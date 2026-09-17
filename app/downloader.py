@@ -26,8 +26,8 @@ COMMON_HEADERS = {
 
 YOUTUBE_EXTRACTOR_ARGS = {
     'youtube': {
-        'player_client': ['android', 'ios', 'mweb', 'web'],
-        'player_skip': ['js', 'configs'],
+        'player_client': ['mweb', 'web', 'android', 'ios'],
+        'player_skip': ['configs'],
     }
 }
 
@@ -105,21 +105,32 @@ def get_standard_formats():
 
     return resolution_tiers, audio_formats
 
+def get_base_ydl_opts():
+    opts = {
+        'ffmpeg_location': FFMPEG_PATH,
+        'noplaylist': True,
+        'quiet': True,
+        'no_warnings': True,
+        'http_headers': COMMON_HEADERS,
+        'socket_timeout': 30,
+        'retries': 10,
+        'fragment_retries': 10,
+    }
+    # Enable JS challenge solver if node is present
+    opts['remote_components'] = ['ejs:github']
+    opts['js_runtimes'] = {'node': {}}
+    return opts
+
 def extract_media_info(url: str) -> Dict[str, Any]:
-    """Extract metadata with zero bot-blocking guarantee"""
+    """Extract metadata with full format recognition"""
     platform_info = detect_platform(url)
     std_video, std_audio = get_standard_formats()
 
-    # Strategy 1: yt-dlp with mobile & tv clients
     ydl_opts = {
-        'quiet': True,
-        'no_warnings': True,
+        **get_base_ydl_opts(),
         'extract_flat': False,
-        'ffmpeg_location': FFMPEG_PATH,
         'skip_download': True,
-        'noplaylist': True,
         'extractor_args': YOUTUBE_EXTRACTOR_ARGS,
-        'http_headers': COMMON_HEADERS,
     }
 
     try:
@@ -192,7 +203,6 @@ def extract_media_info(url: str) -> Dict[str, Any]:
                 "id": info.get('id', 'media')
             }
     except Exception as primary_err:
-        # Strategy 2: Fallback oEmbed metadata resolver (Immune to bot blocks on cloud hosts)
         yt_id = extract_youtube_id(url)
         if yt_id:
             try:
@@ -217,7 +227,6 @@ def extract_media_info(url: str) -> Dict[str, Any]:
             except Exception:
                 pass
 
-        # Strategy 3: Generic safe fallback with standard resolutions
         return {
             "success": True,
             "url": url,
@@ -286,17 +295,10 @@ def _run_conversion_worker(task_id: str, url: str, format_type: str, quality: st
             task["message"] = "Processing & converting media..."
 
     base_ydl_opts = {
-        'ffmpeg_location': FFMPEG_PATH,
+        **get_base_ydl_opts(),
         'outtmpl': output_template,
         'progress_hooks': [progress_hook],
-        'noplaylist': True,
-        'quiet': True,
-        'no_warnings': True,
         'extractor_args': YOUTUBE_EXTRACTOR_ARGS,
-        'http_headers': COMMON_HEADERS,
-        'socket_timeout': 30,
-        'retries': 10,
-        'fragment_retries': 10,
     }
 
     if format_type == "mp3":
@@ -369,11 +371,9 @@ def _run_conversion_worker(task_id: str, url: str, format_type: str, quality: st
             task["size_mb"] = round(os.path.getsize(filename) / (1024 * 1024), 2) if os.path.exists(filename) else 0
 
     except Exception as e:
-        # Cloud/datacenter fallback for direct video/audio download
-        yt_id = extract_youtube_id(url)
         task["status"] = "error"
-        task["error"] = "Stream temporarily protected by YouTube. Please try another quality or format."
-        task["message"] = "Stream conversion failed. Please retry."
+        task["error"] = str(e)
+        task["message"] = f"Download error: {str(e)}"
 
 def get_job_status(task_id: str) -> Optional[Dict[str, Any]]:
     return TASKS.get(task_id)
