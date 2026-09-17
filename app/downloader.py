@@ -74,15 +74,15 @@ def format_size(bytes_val: Optional[int]) -> str:
 
 def get_standard_formats():
     resolution_tiers = [
-        {"height": 4320, "label": "MP4 - 8K Ultra HD (4320p)", "badge": "8K Ultra HD", "tag": "8K UHD", "res_code": "4320p", "size": ""},
-        {"height": 2160, "label": "MP4 - 4K Ultra HD (2160p)", "badge": "4K Ultra HD", "tag": "4K UHD", "res_code": "2160p", "size": ""},
-        {"height": 1440, "label": "MP4 - 2K QHD (1440p)", "badge": "2K QHD", "tag": "2K QHD", "res_code": "1440p", "size": ""},
-        {"height": 1080, "label": "MP4 - 1080p Full HD", "badge": "1080p FHD", "tag": "Full HD", "res_code": "1080p", "size": "", "is_popular": True},
-        {"height": 720, "label": "MP4 - 720p HD", "badge": "720p HD", "tag": "HD", "res_code": "720p", "size": ""},
-        {"height": 480, "label": "MP4 - 480p SD", "badge": "480p SD", "tag": "Medium", "res_code": "480p", "size": ""},
-        {"height": 360, "label": "MP4 - 360p Medium", "badge": "360p", "tag": "Data Saver", "res_code": "360p", "size": ""},
-        {"height": 240, "label": "MP4 - 240p Small", "badge": "240p", "tag": "Low", "res_code": "240p", "size": ""},
-        {"height": 144, "label": "MP4 - 144p Mobile", "badge": "144p", "tag": "Light", "res_code": "144p", "size": ""},
+        {"format": "mp4", "quality": "4320p", "height": 4320, "label": "MP4 - 8K Ultra HD (4320p)", "badge": "8K Ultra HD", "tag": "8K UHD", "res_code": "4320p", "size": ""},
+        {"format": "mp4", "quality": "2160p", "height": 2160, "label": "MP4 - 4K Ultra HD (2160p)", "badge": "4K Ultra HD", "tag": "4K UHD", "res_code": "2160p", "size": ""},
+        {"format": "mp4", "quality": "1440p", "height": 1440, "label": "MP4 - 2K QHD (1440p)", "badge": "2K QHD", "tag": "2K QHD", "res_code": "1440p", "size": ""},
+        {"format": "mp4", "quality": "1080p", "height": 1080, "label": "MP4 - 1080p Full HD", "badge": "1080p FHD", "tag": "Full HD", "res_code": "1080p", "size": "", "is_popular": True},
+        {"format": "mp4", "quality": "720p", "height": 720, "label": "MP4 - 720p HD", "badge": "720p HD", "tag": "HD", "res_code": "720p", "size": ""},
+        {"format": "mp4", "quality": "480p", "height": 480, "label": "MP4 - 480p SD", "badge": "480p SD", "tag": "Medium", "res_code": "480p", "size": ""},
+        {"format": "mp4", "quality": "360p", "height": 360, "label": "MP4 - 360p Medium", "badge": "360p", "tag": "Data Saver", "res_code": "360p", "size": ""},
+        {"format": "mp4", "quality": "240p", "height": 240, "label": "MP4 - 240p Small", "badge": "240p", "tag": "Low", "res_code": "240p", "size": ""},
+        {"format": "mp4", "quality": "144p", "height": 144, "label": "MP4 - 144p Mobile", "badge": "144p", "tag": "Light", "res_code": "144p", "size": ""},
     ]
 
     audio_formats = [

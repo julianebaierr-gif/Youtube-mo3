@@ -301,9 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async function triggerDirectDownload(format, quality, label) {
         if (!currentMediaData) return;
 
+        const safeFormat = (format || 'mp4').toString();
+        const safeQuality = (quality || '1080p').toString();
+        const safeLabel = label || `${safeFormat.toUpperCase()} Download`;
+
         progressModal.classList.remove('hidden');
-        modalTitle.textContent = label;
-        modalSubtitle.textContent = currentMediaData.title;
+        modalTitle.textContent = safeLabel;
+        modalSubtitle.textContent = currentMediaData.title || "Downloading Media";
         modalProgressBar.style.width = '30%';
         modalPctText.textContent = '30%';
         modalSpeedText.textContent = '⚡ High Speed';
@@ -319,8 +323,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     url: currentMediaData.url,
-                    format: format,
-                    quality: quality
+                    format: safeFormat,
+                    quality: safeQuality
                 })
             });
 
@@ -333,12 +337,12 @@ document.addEventListener('DOMContentLoaded', () => {
             modalPctText.textContent = '100%';
             modalIconContainer.className = "w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-4";
             modalIcon.className = "fa-solid fa-circle-check";
-            modalStatusMsg.textContent = `Ready! Downloading ${format.toUpperCase()} to PC...`;
+            modalStatusMsg.textContent = `Ready! Downloading ${safeFormat.toUpperCase()} to PC...`;
             modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-6 bg-emerald-50 py-2.5 px-3 rounded-xl border border-emerald-200";
 
             modalDownloadLink.href = resData.download_url;
             modalDownloadLink.download = resData.file_name;
-            modalBtnLabel.textContent = `Save ${format.toUpperCase()} Directly`;
+            modalBtnLabel.textContent = `Save ${safeFormat.toUpperCase()} Directly`;
             modalActionContainer.classList.remove('hidden');
 
             // Trigger Single Direct Native Browser Download
