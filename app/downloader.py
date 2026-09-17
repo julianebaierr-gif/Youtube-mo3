@@ -98,6 +98,9 @@ def get_standard_formats():
     return resolution_tiers, audio_formats
 
 FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY", "fs_sk_8t8c1m9n1d9f5r6h3m4k9a7a8p1o")
+# Set to True when you want to use FastSaver API credits, or False to preserve credits
+ENABLE_FASTSAVER = os.environ.get("ENABLE_FASTSAVER", "false").lower() in ["true", "1", "yes"]
+
 FASTSAVER_HEADERS = {
     "x-api-key": FASTSAVER_API_KEY,
     "Authorization": f"Bearer {FASTSAVER_API_KEY}",
@@ -106,13 +109,13 @@ FASTSAVER_HEADERS = {
 }
 
 def extract_media_info(url: str) -> Dict[str, Any]:
-    """Extract metadata reliably across all platforms using FastSaver API with yt-dlp fallback"""
+    """Extract metadata reliably across all platforms with optional FastSaver integration"""
     platform_info = detect_platform(url)
     std_video, std_audio = get_standard_formats()
     yt_id = extract_youtube_id(url)
 
-    # 1. Primary for YouTube: FastSaver High-Speed Cloud Engine
-    if yt_id or platform_info["id"] == "youtube":
+    # 1. FastSaver Cloud Engine (Only active when ENABLE_FASTSAVER is True)
+    if ENABLE_FASTSAVER and (yt_id or platform_info["id"] == "youtube"):
         try:
             r = requests.get(
                 "https://api.fastsaver.io/v1/youtube/info",
@@ -307,8 +310,8 @@ def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, An
     platform_info = detect_platform(url)
     yt_id = extract_youtube_id(url)
 
-    # 1. Primary: FastSaver Cloud High Speed Tunnel (Zero Bot Blocks / Direct 1-Click Fast Stream)
-    if yt_id or platform_info["id"] == "youtube":
+    # 1. FastSaver Cloud High Speed Tunnel (Only active when ENABLE_FASTSAVER is True)
+    if ENABLE_FASTSAVER and (yt_id or platform_info["id"] == "youtube"):
         try:
             req_format = "audio" if format_type in ["mp3", "m4a", "wav", "flac"] else quality
             # Ensure quality is valid format tag like '720p', '1080p', or 'audio'
