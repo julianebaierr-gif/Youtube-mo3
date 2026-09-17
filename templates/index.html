@@ -239,32 +239,26 @@
 
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-1 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/70 text-sm font-medium">
-                <a href="/youtube-to-mp3" class="px-3.5 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'yt-mp3' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
+                <a href="/youtube-to-mp3" class="px-4 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'yt-mp3' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
                     <i class="fa-brands fa-youtube text-red-500 mr-1.5"></i> YouTube to MP3
                 </a>
-                <a href="/youtube-to-mp4" class="px-3.5 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'yt-mp4' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
+                <a href="/youtube-to-mp4" class="px-4 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'yt-mp4' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
                     <i class="fa-solid fa-film text-sky-500 mr-1.5"></i> YouTube to MP4
                 </a>
-                <a href="/tiktok-downloader" class="px-3.5 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'tiktok' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
-                    <i class="fa-brands fa-tiktok text-slate-900 mr-1.5"></i> TikTok HD
-                </a>
-                <a href="/instagram-downloader" class="px-3.5 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'instagram' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
-                    <i class="fa-brands fa-instagram text-pink-500 mr-1.5"></i> Instagram
-                </a>
-                <a href="/facebook-downloader" class="px-3.5 py-1.5 rounded-xl hover:text-indigo-600 transition-colors {% if seo.active_tab == 'facebook' %}bg-white text-indigo-600 font-bold shadow-sm{% else %}text-slate-600{% endif %}">
-                    <i class="fa-brands fa-facebook text-blue-600 mr-1.5"></i> Facebook
+                <a href="/youtube-to-mp3-320kbps" class="px-4 py-1.5 rounded-xl hover:text-indigo-600 transition-colors text-slate-600">
+                    <i class="fa-solid fa-compact-disc text-amber-500 mr-1.5"></i> 320kbps Studio
                 </a>
             </nav>
 
             <!-- Quick Action CTA -->
             <div class="flex items-center gap-2 sm:gap-3">
                 <a href="/youtube-to-mp3-320kbps" class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-100 hover:bg-indigo-100 transition-all">
-                    <i class="fa-solid fa-sparkles text-amber-500"></i>
+                    <i class="fa-solid fa-compact-disc text-amber-500"></i>
                     <span>320kbps HQ</span>
                 </a>
                 <button onclick="document.getElementById('media-url-input').focus();" class="px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white btn-gradient shadow-md shadow-indigo-500/20 flex items-center gap-2">
                     <i class="fa-solid fa-download"></i>
-                    <span>Start Free</span>
+                    <span>Convert Free</span>
                 </button>
             </div>
         </div>
@@ -294,27 +288,19 @@
                 {{ seo.subtitle }}
             </p>
 
-            <!-- Multi-Platform Navigation Pills -->
-            <div class="flex flex-wrap items-center justify-center gap-2 mb-8">
-                <a href="/youtube-to-mp3" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'yt-mp3' %}bg-red-500 text-white border-red-500 shadow-md shadow-red-500/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-red-300 shadow-sm{% endif %}">
+            <!-- YouTube Format Pills -->
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-8">
+                <a href="/youtube-to-mp3" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'yt-mp3' %}bg-red-500 text-white border-red-500 shadow-md shadow-red-500/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-red-300 shadow-sm{% endif %}">
                     <i class="fa-brands fa-youtube text-base {% if seo.active_tab == 'yt-mp3' %}text-white{% else %}text-red-500{% endif %}"></i>
-                    <span>YouTube to MP3</span>
+                    <span>YouTube to MP3 (320kbps)</span>
                 </a>
-                <a href="/youtube-to-mp4" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'yt-mp4' %}bg-sky-500 text-white border-sky-500 shadow-md shadow-sky-500/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-sky-300 shadow-sm{% endif %}">
+                <a href="/youtube-to-mp4" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'yt-mp4' %}bg-sky-500 text-white border-sky-500 shadow-md shadow-sky-500/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-sky-300 shadow-sm{% endif %}">
                     <i class="fa-solid fa-video text-base {% if seo.active_tab == 'yt-mp4' %}text-white{% else %}text-sky-500{% endif %}"></i>
-                    <span>YouTube to MP4 (Up to 8K)</span>
+                    <span>YouTube to MP4 (1080p / 4K)</span>
                 </a>
-                <a href="/tiktok-downloader" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'tiktok' %}bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-900/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-slate-400 shadow-sm{% endif %}">
-                    <i class="fa-brands fa-tiktok text-base {% if seo.active_tab == 'tiktok' %}text-white{% else %}text-slate-900{% endif %}"></i>
-                    <span>TikTok</span>
-                </a>
-                <a href="/instagram-downloader" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'instagram' %}bg-gradient-to-r from-purple-600 to-pink-500 text-white border-purple-500 shadow-md shadow-pink-500/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-pink-300 shadow-sm{% endif %}">
-                    <i class="fa-brands fa-instagram text-base {% if seo.active_tab == 'instagram' %}text-white{% else %}text-pink-500{% endif %}"></i>
-                    <span>Instagram Reels</span>
-                </a>
-                <a href="/facebook-downloader" class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'facebook' %}bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/25{% else %}bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-blue-300 shadow-sm{% endif %}">
-                    <i class="fa-brands fa-facebook text-base {% if seo.active_tab == 'facebook' %}text-white{% else %}text-blue-600{% endif %}"></i>
-                    <span>Facebook Video</span>
+                <a href="/youtube-to-mp3-320kbps" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all bg-white/90 hover:bg-white text-slate-700 border-slate-200/90 hover:border-amber-300 shadow-sm">
+                    <i class="fa-solid fa-compact-disc text-amber-500 text-base"></i>
+                    <span>320kbps Studio Master</span>
                 </a>
             </div>
 
@@ -324,12 +310,12 @@
                     
                     <div class="relative w-full flex items-center flex-grow pl-3 pr-2">
                         <div id="platform-icon" class="text-xl mr-3 flex-shrink-0">
-                            <i class="fa-solid fa-link text-slate-400"></i>
+                            <i class="fa-brands fa-youtube text-red-500"></i>
                         </div>
                         <input 
                             type="text" 
                             id="media-url-input" 
-                            placeholder="Paste YouTube, TikTok, Instagram, or Facebook link here..." 
+                            placeholder="{{ seo.placeholder }}" 
                             class="w-full py-3.5 bg-transparent text-slate-900 placeholder-slate-400 text-sm sm:text-base focus:outline-none font-medium"
                             autocomplete="off"
                             spellcheck="false"
@@ -355,9 +341,9 @@
 
             <!-- Platform Detected Live Badge & Quick Note -->
             <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
-                <div id="platform-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-slate-100 text-slate-600 border-slate-200">
-                    <i class="fa-solid fa-satellite-dish text-indigo-500"></i>
-                    <span id="platform-name">Auto-Detect Platform</span>
+                <div id="platform-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border bg-red-50 text-red-600 border-red-200">
+                    <i class="fa-brands fa-youtube text-red-500"></i>
+                    <span id="platform-name">YouTube High Speed Engine</span>
                 </div>
                 <div class="flex items-center gap-1.5 text-slate-400">
                     <i class="fa-solid fa-shield-check text-emerald-500"></i>
@@ -546,9 +532,9 @@
                         <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-2xl mx-auto mb-4 font-extrabold group-hover:scale-110 transition-transform">
                             1
                         </div>
-                        <h3 class="font-bold text-slate-900 text-lg mb-2">Copy Video URL</h3>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Copy YouTube URL</h3>
                         <p class="text-slate-500 text-sm leading-relaxed">
-                            Open YouTube, TikTok, Instagram or Facebook, copy the video or audio link from your browser or app share button.
+                            Open YouTube in your browser or app, copy the video, Music track, or Shorts URL from the address bar or Share button.
                         </p>
                     </div>
 
@@ -643,31 +629,31 @@
                         <span class="font-extrabold text-lg text-slate-900">MediaConvert</span>
                     </div>
                     <p class="text-xs text-slate-500 leading-relaxed mb-4">
-                        Next-generation online media downloader & converter for YouTube, TikTok, Instagram, Facebook, and Twitter.
+                        Ultra-fast, studio-grade YouTube to MP3 (320kbps) audio extractor and YouTube to MP4 (1080p / 4K / 8K) video converter.
                     </p>
                     <div class="flex items-center gap-2 text-xs text-slate-400">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>All Servers Operational</span>
+                        <span>YouTube Conversion Engine Active</span>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-3">YouTube Tools</h4>
+                    <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-3">YouTube Audio (MP3)</h4>
                     <ul class="space-y-2 text-xs text-slate-600">
                         <li><a href="/youtube-to-mp3" class="hover:text-indigo-600 transition-colors">YouTube to MP3 Converter</a></li>
-                        <li><a href="/youtube-to-mp4" class="hover:text-indigo-600 transition-colors">YouTube to MP4 1080p / 4K</a></li>
-                        <li><a href="/youtube-to-mp3-320kbps" class="hover:text-indigo-600 transition-colors">YouTube MP3 320kbps</a></li>
-                        <li><a href="/youtube-to-mp3" class="hover:text-indigo-600 transition-colors">YouTube Shorts Downloader</a></li>
+                        <li><a href="/youtube-to-mp3-320kbps" class="hover:text-indigo-600 transition-colors">YouTube MP3 320kbps Studio</a></li>
+                        <li><a href="/youtube-to-mp3" class="hover:text-indigo-600 transition-colors">YouTube Music Ripper</a></li>
+                        <li><a href="/youtube-to-mp3" class="hover:text-indigo-600 transition-colors">YouTube Shorts to MP3</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-3">Social Media Tools</h4>
+                    <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-3">YouTube Video (MP4)</h4>
                     <ul class="space-y-2 text-xs text-slate-600">
-                        <li><a href="/tiktok-downloader" class="hover:text-indigo-600 transition-colors">TikTok Video No Watermark</a></li>
-                        <li><a href="/instagram-downloader" class="hover:text-indigo-600 transition-colors">Instagram Reels Downloader</a></li>
-                        <li><a href="/facebook-downloader" class="hover:text-indigo-600 transition-colors">Facebook Video Downloader</a></li>
-                        <li><a href="/tiktok-downloader" class="hover:text-indigo-600 transition-colors">TikTok MP3 Audio</a></li>
+                        <li><a href="/youtube-to-mp4" class="hover:text-indigo-600 transition-colors">YouTube to MP4 HD / 1080p</a></li>
+                        <li><a href="/youtube-to-mp4" class="hover:text-indigo-600 transition-colors">YouTube 4K UHD Downloader</a></li>
+                        <li><a href="/youtube-to-mp4" class="hover:text-indigo-600 transition-colors">YouTube 8K Cinema MP4</a></li>
+                        <li><a href="/youtube-to-mp4" class="hover:text-indigo-600 transition-colors">YouTube Shorts Video Saver</a></li>
                     </ul>
                 </div>
 

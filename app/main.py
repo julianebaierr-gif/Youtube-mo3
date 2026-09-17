@@ -17,8 +17,8 @@ os.makedirs(STATIC_DIR, exist_ok=True)
 os.makedirs(TEMPLATES_DIR, exist_ok=True)
 
 app = FastAPI(
-    title="MediaConvert Pro - Free High Speed Video & MP3 Converter",
-    description="Convert and Download YouTube, TikTok, Instagram, Facebook Videos to MP3 320kbps & MP4 HD.",
+    title="YouTube to MP3 & MP4 Converter Pro - Studio Audio & 4K Video",
+    description="Fast, free, and secure online YouTube to MP3 320kbps and YouTube to MP4 1080p/4K downloader.",
     version="1.0.0"
 )
 
@@ -57,21 +57,15 @@ async def youtube_mp3_page(request: Request):
 async def youtube_mp4_page(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-to-mp4"]})
 
-@app.get("/tiktok-downloader", response_class=HTMLResponse)
-async def tiktok_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["tiktok-downloader"]})
-
-@app.get("/instagram-downloader", response_class=HTMLResponse)
-async def instagram_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["instagram-downloader"]})
-
-@app.get("/facebook-downloader", response_class=HTMLResponse)
-async def facebook_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["facebook-downloader"]})
-
 @app.get("/youtube-to-mp3-320kbps", response_class=HTMLResponse)
 async def youtube_320k_page(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-320kbps"]})
+
+@app.get("/tiktok-downloader")
+@app.get("/instagram-downloader")
+@app.get("/facebook-downloader")
+async def legacy_redirect():
+    return RedirectResponse(url="/", status_code=301)
 
 @app.post("/api/extract")
 async def api_extract(payload: ExtractRequest):
