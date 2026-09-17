@@ -97,12 +97,82 @@ def get_standard_formats():
 
     return resolution_tiers, audio_formats
 
+FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY", "fs_sk_8t8c1m9n1d9f5r6h3m4k9a7a8p1o")
+FASTSAVER_HEADERS = {
+    "x-api-key": FASTSAVER_API_KEY,
+    "Authorization": f"Bearer {FASTSAVER_API_KEY}",
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+}
+
 def extract_media_info(url: str) -> Dict[str, Any]:
-    """Extract metadata reliably across all platforms"""
+    """Extract metadata reliably across all platforms using FastSaver API with yt-dlp fallback"""
     platform_info = detect_platform(url)
     std_video, std_audio = get_standard_formats()
     yt_id = extract_youtube_id(url)
 
+    # 1. Primary for YouTube: FastSaver High-Speed Cloud Engine
+    if yt_id or platform_info["id"] == "youtube":
+        try:
+            r = requests.get(
+                "https://api.fastsaver.io/v1/youtube/info",
+                params={"url": url},
+                headers=FASTSAVER_HEADERS,
+                timeout=10
+            )
+            if r.status_code == 200:
+                data = r.json()
+                if data.get("ok"):
+                    title = data.get("title", f"YouTube Video ({yt_id})")
+                    duration = data.get("duration", 0)
+                    thumbnail = (data.get("thumbnails", {}) or {}).get("max") or data.get("thumbnail") or f"https://i.ytimg.com/vi/{yt_id}/hqdefault.jpg"
+                    uploader = data.get("author") or "YouTube Creator"
+                    
+                    fs_formats = data.get("formats", [])
+                    available_resolutions = set()
+                    for f in fs_formats:
+                        fmt_str = f.get("format", "")
+                        if fmt_str and "p" in fmt_str:
+                            available_resolutions.add(fmt_str)
+
+                    video_formats = []
+                    has_popular = False
+                    for tier in std_video:
+                        if not available_resolutions or tier["res_code"] in available_resolutions or tier["res_code"] in ["1080p", "720p", "480p", "360p"]:
+                            is_pop = False
+                            if not has_popular and tier["res_code"] in ["1080p", "720p"]:
+                                is_pop = True
+                                has_popular = True
+
+                            video_formats.append({
+                                "format": "mp4",
+                                "quality": tier["res_code"],
+                                "label": tier["label"],
+                                "resolution": tier["res_code"],
+                                "tag": tier["tag"],
+                                "badge": tier["badge"],
+                                "size": tier.get("size", ""),
+                                "is_popular": is_pop
+                            })
+
+                    return {
+                        "success": True,
+                        "url": url,
+                        "title": title,
+                        "thumbnail": thumbnail,
+                        "duration": format_duration(duration),
+                        "duration_seconds": duration,
+                        "uploader": uploader,
+                        "views": "",
+                        "platform": platform_info,
+                        "audio_formats": std_audio,
+                        "video_formats": video_formats or std_video,
+                        "id": yt_id or data.get("video_id", "media")
+                    }
+        except Exception:
+            pass
+
+    # 2. Universal yt-dlp Engine for TikTok, Instagram, Facebook, SoundCloud, etc.
     ydl_opts = {
         'extract_flat': False,
         'skip_download': True,
@@ -110,14 +180,18 @@ def extract_media_info(url: str) -> Dict[str, Any]:
         'quiet': True,
         'no_warnings': True,
         'http_headers': COMMON_HEADERS,
-        'extractor_args': YOUTUBE_EXTRACTOR_ARGS,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android', 'ios', 'web', 'mweb'],
+                'player_skip': ['configs'],
+            }
+        },
         'socket_timeout': 15,
     }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
-            
             title = info.get('title', 'Video Media')
             duration = info.get('duration')
             thumbnail = info.get('thumbnail')
@@ -229,7 +303,37 @@ def extract_media_info(url: str) -> Dict[str, Any]:
         }
 
 def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, Any]:
-    """Extracts direct streaming stream URL for high-speed instant downloading across YouTube, TikTok, Instagram, FB, etc."""
+    """Extracts direct streaming stream URL using FastSaver API tunnel with yt-dlp fallback"""
+    platform_info = detect_platform(url)
+    yt_id = extract_youtube_id(url)
+
+    # 1. Primary: FastSaver Cloud High Speed Tunnel (Zero Bot Blocks / Direct 1-Click Fast Stream)
+    if yt_id or platform_info["id"] == "youtube":
+        try:
+            req_format = "audio" if format_type in ["mp3", "m4a", "wav", "flac"] else quality
+            # Ensure quality is valid format tag like '720p', '1080p', or 'audio'
+            if req_format not in ["144p", "240p", "360p", "480p", "720p", "1080p", "1440p", "2160p", "audio"]:
+                req_format = "720p" if format_type == "mp4" else "audio"
+
+            r = requests.post(
+                "https://api.fastsaver.io/v1/youtube/download",
+                json={"url": url, "format": req_format},
+                headers=FASTSAVER_HEADERS,
+                timeout=15
+            )
+            if r.status_code == 200:
+                data = r.json()
+                if data.get("ok") and data.get("download_url"):
+                    return {
+                        "success": True,
+                        "stream_url": data["download_url"],
+                        "file_name": data.get("filename") or f"media_{yt_id}.{format_type}",
+                        "title": data.get("filename", "Media Download")
+                    }
+        except Exception:
+            pass
+
+    # 2. Universal Multi-platform Stream Resolver (TikTok, Instagram, Facebook, Twitter, SoundCloud)
     ydl_opts = {
         'extract_flat': False,
         'skip_download': True,
@@ -239,7 +343,7 @@ def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, An
         'http_headers': COMMON_HEADERS,
         'extractor_args': {
             'youtube': {
-                'player_client': ['mweb', 'android', 'web', 'ios'],
+                'player_client': ['android', 'ios', 'web', 'mweb'],
                 'player_skip': ['configs'],
             }
         },
@@ -256,13 +360,11 @@ def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, An
             ext = format_type
 
             if format_type in ["mp3", "m4a", "wav", "flac"]:
-                # Find best audio stream
                 audio_streams = [f for f in formats if f.get('acodec') != 'none' and f.get('vcodec') == 'none' and f.get('url')]
                 if audio_streams:
                     audio_streams.sort(key=lambda x: (x.get('abr') or 0), reverse=True)
                     chosen_url = audio_streams[0]['url']
                 elif formats:
-                    # Filter any stream with audio
                     with_audio = [f for f in formats if f.get('acodec') != 'none' and f.get('url')]
                     if with_audio:
                         with_audio.sort(key=lambda x: (x.get('abr') or 0), reverse=True)
@@ -271,11 +373,9 @@ def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, An
                         chosen_url = formats[0].get('url')
                 ext = "mp3" if format_type == "mp3" else ("m4a" if format_type == "m4a" else "wav")
             else:
-                # Video MP4 stream
                 req_h = int(quality.replace("p", "")) if "p" in quality else 720
                 video_streams = [f for f in formats if f.get('url') and (f.get('vcodec') != 'none' or f.get('ext') == 'mp4')]
                 
-                # Try finding progressive stream (has audio + video) first for instant playback & download
                 prog_streams = [f for f in video_streams if f.get('acodec') != 'none' and f.get('vcodec') != 'none']
                 if prog_streams:
                     prog_streams.sort(key=lambda x: abs((x.get('height') or 0) - req_h))
@@ -296,10 +396,10 @@ def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, An
                     "title": title
                 }
 
-    except Exception as e:
+    except Exception:
         pass
 
     return {
         "success": False,
-        "error": "Unable to extract stream for this video. YouTube or the platform may be throttling this format. Please try another resolution or video."
+        "error": "Unable to extract direct download stream. Please check the link and try again."
     }
