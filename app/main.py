@@ -44,6 +44,7 @@ class ConvertRequest(BaseModel):
     quality: str = "320kbps"
 
 from app.seo_content import SEO_PAGES
+from app.legal_content import LEGAL_PAGES
 
 @app.get("/", response_class=HTMLResponse)
 async def home_page(request: Request):
@@ -56,6 +57,18 @@ async def youtube_mp3_page(request: Request):
 @app.get("/youtube-to-mp4", response_class=HTMLResponse)
 async def youtube_mp4_page(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-to-mp4"]})
+
+@app.get("/contact-us", response_class=HTMLResponse)
+async def contact_us_page(request: Request):
+    return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["contact-us"]})
+
+@app.get("/terms-of-service", response_class=HTMLResponse)
+async def terms_page(request: Request):
+    return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["terms-of-service"]})
+
+@app.get("/privacy-policy", response_class=HTMLResponse)
+async def privacy_page(request: Request):
+    return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["privacy-policy"]})
 
 @app.get("/robots.txt", response_class=HTMLResponse)
 async def robots_txt():
@@ -87,6 +100,24 @@ async def sitemap_xml():
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mediaconvert.pro/contact-us</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://mediaconvert.pro/terms-of-service</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://mediaconvert.pro/privacy-policy</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>"""
     return HTMLResponse(content=xml, media_type="application/xml")
