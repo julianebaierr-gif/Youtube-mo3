@@ -299,19 +299,7 @@ def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, An
     except Exception as e:
         pass
 
-    # Direct fallback for YouTube formats via invidious/piped public stream resolvers if available
-    yt_id = extract_youtube_id(url)
-    if yt_id:
-        fallback_stream_url = f"https://rr1---sn-nx5s7n76.googlevideo.com/videoplayback?id={yt_id}&itag=18"
-        filename = f"youtube_{yt_id}.{format_type}"
-        return {
-            "success": True,
-            "stream_url": fallback_stream_url,
-            "file_name": filename,
-            "title": f"YouTube Video ({yt_id})"
-        }
-
     return {
         "success": False,
-        "error": "Could not extract direct download stream. Please verify the URL and try again."
+        "error": "Unable to extract stream for this video. YouTube or the platform may be throttling this format. Please try another resolution or video."
     }
