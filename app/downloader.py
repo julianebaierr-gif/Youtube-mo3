@@ -56,7 +56,7 @@ def extract_youtube_id(url: str) -> Optional[str]:
 
 def format_duration(seconds: Optional[int]) -> str:
     if not seconds:
-        return "Unknown"
+        return "HD Video"
     mins, secs = divmod(int(seconds), 60)
     hours, mins = divmod(mins, 60)
     if hours > 0:
@@ -116,15 +116,13 @@ def get_base_ydl_opts():
         'retries': 10,
         'fragment_retries': 10,
     }
-    # Enable JS challenge solver if node is present
-    opts['remote_components'] = ['ejs:github']
-    opts['js_runtimes'] = {'node': {}}
     return opts
 
 def extract_media_info(url: str) -> Dict[str, Any]:
-    """Extract metadata with full format recognition"""
+    """Extract metadata gracefully with zero raw bot exception leakage"""
     platform_info = detect_platform(url)
     std_video, std_audio = get_standard_formats()
+    yt_id = extract_youtube_id(url)
 
     ydl_opts = {
         **get_base_ydl_opts(),
@@ -192,7 +190,7 @@ def extract_media_info(url: str) -> Dict[str, Any]:
                 "success": True,
                 "url": url,
                 "title": title,
-                "thumbnail": thumbnail,
+                "thumbnail": thumbnail or (f"https://i.ytimg.com/vi/{yt_id}/hqdefault.jpg" if yt_id else None),
                 "duration": format_duration(duration),
                 "duration_seconds": duration,
                 "uploader": uploader,
@@ -200,10 +198,17 @@ def extract_media_info(url: str) -> Dict[str, Any]:
                 "platform": platform_info,
                 "audio_formats": std_audio,
                 "video_formats": video_formats,
-                "id": info.get('id', 'media')
+                "id": info.get('id', yt_id or 'media')
             }
-    except Exception as primary_err:
-        yt_id = extract_youtube_id(url)
+    except Exception as e:
+        err_msg = str(e)
+        if "unavailable" in err_msg.lower() or "private" in err_msg.lower():
+            return {
+                "success": False,
+                "error": "This video is unavailable or has been removed on YouTube. Please try another link."
+            }
+
+        # Safe Fallback to oEmbed for active YouTube videos
         if yt_id:
             try:
                 oembed_url = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={yt_id}&format=json"
@@ -223,6 +228,11 @@ def extract_media_info(url: str) -> Dict[str, Any]:
                         "audio_formats": std_audio,
                         "video_formats": std_video,
                         "id": yt_id
+                    }
+                elif r.status_code == 404:
+                    return {
+                        "success": False,
+                        "error": "This video is unavailable or private on YouTube. Please check the URL."
                     }
             except Exception:
                 pass
@@ -247,8 +257,8 @@ def start_conversion_job(url: str, format_type: str, quality: str) -> str:
     task_id = str(uuid.uuid4())
     TASKS[task_id] = {
         "status": "starting",
-        "progress": 8,
-        "message": "Initializing high-speed stream...",
+        "progress": 10,
+        "message": "Connecting to media stream...",
         "speed": "",
         "eta": "",
         "file_path": None,
@@ -270,7 +280,7 @@ def _run_conversion_worker(task_id: str, url: str, format_type: str, quality: st
             total = d.get('total_bytes') or d.get('total_bytes_estimate') or 0
             downloaded = d.get('downloaded_bytes', 0)
             if total > 0:
-                pct = min(95, int((downloaded / total) * 90) + 8)
+                pct = min(95, int((downloaded / total) * 88) + 10)
             else:
                 pct = 50
             
@@ -372,8 +382,8 @@ def _run_conversion_worker(task_id: str, url: str, format_type: str, quality: st
 
     except Exception as e:
         task["status"] = "error"
-        task["error"] = str(e)
-        task["message"] = f"Download error: {str(e)}"
+        task["error"] = "This video stream is restricted or unavailable. Please try another video."
+        task["message"] = "Conversion failed. Please try another video."
 
 def get_job_status(task_id: str) -> Optional[Dict[str, Any]]:
     return TASKS.get(task_id)
