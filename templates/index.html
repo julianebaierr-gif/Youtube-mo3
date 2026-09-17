@@ -417,7 +417,13 @@
 
             <!-- Subtitle -->
             <p class="text-sm sm:text-base text-gray-600 max-w-xl mx-auto font-normal leading-relaxed mb-6">
-                Paste any YouTube video or Shorts link to download high-speed MP3 audio or MP4 video files.
+                {% if seo.active_tab == 'yt-mp3' %}
+                Paste any YouTube video link below and download as 320kbps MP3 music in 1 click!
+                {% elif seo.active_tab == 'yt-mp4' %}
+                Paste any YouTube video link below and download as 1080p or 4K MP4 video in 1 click!
+                {% else %}
+                Paste any YouTube video link below and download as MP3 music or MP4 video in 1 click!
+                {% endif %}
             </p>
 
             <!-- Mode Selector Switch -->
@@ -438,12 +444,16 @@
                     
                     <div class="relative w-full flex items-center flex-grow pl-3 pr-2">
                         <div id="platform-icon" class="text-xl mr-2.5 flex-shrink-0">
+                            {% if seo.active_tab == 'yt-mp4' %}
+                            <i class="fa-brands fa-youtube text-blue-600"></i>
+                            {% else %}
                             <i class="fa-brands fa-youtube text-rose-600"></i>
+                            {% endif %}
                         </div>
                         <input 
                             type="text" 
                             id="media-url-input" 
-                            placeholder="Paste YouTube link here..." 
+                            placeholder="{{ seo.placeholder }}" 
                             class="w-full py-2.5 bg-transparent text-slate-900 placeholder-gray-400 text-base sm:text-lg focus:outline-none font-medium"
                             autocomplete="off"
                             spellcheck="false"
@@ -459,7 +469,7 @@
 
                     <button 
                         id="convert-btn" 
-                        class="w-full sm:w-auto px-7 py-3 rounded-xl font-extrabold text-white text-base btn-action-primary flex items-center justify-center gap-2 flex-shrink-0"
+                        class="w-full sm:w-auto px-7 py-3 rounded-xl font-extrabold text-white text-base {% if seo.active_tab == 'yt-mp4' %}btn-download-blue{% else %}btn-action-primary{% endif %} flex items-center justify-center gap-2 flex-shrink-0"
                     >
                         <i class="fa-solid fa-download text-sm"></i>
                         <span>Convert</span>
@@ -472,7 +482,13 @@
                 <span class="inline-flex items-center gap-1 text-emerald-700 font-bold">
                     <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> Simple 3 Steps:
                 </span>
+                {% if seo.active_tab == 'yt-mp3' %}
+                <span>Paste Link ➔ Pick Bitrate ➔ Instant MP3 Download</span>
+                {% elif seo.active_tab == 'yt-mp4' %}
+                <span>Paste Link ➔ Pick Resolution ➔ Instant MP4 Download</span>
+                {% else %}
                 <span>Paste Link ➔ Pick Format ➔ Instant Download</span>
+                {% endif %}
             </div>
 
         </section>
