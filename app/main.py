@@ -57,6 +57,40 @@ async def youtube_mp3_page(request: Request):
 async def youtube_mp4_page(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-to-mp4"]})
 
+@app.get("/robots.txt", response_class=HTMLResponse)
+async def robots_txt():
+    content = """User-agent: *
+Allow: /
+Disallow: /api/
+Sitemap: https://mediaconvert.pro/sitemap.xml
+"""
+    return HTMLResponse(content=content, media_type="text/plain")
+
+@app.get("/sitemap.xml", response_class=HTMLResponse)
+async def sitemap_xml():
+    xml = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mediaconvert.pro/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://mediaconvert.pro/youtube-to-mp3</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://mediaconvert.pro/youtube-to-mp4</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>"""
+    return HTMLResponse(content=xml, media_type="application/xml")
+
 @app.get("/youtube-to-mp3-320kbps")
 async def youtube_320k_redirect():
     return RedirectResponse(url="/youtube-to-mp3", status_code=301)

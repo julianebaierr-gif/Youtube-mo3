@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ seo.title }}</title>
     <meta name="description" content="{{ seo.meta_desc }}">
-    <meta name="keywords" content="youtube to mp3 converter, youtube to mp4, youtube converter, ytmp3, y2mate, mp3 converter 320kbps, tiktok downloader no watermark, instagram reels downloader, facebook video downloader, youtube music to mp3">
-    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ seo.canonical_url }}">
+    <meta name="keywords" content="youtube to mp3 converter, youtube to mp4, youtube converter, ytmp3, y2mate, mp3 converter 320kbps, youtube music to mp3, youtube shorts mp3">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <!-- OpenGraph & Twitter Cards -->
     <meta property="og:title" content="{{ seo.title }}">
     <meta property="og:description" content="{{ seo.meta_desc }}">
+    <meta property="og:url" content="{{ seo.canonical_url }}">
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MediaConvert Pro">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ seo.title }}">
+    <meta name="twitter:description" content="{{ seo.meta_desc }}">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -42,20 +47,65 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Schema.org Rich FAQ Snippet -->
+    <!-- Schema.org WebApplication, HowTo, FAQPage Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "MediaConvert Pro",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "All",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "{{ seo.meta_desc }}"
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "MediaConvert Pro",
+          "url": "{{ seo.canonical_url }}",
+          "applicationCategory": "MultimediaApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "description": "{{ seo.meta_desc }}"
+        },
+        {
+          "@type": "HowTo",
+          "name": "How to Convert and Download YouTube Videos to MP3 or MP4",
+          "description": "Three simple steps to convert online YouTube videos to high quality MP3 audio or 1080p MP4 video files.",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Copy YouTube URL",
+              "text": "Copy the video, Shorts, or Music URL directly from your browser address bar or YouTube app share menu."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Paste and Select Quality",
+              "text": "Paste the link into the converter search field and select your desired MP3 bitrate (up to 320kbps) or MP4 resolution (up to 4K)."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Download Directly",
+              "text": "Click Convert and download your converted media file directly to your PC, Mac, iPhone, or Android device."
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {% for item in seo.faq %}
+            {
+              "@type": "Question",
+              "name": {{ item.q | tojson }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ item.a | tojson }}
+              }
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }
+      ]
     }
     </script>
 
