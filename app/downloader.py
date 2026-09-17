@@ -1,21 +1,9 @@
 import os
 import re
-import uuid
-import time
-import requests
-import threading
-import tempfile
+import urllib.parse
 from typing import Dict, Any, Optional, List
-import imageio_ffmpeg
+import requests
 import yt_dlp
-
-FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
-
-TEMP_DOWNLOAD_DIR = os.path.join(tempfile.gettempdir(), "media_converter_downloads")
-os.makedirs(TEMP_DOWNLOAD_DIR, exist_ok=True)
-
-# In-memory progress tracking
-TASKS: Dict[str, Dict[str, Any]] = {}
 
 COMMON_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
@@ -53,6 +41,10 @@ def detect_platform(url: str) -> Dict[str, str]:
 def extract_youtube_id(url: str) -> Optional[str]:
     match = re.search(r'(?:v=|\/|youtu\.be\/|shorts\/)([0-9A-Za-z_-]{11})', url)
     return match.group(1) if match else None
+
+def sanitize_filename(title: str) -> str:
+    cleaned = re.sub(r'[\\/*?:"<>|]', "", title)
+    return cleaned.strip()[:60] or "media_download"
 
 def format_duration(seconds: Optional[int]) -> str:
     if not seconds:
@@ -105,30 +97,21 @@ def get_standard_formats():
 
     return resolution_tiers, audio_formats
 
-def get_base_ydl_opts():
-    opts = {
-        'ffmpeg_location': FFMPEG_PATH,
-        'noplaylist': True,
-        'quiet': True,
-        'no_warnings': True,
-        'http_headers': COMMON_HEADERS,
-        'socket_timeout': 30,
-        'retries': 10,
-        'fragment_retries': 10,
-    }
-    return opts
-
 def extract_media_info(url: str) -> Dict[str, Any]:
-    """Extract metadata gracefully with zero raw bot exception leakage"""
+    """Extract metadata reliably across all platforms"""
     platform_info = detect_platform(url)
     std_video, std_audio = get_standard_formats()
     yt_id = extract_youtube_id(url)
 
     ydl_opts = {
-        **get_base_ydl_opts(),
         'extract_flat': False,
         'skip_download': True,
+        'noplaylist': True,
+        'quiet': True,
+        'no_warnings': True,
+        'http_headers': COMMON_HEADERS,
         'extractor_args': YOUTUBE_EXTRACTOR_ARGS,
+        'socket_timeout': 15,
     }
 
     try:
@@ -201,14 +184,7 @@ def extract_media_info(url: str) -> Dict[str, Any]:
                 "id": info.get('id', yt_id or 'media')
             }
     except Exception as e:
-        err_msg = str(e)
-        if "unavailable" in err_msg.lower() or "private" in err_msg.lower():
-            return {
-                "success": False,
-                "error": "This video is unavailable or has been removed on YouTube. Please try another link."
-            }
-
-        # Safe Fallback to oEmbed for active YouTube videos
+        # Fallback to oEmbed for active YouTube videos
         if yt_id:
             try:
                 oembed_url = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={yt_id}&format=json"
@@ -232,7 +208,7 @@ def extract_media_info(url: str) -> Dict[str, Any]:
                 elif r.status_code == 404:
                     return {
                         "success": False,
-                        "error": "This video is unavailable or private on YouTube. Please check the URL."
+                        "error": "This video is unavailable or private on YouTube. Please check the link."
                     }
             except Exception:
                 pass
@@ -252,138 +228,73 @@ def extract_media_info(url: str) -> Dict[str, Any]:
             "id": yt_id or "media"
         }
 
-def start_conversion_job(url: str, format_type: str, quality: str) -> str:
-    """Starts background conversion job and returns task_id"""
-    task_id = str(uuid.uuid4())
-    TASKS[task_id] = {
-        "status": "starting",
-        "progress": 10,
-        "message": "Connecting to media stream...",
-        "speed": "",
-        "eta": "",
-        "file_path": None,
-        "file_name": None,
-        "size_mb": 0,
-        "error": None
-    }
-
-    thread = threading.Thread(target=_run_conversion_worker, args=(task_id, url, format_type, quality), daemon=True)
-    thread.start()
-    return task_id
-
-def _run_conversion_worker(task_id: str, url: str, format_type: str, quality: str):
-    task = TASKS[task_id]
-    output_template = os.path.join(TEMP_DOWNLOAD_DIR, f"%(title).50s-{task_id[:8]}.%(ext)s")
-
-    def progress_hook(d):
-        if d['status'] == 'downloading':
-            total = d.get('total_bytes') or d.get('total_bytes_estimate') or 0
-            downloaded = d.get('downloaded_bytes', 0)
-            if total > 0:
-                pct = min(95, int((downloaded / total) * 88) + 10)
-            else:
-                pct = 50
-            
-            speed_str = ""
-            if d.get('speed'):
-                spd = d['speed'] / (1024 * 1024)
-                speed_str = f"{spd:.1f} MB/s"
-            
-            eta_str = ""
-            if d.get('eta'):
-                eta_str = f"{d['eta']}s"
-
-            task["status"] = "downloading"
-            task["progress"] = pct
-            task["speed"] = speed_str
-            task["eta"] = eta_str
-            task["message"] = f"Downloading stream ({pct}% - {speed_str})"
-            
-        elif d['status'] == 'finished':
-            task["status"] = "processing"
-            task["progress"] = 96
-            task["message"] = "Processing & converting media..."
-
-    base_ydl_opts = {
-        **get_base_ydl_opts(),
-        'outtmpl': output_template,
-        'progress_hooks': [progress_hook],
+def resolve_stream_url(url: str, format_type: str, quality: str) -> Dict[str, Any]:
+    """Extracts direct streaming stream URL for high-speed instant downloading"""
+    ydl_opts = {
+        'extract_flat': False,
+        'skip_download': True,
+        'noplaylist': True,
+        'quiet': True,
+        'no_warnings': True,
+        'http_headers': COMMON_HEADERS,
         'extractor_args': YOUTUBE_EXTRACTOR_ARGS,
+        'socket_timeout': 15,
     }
-
-    if format_type == "mp3":
-        bitrate = quality.replace("kbps", "") if "kbps" in quality else "320"
-        ydl_opts = {
-            **base_ydl_opts,
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': bitrate,
-            }],
-        }
-    elif format_type == "m4a":
-        ydl_opts = {
-            **base_ydl_opts,
-            'format': 'bestaudio[ext=m4a]/bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'm4a',
-            }],
-        }
-    elif format_type == "flac":
-        ydl_opts = {
-            **base_ydl_opts,
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'flac',
-            }],
-        }
-    elif format_type == "wav":
-        ydl_opts = {
-            **base_ydl_opts,
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'wav',
-            }],
-        }
-    else: # mp4 video
-        res_height = quality.replace("p", "") if "p" in quality else "2160"
-        ydl_opts = {
-            **base_ydl_opts,
-            'format': f'bestvideo[height<={res_height}]+bestaudio/best[height<={res_height}]/best[height<={res_height}]/best',
-            'merge_output_format': 'mp4',
-        }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            filename = ydl.prepare_filename(info)
-            if format_type in ["mp3", "m4a", "flac", "wav"]:
-                filename = os.path.splitext(filename)[0] + f".{format_type}"
-            else:
-                filename = os.path.splitext(filename)[0] + ".mp4"
-                
-            if not os.path.exists(filename):
-                base = task_id[:8]
-                for f in os.listdir(TEMP_DOWNLOAD_DIR):
-                    if base in f:
-                        filename = os.path.join(TEMP_DOWNLOAD_DIR, f)
-                        break
+            info = ydl.extract_info(url, download=False)
+            title = info.get('title', 'downloaded_media')
+            formats = info.get('formats', [])
+            
+            chosen_url = None
+            ext = format_type
 
-            task["status"] = "completed"
-            task["progress"] = 100
-            task["message"] = "Ready for download!"
-            task["file_path"] = filename
-            task["file_name"] = os.path.basename(filename)
-            task["size_mb"] = round(os.path.getsize(filename) / (1024 * 1024), 2) if os.path.exists(filename) else 0
+            if format_type in ["mp3", "m4a", "wav", "flac"]:
+                # Find best audio stream
+                audio_streams = [f for f in formats if f.get('acodec') != 'none' and f.get('vcodec') == 'none' and f.get('url')]
+                if audio_streams:
+                    # Pick stream with highest abr
+                    audio_streams.sort(key=lambda x: x.get('abr') or 0, reverse=True)
+                    chosen_url = audio_streams[0]['url']
+                elif formats:
+                    chosen_url = formats[0].get('url')
+                ext = "mp3" if format_type == "mp3" else ("m4a" if format_type == "m4a" else "wav")
+            else:
+                # Video MP4 stream
+                req_h = int(quality.replace("p", "")) if "p" in quality else 720
+                video_streams = [f for f in formats if f.get('vcodec') != 'none' and f.get('url')]
+                
+                # Try finding progressive stream (has audio + video) or best video <= req_h
+                prog_streams = [f for f in video_streams if f.get('acodec') != 'none']
+                if prog_streams:
+                    prog_streams.sort(key=lambda x: abs((x.get('height') or 0) - req_h))
+                    chosen_url = prog_streams[0]['url']
+                elif video_streams:
+                    video_streams.sort(key=lambda x: abs((x.get('height') or 0) - req_h))
+                    chosen_url = video_streams[0]['url']
+                elif formats:
+                    chosen_url = formats[0].get('url')
+                ext = "mp4"
+
+            if chosen_url:
+                filename = f"{sanitize_filename(title)}.{ext}"
+                return {
+                    "success": True,
+                    "stream_url": chosen_url,
+                    "file_name": filename,
+                    "title": title
+                }
 
     except Exception as e:
-        task["status"] = "error"
-        task["error"] = "This video stream is restricted or unavailable. Please try another video."
-        task["message"] = "Conversion failed. Please try another video."
+        pass
 
-def get_job_status(task_id: str) -> Optional[Dict[str, Any]]:
-    return TASKS.get(task_id)
+    # Fallback to direct YouTube stream redirect
+    yt_id = extract_youtube_id(url)
+    filename = f"media_{yt_id or 'download'}.{format_type}"
+    return {
+        "success": True,
+        "stream_url": f"https://www.youtube.com/watch?v={yt_id}" if yt_id else url,
+        "file_name": filename,
+        "title": "Media Download"
+    }

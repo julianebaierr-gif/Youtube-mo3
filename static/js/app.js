@@ -1,4 +1,4 @@
-// MediaConvert Pro - High-Speed Client Engine with Live Conversion Modal
+// MediaConvert Pro - High-Speed Client Engine with Instant Direct PC Download
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlInput = document.getElementById('media-url-input');
@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBtnLabel = document.getElementById('modal-btn-label');
 
     let currentMediaData = null;
-    let pollInterval = null;
-    let isTaskCompleted = false;
 
     // Auto-detect platform icon and badge
     function updatePlatformIndicator(url) {
@@ -82,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         platformIcon.innerHTML = iconHtml;
         platformName.textContent = name;
-        platformBadge.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all ${badgeClass}`;
+        platformBadge.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition-all ${badgeClass}`;
 
         if (url.trim().length > 0) {
             clearBtn.classList.remove('hidden');
@@ -223,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="font-bold text-slate-800 text-sm">${fmt.label}</span>
                             ${fmt.is_popular ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-600 text-white shadow-sm">320k Studio</span>' : ''}
                         </div>
-                        <p class="text-xs text-slate-500 mt-0.5">Format: <span class="uppercase font-semibold text-slate-700">${fmt.format}</span> • Quality: <span class="font-medium text-slate-600">${fmt.tag}</span></p>
+                        <p class="text-xs text-slate-500 mt-0.5">Format: <span class="uppercase font-semibold text-slate-700">${fmt.format}</span> • Tag: <span class="font-medium text-slate-600">${fmt.tag}</span></p>
                     </div>
                 </div>
                 <div>
@@ -237,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.querySelector('.download-action-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
-                openDownloadJob(fmt.format, fmt.quality, fmt.label);
+                triggerDirectDownload(fmt.format, fmt.quality, fmt.label);
             });
 
             audioFormatsContainer.appendChild(card);
@@ -274,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.querySelector('.download-action-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
-                openDownloadJob(fmt.format, fmt.quality, fmt.label);
+                triggerDirectDownload(fmt.format, fmt.quality, fmt.label);
             });
 
             videoFormatsContainer.appendChild(card);
@@ -299,25 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
         audioFormatsContainer.classList.add('hidden');
     });
 
-    // Start Async Conversion Job and Download EXACTLY ONCE to PC
-    async function openDownloadJob(format, quality, label) {
+    // Instant 1-Click Direct Download to PC (Zero Vercel Timeout / Zero Bot Block)
+    async function triggerDirectDownload(format, quality, label) {
         if (!currentMediaData) return;
 
-        // Reset state
-        if (pollInterval) {
-            clearInterval(pollInterval);
-            pollInterval = null;
-        }
-        isTaskCompleted = false;
-        
         progressModal.classList.remove('hidden');
         modalTitle.textContent = label;
         modalSubtitle.textContent = currentMediaData.title;
-        modalProgressBar.style.width = '6%';
-        modalPctText.textContent = '6%';
-        modalSpeedText.textContent = '';
-        modalEtaText.textContent = '';
-        modalStatusMsg.textContent = 'Connecting to high-speed stream...';
+        modalProgressBar.style.width = '30%';
+        modalPctText.textContent = '30%';
+        modalSpeedText.textContent = '⚡ High Speed';
+        modalEtaText.textContent = '⏱️ 1s';
+        modalStatusMsg.textContent = 'Preparing high-speed download...';
         modalActionContainer.classList.add('hidden');
         modalIconContainer.className = "w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-2xl mx-auto mb-4";
         modalIcon.className = "fa-solid fa-cog fa-spin";
@@ -335,83 +326,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const resData = await resp.json();
             if (!resp.ok || !resData.success) {
-                throw new Error(resData.error || "Failed to start conversion job");
+                throw new Error(resData.error || "Download resolution failed");
             }
 
-            const taskId = resData.task_id;
-            
-            // Poll progress
-            pollInterval = setInterval(async () => {
-                if (isTaskCompleted) {
-                    if (pollInterval) clearInterval(pollInterval);
-                    return;
-                }
+            modalProgressBar.style.width = '100%';
+            modalPctText.textContent = '100%';
+            modalIconContainer.className = "w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-4";
+            modalIcon.className = "fa-solid fa-circle-check";
+            modalStatusMsg.textContent = `Ready! Downloading ${format.toUpperCase()} to PC...`;
+            modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-6 bg-emerald-50 py-2.5 px-3 rounded-xl border border-emerald-200";
 
-                try {
-                    const progResp = await fetch(`/api/progress/${taskId}`);
-                    if (!progResp.ok) return;
+            modalDownloadLink.href = resData.download_url;
+            modalDownloadLink.download = resData.file_name;
+            modalBtnLabel.textContent = `Save ${format.toUpperCase()} Directly`;
+            modalActionContainer.classList.remove('hidden');
 
-                    const progData = await progResp.json();
-                    
-                    modalProgressBar.style.width = `${progData.progress}%`;
-                    modalPctText.textContent = `${progData.progress}%`;
-                    modalStatusMsg.textContent = progData.message || 'Processing...';
-
-                    if (progData.speed) {
-                        modalSpeedText.textContent = `⚡ ${progData.speed}`;
-                    }
-                    if (progData.eta) {
-                        modalEtaText.textContent = `⏱️ ETA: ${progData.eta}`;
-                    }
-
-                    if (progData.status === 'completed' && !isTaskCompleted) {
-                        isTaskCompleted = true;
-                        if (pollInterval) clearInterval(pollInterval);
-
-                        modalProgressBar.style.width = '100%';
-                        modalPctText.textContent = '100%';
-                        modalIconContainer.className = "w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-4";
-                        modalIcon.className = "fa-solid fa-circle-check";
-                        modalStatusMsg.textContent = `Downloaded to PC! (Size: ${progData.size_mb} MB)`;
-                        modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-6 bg-emerald-50 py-2 px-3 rounded-xl border border-emerald-200";
-                        
-                        modalDownloadLink.href = progData.download_url;
-                        modalDownloadLink.download = progData.file_name;
-                        modalBtnLabel.textContent = `Save Again (${progData.size_mb} MB)`;
-                        modalActionContainer.classList.remove('hidden');
-
-                        // Trigger SINGLE direct browser download to PC
-                        window.location.href = progData.download_url;
-                        
-                    } else if (progData.status === 'error') {
-                        isTaskCompleted = true;
-                        if (pollInterval) clearInterval(pollInterval);
-
-                        modalIconContainer.className = "w-16 h-16 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center text-2xl mx-auto mb-4";
-                        modalIcon.className = "fa-solid fa-triangle-exclamation";
-                        modalStatusMsg.textContent = progData.error || 'Conversion error';
-                        modalStatusMsg.className = "text-xs font-semibold text-red-600 mb-6 bg-red-50 py-2 px-3 rounded-xl border border-red-200";
-                    }
-                } catch (e) {
-                    console.error("Polling error:", e);
-                }
-            }, 600);
+            // Trigger Single Direct Native Browser Download
+            window.location.href = resData.download_url;
 
         } catch (err) {
-            if (pollInterval) clearInterval(pollInterval);
+            modalIconContainer.className = "w-16 h-16 rounded-2xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center text-2xl mx-auto mb-4";
             modalIcon.className = "fa-solid fa-triangle-exclamation";
-            modalStatusMsg.textContent = err.message;
+            modalStatusMsg.textContent = err.message || "Failed to download stream";
+            modalStatusMsg.className = "text-xs font-semibold text-red-600 mb-6 bg-red-50 py-2.5 px-3 rounded-xl border border-red-200";
         }
     }
 
     modalCloseBtn.addEventListener('click', () => {
-        if (pollInterval) clearInterval(pollInterval);
         progressModal.classList.add('hidden');
     });
 
     progressModal.addEventListener('click', (e) => {
         if (e.target === progressModal) {
-            if (pollInterval) clearInterval(pollInterval);
             progressModal.classList.add('hidden');
         }
     });

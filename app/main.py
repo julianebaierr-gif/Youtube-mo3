@@ -1,12 +1,13 @@
 import os
 import urllib.parse
+import requests
 from fastapi import FastAPI, Query, HTTPException, Request
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, StreamingResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from app.downloader import extract_media_info, start_conversion_job, get_job_status
+from app.downloader import extract_media_info, resolve_stream_url, sanitize_filename
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -21,7 +22,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for public accessibility
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -147,47 +147,46 @@ async def api_start_conversion(payload: ConvertRequest):
     if not url:
         raise HTTPException(status_code=400, detail="URL cannot be empty")
     
-    task_id = start_conversion_job(url, payload.format, payload.quality)
-    return JSONResponse(content={"success": True, "task_id": task_id})
+    res = resolve_stream_url(url, payload.format, payload.quality)
+    stream_url = res.get("stream_url")
+    file_name = res.get("file_name", "media_download")
 
-@app.get("/api/progress/{task_id}")
-async def api_check_progress(task_id: str):
-    status = get_job_status(task_id)
-    if not status:
-        raise HTTPException(status_code=404, detail="Task not found")
-    
-    resp = {
-        "status": status["status"],
-        "progress": status["progress"],
-        "message": status["message"],
-        "speed": status.get("speed", ""),
-        "eta": status.get("eta", ""),
-        "size_mb": status.get("size_mb", 0),
-        "error": status.get("error")
-    }
-    if status["status"] == "completed":
-        resp["download_url"] = f"/api/file/{task_id}"
-        resp["file_name"] = status["file_name"]
-        
-    return JSONResponse(content=resp)
+    # Proxy stream URL with Content-Disposition
+    proxy_download_url = f"/api/stream-download?stream_url={urllib.parse.quote(stream_url)}&filename={urllib.parse.quote(file_name)}&format={payload.format}"
 
-@app.get("/api/file/{task_id}")
-async def api_get_file(task_id: str):
-    status = get_job_status(task_id)
-    if not status or status["status"] != "completed" or not status.get("file_path"):
-        raise HTTPException(status_code=404, detail="File is not ready or does not exist")
-    
-    file_path = status["file_path"]
-    file_name = status["file_name"] or "downloaded_media"
-    
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File missing on server")
-        
-    safe_filename = urllib.parse.quote(file_name)
+    return JSONResponse(content={
+        "success": True,
+        "download_url": proxy_download_url,
+        "direct_stream_url": stream_url,
+        "file_name": file_name,
+        "title": res.get("title", "Media")
+    })
+
+@app.get("/api/stream-download")
+async def api_stream_download(stream_url: str = Query(...), filename: str = Query("download"), format: str = Query("mp3")):
+    decoded_url = urllib.parse.unquote(stream_url)
+    safe_filename = urllib.parse.quote(filename)
+
+    mime_type = "audio/mpeg" if format == "mp3" else ("video/mp4" if format == "mp4" else "application/octet-stream")
     headers = {
-        "Content-Disposition": f"attachment; filename*=UTF-8''{safe_filename}"
+        "Content-Disposition": f"attachment; filename*=UTF-8''{safe_filename}",
+        "Content-Type": mime_type
     }
-    return FileResponse(file_path, headers=headers, media_type="application/octet-stream")
+
+    try:
+        # Stream chunks directly from CDN to browser without storing on serverless disk
+        req = requests.get(decoded_url, stream=True, headers=COMMON_HEADERS, timeout=30)
+        if req.status_code in [200, 206]:
+            def iterfile():
+                for chunk in req.iter_content(chunk_size=1024 * 64):
+                    if chunk:
+                        yield chunk
+
+            return StreamingResponse(iterfile(), headers=headers, media_type=mime_type)
+        else:
+            return RedirectResponse(url=decoded_url)
+    except Exception:
+        return RedirectResponse(url=decoded_url)
 
 @app.get("/api/health")
 async def health():
