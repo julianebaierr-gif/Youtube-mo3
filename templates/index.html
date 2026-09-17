@@ -278,25 +278,22 @@
         }
         .seo-article table {
             width: 100%;
+            min-width: 540px;
             border-collapse: collapse;
-            margin: 1.75rem 0;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05);
             border: 1px solid #e2e8f0;
         }
         .seo-article th {
             background-color: #0f172a;
             color: #ffffff;
-            padding: 14px 18px;
+            padding: 12px 14px;
             font-weight: 700;
-            font-size: 0.875rem;
+            font-size: 0.825rem;
             text-align: left;
         }
         .seo-article td {
-            padding: 14px 18px;
+            padding: 12px 14px;
             border: 1px solid #e2e8f0;
-            font-size: 0.875rem;
+            font-size: 0.825rem;
             color: #334155;
         }
         .seo-article tr:nth-child(even) {
@@ -306,6 +303,44 @@
             background-color: #ffffff;
         }
 
+        /* Universal Device & Mobile Touch Responsive Optimization */
+        @media (max-width: 640px) {
+            .seo-article h2 {
+                font-size: 1.4rem;
+                margin-top: 1.75rem;
+                margin-bottom: 0.75rem;
+            }
+            .seo-article h3 {
+                font-size: 1.15rem;
+                margin-top: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .seo-article p, .seo-article ul, .seo-article ol {
+                font-size: 0.925rem;
+                line-height: 1.7;
+            }
+            .seo-article table {
+                font-size: 0.75rem;
+            }
+            .seo-article th, .seo-article td {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Prevent text size adjustment on orientation change & enable smooth touch momentum scrolling */
+        html {
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+
+        /* Auto horizontal scrolling wrapper for tables on mobile */
+        .seo-article > table {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative bg-grid-dots">
