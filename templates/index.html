@@ -261,6 +261,85 @@
         ::-webkit-scrollbar-track { background: #f8fafc; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+        /* High-End SEO Article Typography & Spacing */
+        .seo-article h2 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+            margin-top: 2.75rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.3;
+        }
+        .seo-article h2:first-child {
+            margin-top: 0;
+        }
+        .seo-article h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 2.25rem;
+            margin-bottom: 0.875rem;
+            line-height: 1.4;
+        }
+        .seo-article p {
+            font-size: 1rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+        .seo-article ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #475569;
+            line-height: 1.8;
+        }
+        .seo-article ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #475569;
+            line-height: 1.8;
+        }
+        .seo-article li {
+            margin-bottom: 0.5rem;
+        }
+        .seo-article strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .seo-article table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.75rem 0;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px -3px rgba(15, 23, 42, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .seo-article th {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-align: left;
+        }
+        .seo-article td {
+            padding: 14px 18px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.875rem;
+            color: #334155;
+        }
+        .seo-article tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .seo-article tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative bg-grid-dots">
@@ -641,7 +720,7 @@
 
         <!-- SEO ARTICLE & SEMANTIC KEYWORD CONTENT SECTION -->
         <section class="py-16 bg-white/80 border-t border-slate-200/80">
-            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="seo-article max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {{ seo.article_html | safe }}
             </div>
         </section>
