@@ -57,9 +57,9 @@ async def youtube_mp3_page(request: Request):
 async def youtube_mp4_page(request: Request):
     return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-to-mp4"]})
 
-@app.get("/youtube-to-mp3-320kbps", response_class=HTMLResponse)
-async def youtube_320k_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-320kbps"]})
+@app.get("/youtube-to-mp3-320kbps")
+async def youtube_320k_redirect():
+    return RedirectResponse(url="/youtube-to-mp3", status_code=301)
 
 @app.get("/tiktok-downloader")
 @app.get("/instagram-downloader")

@@ -86,13 +86,10 @@ def get_standard_formats():
     ]
 
     audio_formats = [
-        {"format": "mp3", "quality": "320kbps", "label": "MP3 - 320 kbps (Extreme Studio HQ)", "bitrate": "320", "tag": "Studio Master", "badge": "320k HQ", "is_popular": True},
-        {"format": "mp3", "quality": "256kbps", "label": "MP3 - 256 kbps (High Quality)", "bitrate": "256", "tag": "High Fidelity", "badge": "256k", "is_popular": False},
-        {"format": "mp3", "quality": "192kbps", "label": "MP3 - 192 kbps (Standard)", "bitrate": "192", "tag": "Standard", "badge": "192k", "is_popular": False},
-        {"format": "mp3", "quality": "128kbps", "label": "MP3 - 128 kbps (Fast Download)", "bitrate": "128", "tag": "Compact", "badge": "128k", "is_popular": False},
-        {"format": "m4a", "quality": "Original", "label": "M4A / AAC Audio (Original Bitrate)", "bitrate": "original", "tag": "Native Stream", "badge": "M4A", "is_popular": False},
-        {"format": "flac", "quality": "Lossless", "label": "FLAC Audio (Lossless Hi-Res)", "bitrate": "flac", "tag": "Audiophile", "badge": "FLAC", "is_popular": False},
-        {"format": "wav", "quality": "Lossless", "label": "WAV Audio (Uncompressed Studio)", "bitrate": "wav", "tag": "Studio WAV", "badge": "WAV", "is_popular": False}
+        {"format": "mp3", "quality": "320kbps", "label": "MP3 - 320 kbps (High Quality)", "bitrate": "320", "tag": "320 kbps", "badge": "320k", "is_popular": True},
+        {"format": "mp3", "quality": "256kbps", "label": "MP3 - 256 kbps (Standard HQ)", "bitrate": "256", "tag": "256 kbps", "badge": "256k", "is_popular": False},
+        {"format": "mp3", "quality": "192kbps", "label": "MP3 - 192 kbps (Medium)", "bitrate": "192", "tag": "192 kbps", "badge": "192k", "is_popular": False},
+        {"format": "mp3", "quality": "128kbps", "label": "MP3 - 128 kbps (Fast Download)", "bitrate": "128", "tag": "128 kbps", "badge": "128k", "is_popular": False}
     ]
 
     return resolution_tiers, audio_formats
