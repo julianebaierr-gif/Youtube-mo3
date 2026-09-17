@@ -143,24 +143,36 @@ async def api_extract(payload: ExtractRequest):
 
 @app.post("/api/convert")
 async def api_start_conversion(payload: ConvertRequest):
-    url = payload.url.strip()
-    if not url:
-        raise HTTPException(status_code=400, detail="URL cannot be empty")
-    
-    res = resolve_stream_url(url, payload.format, payload.quality)
-    stream_url = res.get("stream_url")
-    file_name = res.get("file_name", "media_download")
+    try:
+        url = payload.url.strip()
+        if not url:
+            return JSONResponse(status_code=400, content={"success": False, "error": "URL cannot be empty"})
+        
+        res = resolve_stream_url(url, payload.format, payload.quality)
+        if not res.get("success") or not res.get("stream_url"):
+            return JSONResponse(status_code=400, content={
+                "success": False,
+                "error": res.get("error") or "Unable to extract direct stream. Please try another format or link."
+            })
 
-    # Proxy stream URL with Content-Disposition
-    proxy_download_url = f"/api/stream-download?stream_url={urllib.parse.quote(stream_url)}&filename={urllib.parse.quote(file_name)}&format={payload.format}"
+        stream_url = res["stream_url"]
+        file_name = res.get("file_name", "media_download")
 
-    return JSONResponse(content={
-        "success": True,
-        "download_url": proxy_download_url,
-        "direct_stream_url": stream_url,
-        "file_name": file_name,
-        "title": res.get("title", "Media")
-    })
+        # Proxy stream URL with Content-Disposition
+        proxy_download_url = f"/api/stream-download?stream_url={urllib.parse.quote(stream_url)}&filename={urllib.parse.quote(file_name)}&format={payload.format}"
+
+        return JSONResponse(content={
+            "success": True,
+            "download_url": proxy_download_url,
+            "direct_stream_url": stream_url,
+            "file_name": file_name,
+            "title": res.get("title", "Media")
+        })
+    except Exception as e:
+        return JSONResponse(status_code=400, content={
+            "success": False,
+            "error": f"Conversion error: {str(e)}"
+        })
 
 @app.get("/api/stream-download")
 async def api_stream_download(stream_url: str = Query(...), filename: str = Query("download"), format: str = Query("mp3")):

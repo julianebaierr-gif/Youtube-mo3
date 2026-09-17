@@ -328,7 +328,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
 
-            const resData = await resp.json();
+            let resData;
+            try {
+                resData = await resp.json();
+            } catch (e) {
+                throw new Error("Conversion server is currently processing. Please try again.");
+            }
+
             if (!resp.ok || !resData.success) {
                 throw new Error(resData.error || "Download resolution failed");
             }
