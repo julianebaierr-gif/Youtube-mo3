@@ -165,17 +165,30 @@ async def api_start_conversion(payload: ConvertRequest):
 @app.get("/api/stream-download")
 async def api_stream_download(stream_url: str = Query(...), filename: str = Query("download"), format: str = Query("mp3")):
     decoded_url = urllib.parse.unquote(stream_url)
-    safe_filename = urllib.parse.quote(filename)
+    
+    # Ensure filename has extension
+    ext = format.lower()
+    clean_name = filename if filename.endswith(f".{ext}") else f"{filename}.{ext}"
+    safe_filename = urllib.parse.quote(clean_name)
 
-    mime_type = "audio/mpeg" if format == "mp3" else ("video/mp4" if format == "mp4" else "application/octet-stream")
+    mime_map = {
+        "mp3": "audio/mpeg",
+        "m4a": "audio/mp4",
+        "wav": "audio/wav",
+        "flac": "audio/flac",
+        "mp4": "video/mp4"
+    }
+    mime_type = mime_map.get(ext, "application/octet-stream")
+
     headers = {
-        "Content-Disposition": f"attachment; filename*=UTF-8''{safe_filename}",
-        "Content-Type": mime_type
+        "Content-Disposition": f'attachment; filename="{clean_name}"; filename*=UTF-8\'\'{safe_filename}',
+        "Content-Type": mime_type,
+        "Cache-Control": "no-cache"
     }
 
     try:
-        # Stream chunks directly from CDN to browser without storing on serverless disk
-        req = requests.get(decoded_url, stream=True, headers=COMMON_HEADERS, timeout=30)
+        # Stream chunks directly to client browser
+        req = requests.get(decoded_url, stream=True, headers=COMMON_HEADERS, timeout=45)
         if req.status_code in [200, 206]:
             def iterfile():
                 for chunk in req.iter_content(chunk_size=1024 * 64):
@@ -185,7 +198,7 @@ async def api_stream_download(stream_url: str = Query(...), filename: str = Quer
             return StreamingResponse(iterfile(), headers=headers, media_type=mime_type)
         else:
             return RedirectResponse(url=decoded_url)
-    except Exception:
+    except Exception as e:
         return RedirectResponse(url=decoded_url)
 
 @app.get("/api/health")
