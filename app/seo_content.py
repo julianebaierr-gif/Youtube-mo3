@@ -5,8 +5,8 @@
 
 SEO_PAGES = {
     "home": {
-        "title": 'YouTube Downloader & Video Converter | Free Online MP3 MP4 Download',
-        "meta_desc": 'Free youtube downloader to convert youtube to mp3 and mp4 online. Download youtube videos in 320kbps MP3 audio and 1080p 4K MP4 video. Fast, safe, browser-based video downloading tool.',
+        "title": 'YouTube Downloader & Converter | Free MP3 & MP4',
+        "meta_desc": 'Free youtube downloader to convert youtube to mp3 and mp4. Download youtube videos in 320kbps MP3 audio and 1080p 4K MP4 video fast and free online.',
         "h1": 'YouTube to MP3 and MP4 Converter',
         "subtitle": 'Save 320kbps MP3 audio or download 1080p and 4K MP4 video directly in your web browser. Free online video downloader compatible with phones and computers.',
         "badge": 'Free Online Video Converter',
@@ -114,8 +114,8 @@ SEO_PAGES = {
         ]
     },
     "youtube-to-mp3": {
-        "title": 'YouTube to MP3 Converter | Free 320kbps MP3 Downloader Online',
-        "meta_desc": 'Convert youtube to mp3 online free. Save 320kbps high quality mp3 audio from YouTube videos, Music tracks, and Shorts. Fast youtube mp3 converter with automatic song tags.',
+        "title": 'YouTube to MP3 Converter | Free 320kbps MP3',
+        "meta_desc": 'Convert youtube to mp3 online free. Save 320kbps high quality mp3 audio from YouTube videos and Shorts with automatic song tags and album art.',
         "h1": 'YouTube to MP3 Converter',
         "subtitle": 'Convert YouTube videos and Shorts into clean 320kbps MP3 audio files with automated song tags and album artwork. Free youtube mp3 downloader with unlimited conversions.',
         "badge": 'Free MP3 Converter (320kbps)',
@@ -223,8 +223,8 @@ SEO_PAGES = {
         ]
     },
     "youtube-to-mp4": {
-        "title": 'YouTube to MP4 Downloader | Free HD 1080p 4K Video Converter Online',
-        "meta_desc": 'Convert youtube to mp4 online free. Download YouTube videos in 1080p Full HD, 2K, and 4K with 60fps. Fast youtube mp4 converter with Smart TV and USB drive playback support.',
+        "title": 'YouTube to MP4 Downloader | Free 1080p 4K MP4',
+        "meta_desc": 'Convert youtube to mp4 online free. Download YouTube videos in 1080p Full HD, 2K, and 4K with 60fps. Fast youtube mp4 converter for all devices.',
         "h1": 'YouTube to MP4 HD Video Downloader',
         "subtitle": 'Download YouTube videos and Shorts in 1080p Full HD, 2K, and 4K resolutions with smooth 60fps frame rates. Free HD video downloader with synchronized sound.',
         "badge": 'Free HD Video Downloader (MP4)',

@@ -554,7 +554,7 @@
                 <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-2 text-lg">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
-                <h3 class="font-bold text-slate-900 text-base mb-1">Conversion Notice</h3>
+                <p class="font-bold text-slate-900 text-base mb-1">Conversion Notice</p>
                 <p id="error-message" class="text-sm text-red-700 mb-4">Unable to fetch video information.</p>
                 <button onclick="document.getElementById('media-url-input').focus();" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-800 bg-white border border-gray-300 hover:bg-gray-50 transition-all shadow-sm">
                     Try Another Video Link
@@ -577,9 +577,9 @@
                     </div>
 
                     <div class="flex-1 min-w-0">
-                        <h2 id="res-title" class="font-extrabold text-slate-900 text-base sm:text-lg line-clamp-2 leading-snug mb-2">
+                        <p id="res-title" class="font-extrabold text-slate-900 text-base sm:text-lg line-clamp-2 leading-snug mb-2">
                             Media Title
-                        </h2>
+                        </p>
                         <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-3">
                             <span class="flex items-center gap-1 font-semibold text-gray-700">
                                 <i class="fa-solid fa-user-circle text-gray-400"></i>
@@ -661,7 +661,7 @@
                     <i id="modal-icon" class="fa-solid fa-gear fa-spin text-rose-600"></i>
                 </div>
 
-                <h3 id="modal-title" class="font-extrabold text-slate-900 text-base mb-1">Converting</h3>
+                <p id="modal-title" class="font-extrabold text-slate-900 text-base mb-1">Converting</p>
                 <p id="modal-subtitle" class="text-xs text-gray-500 mb-5 truncate">Preparing media stream...</p>
 
                 <!-- Progress Bar -->
@@ -697,7 +697,7 @@
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="text-center max-w-lg mx-auto mb-8">
                     <span class="text-xs font-black uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Simple Process</span>
-                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">How It Works in 3 Steps</h2>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">How It Works in 3 Steps{% if seo.active_tab == 'yt-mp3' %} for MP3{% elif seo.active_tab == 'yt-mp4' %} for MP4{% endif %}</h2>
                     <p class="text-gray-500 text-xs sm:text-sm mt-1">No registration, no software installation, completely free.</p>
                 </div>
 
@@ -739,7 +739,7 @@
         <section class="py-14 max-w-4xl mx-auto px-4 sm:px-6">
             <div class="text-center max-xl mx-auto mb-10">
                 <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">Utility</span>
-                <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">Core Converter Features</h2>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">{% if seo.active_tab == 'yt-mp3' %}YouTube to MP3 Features{% elif seo.active_tab == 'yt-mp4' %}YouTube to MP4 Features{% else %}Core Converter Features{% endif %}</h2>
                 <p class="text-gray-500 text-xs sm:text-sm mt-1">Engineered for clean audio extraction and high-resolution video streams.</p>
             </div>
 
@@ -769,7 +769,7 @@
         <section class="py-14 max-w-3xl mx-auto px-4 sm:px-6">
             <div class="text-center max-w-xl mx-auto mb-8">
                 <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Questions</span>
-                <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">Frequently Asked Questions</h2>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">{% if seo.active_tab == 'yt-mp3' %}YouTube to MP3 FAQ{% elif seo.active_tab == 'yt-mp4' %}YouTube to MP4 FAQ{% else %}Frequently Asked Questions{% endif %}</h2>
                 <p class="text-gray-500 text-xs sm:text-sm mt-1">Practical answers about audio quality, formats, and device compatibility.</p>
             </div>
 
@@ -832,7 +832,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Audio</h4>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Audio</h3>
                     <ul class="space-y-2 text-xs">
                         <li><a href="/youtube-to-mp3" class="hover:text-white transition-colors">YouTube to MP3 Converter</a></li>
                         <li><a href="/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Music to MP3</a></li>
@@ -841,7 +841,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Video</h4>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Video</h3>
                     <ul class="space-y-2 text-xs">
                         <li><a href="/youtube-to-mp4" class="hover:text-white transition-colors">YouTube to MP4 Converter</a></li>
                         <li><a href="/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p Downloader</a></li>
@@ -851,7 +851,7 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Information</h4>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Information</h3>
                     <p class="text-[11px] text-gray-500 leading-relaxed mb-3">
                         Only convert and download media for personal use or where you have rights and permissions.
                     </p>
