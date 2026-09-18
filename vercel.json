@@ -69,6 +69,10 @@
       "dest": "/public/robots.txt"
     },
     {
+      "src": "/google7dfcf5b26cc1f483.html",
+      "dest": "/public/google7dfcf5b26cc1f483.html"
+    },
+    {
       "src": "/public/(.*)",
       "dest": "/public/$1"
     },
