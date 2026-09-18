@@ -26,31 +26,14 @@
     <meta name="twitter:description" content="{{ seo.meta_desc }}">
     <meta name="twitter:image" content="https://www.yt4mp3.cc/static/favicon.svg">
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fff1f2',
-                            100: '#ffe4e6',
-                            500: '#f43f5e',
-                            600: '#e11d48',
-                            700: '#be123c',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Tailwind CSS (Pre-compiled, non-blocking) -->
+    <link rel="stylesheet" href="/static/css/tailwind.min.css">
+
 
     <!-- Preconnect to all Required Origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
 
     <!-- Font-display swap fallback: ensure text visible during webfont load -->
     <style>
