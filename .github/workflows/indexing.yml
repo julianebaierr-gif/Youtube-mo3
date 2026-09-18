@@ -28,4 +28,5 @@ jobs:
         env:
           GOOGLE_INDEXING_KEY: ${{ secrets.GOOGLE_INDEXING_KEY }}
         run: |
-          python scripts/index_now.py
+          echo "$GOOGLE_INDEXING_KEY" > /tmp/google_key.json
+          python scripts/index_now.py /tmp/google_key.json

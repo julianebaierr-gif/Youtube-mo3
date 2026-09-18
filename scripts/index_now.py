@@ -8,6 +8,11 @@ SCOPES = ['https://www.googleapis.com/auth/indexing']
 ENDPOINT = 'https://indexing.googleapis.com/v3/urlNotifications:publish'
 
 def get_credentials():
+    # 0. Check CLI arg
+    import sys
+    if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
+        return service_account.Credentials.from_service_account_file(sys.argv[1], scopes=SCOPES)
+
     # 1. First check environment variable (for GitHub Actions Secret)
     secret_env = os.getenv('GOOGLE_INDEXING_KEY')
     if secret_env:
@@ -20,6 +25,7 @@ def get_credentials():
     # 2. Check local Downloads folder fallback
     local_paths = [
         r'C:\Users\Admin\Downloads\yt4mp3-509012-44fccbc450ca.json',
+        r'/tmp/google_key.json',
         r'google_indexing_key.json'
     ]
     for p in local_paths:
