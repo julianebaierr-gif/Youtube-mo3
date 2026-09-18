@@ -85,16 +85,16 @@ async def terms_page(request: Request):
 async def privacy_page(request: Request):
     return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["privacy-policy"]})
 
-@app.get("/robots.txt", response_class=HTMLResponse)
+@app.api_route("/robots.txt", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def robots_txt():
     content = """User-agent: *
 Allow: /
 Disallow: /api/
 Sitemap: https://www.yt4mp3.cc/sitemap.xml
 """
-    return HTMLResponse(content=content, media_type="text/plain")
+    return Response(content=content, media_type="text/plain; charset=utf-8")
 
-@app.get("/llms.txt", response_class=HTMLResponse)
+@app.api_route("/llms.txt", methods=["GET", "HEAD"])
 async def llms_txt():
     content = """# YT4MP3
 > Free Online YouTube to MP3 and MP4 Converter
@@ -115,9 +115,9 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 - [Terms of Service](https://www.yt4mp3.cc/terms-of-service): Terms governing the personal and fair use of the converter tool.
 - [Privacy Policy](https://www.yt4mp3.cc/privacy-policy): Privacy practices and data handling information.
 """
-    return HTMLResponse(content=content, media_type="text/plain; charset=utf-8")
+    return Response(content=content, media_type="text/plain; charset=utf-8")
 
-@app.get("/sitemap.xml", response_class=HTMLResponse)
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
 async def sitemap_xml():
     xml = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -158,7 +158,15 @@ async def sitemap_xml():
     <priority>0.5</priority>
   </url>
 </urlset>"""
-    return Response(content=xml, media_type="text/xml; charset=utf-8")
+    return Response(
+        content=xml,
+        media_type="application/xml",
+        headers={
+            "Content-Type": "application/xml; charset=utf-8",
+            "X-Robots-Tag": "noindex, follow",
+            "Cache-Control": "public, max-age=3600"
+        }
+    )
 
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
