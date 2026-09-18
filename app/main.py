@@ -90,7 +90,7 @@ async def robots_txt():
     content = """User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://yt4mp3.cc/sitemap.xml
+Sitemap: https://www.yt4mp3.cc/sitemap.xml
 """
     return HTMLResponse(content=content, media_type="text/plain")
 
@@ -99,37 +99,37 @@ async def sitemap_xml():
     xml = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://yt4mp3.cc/</loc>
+    <loc>https://www.yt4mp3.cc/</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://yt4mp3.cc/youtube-to-mp3</loc>
+    <loc>https://www.yt4mp3.cc/youtube-to-mp3</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://yt4mp3.cc/youtube-to-mp4</loc>
+    <loc>https://www.yt4mp3.cc/youtube-to-mp4</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://yt4mp3.cc/contact-us</loc>
+    <loc>https://www.yt4mp3.cc/contact-us</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://yt4mp3.cc/terms-of-service</loc>
+    <loc>https://www.yt4mp3.cc/terms-of-service</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://yt4mp3.cc/privacy-policy</loc>
+    <loc>https://www.yt4mp3.cc/privacy-policy</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -137,12 +137,50 @@ async def sitemap_xml():
 </urlset>"""
     return HTMLResponse(content=xml, media_type="application/xml")
 
+FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185" />
+      <stop offset="50%" stop-color="#f43f5e" />
+      <stop offset="100%" stop-color="#e11d48" />
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#f43f5e" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Dark tactile badge background -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="#334155" stroke-width="4" opacity="0.6" />
+
+  <!-- Stylized Fast Play Arrow + Audio Wave combination -->
+  <!-- Triangle Play Body with rounded corners -->
+  <path d="M168 136 C168 118 188 108 204 118 L386 238 C400 248 400 264 386 274 L204 394 C188 404 168 394 168 376 Z" 
+        fill="url(#roseGrad)" filter="url(#glow)" />
+
+  <!-- Modern Inset Dynamic Sound Wavebars inside the play icon -->
+  <rect x="220" y="216" width="14" height="80" rx="7" fill="#ffffff" opacity="0.95" />
+  <rect x="246" y="186" width="14" height="140" rx="7" fill="#ffffff" opacity="0.95" />
+  <rect x="272" y="226" width="14" height="60" rx="7" fill="#ffffff" opacity="0.95" />
+
+  <!-- Subtle Cyan Sound Accent Arc on right -->
+  <circle cx="396" cy="180" r="14" fill="url(#blueGrad)" />
+  <circle cx="420" cy="220" r="10" fill="url(#blueGrad)" opacity="0.8" />
+</svg>"""
+
 @app.get("/favicon.ico")
+@app.get("/favicon.svg")
+@app.get("/static/favicon.svg")
 async def favicon():
-    favicon_path = os.path.join(STATIC_DIR, "favicon.svg")
-    if os.path.exists(favicon_path):
-        return FileResponse(favicon_path, media_type="image/svg+xml")
-    raise HTTPException(status_code=404)
+    return HTMLResponse(content=FAVICON_SVG_CONTENT, media_type="image/svg+xml")
 
 @app.get("/youtube-to-mp3-320kbps")
 async def youtube_320k_redirect():
