@@ -96,7 +96,7 @@ def get_standard_formats():
 
 FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY", "fs_sk_8t8c1m9n1d9f5r6h3m4k9a7a8p1o")
 # Set to True when you want to use FastSaver API credits, or False to preserve credits
-ENABLE_FASTSAVER = os.environ.get("ENABLE_FASTSAVER", "false").lower() in ["true", "1", "yes"]
+ENABLE_FASTSAVER = os.environ.get("ENABLE_FASTSAVER", "true").lower() in ["true", "1", "yes"]
 
 FASTSAVER_HEADERS = {
     "x-api-key": FASTSAVER_API_KEY,
