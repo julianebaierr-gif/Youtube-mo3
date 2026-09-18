@@ -122,6 +122,13 @@ async def sitemap_xml():
 </urlset>"""
     return HTMLResponse(content=xml, media_type="application/xml")
 
+@app.get("/favicon.ico")
+async def favicon():
+    favicon_path = os.path.join(STATIC_DIR, "favicon.svg")
+    if os.path.exists(favicon_path):
+        return FileResponse(favicon_path, media_type="image/svg+xml")
+    raise HTTPException(status_code=404)
+
 @app.get("/youtube-to-mp3-320kbps")
 async def youtube_320k_redirect():
     return RedirectResponse(url="/youtube-to-mp3", status_code=301)
