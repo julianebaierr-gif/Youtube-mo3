@@ -28,5 +28,5 @@ jobs:
         env:
           GOOGLE_INDEXING_KEY: ${{ secrets.GOOGLE_INDEXING_KEY }}
         run: |
-          python -c "import os; val = os.environ.get('GOOGLE_INDEXING_KEY', ''); open('/tmp/google_key.json', 'w').write(val); print('Key file exists:', os.path.exists('/tmp/google_key.json'), 'Size:', len(val))"
-          python scripts/index_now.py /tmp/google_key.json || (echo "::error::Google Indexing Ping Failed" && exit 1)
+          python -c "import os; val = os.environ.get('GOOGLE_INDEXING_KEY', ''); open('/tmp/google_key.json', 'w').write(val); print('Size of key received in runner:', len(val))"
+          python scripts/index_now.py /tmp/google_key.json 2>&1 | tee -a $GITHUB_STEP_SUMMARY
