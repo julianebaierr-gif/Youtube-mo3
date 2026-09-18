@@ -117,56 +117,7 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 """
     return Response(content=content, media_type="text/plain; charset=utf-8")
 
-@app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
-async def sitemap_xml():
-    xml = """<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.yt4mp3.cc/</loc>
-    <lastmod>2026-09-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.yt4mp3.cc/youtube-to-mp3</loc>
-    <lastmod>2026-09-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.yt4mp3.cc/youtube-to-mp4</loc>
-    <lastmod>2026-09-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.yt4mp3.cc/contact-us</loc>
-    <lastmod>2026-09-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.yt4mp3.cc/terms-of-service</loc>
-    <lastmod>2026-09-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.yt4mp3.cc/privacy-policy</loc>
-    <lastmod>2026-09-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-</urlset>"""
-    return Response(
-        content=xml,
-        media_type="application/xml",
-        headers={
-            "Content-Type": "application/xml; charset=utf-8",
-            "X-Robots-Tag": "noindex, follow",
-            "Cache-Control": "public, max-age=3600"
-        }
-    )
+
 
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
