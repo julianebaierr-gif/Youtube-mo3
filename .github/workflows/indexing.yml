@@ -28,5 +28,5 @@ jobs:
         env:
           GOOGLE_INDEXING_KEY: ${{ secrets.GOOGLE_INDEXING_KEY }}
         run: |
-          echo "$GOOGLE_INDEXING_KEY" > /tmp/google_key.json
+          python -c "import os; open('/tmp/google_key.json', 'w').write(os.environ.get('GOOGLE_INDEXING_KEY', ''))"
           python scripts/index_now.py /tmp/google_key.json
