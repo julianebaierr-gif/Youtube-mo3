@@ -375,8 +375,32 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between">
             <!-- Brand Logo -->
             <a href="/" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 p-0.5 shadow-sm group-hover:scale-105 transition-transform">
-                    <img src="/static/favicon.svg" alt="YT4MP3 Logo" class="w-full h-full rounded-[10px]">
+                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center">
+                    <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a" />
+                                <stop offset="100%" stop-color="#020617" />
+                            </linearGradient>
+                            <linearGradient id="logoRoseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fb7185" />
+                                <stop offset="50%" stop-color="#f43f5e" />
+                                <stop offset="100%" stop-color="#e11d48" />
+                            </linearGradient>
+                            <linearGradient id="logoBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38bdf8" />
+                                <stop offset="100%" stop-color="#2563eb" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="512" height="512" rx="128" fill="url(#logoBgGrad)" />
+                        <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="#334155" stroke-width="4" opacity="0.6" />
+                        <path d="M168 136 C168 118 188 108 204 118 L386 238 C400 248 400 264 386 274 L204 394 C188 404 168 394 168 376 Z" fill="url(#logoRoseGrad)" />
+                        <rect x="220" y="216" width="14" height="80" rx="7" fill="#ffffff" opacity="0.95" />
+                        <rect x="246" y="186" width="14" height="140" rx="7" fill="#ffffff" opacity="0.95" />
+                        <rect x="272" y="226" width="14" height="60" rx="7" fill="#ffffff" opacity="0.95" />
+                        <circle cx="396" cy="180" r="14" fill="url(#logoBlueGrad)" />
+                        <circle cx="420" cy="220" r="10" fill="url(#logoBlueGrad)" opacity="0.8" />
+                    </svg>
                 </div>
                 <div class="flex items-center tracking-tight">
                     <span class="font-black text-2xl tracking-tighter text-slate-950">YT<span class="text-rose-600">4</span>MP3</span>
@@ -773,8 +797,32 @@
                 
                 <div class="md:col-span-1">
                     <div class="flex items-center gap-2.5 mb-3">
-                        <div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
-                            <img src="/static/favicon.svg" alt="YT4MP3" class="w-full h-full">
+                        <div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="footBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#0f172a" />
+                                        <stop offset="100%" stop-color="#020617" />
+                                    </linearGradient>
+                                    <linearGradient id="footRoseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#fb7185" />
+                                        <stop offset="50%" stop-color="#f43f5e" />
+                                        <stop offset="100%" stop-color="#e11d48" />
+                                    </linearGradient>
+                                    <linearGradient id="footBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8" />
+                                        <stop offset="100%" stop-color="#2563eb" />
+                                    </linearGradient>
+                                </defs>
+                                <rect width="512" height="512" rx="128" fill="url(#footBgGrad)" />
+                                <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="#334155" stroke-width="4" opacity="0.6" />
+                                <path d="M168 136 C168 118 188 108 204 118 L386 238 C400 248 400 264 386 274 L204 394 C188 404 168 394 168 376 Z" fill="url(#footRoseGrad)" />
+                                <rect x="220" y="216" width="14" height="80" rx="7" fill="#ffffff" opacity="0.95" />
+                                <rect x="246" y="186" width="14" height="140" rx="7" fill="#ffffff" opacity="0.95" />
+                                <rect x="272" y="226" width="14" height="60" rx="7" fill="#ffffff" opacity="0.95" />
+                                <circle cx="396" cy="180" r="14" fill="url(#footBlueGrad)" />
+                                <circle cx="420" cy="220" r="10" fill="url(#footBlueGrad)" opacity="0.8" />
+                            </svg>
                         </div>
                         <span class="font-black text-lg tracking-tight text-white">YT<span class="text-rose-500">4</span>MP3</span>
                     </div>

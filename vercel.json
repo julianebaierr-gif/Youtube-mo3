@@ -31,6 +31,10 @@
   ],
   "routes": [
     {
+      "src": "/favicon.ico",
+      "dest": "api/index.py"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },
