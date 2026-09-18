@@ -12,7 +12,7 @@ SEO_PAGES = {
         "badge": 'Free Online Video Converter',
         "placeholder": 'Paste YouTube video, Shorts, or Music URL here...',
         "active_tab": 'all',
-        "canonical_url": 'https://mediaconvert.pro/',
+        "canonical_url": 'https://yt4mp3.cc/',
         "features": [
             {
                 "icon": 'fa-solid fa-bolt',
@@ -121,7 +121,7 @@ SEO_PAGES = {
         "badge": 'Free MP3 Converter (320kbps)',
         "placeholder": 'Paste YouTube video or Shorts link to save MP3...',
         "active_tab": 'yt-mp3',
-        "canonical_url": 'https://mediaconvert.pro/youtube-to-mp3',
+        "canonical_url": 'https://yt4mp3.cc/youtube-to-mp3',
         "features": [
             {
                 "icon": 'fa-solid fa-music',
@@ -230,7 +230,7 @@ SEO_PAGES = {
         "badge": 'Free HD Video Downloader (MP4)',
         "placeholder": 'Paste YouTube video link to download MP4 HD...',
         "active_tab": 'yt-mp4',
-        "canonical_url": 'https://mediaconvert.pro/youtube-to-mp4',
+        "canonical_url": 'https://yt4mp3.cc/youtube-to-mp4',
         "features": [
             {
                 "icon": 'fa-solid fa-film',

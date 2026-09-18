@@ -75,7 +75,7 @@ async def robots_txt():
     content = """User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://mediaconvert.pro/sitemap.xml
+Sitemap: https://yt4mp3.cc/sitemap.xml
 """
     return HTMLResponse(content=content, media_type="text/plain")
 
@@ -84,37 +84,37 @@ async def sitemap_xml():
     xml = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mediaconvert.pro/</loc>
+    <loc>https://yt4mp3.cc/</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://mediaconvert.pro/youtube-to-mp3</loc>
+    <loc>https://yt4mp3.cc/youtube-to-mp3</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mediaconvert.pro/youtube-to-mp4</loc>
+    <loc>https://yt4mp3.cc/youtube-to-mp4</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://mediaconvert.pro/contact-us</loc>
+    <loc>https://yt4mp3.cc/contact-us</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://mediaconvert.pro/terms-of-service</loc>
+    <loc>https://yt4mp3.cc/terms-of-service</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://mediaconvert.pro/privacy-policy</loc>
+    <loc>https://yt4mp3.cc/privacy-policy</loc>
     <lastmod>2026-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -217,4 +217,4 @@ async def api_stream_download(stream_url: str = Query(...), filename: str = Quer
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "service": "MediaConvert Pro Engine"}
+    return {"status": "ok", "service": "YT4MP3 Engine"}
