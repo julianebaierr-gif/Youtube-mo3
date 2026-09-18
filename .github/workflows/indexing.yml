@@ -1,0 +1,31 @@
+name: Google Instant Indexing
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Run once every 24 hours to ensure Googlebot freshness
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install google-auth
+
+      - name: Run Google Indexing API ping
+        env:
+          GOOGLE_INDEXING_KEY: ${{ secrets.GOOGLE_INDEXING_KEY }}
+        run: |
+          python scripts/index_now.py
