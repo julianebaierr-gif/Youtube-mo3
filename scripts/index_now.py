@@ -70,4 +70,10 @@ def ping_google_indexing():
             print(f"[ERROR {e.code}] {url} -> {err}")
 
 if __name__ == '__main__':
-    ping_google_indexing()
+    try:
+        ping_google_indexing()
+    except Exception as err:
+        import traceback
+        print("ERROR IN PING_GOOGLE_INDEXING:")
+        traceback.print_exc()
+        raise
