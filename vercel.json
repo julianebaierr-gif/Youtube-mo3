@@ -27,6 +27,20 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
+    },
+    {
+      "source": "/index_sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
+    },
     {
       "source": "/robots.txt",
       "headers": [
@@ -42,6 +56,10 @@
     }
   ],
   "routes": [
+    {
+      "src": "/index_sitemap.xml",
+      "dest": "/public/index_sitemap.xml"
+    },
     {
       "src": "/robots.txt",
       "dest": "/public/robots.txt"
