@@ -90,7 +90,6 @@ async def robots_txt():
     content = """User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://www.yt4mp3.cc/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8")
 
