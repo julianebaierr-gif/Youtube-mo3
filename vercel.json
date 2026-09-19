@@ -36,8 +36,12 @@
           "value": "application/xml; charset=utf-8"
         },
         {
+          "key": "Content-Disposition",
+          "value": "inline"
+        },
+        {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
+          "value": "no-cache, no-store, must-revalidate"
         }
       ]
     },
