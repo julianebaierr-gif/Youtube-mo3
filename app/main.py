@@ -45,10 +45,11 @@ async def add_security_headers(request: Request, call_next):
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Content-Security-Policy"] = (
         "default-src 'self' 'unsafe-inline' 'unsafe-eval' "
-        "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.ytimg.com https://*.googlevideo.com; "
+        "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.ytimg.com https://*.googlevideo.com https://analytics.ahrefs.com; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com; "
         "img-src 'self' data: https:; "
         "media-src 'self' blob: https:; "
-        "connect-src 'self' https:;"
+        "connect-src 'self' https: https://analytics.ahrefs.com;"
     )
     return response
 
