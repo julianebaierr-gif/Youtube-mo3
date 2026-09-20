@@ -49,7 +49,8 @@ async def add_security_headers(request: Request, call_next):
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com; "
         "img-src 'self' data: https:; "
         "media-src 'self' blob: https:; "
-        "connect-src 'self' https: https://analytics.ahrefs.com;"
+        "connect-src 'self' https: https://noembed.com https://analytics.ahrefs.com; "
+        "frame-src 'self' https://loader.to;"
     )
     return response
 
