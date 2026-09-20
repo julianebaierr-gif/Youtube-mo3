@@ -53,3 +53,5 @@ test_dl.*
 # Operating System
 .DS_Store
 Thumbs.db
+
+.vercel
