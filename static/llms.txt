@@ -10,9 +10,9 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 - Fully compatible with desktop and mobile devices including Android, iOS, Windows, and macOS.
 
 ## Available Pages
-- [Home](https://www.yt4mp3.cc/): Free Online YouTube to MP3 and MP4 Converter.
-- [YouTube to MP3 Converter](https://www.yt4mp3.cc/youtube-to-mp3): Convert YouTube videos and music into high quality 320kbps MP3 audio files.
-- [YouTube to MP4 Converter](https://www.yt4mp3.cc/youtube-to-mp4): Download YouTube videos in 1080p, 720p, and 4K MP4 format.
-- [Contact Us](https://www.yt4mp3.cc/contact-us): Get in touch with our team for questions, feedback, or DMCA inquiries.
-- [Terms of Service](https://www.yt4mp3.cc/terms-of-service): Terms governing the personal and fair use of the converter tool.
-- [Privacy Policy](https://www.yt4mp3.cc/privacy-policy): Privacy practices and data handling information.
+- [Home](https://www.yt4mp3.com/): Free Online YouTube to MP3 and MP4 Converter.
+- [YouTube to MP3 Converter](https://www.yt4mp3.com/youtube-to-mp3): Convert YouTube videos and music into high quality 320kbps MP3 audio files.
+- [YouTube to MP4 Converter](https://www.yt4mp3.com/youtube-to-mp4): Download YouTube videos in 1080p, 720p, and 4K MP4 format.
+- [Contact Us](https://www.yt4mp3.com/contact-us): Get in touch with our team for questions, feedback, or DMCA inquiries.
+- [Terms of Service](https://www.yt4mp3.com/terms-of-service): Terms governing the personal and fair use of the converter tool.
+- [Privacy Policy](https://www.yt4mp3.com/privacy-policy): Privacy practices and data handling information.

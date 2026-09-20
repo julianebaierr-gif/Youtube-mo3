@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-SEO content dictionary for yt4mp3.cc pages.
+SEO content dictionary for yt4mp3.com pages.
 Topical clusters enriched from Ahrefs and Semrush keywords.
 100% human tone with 0% AI detected vocabulary.
 """
@@ -14,7 +14,7 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
           'badge': 'Free Online Video Converter',
           'placeholder': 'Paste YouTube video, Shorts, or Music URL here...',
           'active_tab': 'all',
-          'canonical_url': 'https://www.yt4mp3.cc/',
+          'canonical_url': 'https://www.yt4mp3.com/',
           'features': [{'icon': 'fa-solid fa-bolt',
                         'title': 'Fast Server Processing',
                         'desc': 'Audio and video streams are prepared directly on cloud servers, saving battery and '
@@ -375,7 +375,7 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
                           '<thead>\n'
                           '<tr>\n'
                           '<th>Feature</th>\n'
-                          '<th>yt4mp3.cc</th>\n'
+                          '<th>yt4mp3.com</th>\n'
                           '<th>Older Converters (ytmp3 / y2mate)</th>\n'
                           '</tr>\n'
                           '</thead>\n'
@@ -492,7 +492,7 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
                     'badge': 'Free MP3 Converter (320kbps)',
                     'placeholder': 'Paste YouTube video or Shorts link to save MP3...',
                     'active_tab': 'yt-mp3',
-                    'canonical_url': 'https://www.yt4mp3.cc/youtube-to-mp3',
+                    'canonical_url': 'https://www.yt4mp3.com/youtube-to-mp3',
                     'features': [{'icon': 'fa-solid fa-music',
                                   'title': '320kbps MP3 Quality',
                                   'desc': 'Transcode audio using high grade MP3 encoders with constant bitrate to '
@@ -939,7 +939,7 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
                     'badge': 'Free HD Video Downloader (MP4)',
                     'placeholder': 'Paste YouTube video link to download MP4 HD...',
                     'active_tab': 'yt-mp4',
-                    'canonical_url': 'https://www.yt4mp3.cc/youtube-to-mp4',
+                    'canonical_url': 'https://www.yt4mp3.com/youtube-to-mp4',
                     'features': [{'icon': 'fa-solid fa-film',
                                   'title': '1080p, 2K & 4K Video',
                                   'desc': 'Download youtube videos in 720p HD, 1080p Full HD, 1440p 2K, and 2160p 4K '
