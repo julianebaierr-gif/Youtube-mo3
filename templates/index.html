@@ -1052,15 +1052,22 @@
                         platform: { name: 'YouTube' },
                         prewarmedPromise: prewarmedPromise,
                         audio_formats: [
-                            { format: 'mp3', quality: '320kbps', label: 'MP3 High Quality', is_popular: true },
-                            { format: 'mp3', quality: '256kbps', label: 'MP3 Standard', is_popular: false },
-                            { format: 'mp3', quality: '128kbps', label: 'MP3 Compact', is_popular: false }
+                            { format: 'mp3', quality: '320kbps', label: 'MP3 Studio (320kbps)', sub: '320 kbps • MP3 Audio', is_popular: true, btn_label: 'Get MP3' },
+                            { format: 'mp3', quality: '256kbps', label: 'MP3 Standard (256kbps)', sub: '256 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
+                            { format: 'mp3', quality: '128kbps', label: 'MP3 Compact (128kbps)', sub: '128 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
+                            { format: 'm4a', quality: 'm4a', label: 'M4A Audio (Apple AAC)', sub: 'High Fidelity • Apple Compatible', is_popular: false, badge: 'Fast Stream', btn_label: 'Get M4A' },
+                            { format: 'flac', quality: 'flac', label: 'FLAC Lossless', sub: 'Hi-Res Lossless Audio', is_popular: false, badge: 'Hi-Fi', btn_label: 'Get FLAC' },
+                            { format: 'wav', quality: 'wav', label: 'WAV Studio Audio', sub: 'Uncompressed Master Audio', is_popular: false, badge: 'Master', btn_label: 'Get WAV' },
+                            { format: 'aac', quality: 'aac', label: 'AAC Audio', sub: 'Crystal Clear Audio Stream', is_popular: false, badge: 'Clean', btn_label: 'Get AAC' }
                         ],
                         video_formats: [
-                            { format: 'mp4', quality: '1080p', label: 'Full HD 1080p', tag: '1080p', badge: '1080p HD', size: 'High Definition' },
-                            { format: 'mp4', quality: '720p', label: 'HD 720p', tag: '720p', badge: '720p HD', size: 'Standard HD' },
-                            { format: 'mp4', quality: '480p', label: 'SD 480p', tag: '480p', badge: '480p SD', size: 'Compact' },
-                            { format: 'mp4', quality: '360p', label: 'Mobile 360p', tag: '360p', badge: '360p SD', size: 'Low Bandwidth' }
+                            { format: 'mp4', quality: '4k', label: '4K Ultra HD (2160p)', tag: '4K UHD', badge: 'Ultra HD 4K', size: 'Max Detail', is_popular: true },
+                            { format: 'mp4', quality: '1440', label: '2K Quad HD (1440p)', tag: '1440p QHD', badge: '2K QHD', size: 'Super Sharp', is_popular: false },
+                            { format: 'mp4', quality: '1080', label: 'Full HD (1080p)', tag: '1080p FHD', badge: '1080p FHD', size: 'Crisp HD', is_popular: true },
+                            { format: 'mp4', quality: '720', label: 'HD Ready (720p)', tag: '720p HD', badge: '720p HD', size: 'Standard HD', is_popular: false },
+                            { format: 'mp4', quality: '480', label: 'SD Quality (480p)', tag: '480p SD', badge: '480p SD', size: 'Compact Size', is_popular: false },
+                            { format: 'mp4', quality: '360', label: 'Mobile Saver (360p)', tag: '360p Mobile', badge: '360p SD', size: 'Low Bandwidth', is_popular: false },
+                            { format: 'webm', quality: 'webm', label: 'WebM Video (VP9)', tag: 'WebM Modern', badge: 'WebM Codec', size: 'Optimized', is_popular: false }
                         ]
                     };
 
@@ -1102,22 +1109,23 @@
                                 <div class="flex items-center gap-2">
                                     <span class="font-bold text-slate-900 text-sm">${fmt.label}</span>
                                     ${fmt.is_popular ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700">Recommended</span>' : ''}
+                                    ${fmt.badge ? `<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-200">${fmt.badge}</span>` : ''}
                                 </div>
-                                <p class="text-xs text-gray-500">${fmt.quality} • MP3 Audio</p>
+                                <p class="text-xs text-gray-500">${fmt.sub}</p>
                             </div>
                         </div>
                         <div>
                             <button class="download-action-btn px-4 py-2 text-xs font-bold btn-download-green flex items-center gap-1.5" 
                                 data-format="${fmt.format}" data-quality="${fmt.quality}">
                                 <i class="fa-solid fa-download text-xs"></i>
-                                <span>Get MP3</span>
+                                <span>${fmt.btn_label || 'Get Audio'}</span>
                             </button>
                         </div>
                     `;
 
                     row.querySelector('.download-action-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
-                        triggerDirectDownload(fmt.format, fmt.quality, `MP3 (${fmt.quality})`);
+                        triggerDirectDownload(fmt.format, fmt.quality, fmt.label);
                     });
 
                     audioFormatsContainer.appendChild(row);
@@ -1138,21 +1146,21 @@
                                     <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-blue-100 text-blue-700">${fmt.badge}</span>
                                     ${fmt.size ? `<span class="text-xs text-gray-400 font-mono">~${fmt.size}</span>` : ''}
                                 </div>
-                                <p class="text-xs text-gray-500">${fmt.tag} • MP4 Video</p>
+                                <p class="text-xs text-gray-500">${fmt.tag} • High Quality Video</p>
                             </div>
                         </div>
                         <div>
                             <button class="download-action-btn px-4 py-2 text-xs font-bold btn-download-blue flex items-center gap-1.5" 
                                 data-format="${fmt.format}" data-quality="${fmt.quality}">
                                 <i class="fa-solid fa-download text-xs"></i>
-                                <span>Get MP4</span>
+                                <span>Get ${fmt.format.toUpperCase()}</span>
                             </button>
                         </div>
                     `;
 
                     row.querySelector('.download-action-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
-                        triggerDirectDownload(fmt.format, fmt.quality, `MP4 (${fmt.quality})`);
+                        triggerDirectDownload(fmt.format, fmt.quality, fmt.label);
                     });
 
                     videoFormatsContainer.appendChild(row);
@@ -1189,8 +1197,8 @@
             async function triggerDirectDownload(format, quality, label) {
                 if (!currentMediaData) return;
 
-                const safeFormat = (format || 'mp4').toString();
-                const safeQuality = (quality || '1080p').toString();
+                const safeFormat = (format || 'mp4').toString().toLowerCase();
+                const safeQuality = (quality || '1080').toString().toLowerCase();
                 const safeLabel = label || `${safeFormat.toUpperCase()} Download`;
                 const ytId = currentMediaData.id;
                 const ytUrl = `https://www.youtube.com/watch?v=${ytId}`;
@@ -1208,7 +1216,18 @@
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
-                let fmtParam = safeFormat === 'mp3' ? 'mp3' : (safeQuality.replace('p', '') || '720');
+                // Map format and quality cleanly to converter API parameter
+                let fmtParam = 'mp3';
+                if (safeFormat === 'mp3') {
+                    fmtParam = 'mp3';
+                } else if (['m4a', 'flac', 'wav', 'aac', 'opus', 'ogg', 'webm'].includes(safeFormat)) {
+                    fmtParam = safeFormat;
+                } else if (safeFormat === 'mp4') {
+                    const cleanQ = safeQuality.replace('p', '');
+                    fmtParam = cleanQ === '2160' ? '4k' : (cleanQ || '1080');
+                } else {
+                    fmtParam = safeFormat;
+                }
 
                 // Smooth rapid progress animation
                 let curPct = 25;
