@@ -29,7 +29,7 @@
       ]
     },
     {
-      "source": "/index_sitemap.xml",
+      "source": "/sitemap.xml",
       "headers": [
         {
           "key": "Content-Type",
@@ -61,8 +61,8 @@
   ],
   "routes": [
     {
-      "src": "/index_sitemap.xml",
-      "dest": "/public/index_sitemap.xml"
+      "src": "/sitemap.xml",
+      "dest": "/public/sitemap.xml"
     },
     {
       "src": "/robots.txt",

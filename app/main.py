@@ -79,7 +79,7 @@ async def privacy_page(request: Request):
 async def robots_txt():
     content = """User-agent: *
 Allow: /
-Sitemap: https://www.yt4mp3.cc/index_sitemap.xml
+Sitemap: https://www.yt4mp3.cc/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8")
 
