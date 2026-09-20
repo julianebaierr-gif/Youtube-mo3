@@ -1186,57 +1186,109 @@
                 const safeQuality = (quality || '1080p').toString();
                 const safeLabel = label || `${safeFormat.toUpperCase()} Download`;
                 const ytId = currentMediaData.id;
+                const ytUrl = `https://www.youtube.com/watch?v=${ytId}`;
 
                 progressModal.classList.remove('hidden');
                 modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
-                modalProgressBar.style.width = '20%';
-                modalPctText.textContent = '20%';
+                modalProgressBar.style.width = '15%';
+                modalPctText.textContent = '15%';
                 modalSpeedText.textContent = 'High Speed';
-                modalEtaText.textContent = '1s';
-                modalStatusMsg.textContent = 'Generating high-speed stream...';
+                modalEtaText.textContent = '2s';
+                modalStatusMsg.textContent = 'Initiating direct stream converter...';
+                modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200";
                 modalActionContainer.classList.add('hidden');
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
-                // Progress simulation
-                let pct = 20;
-                const interval = setInterval(() => {
-                    pct += 25;
-                    if (pct >= 90) {
-                        pct = 90;
-                        clearInterval(interval);
-                    }
-                    modalProgressBar.style.width = `${pct}%`;
-                    modalPctText.textContent = `${pct}%`;
-                }, 200);
+                let fmtParam = safeFormat === 'mp3' ? 'mp3' : (safeQuality.replace('p', '') || '720');
 
-                // Direct Decentralized Download Provider (High capacity, handles 10,000+ concurrent requests effortlessly)
-                // Fallback direct download link
-                setTimeout(() => {
-                    clearInterval(interval);
+                // Animate progress smoothly while server converts
+                let curPct = 15;
+                const animTimer = setInterval(() => {
+                    if (curPct < 90) {
+                        curPct += Math.floor(Math.random() * 8) + 4;
+                        if (curPct > 90) curPct = 90;
+                        modalProgressBar.style.width = `${curPct}%`;
+                        modalPctText.textContent = `${curPct}%`;
+                    }
+                }, 400);
+
+                function completeDownload(finalDownloadUrl) {
+                    clearInterval(animTimer);
                     modalProgressBar.style.width = '100%';
                     modalPctText.textContent = '100%';
                     modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
                     modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
-                    modalStatusMsg.textContent = `Ready! Downloading ${safeFormat.toUpperCase()} to your device...`;
+                    modalStatusMsg.textContent = `Direct Download Ready! Saving file to your device...`;
                     modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-5 bg-emerald-50 py-2 px-3 rounded-lg border border-emerald-200";
 
-                    // High-capacity public media proxy provider URL for MP3 & MP4
-                    let downloadTargetUrl = "";
-                    if (safeFormat === 'mp3') {
-                        downloadTargetUrl = `https://loader.to/api/button/?url=https://www.youtube.com/watch?v=${ytId}&f=mp3`;
-                    } else {
-                        downloadTargetUrl = `https://loader.to/api/button/?url=https://www.youtube.com/watch?v=${ytId}&f=${safeQuality.replace('p','') || '720'}`;
-                    }
-
-                    modalDownloadLink.href = downloadTargetUrl;
-                    modalBtnLabel.textContent = `Save ${safeFormat.toUpperCase()} to Device`;
+                    modalDownloadLink.href = finalDownloadUrl;
+                    modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()} Now`;
                     modalActionContainer.classList.remove('hidden');
 
-                    // Open direct instant download window
-                    window.open(downloadTargetUrl, '_blank');
-                }, 800);
+                    // Direct 1-Click File Download Trigger without popup window
+                    const dlAnchor = document.createElement('a');
+                    dlAnchor.href = finalDownloadUrl;
+                    dlAnchor.setAttribute('download', '');
+                    dlAnchor.setAttribute('target', '_blank');
+                    dlAnchor.setAttribute('rel', 'noopener noreferrer');
+                    document.body.appendChild(dlAnchor);
+                    dlAnchor.click();
+                    setTimeout(() => dlAnchor.remove(), 1000);
+                }
+
+                try {
+                    // Step 1: Call public converter API in background
+                    const initApiUrl = `https://p.savenow.to/api/v2/download?button=1&format=${fmtParam}&url=${encodeURIComponent(ytUrl)}`;
+                    const initResp = await fetch(initApiUrl);
+                    
+                    if (!initResp.ok) throw new Error('Converter network issue');
+                    const initData = await initResp.json();
+
+                    if (!initData || !initData.id) {
+                        throw new Error('No conversion ID returned');
+                    }
+
+                    const convId = initData.id;
+                    modalStatusMsg.textContent = 'Encoding media stream at high bitrate...';
+
+                    // Step 2: Poll progress in background until stream file is ready
+                    let attempts = 0;
+                    const maxAttempts = 25; // 25 seconds max polling
+                    
+                    const pollProgress = async () => {
+                        attempts++;
+                        try {
+                            const progUrl = `https://p.savenow.to/api/progress?id=${convId}`;
+                            const progResp = await fetch(progUrl);
+                            if (progResp.ok) {
+                                const progData = await progResp.json();
+                                if (progData.download_url && (progData.success === 1 || progData.progress >= 1000)) {
+                                    completeDownload(progData.download_url);
+                                    return;
+                                }
+                            }
+                        } catch (e) {
+                            console.warn('Poll error:', e);
+                        }
+
+                        if (attempts < maxAttempts) {
+                            setTimeout(pollProgress, 1200);
+                        } else {
+                            // Fallback if conversion took longer
+                            const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
+                            completeDownload(fallbackUrl);
+                        }
+                    };
+
+                    setTimeout(pollProgress, 1000);
+
+                } catch (err) {
+                    console.error('Direct download error, falling back:', err);
+                    const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
+                    completeDownload(fallbackUrl);
+                }
             }
 
             modalCloseBtn.addEventListener('click', () => {
