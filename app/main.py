@@ -27,6 +27,17 @@ app.add_middleware(
 )
 
 @app.middleware("http")
+async def domain_redirect_middleware(request: Request, call_next):
+    host = request.headers.get("host", "").lower()
+    # If request comes from the old domain yt4mp3.cc, 301 redirect to www.yt4mp3.com
+    if "yt4mp3.cc" in host:
+        new_url = f"https://www.yt4mp3.com{request.url.path}"
+        if request.url.query:
+            new_url += f"?{request.url.query}"
+        return RedirectResponse(url=new_url, status_code=301)
+    return await call_next(request)
+
+@app.middleware("http")
 async def add_security_headers(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
