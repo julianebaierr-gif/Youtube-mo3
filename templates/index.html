@@ -697,11 +697,11 @@
 
                 <!-- Action Button -->
                 <div id="modal-action-container" class="hidden space-y-2">
-                    <a id="modal-download-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl font-bold text-white text-sm bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-arrow-down"></i>
-                        <span id="modal-btn-label">Save File to Device</span>
-                    </a>
-                    <p class="text-[11px] text-gray-400">Download starts automatically. Click button above if needed.</p>
+                    <button id="modal-download-link" type="button" class="w-full py-3.5 px-4 rounded-xl font-black text-white text-sm sm:text-base bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-down text-lg"></i>
+                        <span id="modal-btn-label">Download MP4 Full HD (Fast)</span>
+                    </button>
+                    <p class="text-[11px] text-gray-400">Download starts automatically to your device without popups.</p>
                 </div>
             </div>
         </div>
@@ -951,8 +951,36 @@
                 }
             }
 
+            function prewarmStreams(ytId) {
+                if (!ytId || (window._lastPrewarmedId === ytId)) return;
+                window._lastPrewarmedId = ytId;
+                window._prewarmedStreams = window._prewarmedStreams || {};
+                
+                const targetUrlEncoded = encodeURIComponent(`https://www.youtube.com/watch?v=${ytId}`);
+                ['mp3', '1080', '720'].forEach(f => {
+                    if (!window._prewarmedStreams[f + '_' + ytId]) {
+                        window._prewarmedStreams[f + '_' + ytId] = fetch(`https://p.savenow.to/api/v2/download?button=1&format=${f}&url=${targetUrlEncoded}`)
+                            .then(r => r.ok ? r.json() : null)
+                            .catch(() => null);
+                    }
+                });
+            }
+
             urlInput.addEventListener('input', (e) => {
-                updatePlatformIndicator(e.target.value);
+                const val = e.target.value;
+                updatePlatformIndicator(val);
+                const ytId = extractYouTubeId(val);
+                if (ytId) prewarmStreams(ytId);
+            });
+
+            urlInput.addEventListener('paste', (e) => {
+                setTimeout(() => {
+                    const ytId = extractYouTubeId(urlInput.value);
+                    if (ytId) {
+                        prewarmStreams(ytId);
+                        startConversion();
+                    }
+                }, 50);
             });
 
             pasteBtn.addEventListener('click', async () => {
@@ -961,6 +989,8 @@
                     if (text) {
                         urlInput.value = text;
                         updatePlatformIndicator(text);
+                        const ytId = extractYouTubeId(text);
+                        if (ytId) prewarmStreams(ytId);
                         startConversion();
                     }
                 } catch (err) {
@@ -1199,96 +1229,127 @@
                 });
             }
 
+            function triggerSilentDownload(downloadUrl) {
+                if (!downloadUrl) return;
+                try {
+                    let dlIframe = document.getElementById('silent-dl-iframe');
+                    if (!dlIframe) {
+                        dlIframe = document.createElement('iframe');
+                        dlIframe.id = 'silent-dl-iframe';
+                        dlIframe.style.display = 'none';
+                        dlIframe.style.width = '0px';
+                        dlIframe.style.height = '0px';
+                        document.body.appendChild(dlIframe);
+                    }
+                    dlIframe.src = downloadUrl;
+                } catch (e) {
+                    const dlAnchor = document.createElement('a');
+                    dlAnchor.href = downloadUrl;
+                    dlAnchor.download = '';
+                    document.body.appendChild(dlAnchor);
+                    dlAnchor.click();
+                    setTimeout(() => dlAnchor.remove(), 500);
+                }
+            }
+
+            modalDownloadLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window._currentFinalDlUrl) {
+                    triggerSilentDownload(window._currentFinalDlUrl);
+                }
+            });
+
             async function triggerDirectDownload(format, quality, label) {
                 if (!currentMediaData) return;
 
                 const safeFormat = (format || 'mp4').toString().toLowerCase();
                 const safeQuality = (quality || '1080').toString().toLowerCase();
-                const safeLabel = label || `${safeFormat.toUpperCase()} Download`;
+                const cleanQ = safeQuality.replace('p', '');
                 const ytId = currentMediaData.id;
                 const ytUrl = `https://www.youtube.com/watch?v=${ytId}`;
 
-                progressModal.classList.remove('hidden');
-                modalTitle.textContent = safeLabel;
-                modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
-                modalProgressBar.style.width = '35%';
-                modalPctText.textContent = '35%';
-                modalSpeedText.textContent = 'Turbo Stream';
-                modalEtaText.textContent = '1s';
-                modalStatusMsg.textContent = 'Connecting high-speed stream...';
-                modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200";
-                modalActionContainer.classList.add('hidden');
-                modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
-                modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
-
-                // Map format and quality cleanly to converter API parameter
+                // Map format cleanly to API
                 let fmtParam = 'mp3';
                 if (safeFormat === 'mp3') {
                     fmtParam = 'mp3';
                 } else if (['m4a', 'flac', 'wav', 'aac', 'opus', 'ogg', 'webm'].includes(safeFormat)) {
                     fmtParam = safeFormat;
                 } else if (safeFormat === 'mp4') {
-                    const cleanQ = safeQuality.replace('p', '');
                     fmtParam = cleanQ === '2160' ? '4k' : (cleanQ || '1080');
                 } else {
                     fmtParam = safeFormat;
                 }
 
-                // Smooth rapid progress animation (1-2s feel)
-                let curPct = 35;
+                // High-CTR button label based on format
+                let highCtrLabel = "";
+                if (safeFormat === 'mp3') {
+                    highCtrLabel = `Download MP3 Music (${quality || '320kbps'})`;
+                } else if (safeFormat === 'mp4') {
+                    if (cleanQ === '4k' || cleanQ === '2160') {
+                        highCtrLabel = "Download 4K Ultra HD Video";
+                    } else if (cleanQ === '1440') {
+                        highCtrLabel = "Download 2K Quad HD Video";
+                    } else if (cleanQ === '1080') {
+                        highCtrLabel = "Download 1080p Full HD Video";
+                    } else {
+                        highCtrLabel = `Download MP4 (${quality || '720p'})`;
+                    }
+                } else {
+                    highCtrLabel = `Download ${safeFormat.toUpperCase()} Audio`;
+                }
+
+                progressModal.classList.remove('hidden');
+                modalTitle.textContent = highCtrLabel;
+                modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
+                modalProgressBar.style.width = '40%';
+                modalPctText.textContent = '40%';
+                modalSpeedText.textContent = 'Turbo Stream';
+                modalEtaText.textContent = '1s';
+                modalStatusMsg.textContent = 'Connecting direct high-speed stream...';
+                modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200";
+                modalActionContainer.classList.add('hidden');
+                modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
+                modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
+
+                // Rapid 1-2s progress animation
+                let curPct = 40;
                 const animTimer = setInterval(() => {
-                    if (curPct < 94) {
-                        curPct += Math.floor(Math.random() * 12) + 8;
-                        if (curPct > 94) curPct = 94;
+                    if (curPct < 95) {
+                        curPct += Math.floor(Math.random() * 15) + 10;
+                        if (curPct > 95) curPct = 95;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
                     }
-                }, 150);
+                }, 120);
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
                     if (completed) return;
                     completed = true;
                     clearInterval(animTimer);
+                    window._currentFinalDlUrl = finalDownloadUrl;
+
                     modalProgressBar.style.width = '100%';
                     modalPctText.textContent = '100%';
                     modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
                     modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
-                    modalStatusMsg.textContent = `File Ready! Downloading to your device...`;
+                    modalStatusMsg.textContent = `Stream Ready! Downloading file to your device...`;
                     modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-5 bg-emerald-50 py-2 px-3 rounded-lg border border-emerald-200";
 
-                    modalDownloadLink.href = finalDownloadUrl;
-                    modalBtnLabel.textContent = `Save ${safeFormat.toUpperCase()} Again`;
+                    modalBtnLabel.textContent = highCtrLabel;
                     modalActionContainer.classList.remove('hidden');
 
-                    // 100% Invisible Direct File Download Trigger (Zero new tabs open/closed)
-                    try {
-                        let dlIframe = document.getElementById('silent-dl-iframe');
-                        if (!dlIframe) {
-                            dlIframe = document.createElement('iframe');
-                            dlIframe.id = 'silent-dl-iframe';
-                            dlIframe.style.display = 'none';
-                            dlIframe.style.width = '0px';
-                            dlIframe.style.height = '0px';
-                            document.body.appendChild(dlIframe);
-                        }
-                        dlIframe.src = finalDownloadUrl;
-                    } catch (e) {
-                        // Invisible anchor fallback
-                        const dlAnchor = document.createElement('a');
-                        dlAnchor.href = finalDownloadUrl;
-                        dlAnchor.download = '';
-                        document.body.appendChild(dlAnchor);
-                        dlAnchor.click();
-                        setTimeout(() => dlAnchor.remove(), 500);
-                    }
+                    // 100% Invisible Direct Browser File Download (Zero new tab open/close)
+                    triggerSilentDownload(finalDownloadUrl);
                 }
 
                 try {
-                    // Check if we already have prewarmed promise for this format
+                    // Check proactive pre-warm cache
                     let initData = null;
-                    if (currentMediaData.prewarmed && currentMediaData.prewarmed[fmtParam]) {
-                        initData = await currentMediaData.prewarmed[fmtParam];
+                    const prewarmKey = fmtParam + '_' + ytId;
+                    if (window._prewarmedStreams && window._prewarmedStreams[prewarmKey]) {
+                        initData = await window._prewarmedStreams[prewarmKey];
                     }
 
                     if (!initData || !initData.id) {
@@ -1309,11 +1370,11 @@
                     }
 
                     const convId = initData.id;
-                    modalStatusMsg.textContent = 'Processing high quality audio/video stream...';
+                    modalStatusMsg.textContent = 'Encoding media stream at studio bitrate...';
 
-                    // High frequency 350ms rapid polling for 1-2s response
+                    // Rapid 250ms polling for quick 1-2s resolution
                     let attempts = 0;
-                    const maxAttempts = 40;
+                    const maxAttempts = 50;
                     
                     const pollProgress = async () => {
                         if (completed) return;
@@ -1333,15 +1394,15 @@
                         }
 
                         if (attempts < maxAttempts) {
-                            setTimeout(pollProgress, 350);
+                            setTimeout(pollProgress, 250);
                         } else {
                             const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
                             completeDownload(fallbackUrl);
                         }
                     };
 
-                    // First poll immediately at 100ms
-                    setTimeout(pollProgress, 100);
+                    // First poll immediately at 50ms
+                    setTimeout(pollProgress, 50);
 
                 } catch (err) {
                     console.error('Speed fallback triggered:', err);
