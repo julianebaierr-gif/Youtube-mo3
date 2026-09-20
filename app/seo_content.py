@@ -933,7 +933,7 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
  'youtube-to-mp4': {'title': 'YouTube to MP4 Converter | Free MP4 and MP3',
                     'meta_desc': 'Fast YouTube to MP4 Converter and YouTube to MP3 Converter. Download YouTube videos '
                                  'and Shorts in 1080p 4K MP4 video or 320kbps MP3 audio free online.',
-                    'h1': 'YouTube to MP4 HD Video Downloader',
+                    'h1': 'YouTube to MP4 Converter',
                     'subtitle': 'Download YouTube videos and Shorts in 1080p Full HD, 2K, and 4K resolutions with '
                                 'smooth 60fps frame rates. Free HD video downloader with synchronized sound.',
                     'badge': 'Free HD Video Downloader (MP4)',

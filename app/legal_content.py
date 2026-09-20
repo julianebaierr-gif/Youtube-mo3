@@ -296,17 +296,17 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                     'subtitle': 'Our commitment to user privacy, data security, and transparent processing practices.',
                     'badge': 'Privacy & Security',
                     'canonical_url': 'https://www.yt4mp3.com/privacy-policy',
-                    'article_html': '<h2>Privacy Policy for YT4MP3.cc</h2>\n'
+                    'article_html': '<h2>Privacy Policy for YT4MP3.com</h2>\n'
                                     '\n'
-                                    '<p>Welcome to YT4MP3.cc. We respect your privacy and are committed to protecting '
+                                    '<p>Welcome to YT4MP3.com. We respect your privacy and are committed to protecting '
                                     'your personal data when you use our online media conversion tools. This privacy '
                                     'document outlines how we handle information related to your visit and use of our '
-                                    'platform. By accessing or using YT4MP3.cc, you agree to the practices described '
+                                    'platform. By accessing or using YT4MP3.com, you agree to the practices described '
                                     'in this policy.</p>\n'
                                     '\n'
                                     '<h3>Privacy Commitment</h3>\n'
                                     '\n'
-                                    '<p>At YT4MP3.cc, we believe that converting media should be straightforward and '
+                                    '<p>At YT4MP3.com, we believe that converting media should be straightforward and '
                                     'private. We have designed our system so that you can convert YouTube videos to '
                                     'MP3 and MP4 formats without needing to create an account. No registration or '
                                     'personal sign-up is required to access our core features. You do not need to '
@@ -328,7 +328,7 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                                     '\n'
                                     '<p>To maintain platform security, prevent abuse, and ensure reliable server '
                                     'performance, our web infrastructure automatically records certain standard system '
-                                    'details when you visit YT4MP3.cc. These server logs may include:</p>\n'
+                                    'details when you visit YT4MP3.com. These server logs may include:</p>\n'
                                     '<ul>\n'
                                     '    <li>Anonymized IP addresses</li>\n'
                                     '    <li>Browser type and version</li>\n'
@@ -354,7 +354,7 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                                     '\n'
                                     '<h3>Cookies and Security</h3>\n'
                                     '\n'
-                                    '<p>YT4MP3.cc utilizes a secure HTTPS connection across all pages. This encryption '
+                                    '<p>YT4MP3.com utilizes a secure HTTPS connection across all pages. This encryption '
                                     'ensures that data transmitted between your browser and our servers remains '
                                     'private and protected from interception by third parties. Regarding cookies, we '
                                     'do not employ tracking cookies or invasive analytics tools that follow your '
@@ -370,4 +370,4 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                                     'our designated contact channels. We reserve the right to update this privacy '
                                     'policy periodically to reflect changes in our services or legal obligations. Any '
                                     'modifications will be posted directly on this page, and continued use of '
-                                    'YT4MP3.cc constitutes your acceptance of the revised terms.</p>'}}
+                                    'YT4MP3.com constitutes your acceptance of the revised terms.</p>'}}
