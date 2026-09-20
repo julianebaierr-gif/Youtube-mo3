@@ -662,52 +662,46 @@
         </section>
 
         <!-- DOWNLOAD PROGRESS POPUP MODAL -->
-        <div id="progress-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 hidden transition-all duration-300">
-            <div class="human-card bg-white rounded-3xl p-6 sm:p-10 max-w-lg w-full shadow-2xl border border-slate-100 relative text-center">
+        <div id="progress-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity">
+            <div class="human-card bg-white rounded-2xl p-6 sm:p-8 max-w-sm w-full shadow-xl border border-gray-200 relative text-center">
                 
                 <!-- Close Button -->
-                <button id="modal-close-btn" aria-label="Close download modal" class="absolute top-4 right-4 sm:top-5 sm:right-5 text-gray-400 hover:text-slate-900 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-base transition-colors cursor-pointer">
+                <button id="modal-close-btn" aria-label="Close download modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs transition-colors cursor-pointer">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
 
                 <!-- Status Icon -->
-                <div id="modal-icon-container" class="w-20 h-20 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-3xl mx-auto mb-4 border border-rose-100 shadow-sm transition-all duration-300">
+                <div id="modal-icon-container" class="w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3">
                     <i id="modal-icon" class="fa-solid fa-gear fa-spin text-rose-600"></i>
                 </div>
 
-                <h3 id="modal-title" class="font-black text-slate-900 text-xl sm:text-2xl mb-1.5 leading-snug tracking-tight">Converting</h3>
-                <p id="modal-subtitle" class="text-sm sm:text-base text-slate-600 mb-6 truncate max-w-[95%] mx-auto font-medium">Preparing media stream...</p>
+                <p id="modal-title" class="font-extrabold text-slate-900 text-base mb-1">Converting</p>
+                <p id="modal-subtitle" class="text-xs text-gray-500 mb-5 truncate max-w-[90%] mx-auto">Preparing media stream...</p>
 
                 <!-- Progress Bar -->
-                <div class="w-full bg-slate-100 rounded-full h-4 mb-3 overflow-hidden border border-slate-200 p-0.5 shadow-inner">
-                    <div id="modal-progress-bar" class="h-full rounded-full bg-gradient-to-r from-rose-500 via-rose-600 to-emerald-500 transition-all duration-300 w-[20%]"></div>
+                <div class="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden border border-gray-200">
+                    <div id="modal-progress-bar" class="h-full rounded-full bg-rose-600 transition-all duration-300 w-[20%]"></div>
                 </div>
 
                 <!-- Progress Meta -->
-                <div class="flex items-center justify-between text-xs sm:text-sm text-slate-600 font-mono font-bold mb-4 px-1">
-                    <span id="modal-pct-text" class="text-slate-900 text-sm sm:text-base font-black">40%</span>
-                    <span id="modal-speed-text" class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-bolt text-emerald-600"></i> Turbo High Speed
-                    </span>
-                    <span id="modal-eta-text" class="text-slate-500 font-medium">~1s</span>
+                <div class="flex items-center justify-between text-xs text-gray-500 font-mono mb-4 px-1">
+                    <span id="modal-pct-text">25%</span>
+                    <span id="modal-speed-text" class="text-emerald-600 font-semibold">Turbo Speed</span>
+                    <span id="modal-eta-text">~1s</span>
                 </div>
 
                 <!-- Status Message -->
-                <div id="modal-status-msg" class="text-sm sm:text-base font-bold text-slate-800 mb-6 bg-slate-50 py-3.5 px-5 rounded-2xl border border-slate-200 flex items-center justify-center gap-2.5 shadow-sm">
-                    <i class="fa-solid fa-spinner fa-spin text-rose-600"></i>
-                    <span>Preparing direct file stream...</span>
-                </div>
+                <p id="modal-status-msg" class="text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200">
+                    Preparing file stream...
+                </p>
 
                 <!-- Action Button -->
-                <div id="modal-action-container" class="hidden space-y-3.5">
-                    <a id="modal-download-link" href="#" target="_self" download class="w-full py-4 sm:py-5 px-6 rounded-2xl font-black text-white text-lg sm:text-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] transition-all flex items-center justify-center gap-3 shadow-xl shadow-emerald-600/30 cursor-pointer border border-emerald-400 no-underline">
-                        <i class="fa-solid fa-circle-down text-2xl sm:text-3xl animate-bounce"></i>
-                        <span id="modal-btn-label">Download File</span>
+                <div id="modal-action-container" class="hidden space-y-2">
+                    <a id="modal-download-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl font-bold text-white text-sm bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer no-underline">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        <span id="modal-btn-label">Save File to Device</span>
                     </a>
-                    <div class="flex items-center justify-center gap-2 text-xs sm:text-sm text-slate-500 font-semibold">
-                        <i class="fa-solid fa-shield-check text-emerald-500 text-sm"></i>
-                        <span>Direct Device Download &bull; No Ads &bull; No New Tabs</span>
-                    </div>
+                    <p class="text-[11px] text-gray-400">Download starts automatically. Click button above if needed.</p>
                 </div>
             </div>
         </div>
@@ -1235,60 +1229,13 @@
                 });
             }
 
-            function triggerDirectDownloadStream(downloadUrl) {
-                if (!downloadUrl) return;
-
-                // 1. Update the direct anchor button
-                if (modalDownloadLink) {
-                    modalDownloadLink.href = downloadUrl;
-                    modalDownloadLink.setAttribute('download', '');
-                }
-
-                // 2. Invisible programmatic anchor click in the current tab
-                try {
-                    const tempA = document.createElement('a');
-                    tempA.href = downloadUrl;
-                    tempA.setAttribute('download', '');
-                    tempA.style.display = 'none';
-                    document.body.appendChild(tempA);
-                    tempA.click();
-                    setTimeout(() => {
-                        try { tempA.remove(); } catch(e) {}
-                    }, 1000);
-                } catch(e) {
-                    console.warn('Anchor click warning:', e);
-                }
-
-                // 3. Fallback direct window.location assignment
-                // Since savenow CDN sends Content-Disposition: attachment,
-                // window.location.href triggers native browser download in current window without leaving the page or opening any new tab!
-                setTimeout(() => {
-                    try {
-                        window.location.href = downloadUrl;
-                    } catch(e) {
-                        console.warn('Direct location assignment warning:', e);
-                    }
-                }, 150);
-            }
-
-            modalDownloadLink.addEventListener('click', () => {
-                if (window._currentFinalDlUrl) {
-                    modalDownloadLink.href = window._currentFinalDlUrl;
-                    modalDownloadLink.setAttribute('download', '');
-                    if (!window._currentFinalDlUrl.includes('loader.to')) {
-                        try {
-                            window.location.href = window._currentFinalDlUrl;
-                        } catch(e) {}
-                    }
-                }
-            });
-
             async function triggerDirectDownload(format, quality, label) {
                 if (!currentMediaData) return;
 
                 const safeFormat = (format || 'mp4').toString().toLowerCase();
                 const safeQuality = (quality || '1080').toString().toLowerCase();
                 const cleanQ = safeQuality.replace('p', '');
+                const safeLabel = label || `${safeFormat.toUpperCase()} Download`;
                 const ytId = currentMediaData.id;
                 const ytUrl = `https://www.youtube.com/watch?v=${ytId}`;
 
@@ -1304,75 +1251,56 @@
                     fmtParam = safeFormat;
                 }
 
-                // High-CTR button label based on format
-                let highCtrLabel = "";
-                if (safeFormat === 'mp3') {
-                    highCtrLabel = `Download MP3 Music (${quality || '320kbps'})`;
-                } else if (safeFormat === 'mp4') {
-                    if (cleanQ === '4k' || cleanQ === '2160') {
-                        highCtrLabel = "Download 4K Ultra HD Video";
-                    } else if (cleanQ === '1440') {
-                        highCtrLabel = "Download 2K Quad HD Video";
-                    } else if (cleanQ === '1080') {
-                        highCtrLabel = "Download 1080p Full HD Video";
-                    } else {
-                        highCtrLabel = `Download MP4 (${quality || '720p'})`;
-                    }
-                } else {
-                    highCtrLabel = `Download ${safeFormat.toUpperCase()} Audio`;
-                }
-
                 progressModal.classList.remove('hidden');
-                modalTitle.textContent = highCtrLabel;
+                modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
-                modalProgressBar.style.width = '40%';
-                modalPctText.textContent = '40%';
-                modalSpeedText.innerHTML = '<i class="fa-solid fa-bolt text-emerald-600"></i> Turbo High Speed';
+                modalProgressBar.style.width = '25%';
+                modalPctText.textContent = '25%';
+                modalSpeedText.textContent = 'Turbo Speed';
                 modalEtaText.textContent = '~1s';
-                modalStatusMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-rose-600"></i> <span>Connecting direct high-speed stream...</span>';
-                modalStatusMsg.className = "text-sm sm:text-base font-bold text-slate-800 mb-6 bg-slate-50 py-3.5 px-5 rounded-2xl border border-slate-200 flex items-center justify-center gap-2.5 shadow-sm";
+                modalStatusMsg.textContent = 'Connecting high-speed stream...';
+                modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200";
                 modalActionContainer.classList.add('hidden');
-                modalIconContainer.className = "w-20 h-20 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-3xl mx-auto mb-4 border border-rose-100 shadow-sm transition-all duration-300";
+                modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
-                // Rapid 1-2s progress animation
-                let curPct = 40;
+                // Smooth progress animation
+                let curPct = 25;
                 const animTimer = setInterval(() => {
-                    if (curPct < 95) {
-                        curPct += Math.floor(Math.random() * 15) + 10;
-                        if (curPct > 95) curPct = 95;
+                    if (curPct < 90) {
+                        curPct += Math.floor(Math.random() * 8) + 3;
+                        if (curPct > 90) curPct = 90;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
                     }
-                }, 120);
+                }, 250);
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
                     if (completed) return;
                     completed = true;
                     clearInterval(animTimer);
-                    window._currentFinalDlUrl = finalDownloadUrl;
 
                     modalProgressBar.style.width = '100%';
                     modalPctText.textContent = '100%';
-                    modalIconContainer.className = "w-20 h-20 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-200 shadow-sm transition-all duration-300";
-                    modalIcon.className = "fa-solid fa-circle-check text-emerald-600 text-4xl";
-                    modalStatusMsg.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> <span>Ready! Downloading directly to your device...</span>`;
-                    modalStatusMsg.className = "text-sm sm:text-base font-black text-emerald-800 mb-6 bg-emerald-50 py-3.5 px-5 rounded-2xl border border-emerald-200 flex items-center justify-center gap-2.5 shadow-sm";
+                    modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
+                    modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
+                    modalStatusMsg.textContent = `File Ready! Downloading to your device...`;
+                    modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-5 bg-emerald-50 py-2 px-3 rounded-lg border border-emerald-200";
 
-                    modalBtnLabel.textContent = highCtrLabel;
                     modalDownloadLink.href = finalDownloadUrl;
-                    modalDownloadLink.setAttribute('download', '');
+                    modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()} Now`;
                     modalActionContainer.classList.remove('hidden');
 
-                    if (finalDownloadUrl.includes('loader.to')) {
-                        modalDownloadLink.target = '_blank';
-                        modalStatusMsg.innerHTML = '<i class="fa-solid fa-cloud-arrow-down text-emerald-600 text-lg"></i> <span>Click the download button below:</span>';
-                    } else {
-                        modalDownloadLink.target = '_self';
-                        // 100% Direct File Download (Zero new tabs open/close)
-                        triggerDirectDownloadStream(finalDownloadUrl);
-                    }
+                    // 1-Click direct browser file trigger (opens new tab and auto-closes as file downloads)
+                    const dlAnchor = document.createElement('a');
+                    dlAnchor.href = finalDownloadUrl;
+                    dlAnchor.setAttribute('download', '');
+                    dlAnchor.setAttribute('target', '_blank');
+                    dlAnchor.setAttribute('rel', 'noopener noreferrer');
+                    document.body.appendChild(dlAnchor);
+                    dlAnchor.click();
+                    setTimeout(() => dlAnchor.remove(), 1000);
                 }
 
                 try {
@@ -1401,11 +1329,11 @@
                     }
 
                     const convId = initData.id;
-                    modalStatusMsg.textContent = 'Encoding media stream at studio bitrate...';
+                    modalStatusMsg.textContent = 'Processing high quality audio/video stream...';
 
-                    // Rapid 250ms polling for quick 1-2s resolution
+                    // High frequency 400ms polling for instant response
                     let attempts = 0;
-                    const maxAttempts = 50;
+                    const maxAttempts = 60;
                     
                     const pollProgress = async () => {
                         if (completed) return;
@@ -1419,21 +1347,29 @@
                                     completeDownload(progData.download_url);
                                     return;
                                 }
+                                if (progData.progress && progData.progress > 0) {
+                                    const realPct = Math.min(92, Math.round(progData.progress / 10));
+                                    if (realPct > curPct) {
+                                        curPct = realPct;
+                                        modalProgressBar.style.width = `${curPct}%`;
+                                        modalPctText.textContent = `${curPct}%`;
+                                    }
+                                }
                             }
                         } catch (e) {
                             console.warn(e);
                         }
 
                         if (attempts < maxAttempts) {
-                            setTimeout(pollProgress, 250);
+                            setTimeout(pollProgress, 400);
                         } else {
                             const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
                             completeDownload(fallbackUrl);
                         }
                     };
 
-                    // First poll immediately at 50ms
-                    setTimeout(pollProgress, 50);
+                    // First poll immediately without waiting
+                    setTimeout(pollProgress, 100);
 
                 } catch (err) {
                     console.error('Speed fallback triggered:', err);
