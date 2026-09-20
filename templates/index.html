@@ -1033,10 +1033,15 @@
                         title = `YouTube Video (${ytId})`;
                     }
 
-                    let prewarmedPromise = null;
+                    // Concurrent background pre-warming for both MP3 & 1080p MP4
+                    const prewarmed = {};
                     try {
-                        const defaultFmt = pageActiveTab === 'yt-mp4' ? '1080' : 'mp3';
-                        prewarmedPromise = fetch(`https://p.savenow.to/api/v2/download?button=1&format=${defaultFmt}&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${ytId}`)}`)
+                        const targetUrlEncoded = encodeURIComponent(`https://www.youtube.com/watch?v=${ytId}`);
+                        prewarmed['mp3'] = fetch(`https://p.savenow.to/api/v2/download?button=1&format=mp3&url=${targetUrlEncoded}`)
+                            .then(r => r.ok ? r.json() : null)
+                            .catch(() => null);
+
+                        prewarmed['1080'] = fetch(`https://p.savenow.to/api/v2/download?button=1&format=1080&url=${targetUrlEncoded}`)
                             .then(r => r.ok ? r.json() : null)
                             .catch(() => null);
                     } catch (e) {}
@@ -1050,7 +1055,7 @@
                         views: "",
                         thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
                         platform: { name: 'YouTube' },
-                        prewarmedPromise: prewarmedPromise,
+                        prewarmed: prewarmed,
                         audio_formats: [
                             { format: 'mp3', quality: '320kbps', label: 'MP3 Studio (320kbps)', sub: '320 kbps • MP3 Audio', is_popular: true, btn_label: 'Get MP3' },
                             { format: 'mp3', quality: '256kbps', label: 'MP3 Standard (256kbps)', sub: '256 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
@@ -1206,10 +1211,10 @@
                 progressModal.classList.remove('hidden');
                 modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
-                modalProgressBar.style.width = '25%';
-                modalPctText.textContent = '25%';
+                modalProgressBar.style.width = '35%';
+                modalPctText.textContent = '35%';
                 modalSpeedText.textContent = 'Turbo Stream';
-                modalEtaText.textContent = 'Fast';
+                modalEtaText.textContent = '1s';
                 modalStatusMsg.textContent = 'Connecting high-speed stream...';
                 modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200";
                 modalActionContainer.classList.add('hidden');
@@ -1229,16 +1234,16 @@
                     fmtParam = safeFormat;
                 }
 
-                // Smooth rapid progress animation
-                let curPct = 25;
+                // Smooth rapid progress animation (1-2s feel)
+                let curPct = 35;
                 const animTimer = setInterval(() => {
-                    if (curPct < 92) {
-                        curPct += Math.floor(Math.random() * 10) + 5;
-                        if (curPct > 92) curPct = 92;
+                    if (curPct < 94) {
+                        curPct += Math.floor(Math.random() * 12) + 8;
+                        if (curPct > 94) curPct = 94;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
                     }
-                }, 250);
+                }, 150);
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
@@ -1253,27 +1258,37 @@
                     modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-5 bg-emerald-50 py-2 px-3 rounded-lg border border-emerald-200";
 
                     modalDownloadLink.href = finalDownloadUrl;
-                    modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()} Now`;
+                    modalBtnLabel.textContent = `Save ${safeFormat.toUpperCase()} Again`;
                     modalActionContainer.classList.remove('hidden');
 
-                    // 1-Click direct browser file trigger
-                    const dlAnchor = document.createElement('a');
-                    dlAnchor.href = finalDownloadUrl;
-                    dlAnchor.setAttribute('download', '');
-                    dlAnchor.setAttribute('target', '_blank');
-                    dlAnchor.setAttribute('rel', 'noopener noreferrer');
-                    document.body.appendChild(dlAnchor);
-                    dlAnchor.click();
-                    setTimeout(() => dlAnchor.remove(), 1000);
+                    // 100% Invisible Direct File Download Trigger (Zero new tabs open/closed)
+                    try {
+                        let dlIframe = document.getElementById('silent-dl-iframe');
+                        if (!dlIframe) {
+                            dlIframe = document.createElement('iframe');
+                            dlIframe.id = 'silent-dl-iframe';
+                            dlIframe.style.display = 'none';
+                            dlIframe.style.width = '0px';
+                            dlIframe.style.height = '0px';
+                            document.body.appendChild(dlIframe);
+                        }
+                        dlIframe.src = finalDownloadUrl;
+                    } catch (e) {
+                        // Invisible anchor fallback
+                        const dlAnchor = document.createElement('a');
+                        dlAnchor.href = finalDownloadUrl;
+                        dlAnchor.download = '';
+                        document.body.appendChild(dlAnchor);
+                        dlAnchor.click();
+                        setTimeout(() => dlAnchor.remove(), 500);
+                    }
                 }
 
                 try {
                     // Check if we already have prewarmed promise for this format
                     let initData = null;
-                    const defaultFmt = ("{{ seo.active_tab }}" === 'yt-mp4') ? '1080' : 'mp3';
-                    
-                    if (fmtParam === defaultFmt && currentMediaData.prewarmedPromise) {
-                        initData = await currentMediaData.prewarmedPromise;
+                    if (currentMediaData.prewarmed && currentMediaData.prewarmed[fmtParam]) {
+                        initData = await currentMediaData.prewarmed[fmtParam];
                     }
 
                     if (!initData || !initData.id) {
@@ -1296,9 +1311,9 @@
                     const convId = initData.id;
                     modalStatusMsg.textContent = 'Processing high quality audio/video stream...';
 
-                    // High frequency 500ms polling for instant response
+                    // High frequency 350ms rapid polling for 1-2s response
                     let attempts = 0;
-                    const maxAttempts = 35;
+                    const maxAttempts = 40;
                     
                     const pollProgress = async () => {
                         if (completed) return;
@@ -1318,15 +1333,15 @@
                         }
 
                         if (attempts < maxAttempts) {
-                            setTimeout(pollProgress, 500); // 500ms rapid poll instead of 1200ms
+                            setTimeout(pollProgress, 350);
                         } else {
                             const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
                             completeDownload(fallbackUrl);
                         }
                     };
 
-                    // First poll immediately without waiting 1s
-                    setTimeout(pollProgress, 200);
+                    // First poll immediately at 100ms
+                    setTimeout(pollProgress, 100);
 
                 } catch (err) {
                     console.error('Speed fallback triggered:', err);
