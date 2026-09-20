@@ -1033,6 +1033,14 @@
                         title = `YouTube Video (${ytId})`;
                     }
 
+                    let prewarmedPromise = null;
+                    try {
+                        const defaultFmt = pageActiveTab === 'yt-mp4' ? '1080' : 'mp3';
+                        prewarmedPromise = fetch(`https://p.savenow.to/api/v2/download?button=1&format=${defaultFmt}&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${ytId}`)}`)
+                            .then(r => r.ok ? r.json() : null)
+                            .catch(() => null);
+                    } catch (e) {}
+
                     currentMediaData = {
                         id: ytId,
                         url: url,
@@ -1042,6 +1050,7 @@
                         views: "",
                         thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
                         platform: { name: 'YouTube' },
+                        prewarmedPromise: prewarmedPromise,
                         audio_formats: [
                             { format: 'mp3', quality: '320kbps', label: 'MP3 High Quality', is_popular: true },
                             { format: 'mp3', quality: '256kbps', label: 'MP3 Standard', is_popular: false },
@@ -1055,10 +1064,8 @@
                         ]
                     };
 
-                    setTimeout(() => {
-                        loadingCard.classList.add('hidden');
-                        renderResult(currentMediaData);
-                    }, 400);
+                    loadingCard.classList.add('hidden');
+                    renderResult(currentMediaData);
 
                 } catch (err) {
                     loadingCard.classList.add('hidden');
@@ -1191,11 +1198,11 @@
                 progressModal.classList.remove('hidden');
                 modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
-                modalProgressBar.style.width = '15%';
-                modalPctText.textContent = '15%';
-                modalSpeedText.textContent = 'High Speed';
-                modalEtaText.textContent = '2s';
-                modalStatusMsg.textContent = 'Initiating direct stream converter...';
+                modalProgressBar.style.width = '25%';
+                modalPctText.textContent = '25%';
+                modalSpeedText.textContent = 'Turbo Stream';
+                modalEtaText.textContent = 'Fast';
+                modalStatusMsg.textContent = 'Connecting high-speed stream...';
                 modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-5 bg-gray-50 py-2 px-3 rounded-lg border border-gray-200";
                 modalActionContainer.classList.add('hidden');
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
@@ -1203,31 +1210,34 @@
 
                 let fmtParam = safeFormat === 'mp3' ? 'mp3' : (safeQuality.replace('p', '') || '720');
 
-                // Animate progress smoothly while server converts
-                let curPct = 15;
+                // Smooth rapid progress animation
+                let curPct = 25;
                 const animTimer = setInterval(() => {
-                    if (curPct < 90) {
-                        curPct += Math.floor(Math.random() * 8) + 4;
-                        if (curPct > 90) curPct = 90;
+                    if (curPct < 92) {
+                        curPct += Math.floor(Math.random() * 10) + 5;
+                        if (curPct > 92) curPct = 92;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
                     }
-                }, 400);
+                }, 250);
 
+                let completed = false;
                 function completeDownload(finalDownloadUrl) {
+                    if (completed) return;
+                    completed = true;
                     clearInterval(animTimer);
                     modalProgressBar.style.width = '100%';
                     modalPctText.textContent = '100%';
                     modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
                     modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
-                    modalStatusMsg.textContent = `Direct Download Ready! Saving file to your device...`;
+                    modalStatusMsg.textContent = `File Ready! Downloading to your device...`;
                     modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-5 bg-emerald-50 py-2 px-3 rounded-lg border border-emerald-200";
 
                     modalDownloadLink.href = finalDownloadUrl;
                     modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()} Now`;
                     modalActionContainer.classList.remove('hidden');
 
-                    // Direct 1-Click File Download Trigger without popup window
+                    // 1-Click direct browser file trigger
                     const dlAnchor = document.createElement('a');
                     dlAnchor.href = finalDownloadUrl;
                     dlAnchor.setAttribute('download', '');
@@ -1239,25 +1249,40 @@
                 }
 
                 try {
-                    // Step 1: Call public converter API in background
-                    const initApiUrl = `https://p.savenow.to/api/v2/download?button=1&format=${fmtParam}&url=${encodeURIComponent(ytUrl)}`;
-                    const initResp = await fetch(initApiUrl);
+                    // Check if we already have prewarmed promise for this format
+                    let initData = null;
+                    const defaultFmt = ("{{ seo.active_tab }}" === 'yt-mp4') ? '1080' : 'mp3';
                     
-                    if (!initResp.ok) throw new Error('Converter network issue');
-                    const initData = await initResp.json();
+                    if (fmtParam === defaultFmt && currentMediaData.prewarmedPromise) {
+                        initData = await currentMediaData.prewarmedPromise;
+                    }
 
                     if (!initData || !initData.id) {
-                        throw new Error('No conversion ID returned');
+                        const initApiUrl = `https://p.savenow.to/api/v2/download?button=1&format=${fmtParam}&url=${encodeURIComponent(ytUrl)}`;
+                        const initResp = await fetch(initApiUrl);
+                        if (!initResp.ok) throw new Error('Converter error');
+                        initData = await initResp.json();
+                    }
+
+                    if (!initData || !initData.id) {
+                        throw new Error('No ID');
+                    }
+
+                    // If stream already prepared instantly
+                    if (initData.download_url) {
+                        completeDownload(initData.download_url);
+                        return;
                     }
 
                     const convId = initData.id;
-                    modalStatusMsg.textContent = 'Encoding media stream at high bitrate...';
+                    modalStatusMsg.textContent = 'Processing high quality audio/video stream...';
 
-                    // Step 2: Poll progress in background until stream file is ready
+                    // High frequency 500ms polling for instant response
                     let attempts = 0;
-                    const maxAttempts = 25; // 25 seconds max polling
+                    const maxAttempts = 35;
                     
                     const pollProgress = async () => {
+                        if (completed) return;
                         attempts++;
                         try {
                             const progUrl = `https://p.savenow.to/api/progress?id=${convId}`;
@@ -1270,22 +1295,22 @@
                                 }
                             }
                         } catch (e) {
-                            console.warn('Poll error:', e);
+                            console.warn(e);
                         }
 
                         if (attempts < maxAttempts) {
-                            setTimeout(pollProgress, 1200);
+                            setTimeout(pollProgress, 500); // 500ms rapid poll instead of 1200ms
                         } else {
-                            // Fallback if conversion took longer
                             const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
                             completeDownload(fallbackUrl);
                         }
                     };
 
-                    setTimeout(pollProgress, 1000);
+                    // First poll immediately without waiting 1s
+                    setTimeout(pollProgress, 200);
 
                 } catch (err) {
-                    console.error('Direct download error, falling back:', err);
+                    console.error('Speed fallback triggered:', err);
                     const fallbackUrl = `https://loader.to/api/button/?url=${encodeURIComponent(ytUrl)}&f=${fmtParam}`;
                     completeDownload(fallbackUrl);
                 }
