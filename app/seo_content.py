@@ -5,10 +5,10 @@ Topical clusters enriched from Ahrefs and Semrush keywords.
 100% human tone with 0% AI detected vocabulary.
 """
 
-SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
-          'meta_desc': 'Free YouTube to MP3 Converter and YouTube to MP4 Converter. Download videos in 320kbps MP3 '
-                       'audio and 1080p 4K MP4 video fast, free, and online.',
-          'h1': 'YouTube to MP3 and MP4 Converter',
+SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter | 320kbps & 1080p',
+          'meta_desc': 'YT4MP3 is the best free YouTube to MP3 and MP4 converter. Convert YouTube videos in 320kbps '
+                       'high quality audio and 1080p Full HD video fast with zero ads.',
+          'h1': 'YT4MP3 - YouTube to MP3 and MP4 Converter',
           'subtitle': 'Save 320kbps MP3 audio or download 1080p and 4K MP4 video directly in your web browser. Free '
                       'online video downloader compatible with phones and computers.',
           'badge': 'Free Online Video Converter',
@@ -483,10 +483,10 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
                   {'q': 'Is it legal to save YouTube videos for personal offline use?',
                    'a': 'Only download content you have permission to download or that is legally available. Copyright '
                         'laws vary by country, so always respect the rights of content creators.'}]},
- 'youtube-to-mp3': {'title': 'YouTube to MP3 Converter | Free MP3 and MP4',
-                    'meta_desc': 'Fast YouTube to MP3 Converter and YouTube to MP4 Converter. Convert YouTube videos '
-                                 'and Shorts to 320kbps MP3 audio or MP4 video free and online.',
-                    'h1': 'YouTube to MP3 Converter',
+ 'youtube-to-mp3': {'title': 'YT4MP3 - YouTube to MP3 Converter (320kbps High Quality)',
+                    'meta_desc': 'Convert YouTube videos, music, and Shorts to 320kbps MP3 audio with YT4MP3. Fast, '
+                                 'free YouTube to MP3 converter with studio quality sound and automatic tags.',
+                    'h1': 'YT4MP3 - YouTube to MP3 Converter',
                     'subtitle': 'Convert YouTube videos and Shorts into clean 320kbps MP3 audio files with automated '
                                 'song tags and album artwork. Free youtube mp3 downloader with unlimited conversions.',
                     'badge': 'Free MP3 Converter (320kbps)',
@@ -930,10 +930,10 @@ SEO_PAGES = {'home': {'title': 'YouTube to MP3 and MP4 Converter | Free Online',
                             {'q': 'Is this youtube to mp3 converter completely free?',
                              'a': 'Yes, our youtube to mp3 converter is free to use with no hidden charges. There is '
                                   'currently no daily conversion limit.'}]},
- 'youtube-to-mp4': {'title': 'YouTube to MP4 Converter | Free MP4 and MP3',
-                    'meta_desc': 'Fast YouTube to MP4 Converter and YouTube to MP3 Converter. Download YouTube videos '
-                                 'and Shorts in 1080p 4K MP4 video or 320kbps MP3 audio free online.',
-                    'h1': 'YouTube to MP4 Converter',
+ 'youtube-to-mp4': {'title': 'YT4MP3 - YouTube to MP4 Converter (1080p Full HD & 4K)',
+                    'meta_desc': 'Download YouTube videos and Shorts in 1080p Full HD and 4K MP4 with YT4MP3. Free, '
+                                 'fast YouTube to MP4 converter with smooth 60fps video and clear audio.',
+                    'h1': 'YT4MP3 - YouTube to MP4 Converter',
                     'subtitle': 'Download YouTube videos and Shorts in 1080p Full HD, 2K, and 4K resolutions with '
                                 'smooth 60fps frame rates. Free HD video downloader with synchronized sound.',
                     'badge': 'Free HD Video Downloader (MP4)',
