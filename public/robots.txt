@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /?s=
+Disallow: /*?*s=
+Disallow: /*?*q=
+Disallow: /*?*ref=
 Sitemap: https://www.yt4mp3.com/sitemap.xml

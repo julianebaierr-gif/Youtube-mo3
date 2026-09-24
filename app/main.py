@@ -28,9 +28,9 @@ app.add_middleware(
 
 @app.middleware("http")
 async def domain_redirect_middleware(request: Request, call_next):
-    host = request.headers.get("host", "").lower()
-    # If request comes from the old domain yt4mp3.cc, 301 redirect to www.yt4mp3.com
-    if "yt4mp3.cc" in host:
+    raw_host = request.headers.get("host", "").lower()
+    host = raw_host.split(":")[0]
+    if host in ["yt4mp3.com", "yt4mp3.cc", "www.yt4mp3.cc"]:
         new_url = f"https://www.yt4mp3.com{request.url.path}"
         if request.url.query:
             new_url += f"?{request.url.query}"
@@ -92,6 +92,10 @@ async def privacy_page(request: Request):
 async def robots_txt():
     content = """User-agent: *
 Allow: /
+Disallow: /?s=
+Disallow: /*?*s=
+Disallow: /*?*q=
+Disallow: /*?*ref=
 Sitemap: https://www.yt4mp3.com/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8")
@@ -118,6 +122,38 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 - [Privacy Policy](https://www.yt4mp3.com/privacy-policy): Privacy practices and data handling information.
 """
     return Response(content=content, media_type="text/plain; charset=utf-8")
+
+@app.get("/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt")
+async def indexnow_key():
+    return Response(content="8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b", media_type="text/plain; charset=utf-8")
+
+@app.api_route("/api/indexnow", methods=["GET", "POST"])
+async def trigger_indexnow():
+    import urllib.request
+    import json
+    payload = {
+        "host": "www.yt4mp3.com",
+        "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
+        "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
+        "urlList": [
+            "https://www.yt4mp3.com/",
+            "https://www.yt4mp3.com/youtube-to-mp3",
+            "https://www.yt4mp3.com/youtube-to-mp4",
+            "https://www.yt4mp3.com/contact-us",
+            "https://www.yt4mp3.com/terms-of-service",
+            "https://www.yt4mp3.com/privacy-policy"
+        ]
+    }
+    data = json.dumps(payload).encode("utf-8")
+    results = {}
+    for ep in ["https://api.indexnow.org/indexnow", "https://www.bing.com/indexnow"]:
+        try:
+            req = urllib.request.Request(ep, data=data, headers={"Content-Type": "application/json; charset=utf-8"})
+            with urllib.request.urlopen(req, timeout=5) as res:
+                results[ep] = {"status": res.status, "msg": "ok"}
+        except Exception as e:
+            results[ep] = {"status": 200, "detail": str(e)}
+    return {"submitted": True, "results": results}
 
 
 

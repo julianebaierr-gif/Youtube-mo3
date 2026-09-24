@@ -6,7 +6,6 @@
     <title>{{ seo.title }}</title>
     <meta name="description" content="{{ seo.meta_desc }}">
     <link rel="canonical" href="{{ seo.canonical_url }}">
-    <meta name="keywords" content="YouTube to MP3 Converter, YouTube to MP4 Converter, youtube to mp3, youtube to mp4, mp3 converter, mp4 converter, ytmp3, y2mate, 320kbps mp3, 1080p mp4, youtube downloader, online video converter">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="google-site-verification" content="2yNWnDsZkYUCjQ6RZYlf2u15UFa001ufuZW64v6TMCA" />
     <script src="https://analytics.ahrefs.com/analytics.js" data-key="OvFiTUkvewm4E95mOTaF1w" async></script>
@@ -73,19 +72,35 @@
           "applicationCategory": "MultimediaApplication",
           "operatingSystem": "All",
           "image": "https://www.yt4mp3.com/static/favicon.svg",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "1840",
-            "bestRating": "5",
-            "worstRating": "1"
-          },
           "offers": {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD"
           },
           "description": "{{ seo.meta_desc }}"
+        },
+        {
+          "@type": "Organization",
+          "name": "YT4MP3",
+          "url": "https://www.yt4mp3.com/",
+          "logo": "https://www.yt4mp3.com/static/favicon.svg"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.yt4mp3.com/"
+            }{% if seo.canonical_url != 'https://www.yt4mp3.com/' %},
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "{{ seo.badge }}",
+              "item": "{{ seo.canonical_url }}"
+            }{% endif %}
+          ]
         },
         {
           "@type": "HowTo",
@@ -340,6 +355,26 @@
             background-color: #f9fafb;
         }
 
+        .toc-box ul {
+            list-style-type: none !important;
+            padding-left: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        .toc-box a {
+            text-decoration: none;
+            display: inline-block;
+            padding: 3px 0;
+            color: #334155;
+            font-weight: 500;
+        }
+        .toc-box a:hover {
+            color: #e11d48;
+            text-decoration: underline;
+        }
+        .seo-article h2[id], .seo-article h3[id] {
+            scroll-margin-top: 5rem;
+        }
+
         @media (max-width: 640px) {
             .seo-article h2 {
                 font-size: 1.35rem;
@@ -534,6 +569,13 @@
                 {% else %}
                 <span>Paste Link ➔ Pick Format ➔ Instant Download</span>
                 {% endif %}
+            </div>
+
+            <!-- Prominent Legal Disclaimer -->
+            <div class="mt-4 pt-3 border-t border-gray-100 max-w-2xl mx-auto">
+                <p class="text-[11px] text-gray-500 text-center leading-relaxed">
+                    <span class="font-semibold text-gray-600">Legal Notice:</span> YT4MP3 is intended solely for personal, educational, and backup purposes of non-copyrighted or Creative Commons licensed content. Users are responsible for complying with the respective platform's Terms of Service.
+                </p>
             </div>
 
         </section>
@@ -865,17 +907,18 @@
                 </div>
 
                 <div>
-                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Information</h3>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Legal & DMCA</h3>
                     <p class="text-[12px] text-slate-300 leading-relaxed mb-3">
-                        Only convert and download media for personal use or where you have rights and permissions.
+                        YT4MP3 is intended solely for personal, educational, and backup purposes of non-copyrighted or Creative Commons licensed content. Users are responsible for complying with the respective platform's Terms of Service.
                     </p>
-                    <div class="text-xs text-slate-300 flex gap-3">
+                    <div class="text-xs text-slate-300 flex flex-wrap gap-2 mb-2">
                         <a href="/privacy-policy" class="hover:text-white underline">Privacy</a>
                         <span>•</span>
                         <a href="/terms-of-service" class="hover:text-white underline">Terms</a>
                         <span>•</span>
-                        <a href="/contact-us" class="hover:text-white underline">Contact</a>
+                        <a href="/contact-us" class="hover:text-white underline">DMCA / Contact</a>
                     </div>
+                    <p class="text-[11px] text-slate-400">DMCA Notice: <a href="mailto:dmca@yt4mp3.com" class="text-slate-300 hover:underline">dmca@yt4mp3.com</a></p>
                 </div>
             </div>
 

@@ -73,6 +73,10 @@
       "dest": "/public/google7dfcf5b26cc1f483.html"
     },
     {
+      "src": "/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
+      "dest": "/public/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt"
+    },
+    {
       "src": "/public/(.*)",
       "dest": "/public/$1"
     },
