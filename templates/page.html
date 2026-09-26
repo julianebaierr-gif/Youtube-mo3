@@ -310,7 +310,7 @@
                 <div>
                     <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Legal & DMCA</h3>
                     <p class="text-[12px] text-slate-300 leading-relaxed mb-3">
-                        YT4MP3 is intended solely for personal, educational, and backup purposes of non-copyrighted or Creative Commons licensed content. Users are responsible for complying with the respective platform's Terms of Service.
+                        {{ t.legal_disclaimer | default('YT4MP3 is intended solely for personal, educational, and backup purposes of non-copyrighted or Creative Commons licensed content. Users are responsible for complying with the respective platform\'s Terms of Service.') }}
                     </p>
                     <div class="text-xs text-slate-300 flex flex-wrap gap-2 mb-2">
                         <a href="/privacy-policy" class="hover:text-white underline">Privacy</a>
@@ -323,8 +323,21 @@
                 </div>
             </div>
 
+            <!-- Multilingual Language Grid for Direct Crawl & Discovery -->
+            <div class="py-6 border-b border-slate-900 text-center">
+                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">{{ t.languages_label | default('Supported Languages') }}</p>
+                <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+                    {% for item in switcher %}
+                    <a href="{{ item.url }}" class="flex items-center gap-1.5 {% if item.is_current %}text-rose-400 font-bold{% else %}text-slate-300 hover:text-white{% endif %} transition-colors">
+                        <span>{{ item.flag }}</span>
+                        <span>{{ item.native }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
             <div class="pt-6 text-center text-xs text-slate-400">
-                <p>© 2026 YT4MP3. Built for creators and everyday users.</p>
+                <p>© 2026 YT4MP3. {{ t.all_rights_reserved | default('All rights reserved.') }}</p>
             </div>
         </div>
     </footer>

@@ -63,30 +63,110 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 from app.seo_content import SEO_PAGES
 from app.legal_content import LEGAL_PAGES
+from app.i18n import (
+    SUPPORTED_LANGUAGES,
+    get_ui_strings,
+    get_page_content,
+    get_hreflang_links,
+    get_language_switcher_links
+)
 
+def render_converter_page(request: Request, page_key: str, lang: str = "en"):
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Language not found")
+    
+    seo_data = get_page_content(lang, page_key)
+    ui_strings = get_ui_strings(lang)
+    hreflangs = get_hreflang_links(page_key)
+    switcher = get_language_switcher_links(page_key, lang)
+    current_meta = SUPPORTED_LANGUAGES[lang]
+    
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "seo": seo_data,
+            "t": ui_strings,
+            "lang": lang,
+            "lang_dir": current_meta.get("dir", "ltr"),
+            "hreflangs": hreflangs,
+            "switcher": switcher,
+            "current_lang": current_meta,
+            "supported_languages": SUPPORTED_LANGUAGES
+        }
+    )
+
+def render_legal_page(request: Request, page_key: str):
+    ui_strings = get_ui_strings("en")
+    switcher = get_language_switcher_links("home", "en")
+    current_meta = SUPPORTED_LANGUAGES["en"]
+    return templates.TemplateResponse(
+        request=request,
+        name="page.html",
+        context={
+            "seo": LEGAL_PAGES[page_key],
+            "t": ui_strings,
+            "lang": "en",
+            "lang_dir": "ltr",
+            "switcher": switcher,
+            "current_lang": current_meta,
+            "supported_languages": SUPPORTED_LANGUAGES
+        }
+    )
+
+# Root English Routes
 @app.get("/", response_class=HTMLResponse)
 async def home_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["home"]})
+    return render_converter_page(request, "home", "en")
 
 @app.get("/youtube-to-mp3", response_class=HTMLResponse)
 async def youtube_mp3_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-to-mp3"]})
+    return render_converter_page(request, "youtube-to-mp3", "en")
 
 @app.get("/youtube-to-mp4", response_class=HTMLResponse)
 async def youtube_mp4_page(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html", context={"seo": SEO_PAGES["youtube-to-mp4"]})
+    return render_converter_page(request, "youtube-to-mp4", "en")
 
+# Static Legal Pages (Universal English)
 @app.get("/contact-us", response_class=HTMLResponse)
 async def contact_us_page(request: Request):
-    return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["contact-us"]})
+    return render_legal_page(request, "contact-us")
 
 @app.get("/terms-of-service", response_class=HTMLResponse)
 async def terms_page(request: Request):
-    return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["terms-of-service"]})
+    return render_legal_page(request, "terms-of-service")
 
 @app.get("/privacy-policy", response_class=HTMLResponse)
 async def privacy_page(request: Request):
-    return templates.TemplateResponse(request=request, name="page.html", context={"seo": LEGAL_PAGES["privacy-policy"]})
+    return render_legal_page(request, "privacy-policy")
+
+# Localized Routes (13 international languages)
+@app.get("/{lang}", response_class=HTMLResponse)
+@app.get("/{lang}/", response_class=HTMLResponse)
+async def localized_home_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "home", lang)
+
+@app.get("/{lang}/youtube-to-mp3", response_class=HTMLResponse)
+@app.get("/{lang}/youtube-to-mp3/", response_class=HTMLResponse)
+async def localized_youtube_mp3_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/youtube-to-mp3", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "youtube-to-mp3", lang)
+
+@app.get("/{lang}/youtube-to-mp4", response_class=HTMLResponse)
+@app.get("/{lang}/youtube-to-mp4/", response_class=HTMLResponse)
+async def localized_youtube_mp4_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/youtube-to-mp4", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "youtube-to-mp4", lang)
 
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def robots_txt():
@@ -135,14 +215,22 @@ async def trigger_indexnow():
         "host": "www.yt4mp3.com",
         "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
         "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
-        "urlList": [
-            "https://www.yt4mp3.com/",
-            "https://www.yt4mp3.com/youtube-to-mp3",
-            "https://www.yt4mp3.com/youtube-to-mp4",
-            "https://www.yt4mp3.com/contact-us",
-            "https://www.yt4mp3.com/terms-of-service",
-            "https://www.yt4mp3.com/privacy-policy"
-        ]
+        "urlList": (
+            [
+                "https://www.yt4mp3.com/",
+                "https://www.yt4mp3.com/youtube-to-mp3",
+                "https://www.yt4mp3.com/youtube-to-mp4",
+                "https://www.yt4mp3.com/contact-us",
+                "https://www.yt4mp3.com/terms-of-service",
+                "https://www.yt4mp3.com/privacy-policy"
+            ] + [
+                f"https://www.yt4mp3.com/{c}/" for c in SUPPORTED_LANGUAGES if c != "en"
+            ] + [
+                f"https://www.yt4mp3.com/{c}/youtube-to-mp3" for c in SUPPORTED_LANGUAGES if c != "en"
+            ] + [
+                f"https://www.yt4mp3.com/{c}/youtube-to-mp4" for c in SUPPORTED_LANGUAGES if c != "en"
+            ]
+        )
     }
     data = json.dumps(payload).encode("utf-8")
     results = {}
