@@ -140,34 +140,7 @@ async def terms_page(request: Request):
 async def privacy_page(request: Request):
     return render_legal_page(request, "privacy-policy")
 
-# Localized Routes (13 international languages)
-@app.get("/{lang}", response_class=HTMLResponse)
-@app.get("/{lang}/", response_class=HTMLResponse)
-async def localized_home_page(request: Request, lang: str):
-    if lang == "en":
-        return RedirectResponse(url="/", status_code=301)
-    if lang not in SUPPORTED_LANGUAGES:
-        raise HTTPException(status_code=404, detail="Page not found")
-    return render_converter_page(request, "home", lang)
-
-@app.get("/{lang}/youtube-to-mp3", response_class=HTMLResponse)
-@app.get("/{lang}/youtube-to-mp3/", response_class=HTMLResponse)
-async def localized_youtube_mp3_page(request: Request, lang: str):
-    if lang == "en":
-        return RedirectResponse(url="/youtube-to-mp3", status_code=301)
-    if lang not in SUPPORTED_LANGUAGES:
-        raise HTTPException(status_code=404, detail="Page not found")
-    return render_converter_page(request, "youtube-to-mp3", lang)
-
-@app.get("/{lang}/youtube-to-mp4", response_class=HTMLResponse)
-@app.get("/{lang}/youtube-to-mp4/", response_class=HTMLResponse)
-async def localized_youtube_mp4_page(request: Request, lang: str):
-    if lang == "en":
-        return RedirectResponse(url="/youtube-to-mp4", status_code=301)
-    if lang not in SUPPORTED_LANGUAGES:
-        raise HTTPException(status_code=404, detail="Page not found")
-    return render_converter_page(request, "youtube-to-mp4", lang)
-
+# SEO, Discovery & System Endpoints
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def robots_txt():
     content = """User-agent: *
@@ -179,6 +152,15 @@ Disallow: /*?*ref=
 Sitemap: https://www.yt4mp3.com/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8")
+
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
+async def sitemap_xml():
+    sitemap_file = os.path.join(BASE_DIR, "public", "sitemap.xml")
+    if os.path.exists(sitemap_file):
+        with open(sitemap_file, "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="application/xml; charset=utf-8")
+    raise HTTPException(status_code=404, detail="Sitemap not found")
 
 @app.api_route("/llms.txt", methods=["GET", "HEAD"])
 async def llms_txt():
@@ -243,8 +225,6 @@ async def trigger_indexnow():
             results[ep] = {"status": 200, "detail": str(e)}
     return {"submitted": True, "results": results}
 
-
-
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -299,4 +279,32 @@ async def youtube_320k_redirect():
 @app.get("/facebook-downloader")
 async def legacy_redirect():
     return RedirectResponse(url="/", status_code=301)
+
+# Localized Routes (13 international languages)
+@app.get("/{lang}", response_class=HTMLResponse)
+@app.get("/{lang}/", response_class=HTMLResponse)
+async def localized_home_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "home", lang)
+
+@app.get("/{lang}/youtube-to-mp3", response_class=HTMLResponse)
+@app.get("/{lang}/youtube-to-mp3/", response_class=HTMLResponse)
+async def localized_youtube_mp3_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/youtube-to-mp3", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "youtube-to-mp3", lang)
+
+@app.get("/{lang}/youtube-to-mp4", response_class=HTMLResponse)
+@app.get("/{lang}/youtube-to-mp4/", response_class=HTMLResponse)
+async def localized_youtube_mp4_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/youtube-to-mp4", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "youtube-to-mp4", lang)
 
