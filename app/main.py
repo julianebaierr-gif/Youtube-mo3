@@ -1,4 +1,7 @@
 import os
+import urllib.request
+import urllib.parse
+import json
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -224,6 +227,61 @@ async def trigger_indexnow():
         except Exception as e:
             results[ep] = {"status": 200, "detail": str(e)}
     return {"submitted": True, "results": results}
+
+@app.get("/api/convert")
+async def proxy_convert(url: str, format: str = "mp3"):
+    encoded_url = urllib.parse.quote(url)
+    fmt = format.lower()
+    
+    # 1. Primary Engine: savenow.to
+    try:
+        api_url = f"https://p.savenow.to/api/v2/download?button=1&format={fmt}&url={encoded_url}"
+        req = urllib.request.Request(api_url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer": "https://www.yt4mp3.com/"
+        })
+        with urllib.request.urlopen(req, timeout=8) as r:
+            data = json.loads(r.read())
+            if data and data.get("id"):
+                return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": data.get("download_url")}
+    except Exception:
+        pass
+
+    # 2. Secondary Engine: loader.to
+    try:
+        lto_url = f"https://loader.to/ajax/download.php?button=1&start=1&end=1&format={fmt}&url={encoded_url}"
+        req = urllib.request.Request(lto_url, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer": "https://loader.to/"
+        })
+        with urllib.request.urlopen(req, timeout=8) as r:
+            data = json.loads(r.read())
+            if data and data.get("id"):
+                return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": data.get("download_url")}
+    except Exception:
+        pass
+
+    raise HTTPException(status_code=502, detail="Unable to initiate media conversion")
+
+@app.get("/api/progress")
+async def proxy_progress(id: str):
+    endpoints = [
+        f"https://p.savenow.to/api/progress?id={id}",
+        f"https://lto2.affadaffa.com/api/progress?id={id}"
+    ]
+    for ep in endpoints:
+        try:
+            req = urllib.request.Request(ep, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                "Referer": "https://www.yt4mp3.com/"
+            })
+            with urllib.request.urlopen(req, timeout=5) as r:
+                data = json.loads(r.read())
+                if data:
+                    return data
+        except Exception:
+            continue
+    raise HTTPException(status_code=502, detail="Progress check failed")
 
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
