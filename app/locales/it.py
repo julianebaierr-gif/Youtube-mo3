@@ -87,7 +87,7 @@ UI = {
     "comp_row4_others": "Reindirizzamenti ingannevoli, banner invasivi e rischio malware",
     "comp_row5_title": "Supporto Smartphone & Dispositivi",
     "comp_row5_yt4mp3": "Perfetto su iPhone Safari, Android Chrome, Mac e Windows",
-    "comp_row5_others": "Spesso non funziona su iOS Safari o richiede l\'installazione di APK",
+    "comp_row5_others": "Spesso non funziona su iOS Safari o richiede l'installazione di APK",
     "comp_row6_title": "YouTube Shorts & Video Lunghi",
     "comp_row6_yt4mp3": "Pieno supporto per Shorts, DJ set e podcast oltre le 2 ore",
     "comp_row6_others": "Limite rigido di 10-20 minuti; non riconosce i link Shorts",
@@ -99,7 +99,7 @@ UI = {
     "benefit2_title": "Risparmio di Batteria e Giga",
     "benefit2_desc": "I file audio consumano fino al 90% in meno di batteria e zero dati rispetto alla riproduzione video con schermo acceso.",
     "benefit3_title": "Ascolto in Background",
-    "benefit3_desc": "Continua l\'ascolto a schermo bloccato o mentre usi altre app senza pagare YouTube Premium.",
+    "benefit3_desc": "Continua l'ascolto a schermo bloccato o mentre usi altre app senza pagare YouTube Premium.",
     "benefit4_title": "Shorts, Podcast e Mix Lunghi",
     "benefit4_desc": "Estrai audio perfetto da clip Shorts virali, conferenze, audiolibri e DJ set di più ore.",
 }
