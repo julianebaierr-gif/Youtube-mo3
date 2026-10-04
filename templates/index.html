@@ -848,6 +848,277 @@
             </div>
         </section>
 
+        <!-- AUDIOTRANSCRIBER-INSPIRED: COMPARISON MATRIX (YT4MP3 VS OTHER CONVERTERS) -->
+        <section class="py-14 bg-white border-t border-gray-200" id="comparison">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-xl mx-auto mb-10">
+                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">{{ t.comp_badge | default('Comparison') }}</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">{{ t.comp_title | default('YT4MP3 vs. Other Converters') }}</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">{{ t.comp_subtitle | default('See why millions choose YT4MP3 over slow, ad-heavy converter tools.') }}</p>
+                </div>
+
+                <!-- Desktop / Tablet Comparison Table -->
+                <div class="hidden md:block overflow-hidden rounded-2xl border border-gray-200 shadow-sm bg-white">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200 text-xs font-black uppercase text-gray-700">
+                                <th class="p-4 w-1/3">{{ t.comp_feature_col | default('Feature & Capability') }}</th>
+                                <th class="p-4 w-1/3 bg-emerald-50/70 text-emerald-900 border-x border-emerald-200/70">
+                                    <div class="flex items-center gap-1.5">
+                                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                                        <span>{{ t.comp_yt4mp3_col | default('YT4MP3 (Recommended)') }}</span>
+                                    </div>
+                                </th>
+                                <th class="p-4 w-1/3 text-gray-500">{{ t.comp_others_col | default('Other Converters') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-xs sm:text-sm">
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-4 font-bold text-slate-900">{{ t.comp_row1_title | default('Account & Sign-up') }}</td>
+                                <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row1_yt4mp3 | default('100% Free, No Sign-up / No Credit Card') }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-gray-500">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row1_others | default('Forced registration, paywalls, or spam newsletters') }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-4 font-bold text-slate-900">{{ t.comp_row2_title | default('Speed & Download Limits') }}</td>
+                                <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row2_yt4mp3 | default('Instant real-time conversion & direct download') }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-gray-500">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row2_others | default('Long waiting queues, artificial throttling & timers') }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-4 font-bold text-slate-900">{{ t.comp_row3_title | default('Audio & Video Quality') }}</td>
+                                <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row3_yt4mp3 | default('Genuine 320 kbps MP3 & 1080p/4K MP4 with synced audio') }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-gray-500">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row3_others | default('Capped at compressed 128 kbps or low 360p resolution') }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-4 font-bold text-slate-900">{{ t.comp_row4_title | default('Annoying Ads & Redirects') }}</td>
+                                <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row4_yt4mp3 | default('Clean & safe: Zero pop-unders, no fake download buttons') }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-gray-500">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row4_others | default('Spammy redirects, intrusive popups & malware traps') }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-4 font-bold text-slate-900">{{ t.comp_row5_title | default('Device & Mobile Support') }}</td>
+                                <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row5_yt4mp3 | default('Seamless on iPhone Safari, Android Chrome, Mac & Windows') }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-gray-500">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row5_others | default('Often breaks on iOS Safari or requires APK apps') }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-4 font-bold text-slate-900">{{ t.comp_row6_title | default('Shorts & Long Podcasts') }}</td>
+                                <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row6_yt4mp3 | default('Full support for Shorts, DJ sets & 2hr+ audiobooks') }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-gray-500">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
+                                        <span>{{ t.comp_row6_others | default('Strict 10-20 min limit; cannot parse Shorts URLs') }}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Responsive Comparison Cards -->
+                <div class="grid grid-cols-1 gap-3 md:hidden">
+                    <div class="human-card p-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                            <span class="font-bold text-xs text-slate-900">{{ t.comp_row1_title | default('Account & Sign-up') }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">100% Free</span>
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5">
+                            <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span><strong>YT4MP3:</strong> {{ t.comp_row1_yt4mp3 | default('No Sign-up / No Credit Card') }}</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-gray-500">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Others:</strong> {{ t.comp_row1_others | default('Forced registration / paywalls') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="human-card p-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                            <span class="font-bold text-xs text-slate-900">{{ t.comp_row2_title | default('Speed & Download Limits') }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">Turbo Speed</span>
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5">
+                            <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span><strong>YT4MP3:</strong> {{ t.comp_row2_yt4mp3 | default('Instant real-time direct download') }}</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-gray-500">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Others:</strong> {{ t.comp_row2_others | default('Waiting queues & throttling') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="human-card p-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                            <span class="font-bold text-xs text-slate-900">{{ t.comp_row3_title | default('Audio & Video Quality') }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">320kbps / 4K</span>
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5">
+                            <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span><strong>YT4MP3:</strong> {{ t.comp_row3_yt4mp3 | default('Genuine 320 kbps & 1080p/4K MP4') }}</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-gray-500">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Others:</strong> {{ t.comp_row3_others | default('Capped at 128 kbps or 360p') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="human-card p-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                            <span class="font-bold text-xs text-slate-900">{{ t.comp_row4_title | default('Annoying Ads & Redirects') }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">Zero Popups</span>
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5">
+                            <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span><strong>YT4MP3:</strong> {{ t.comp_row4_yt4mp3 | default('Zero pop-unders, no fake buttons') }}</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-gray-500">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Others:</strong> {{ t.comp_row4_others | default('Deceptive ads & virus risks') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="human-card p-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                            <span class="font-bold text-xs text-slate-900">{{ t.comp_row5_title | default('Device & Mobile Support') }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">iOS & Android</span>
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5">
+                            <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span><strong>YT4MP3:</strong> {{ t.comp_row5_yt4mp3 | default('iPhone, Android, Mac & PC') }}</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-gray-500">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Others:</strong> {{ t.comp_row5_others | default('Breaks on mobile Safari') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="human-card p-4">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                            <span class="font-bold text-xs text-slate-900">{{ t.comp_row6_title | default('Shorts & Long Podcasts') }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">Shorts Ready</span>
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5">
+                            <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
+                                <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                                <span><strong>YT4MP3:</strong> {{ t.comp_row6_yt4mp3 | default('Shorts & 2hr+ mixes supported') }}</span>
+                            </div>
+                            <div class="flex items-start gap-1.5 text-gray-500">
+                                <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                                <span><strong>Others:</strong> {{ t.comp_row6_others | default('10-min limit, fails on Shorts') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AUDIOTRANSCRIBER-INSPIRED: CORE ADVANTAGES / WHY CONVERT TO MP3 -->
+        <section class="py-14 bg-gray-50 border-t border-gray-200" id="benefits">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-xl mx-auto mb-10">
+                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">{{ t.benefits_badge | default('Key Advantages') }}</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">{{ t.benefits_title | default('Why Convert YouTube Videos to MP3?') }}</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">{{ t.benefits_subtitle | default('Free your favorite audio from online restrictions and enjoy offline freedom.') }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="human-card p-5 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-plane-departure"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1.5">{{ t.benefit1_title | default('Offline Playback Anywhere') }}</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ t.benefit1_desc | default('Listen on airplanes, underground transit, or road trips without Wi-Fi or wasting expensive cellular data.') }}</p>
+                    </div>
+
+                    <div class="human-card p-5 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-battery-three-quarters"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1.5">{{ t.benefit2_title | default('Save Battery & Mobile Data') }}</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ t.benefit2_desc | default('Audio files use up to 90% less battery and zero streaming bandwidth compared to continuous video playback with the screen on.') }}</p>
+                    </div>
+
+                    <div class="human-card p-5 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1.5">{{ t.benefit3_title | default('Background Audio Playback') }}</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ t.benefit3_desc | default('Keep listening with your phone screen locked or while using other apps without paying for expensive YouTube Premium subscriptions.') }}</p>
+                    </div>
+
+                    <div class="human-card p-5 bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-3">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1.5">{{ t.benefit4_title | default('Shorts, Podcasts & Long Mixes') }}</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ t.benefit4_desc | default('Extract clean sound from viral Shorts clips, educational lectures, and multi-hour DJ sets with zero cutoffs.') }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- SEO ARTICLE & DETAILED REFERENCE CONTENT -->
         <section class="py-14 bg-white border-t border-gray-200">
             <div class="seo-article max-w-3xl mx-auto px-4 sm:px-6">
