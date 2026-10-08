@@ -2,6 +2,7 @@ import os
 import urllib.request
 import urllib.parse
 import json
+import re
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -142,6 +143,42 @@ async def terms_page(request: Request):
 @app.get("/privacy-policy", response_class=HTMLResponse)
 async def privacy_page(request: Request):
     return render_legal_page(request, "privacy-policy")
+
+# Viral URL Shortcut Routes (e.g. yt4mp3.com/watch?v=..., yt4mp3.com/shorts/..., yt4mp3.com/4youtube/...)
+@app.get("/watch", response_class=HTMLResponse)
+async def watch_shortcut_page(request: Request):
+    return render_converter_page(request, "home", "en")
+
+@app.get("/shorts/{short_id:path}", response_class=HTMLResponse)
+async def shorts_shortcut_page(request: Request, short_id: str):
+    return render_converter_page(request, "home", "en")
+
+@app.get("/4youtube", response_class=HTMLResponse)
+@app.get("/4youtube/{path:path}", response_class=HTMLResponse)
+async def four_youtube_shortcut_page(request: Request, path: str = ""):
+    return render_converter_page(request, "home", "en")
+
+@app.get("/4/{path:path}", response_class=HTMLResponse)
+async def four_shortcut_page(request: Request, path: str = ""):
+    return render_converter_page(request, "home", "en")
+
+# PWA Endpoints
+@app.get("/manifest.json")
+async def manifest_endpoint():
+    manifest_file = os.path.join(BASE_DIR, "public", "manifest.json")
+    if os.path.exists(manifest_file):
+        with open(manifest_file, "r", encoding="utf-8") as f:
+            return Response(content=f.read(), media_type="application/manifest+json; charset=utf-8")
+    raise HTTPException(status_code=404, detail="Manifest not found")
+
+@app.get("/sw.js")
+async def service_worker_endpoint():
+    sw_file = os.path.join(BASE_DIR, "public", "sw.js")
+    if os.path.exists(sw_file):
+        with open(sw_file, "r", encoding="utf-8") as f:
+            return Response(content=f.read(), media_type="application/javascript; charset=utf-8")
+    raise HTTPException(status_code=404, detail="Service worker not found")
+
 
 # SEO, Discovery & System Endpoints
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], response_class=HTMLResponse)
@@ -345,6 +382,11 @@ async def localized_home_page(request: Request, lang: str):
     if lang == "en":
         return RedirectResponse(url="/", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
+        clean_id = lang.strip("/")
+        if len(clean_id) == 11 and re.match(r'^[a-zA-Z0-9_-]{11}$', clean_id):
+            return render_converter_page(request, "home", "en")
+        if clean_id.startswith("4youtube") or clean_id.startswith("watch"):
+            return render_converter_page(request, "home", "en")
         raise HTTPException(status_code=404, detail="Page not found")
     return render_converter_page(request, "home", lang)
 

@@ -18,7 +18,14 @@
     <!-- Favicon & Touch Icons for Search Console & Browsers -->
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/static/favicon.svg">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/static/icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/static/icon-512.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YT4MP3">
     <meta name="theme-color" content="#0f172a">
 
     <!-- OpenGraph & Twitter Cards -->
@@ -497,6 +504,13 @@
                     </div>
                 </div>
 
+                <!-- PWA Install App Button -->
+                <button id="header-pwa-btn" onclick="triggerPwaInstall()" aria-label="Install YT4MP3 App" class="px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm border border-rose-700 cursor-pointer">
+                    <i class="fa-solid fa-mobile-screen-button text-xs"></i>
+                    <span class="hidden sm:inline">Install App</span>
+                    <span class="sm:hidden">App</span>
+                </button>
+
                 <!-- Quick Convert CTA -->
                 <button onclick="document.getElementById('media-url-input').focus();" aria-label="Quick Convert" class="hidden sm:flex px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-900 bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all items-center gap-1.5 border border-gray-300">
                     <i class="fa-solid fa-bolt text-amber-500"></i>
@@ -590,6 +604,46 @@
                     <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> {{ t.how_it_works_title | default('3 Simple Steps') }}:
                 </span>
                 <span>{{ t.step1_title | default('Paste Link') }} ➔ {{ t.step2_title | default('Select Format') }} ➔ {{ t.step3_title | default('Download') }}</span>
+            </div>
+
+            <!-- Viral Shortcut Trick Card (like SSYouTube / 4YouTube) -->
+            <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-50 via-slate-50 to-blue-50 border border-rose-200 text-left max-w-2xl mx-auto shadow-sm">
+                <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-rose-600 text-white flex items-center justify-center text-xs font-black shadow-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </span>
+                        <h2 class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                            Viral URL Shortcut Trick: <span class="text-rose-600">Direct Download</span>
+                        </h2>
+                    </div>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        ⚡ No Copy-Paste Needed
+                    </span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-3">
+                    Jab aap YouTube par video dekh rahe hon, browser address bar me <code class="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] font-bold text-slate-800">youtube.com</code> ki jagah <strong class="text-rose-600 font-mono font-bold">yt4mp3.com</strong> likh kar Enter dabayein:
+                </p>
+                <div class="space-y-2 bg-white p-3 sm:p-3.5 rounded-xl border border-gray-200 font-mono text-xs overflow-x-auto shadow-inner">
+                    <div class="flex items-center gap-2 text-gray-500 text-[11px] sm:text-xs min-w-[320px]">
+                        <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-bold text-[10px] uppercase font-sans">Before:</span>
+                        <span class="truncate">https://www.<span class="bg-gray-200 text-slate-900 px-1 py-0.5 rounded font-bold">youtube</span>.com/watch?v=dQw4w9WgXcQ</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 text-slate-900 text-[11px] sm:text-xs pt-2 border-t border-dashed border-gray-200 min-w-[320px]">
+                        <div class="flex items-center gap-2 truncate">
+                            <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] uppercase font-sans">After:</span>
+                            <span class="truncate">https://www.<span class="bg-rose-600 text-white px-1.5 py-0.5 rounded font-black">yt4mp3</span>.com/watch?v=dQw4w9WgXcQ</span>
+                        </div>
+                        <button type="button" onclick="testUrlShortcutDemo()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-sans text-xs font-bold border border-rose-200 flex-shrink-0 transition-all flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-bolt text-[10px]"></i>
+                            <span>Test Trick</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-2.5 flex items-center justify-between text-[11px] text-gray-500 flex-wrap gap-2">
+                    <span>✨ YouTube Shorts bhi support karta hai: <code class="font-mono font-semibold text-slate-700">yt4mp3.com/shorts/...</code></span>
+                    <span class="text-rose-600 font-semibold">⚡ Foran auto-download shuru ho jata hai!</span>
+                </div>
             </div>
 
             <!-- Prominent Legal Disclaimer -->
@@ -779,6 +833,56 @@
 
                     <p class="text-[11px] text-gray-500 font-medium">Download starts automatically. Tap green button if needed.</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Floating PWA Install Prompt Banner -->
+        <div id="pwa-mobile-banner" class="hidden fixed bottom-4 left-4 right-4 z-40 bg-slate-950 text-white p-3.5 rounded-2xl shadow-2xl border border-slate-800 flex items-center justify-between gap-3 max-w-md mx-auto">
+            <div class="flex items-center gap-3 min-w-0">
+                <img src="/static/icon-192.png" alt="YT4MP3 App Icon" class="w-10 h-10 rounded-xl flex-shrink-0 shadow border border-slate-700">
+                <div class="min-w-0">
+                    <p class="font-extrabold text-xs sm:text-sm leading-tight text-white truncate">Install YT4MP3 App</p>
+                    <p class="text-[11px] text-slate-300 truncate">1-Tap YouTube Downloader on Home Screen</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button onclick="triggerPwaInstall()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow transition-all cursor-pointer">
+                    Install
+                </button>
+                <button onclick="dismissPwaBanner()" class="p-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer" title="Dismiss">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- iOS Safari "Add to Home Screen" Instructions Modal -->
+        <div id="pwa-ios-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+            <div class="human-card bg-white rounded-2xl p-6 sm:p-7 max-w-sm w-full shadow-2xl border border-gray-200 text-center relative">
+                <button onclick="closeIosModal()" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl mx-auto mb-3 border border-rose-100">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <h3 class="font-extrabold text-slate-900 text-lg mb-1">Install YT4MP3 on iPhone</h3>
+                <p class="text-xs text-gray-500 mb-4">Add to Home Screen for lightning fast 1-tap downloads:</p>
+                <div class="text-left text-xs space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-200 text-slate-800">
+                    <div class="flex items-start gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">1</span>
+                        <span>Safari ke bottom bar me <strong>Share button</strong> <i class="fa-solid fa-arrow-up-from-bracket text-blue-600 mx-1"></i> par tap karein.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">2</span>
+                        <span>Menu ko scroll karein aur <strong>"Add to Home Screen"</strong> <i class="fa-regular fa-square-plus text-slate-800 mx-1"></i> select karein.</span>
+                    </div>
+                    <div class="flex items-start gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">3</span>
+                        <span>Top right corner me <strong>"Add"</strong> button dabayein. Done!</span>
+                    </div>
+                </div>
+                <button onclick="closeIosModal()" class="w-full mt-4 py-2.5 rounded-xl font-bold text-xs bg-slate-900 text-white hover:bg-slate-800 transition-all cursor-pointer">
+                    Got it!
+                </button>
             </div>
         </div>
 
@@ -1909,7 +2013,150 @@
                     }
                 });
             });
+
+            // Auto URL Shortcut Detector & Converter (Viral Trick: yt4mp3.com/watch?v=... or yt4mp3.com/shorts/...)
+            function checkAutoConvertUrl() {
+                try {
+                    const searchParams = new URLSearchParams(window.location.search);
+                    let detectedUrl = null;
+
+                    // 1. Check query parameters: ?v=..., ?url=..., ?link=..., ?q=...
+                    if (searchParams.has('v')) {
+                        const vid = searchParams.get('v');
+                        if (vid && vid.length >= 11) {
+                            detectedUrl = `https://www.youtube.com/watch?v=${vid}`;
+                        }
+                    } else if (searchParams.has('url')) {
+                        detectedUrl = searchParams.get('url');
+                    } else if (searchParams.has('link')) {
+                        detectedUrl = searchParams.get('link');
+                    } else if (searchParams.has('q')) {
+                        detectedUrl = searchParams.get('q');
+                    }
+
+                    // 2. Check pathname patterns if not found in query params
+                    if (!detectedUrl) {
+                        const path = window.location.pathname;
+                        
+                        // /shorts/XYZ
+                        const shortsMatch = path.match(/\/shorts\/([a-zA-Z0-9_-]{11})/i);
+                        if (shortsMatch && shortsMatch[1]) {
+                            detectedUrl = `https://www.youtube.com/shorts/${shortsMatch[1]}`;
+                        }
+                        
+                        // /4youtube/XYZ or /4/XYZ
+                        const shortcutMatch = path.match(/\/(?:4youtube|4)\/([a-zA-Z0-9_-]{11})/i);
+                        if (shortcutMatch && shortcutMatch[1]) {
+                            detectedUrl = `https://www.youtube.com/watch?v=${shortcutMatch[1]}`;
+                        }
+                        
+                        // Direct /XYZ (11-char ID)
+                        const directIdMatch = path.match(/^\/([a-zA-Z0-9_-]{11})\/?$/);
+                        if (directIdMatch && directIdMatch[1]) {
+                            detectedUrl = `https://www.youtube.com/watch?v=${directIdMatch[1]}`;
+                        }
+                    }
+
+                    if (detectedUrl) {
+                        const ytId = extractYouTubeId(detectedUrl);
+                        if (ytId) {
+                            urlInput.value = detectedUrl;
+                            updatePlatformIndicator(detectedUrl);
+                            prewarmStreams(ytId);
+                            setTimeout(() => {
+                                startConversion();
+                            }, 350);
+                        }
+                    }
+                } catch(e) {
+                    console.warn('Auto convert check:', e);
+                }
+            }
+
+            checkAutoConvertUrl();
         });
+    </script>
+
+    <!-- PWA Installation and Service Worker Controller -->
+    <script>
+        let deferredPwaPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+
+            const headerBtn = document.getElementById('header-pwa-btn');
+            if (headerBtn) headerBtn.classList.remove('hidden');
+
+            const isMobile = window.innerWidth <= 768;
+            const dismissed = localStorage.getItem('yt4mp3_pwa_dismissed');
+            const now = Date.now();
+            if (isMobile && (!dismissed || (now - parseInt(dismissed)) > 7 * 86400000)) {
+                const banner = document.getElementById('pwa-mobile-banner');
+                if (banner) banner.classList.remove('hidden');
+            }
+        });
+
+        window.triggerPwaInstall = async function() {
+            // 1. If native prompt is available (Chrome / Android / Desktop)
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                const { outcome } = await deferredPwaPrompt.userChoice;
+                deferredPwaPrompt = null;
+                const banner = document.getElementById('pwa-mobile-banner');
+                if (banner) banner.classList.add('hidden');
+                return;
+            }
+
+            // 2. iOS Safari detection
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isIos) {
+                const iosModal = document.getElementById('pwa-ios-modal');
+                if (iosModal) iosModal.classList.remove('hidden');
+                return;
+            }
+
+            // 3. Fallback for desktop browsers without prompt active or already installed
+            alert("To install YT4MP3 app:\n1. Click the Install icon in your browser address bar\nOR\n2. Open browser menu (⋮) -> 'Install YT4MP3' or 'Add to Home Screen'.");
+        };
+
+        window.dismissPwaBanner = function() {
+            const banner = document.getElementById('pwa-mobile-banner');
+            if (banner) banner.classList.add('hidden');
+            localStorage.setItem('yt4mp3_pwa_dismissed', Date.now().toString());
+        };
+
+        window.closeIosModal = function() {
+            const iosModal = document.getElementById('pwa-ios-modal');
+            if (iosModal) iosModal.classList.add('hidden');
+        };
+
+        window.testUrlShortcutDemo = function() {
+            const input = document.getElementById('media-url-input');
+            if (input) {
+                input.value = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                const event = new Event('input', { bubbles: true });
+                input.dispatchEvent(event);
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const convBtn = document.getElementById('convert-btn');
+                if (convBtn) {
+                    setTimeout(() => convBtn.click(), 400);
+                }
+            }
+        };
+
+        // Service Worker Registration for PWA compliance
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                    .then(reg => {
+                        console.log('YT4MP3 Service Worker active');
+                    })
+                    .catch(err => {
+                        console.log('SW registration error:', err);
+                    });
+            });
+        }
     </script>
     <script>
         // Deferred non-critical icons loading so PageSpeed unused CSS audit is 100% clean

@@ -1,0 +1,32 @@
+{
+  "name": "YT4MP3 - YouTube to MP3 & MP4 Converter",
+  "short_name": "YT4MP3",
+  "description": "Fast YouTube to MP3 (320kbps) audio converter and 1080p/4K MP4 video downloader.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#e11d48",
+  "categories": ["utilities", "music", "video"],
+  "icons": [
+    {
+      "src": "/static/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
