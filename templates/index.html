@@ -505,10 +505,10 @@
                 </div>
 
                 <!-- PWA Install App Button -->
-                <button id="header-pwa-btn" onclick="triggerPwaInstall()" aria-label="Install YT4MP3 App" class="px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm border border-rose-700 cursor-pointer">
+                <button id="header-pwa-btn" onclick="triggerPwaInstall()" aria-label="{{ t.pwa_install_btn | default('Install App') }}" class="px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm border border-rose-700 cursor-pointer">
                     <i class="fa-solid fa-mobile-screen-button text-xs"></i>
-                    <span class="hidden sm:inline">Install App</span>
-                    <span class="sm:hidden">App</span>
+                    <span class="hidden sm:inline">{{ t.pwa_install_btn | default('Install App') }}</span>
+                    <span class="sm:hidden">{{ t.pwa_install_short | default('App') }}</span>
                 </button>
 
                 <!-- Quick Convert CTA -->
@@ -614,35 +614,35 @@
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
                         </span>
                         <h2 class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-                            Viral URL Shortcut Trick: <span class="text-rose-600">Direct Download</span>
+                            {{ t.shortcut_title | default('Viral URL Shortcut Trick: Direct Download') }}
                         </h2>
                     </div>
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
-                        ⚡ No Copy-Paste Needed
+                        ⚡ {{ t.shortcut_badge | default('No Copy-Paste Needed') }}
                     </span>
                 </div>
                 <p class="text-xs text-gray-600 leading-relaxed mb-3">
-                    Jab aap YouTube par video dekh rahe hon, browser address bar me <code class="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] font-bold text-slate-800">youtube.com</code> ki jagah <strong class="text-rose-600 font-mono font-bold">yt4mp3.com</strong> likh kar Enter dabayein:
+                    {{ t.shortcut_guide_prefix | default('When watching a video on YouTube, simply replace') }} <code class="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] font-bold text-slate-800">youtube.com</code> {{ t.shortcut_guide_suffix | default('with') }} <strong class="text-rose-600 font-mono font-bold">yt4mp3.com</strong> {{ t.shortcut_guide_end | default('in your browser address bar and press Enter:') }}
                 </p>
                 <div class="space-y-2 bg-white p-3 sm:p-3.5 rounded-xl border border-gray-200 font-mono text-xs overflow-x-auto shadow-inner">
                     <div class="flex items-center gap-2 text-gray-500 text-[11px] sm:text-xs min-w-[320px]">
-                        <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-bold text-[10px] uppercase font-sans">Before:</span>
+                        <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-bold text-[10px] uppercase font-sans">{{ t.shortcut_before | default('Before:') }}</span>
                         <span class="truncate">https://www.<span class="bg-gray-200 text-slate-900 px-1 py-0.5 rounded font-bold">youtube</span>.com/watch?v=dQw4w9WgXcQ</span>
                     </div>
                     <div class="flex items-center justify-between gap-2 text-slate-900 text-[11px] sm:text-xs pt-2 border-t border-dashed border-gray-200 min-w-[320px]">
                         <div class="flex items-center gap-2 truncate">
-                            <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] uppercase font-sans">After:</span>
+                            <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] uppercase font-sans">{{ t.shortcut_after | default('After:') }}</span>
                             <span class="truncate">https://www.<span class="bg-rose-600 text-white px-1.5 py-0.5 rounded font-black">yt4mp3</span>.com/watch?v=dQw4w9WgXcQ</span>
                         </div>
                         <button type="button" onclick="testUrlShortcutDemo()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-sans text-xs font-bold border border-rose-200 flex-shrink-0 transition-all flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-bolt text-[10px]"></i>
-                            <span>Test Trick</span>
+                            <span>{{ t.shortcut_test_btn | default('Test Trick') }}</span>
                         </button>
                     </div>
                 </div>
                 <div class="mt-2.5 flex items-center justify-between text-[11px] text-gray-500 flex-wrap gap-2">
-                    <span>✨ YouTube Shorts bhi support karta hai: <code class="font-mono font-semibold text-slate-700">yt4mp3.com/shorts/...</code></span>
-                    <span class="text-rose-600 font-semibold">⚡ Foran auto-download shuru ho jata hai!</span>
+                    <span>✨ {{ t.shortcut_shorts_note | default('Also supports YouTube Shorts:') }} <code class="font-mono font-semibold text-slate-700">yt4mp3.com/shorts/...</code></span>
+                    <span class="text-rose-600 font-semibold">⚡ {{ t.shortcut_instant_note | default('Instant auto-download starts automatically!') }}</span>
                 </div>
             </div>
 
@@ -841,13 +841,13 @@
             <div class="flex items-center gap-3 min-w-0">
                 <img src="/static/icon-192.png" alt="YT4MP3 App Icon" class="w-10 h-10 rounded-xl flex-shrink-0 shadow border border-slate-700">
                 <div class="min-w-0">
-                    <p class="font-extrabold text-xs sm:text-sm leading-tight text-white truncate">Install YT4MP3 App</p>
-                    <p class="text-[11px] text-slate-300 truncate">1-Tap YouTube Downloader on Home Screen</p>
+                    <p class="font-extrabold text-xs sm:text-sm leading-tight text-white truncate">{{ t.pwa_banner_title | default('Install YT4MP3 App') }}</p>
+                    <p class="text-[11px] text-slate-300 truncate">{{ t.pwa_banner_desc | default('1-Tap YouTube Downloader on Home Screen') }}</p>
                 </div>
             </div>
             <div class="flex items-center gap-1.5 flex-shrink-0">
                 <button onclick="triggerPwaInstall()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow transition-all cursor-pointer">
-                    Install
+                    {{ t.pwa_banner_install | default('Install') }}
                 </button>
                 <button onclick="dismissPwaBanner()" class="p-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer" title="Dismiss">
                     <i class="fa-solid fa-xmark text-sm"></i>
@@ -864,24 +864,24 @@
                 <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl mx-auto mb-3 border border-rose-100">
                     <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
-                <h3 class="font-extrabold text-slate-900 text-lg mb-1">Install YT4MP3 on iPhone</h3>
-                <p class="text-xs text-gray-500 mb-4">Add to Home Screen for lightning fast 1-tap downloads:</p>
+                <h3 class="font-extrabold text-slate-900 text-lg mb-1">{{ t.pwa_ios_title | default('Install YT4MP3 on iPhone') }}</h3>
+                <p class="text-xs text-gray-500 mb-4">{{ t.pwa_ios_desc | default('Add to Home Screen for lightning fast 1-tap downloads:') }}</p>
                 <div class="text-left text-xs space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-200 text-slate-800">
                     <div class="flex items-start gap-2.5">
                         <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">1</span>
-                        <span>Safari ke bottom bar me <strong>Share button</strong> <i class="fa-solid fa-arrow-up-from-bracket text-blue-600 mx-1"></i> par tap karein.</span>
+                        <span>{{ t.pwa_ios_step1 | default('Tap the Share button in Safari bottom bar.') }} <i class="fa-solid fa-arrow-up-from-bracket text-blue-600 mx-1"></i></span>
                     </div>
                     <div class="flex items-start gap-2.5">
                         <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">2</span>
-                        <span>Menu ko scroll karein aur <strong>"Add to Home Screen"</strong> <i class="fa-regular fa-square-plus text-slate-800 mx-1"></i> select karein.</span>
+                        <span>{{ t.pwa_ios_step2 | default('Scroll down and select "Add to Home Screen".') }} <i class="fa-regular fa-square-plus text-slate-800 mx-1"></i></span>
                     </div>
                     <div class="flex items-start gap-2.5">
                         <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">3</span>
-                        <span>Top right corner me <strong>"Add"</strong> button dabayein. Done!</span>
+                        <span>{{ t.pwa_ios_step3 | default('Tap "Add" in the top right corner. Done!') }}</span>
                     </div>
                 </div>
                 <button onclick="closeIosModal()" class="w-full mt-4 py-2.5 rounded-xl font-bold text-xs bg-slate-900 text-white hover:bg-slate-800 transition-all cursor-pointer">
-                    Got it!
+                    {{ t.pwa_ios_btn | default('Got it!') }}
                 </button>
             </div>
         </div>
