@@ -473,6 +473,9 @@
                 <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="px-4 py-1.5 rounded-lg transition-colors {% if seo.active_tab == 'yt-mp4' %}bg-white text-slate-900 shadow-sm{% else %}text-gray-600 hover:text-slate-900{% endif %}">
                     <i class="fa-solid fa-video text-blue-500 mr-1.5 text-xs"></i> {{ t.nav_mp4 | default('YouTube to MP4') }}
                 </a>
+                <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-shorts-downloader" class="px-4 py-1.5 rounded-lg transition-colors {% if seo.active_tab == 'yt-shorts' %}bg-white text-slate-900 shadow-sm{% else %}text-gray-600 hover:text-slate-900{% endif %}">
+                    <i class="fa-solid fa-bolt text-amber-500 mr-1.5 text-xs"></i> {{ t.nav_shorts | default('YouTube Shorts') }}
+                </a>
             </nav>
 
             <!-- Right CTA Button & Language Switcher -->
@@ -553,6 +556,10 @@
                 <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'yt-mp4' %}bg-blue-50 border-blue-500 text-blue-700{% else %}bg-white hover:bg-gray-50 text-gray-700 border-gray-200{% endif %}">
                     <i class="fa-solid fa-video text-xs {% if seo.active_tab == 'yt-mp4' %}text-blue-600{% else %}text-gray-400{% endif %}"></i>
                     <span>{{ t.mp4_video_tab | default('MP4 Video') }}</span>
+                </a>
+                <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-shorts-downloader" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all {% if seo.active_tab == 'yt-shorts' %}bg-amber-50 border-amber-500 text-amber-700{% else %}bg-white hover:bg-gray-50 text-gray-700 border-gray-200{% endif %}">
+                    <i class="fa-solid fa-bolt text-xs {% if seo.active_tab == 'yt-shorts' %}text-amber-600{% else %}text-gray-400{% endif %}"></i>
+                    <span>{{ t.nav_shorts | default('YouTube Shorts') }}</span>
                 </a>
             </div>
 
@@ -1311,7 +1318,7 @@
                         <li><a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="hover:text-white transition-colors">{{ t.nav_mp4 | default('YouTube to MP4 Converter') }}</a></li>
                         <li><a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p Downloader</a></li>
                         <li><a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 4K UHD Video</a></li>
-                        <li><a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="hover:text-white transition-colors">YouTube Shorts MP4</a></li>
+                        <li><a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-shorts-downloader" class="hover:text-white transition-colors">{{ t.nav_shorts | default('YouTube Shorts Downloader') }}</a></li>
                     </ul>
                 </div>
 

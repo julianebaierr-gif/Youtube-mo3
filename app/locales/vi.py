@@ -525,3 +525,502 @@ PAGES = {
 <p>Chép các chương trình ca nhạc, phim hoạt hình thiếu nhi vào USB để cắm trực tiếp vào TV phòng khách giúp các em nhỏ giải trí mà không tiếp xúc với các nội dung quảng cáo không mong muốn.</p>"""
     }
 }
+
+
+# YouTube Shorts Downloader Integration
+KEYWORDS_RESEARCH["shorts_keywords"] = ['tải youtube shorts',
+ 'download youtube shorts',
+ 'tải video shorts youtube',
+ 'tải shorts',
+ 'lưu video shorts',
+ 'chuyển youtube shorts sang mp4',
+ 'chuyển youtube shorts sang mp3',
+ 'tải shorts không logo',
+ 'tải shorts không watermark',
+ 'tải reels youtube',
+ 'tải shorts miễn phí',
+ 'tải shorts về điện thoại',
+ 'cách tải youtube shorts',
+ 'tải video ngắn youtube',
+ 'trang web tải shorts youtube',
+ 'savefrom youtube shorts',
+ 'savefrom shorts',
+ 'shortsnoob tải video',
+ 'publer youtube shorts',
+ 'y2mate shorts',
+ 'ssyoutube shorts',
+ 'snaptik shorts',
+ '10downloader shorts',
+ 'savefrom net tải video youtube shorts',
+ 'savetube shorts',
+ 'yt shorts downloader publer',
+ 'snaptube shorts',
+ 'vidmate tải shorts',
+ 'tải shorts bằng link',
+ 'savefrom mp4 shorts',
+ 'ss youtube shorts',
+ 'shortsnoob miễn phí',
+ 'publer downloader miễn phí',
+ 'y2mate shorts mp3',
+ 'save from net shorts',
+ 'online video downloader shorts',
+ 'snaptik youtube shorts',
+ '10downloader youtube shorts',
+ 'công cụ tải shorts trực tuyến',
+ 'bộ chuyển đổi savefrom shorts',
+ 'savefrom net shorts việt nam',
+ 'tải video shortsnoob',
+ 'tải shorts không quảng cáo',
+ 'tỷ lệ video dọc 9 16',
+ 'độ phân giải 1080p full hd',
+ 'độ phân giải 1080x1920',
+ 'không dính logo hình mờ',
+ 'không watermark',
+ 'tách âm thanh mp3 320 kbps',
+ 'tải nhạc từ shorts',
+ 'không quảng cáo làm phiền',
+ 'không pop up khó chịu',
+ 'lưu vào cuộn camera iphone safari',
+ 'thư mục tải về android chrome',
+ 'không cần cài đặt app và apk',
+ 'nhà sáng tạo tiktok và reels',
+ 'âm thanh và nhạc nền viral',
+ 'nhạc nền shorts',
+ 'đồng bộ âm thanh và hình ảnh',
+ 'định dạng tệp h264 mp4',
+ 'luồng dash riêng biệt',
+ 'tách và ghép luồng đám mây',
+ 'mẹo url rút gọn 4youtube',
+ 'ứng dụng pwa màn hình chính',
+ 'phát ngoại tuyến không cần mạng',
+ 'tiết kiệm dữ liệu di động',
+ 'nghe nhạc khi tắt màn hình',
+ 'nhạc chuông điện thoại ringtone',
+ 'chỉnh sửa trên capcut và premiere pro',
+ 'tốc độ 60 khung hình 60fps',
+ 'video ngắn định dạng đứng',
+ 'tải trực tiếp trên trình duyệt',
+ 'máy chủ nhanh không chờ đợi',
+ 'không giới hạn lượt tải mỗi ngày',
+ 'công cụ an toàn không virus',
+ 'lưu trữ vào bộ sưu tập ảnh',
+ 'tiêu đề moov atom khởi động nhanh',
+ 'không gian màu rec 709',
+ 'trích đoạn thoại và câu nói hay',
+ 'meme và video hài hước',
+ 'công thức nấu ăn nhanh shorts',
+ 'mẹo công nghệ shorts',
+ 'dung lượng nhẹ 720p hd',
+ 'âm thanh stereo aac',
+ 'video học tập ngắn',
+ 'bản sao lưu cá nhân',
+ 'tải xuống tức thì trong vài giây',
+ 'chuyển đổi đám mây nhanh chóng',
+ 'cách tải video youtube shorts về iphone vào album ảnh',
+ 'cách lưu youtube shorts về điện thoại android không cần app',
+ 'có thể chuyển video shorts youtube sang mp3 không',
+ 'cách tải video shorts trên youtube không cần cài ứng dụng',
+ 'trang web tải shorts youtube nào an toàn không dính virus',
+ 'cách tải shorts độ phân giải 1080p 60fps',
+ 'cách tách nhạc lấy âm thanh từ youtube shorts',
+ 'tại sao tải video shorts ở trang khác lại bị mất tiếng',
+ 'video shorts tải về trên android nằm ở thư mục nào',
+ 'cách tải video màn hình dọc từ youtube',
+ 'cách lưu shorts youtube vào ứng dụng ảnh trên iphone',
+ 'cách tải shorts không bị lệch tiếng so với hình',
+ 'cách tải bài hát từ youtube shorts định dạng mp3 320kbps',
+ 'cách dùng mẹo 4youtube để tải shorts nhanh',
+ 'cách tải video ngắn youtube không có logo bản quyền',
+ 'có thể tải youtube shorts về máy tính pc không',
+ 'dùng trang web tải shorts youtube online có an toàn không',
+ 'cách đăng lại video shorts đã tải lên tiktok',
+ 'tại sao video shorts tải về hay bị trễ tiếng',
+ 'cách tải video youtube shorts không bị quảng cáo',
+ 'cách cài ứng dụng yt4mp3 lên màn hình điện thoại',
+ 'một video shorts 1080p chiếm bao nhiêu dung lượng']
+UI["nav_shorts"] = 'YouTube Shorts'
+PAGES["youtube-shorts-downloader"] = {'title': 'Tải YouTube Shorts - Chuyển Đổi Shorts Sang MP4 & MP3 | YT4MP3',
+ 'meta_desc': 'Tải video YouTube Shorts 1080p Full HD MP4 và âm thanh MP3 320kbps miễn phí không logo hình mờ. Công cụ '
+              'tải nhanh cho iPhone, Android và PC không quảng cáo.',
+ 'h1': 'Tải YouTube Shorts Trực Tuyến',
+ 'subtitle': 'Lưu video ngắn YouTube Shorts định dạng dọc chuẩn 1080p Full HD hoặc chuyển sang MP3 320kbps không logo '
+             'mờ. Tải nhanh, miễn phí và không cần cài app.',
+ 'badge': 'Công Cụ Tải YouTube Shorts',
+ 'placeholder': 'Dán liên kết YouTube Shorts vào đây (ví dụ: youtube.com/shorts/...)...',
+ 'active_tab': 'yt-shorts',
+ 'canonical_url': 'https://www.yt4mp3.com/vi/youtube-shorts-downloader',
+ 'features': [{'icon': 'fa-solid fa-wand-magic-sparkles',
+               'title': 'Không Logo hay Hình Mờ',
+               'desc': 'Nhận tệp video gốc sạch đẹp, không bị chèn hình mờ của bên thứ ba, logo trang web hay chữ '
+                       'quảng cáo.'},
+              {'icon': 'fa-solid fa-mobile-screen',
+               'title': 'Video Dọc 1080p 60fps',
+               'desc': 'Giữ nguyên tỷ lệ khung hình 9:16 sắc nét chuẩn Full HD cùng tốc độ 60 khung hình mượt mà cho '
+                       'điện thoại.'},
+              {'icon': 'fa-solid fa-music',
+               'title': 'Tách Âm Thanh MP3 320kbps',
+               'desc': 'Trích xuất những giai điệu thịnh hành, lời thoại nổi tiếng và hiệu ứng âm thanh sống động '
+                       'thành file MP3 chất lượng.'},
+              {'icon': 'fa-solid fa-shield-halved',
+               'title': 'Không Quảng Cáo Phiền Phức',
+               'desc': 'Trải nghiệm mượt mà không có cửa sổ pop-up lừa đảo, không nút tải giả mạo và không lo dính mã '
+                       'độc.'},
+              {'icon': 'fa-solid fa-apple-whole',
+               'title': 'Tương Thích iPhone & Android',
+               'desc': 'Lưu trực tiếp vào album Ảnh trên Safari iOS và thư mục Tệp tải về trên Chrome Android cũng như '
+                       'máy tính.'},
+              {'icon': 'fa-solid fa-bolt',
+               'title': 'Mẹo URL Nhanh & Ứng Dụng PWA',
+               'desc': 'Gõ 4youtube vào thanh địa chỉ để tải tức thì hoặc cài đặt ứng dụng nhẹ nhàng ngay trên màn '
+                       'hình chính.'}],
+ 'faq': [{'q': 'Làm thế nào để tải video YouTube Shorts về điện thoại?',
+          'a': 'Mở video trong ứng dụng YouTube, nhấn nút Chia sẻ rồi chọn Sao chép liên kết. Sau đó dán link vào ô '
+               'tìm kiếm của YT4MP3, chọn định dạng MP4 và bấm Tải về để lưu vào máy.'},
+         {'q': 'Cách lưu video Shorts vào album Ảnh trên iPhone?',
+          'a': 'Thực hiện tải về trên trình duyệt Safari. Khi tải xong, nhấn vào biểu tượng tải về trên thanh Safari, '
+               "mở video, bấm nút Chia sẻ iOS và chọn 'Lưu video'. Video sẽ xuất hiện trong ứng dụng Ảnh."},
+         {'q': 'Video Shorts tải về có bị dính logo hình mờ (watermark) không?',
+          'a': 'Không. YT4MP3 cung cấp luồng video gốc nguyên bản. Chúng tôi không bao giờ đóng dấu bản quyền, logo '
+               'trang web hay chữ quảng cáo vào video của bạn.'},
+         {'q': 'Tôi có thể chuyển video YouTube Shorts thành file nhạc MP3 không?',
+          'a': 'Có. Bạn chỉ cần chọn định dạng MP3 trước khi tải. Hệ thống máy chủ sẽ tự động tách phần âm thanh và '
+               'cung cấp tệp MP3 chuẩn 320 kbps trong trẻo để làm nhạc chuông.'},
+         {'q': 'Độ phân giải video Shorts tải về là bao nhiêu?',
+          'a': 'Chúng tôi hỗ trợ mức phân giải cao nhất mà tác giả tải lên, phần lớn là 1080p Full HD (1080x1920) ở '
+               'tốc độ 60fps hoặc 30fps, bên cạnh tùy chọn 720p HD.'},
+         {'q': 'Tại sao các trang web khác thường báo lỗi với link Shorts?',
+          'a': 'YouTube sử dụng cấu trúc đường dẫn riêng cho video ngắn (youtube.com/shorts/id) thay vì dạng thông '
+               'thường. Các công cụ cũ không nhận dạng được, trong khi YT4MP3 xử lý trơn tru cả hai.'},
+         {'q': 'Có giới hạn số lượng video Shorts được tải mỗi ngày không?',
+          'a': 'Không có giới hạn. YT4MP3 hoàn toàn miễn phí và không giới hạn số lượt tải, phục vụ tốt cho nhu cầu '
+               'lưu trữ học tập và giải trí không cần mạng.'},
+         {'q': 'Tôi có cần cài đặt phần mềm hay tạo tài khoản không?',
+          'a': 'Bạn không cần cài ứng dụng hay đăng ký tài khoản. Mọi thao tác đều thực hiện trực tiếp trên trình '
+               'duyệt web của điện thoại và máy tính.'},
+         {'q': 'Mẹo gõ tắt URL để tải Shorts nhanh là gì?',
+          'a': "Bạn chỉ cần thêm số '4' vào trước youtube.com (ví dụ: 4youtube.com/shorts/id) hoặc đổi tên miền thành "
+               'yt4mp3.com trên thanh địa chỉ để mở ngay trang tải xuống.'},
+         {'q': 'Tại sao video tải về lại có tỷ lệ khung hình đứng?',
+          'a': 'YouTube Shorts được quay theo tỷ lệ dọc 9:16 nhằm lấp đầy toàn bộ màn hình điện thoại. Chúng tôi giữ '
+               'nguyên tỷ lệ này để mang lại trải nghiệm xem trọn vẹn nhất.'},
+         {'q': 'YT4MP3 làm thế nào để âm thanh không bị lệch so với hình ảnh?',
+          'a': 'YouTube truyền tải dữ liệu hình ảnh và âm thanh tách biệt theo giao thức DASH. Máy chủ của chúng tôi '
+               'căn chỉnh mốc thời gian (PTS) chính xác đến từng mili-giây trước khi hoàn tất file MP4.'},
+         {'q': 'Tôi có thể đưa video đã tải vào CapCut hay Premiere để chỉnh sửa không?',
+          'a': 'Hoàn toàn được. Các video được đóng gói theo chuẩn H.264 MP4 với âm thanh AAC, tương thích hoàn hảo '
+               'với CapCut, Adobe Premiere, DaVinci Resolve và Final Cut Pro.'},
+         {'q': 'Công cụ có tải được video Shorts riêng tư hay bị hạn chế không?',
+          'a': 'Trang web chỉ xử lý được các video YouTube Shorts được chia sẻ công khai. Video ở chế độ riêng tư hoặc '
+               'yêu cầu đăng nhập không thể tải được.'},
+         {'q': 'Một video Shorts thường chiếm bao nhiêu dung lượng bộ nhớ?',
+          'a': 'Một video dọc 60 giây chất lượng 1080p thường có dung lượng từ 15 MB đến 35 MB. Tệp âm thanh MP3 riêng '
+               'chỉ tốn khoảng 2,5 MB đến 4 MB.'},
+         {'q': 'Sử dụng YT4MP3 có an toàn trước virus và mã độc không?',
+          'a': 'Rất an toàn. Chúng tôi không sử dụng các cửa sổ nhảy quảng cáo phiền toái, nút tải giả mạo hay yêu cầu '
+               'cấp quyền đáng ngờ.'},
+         {'q': 'Tải video YouTube Shorts về máy cho mục đích cá nhân có hợp pháp không?',
+          'a': 'Việc lưu video để xem lại khi không có internet hoặc phục vụ mục đích nghiên cứu cá nhân thuộc phạm vi '
+               'sử dụng hợp lý. Hãy luôn tôn trọng quyền tác giả của người tạo nội dung.'}],
+ 'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
+                 '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid '
+                 'fa-list-ul mr-2 text-rose-600"></i>Nội Dung Hướng Dẫn</p>\n'
+                 '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
+                 '  <li><a href="#kien-truc-video-doc-vi" class="hover:text-rose-600 transition-colors">1. Kiến Trúc '
+                 'Video Dọc 9:16 và Mã Hóa Độ Nét Cao Full HD</a></li>\n'
+                 '  <li><a href="#huong-dan-thiet-bi-vi" class="hover:text-rose-600 transition-colors">2. Hướng Dẫn '
+                 'Chi Tiết Cho iPhone, Android và Máy Tính</a></li>\n'
+                 '  <li><a href="#tach-nhac-mp3-vi" class="hover:text-rose-600 transition-colors">3. Tách Âm Thanh MP3 '
+                 '320kbps từ Các Đoạn Shorts Thịnh Hành</a></li>\n'
+                 '  <li><a href="#so-sanh-cong-cu-vi" class="hover:text-rose-600 transition-colors">4. Bảng So Sánh '
+                 'Chi Tiết: YT4MP3 vs ShortsNoob vs SaveFrom vs Publer</a></li>\n'
+                 '  <li><a href="#khong-dinh-hinh-mo-vi" class="hover:text-rose-600 transition-colors">5. Cam Kết Tệp '
+                 'Sạch Không Logo Hình Mờ (Watermark)</a></li>\n'
+                 '  <li><a href="#danh-cho-nha-sang-tao-vi" class="hover:text-rose-600 transition-colors">6. Dành Cho '
+                 'Nhà Sáng Tạo: Tái Sử Dụng Trên TikTok và Reels</a></li>\n'
+                 '  <li><a href="#meo-url-va-pwa-vi" class="hover:text-rose-600 transition-colors">7. Mẹo Gõ Tắt Đường '
+                 'Dẫn và Ứng Dụng Web PWA Tiện Lợi</a></li>\n'
+                 '  <li><a href="#dong-bo-luong-dash-vi" class="hover:text-rose-600 transition-colors">8. Khắc Phục '
+                 'Hiện Tượng Lệch Tiếng Bằng Luồng DASH Chuẩn</a></li>\n'
+                 '</ul>\n'
+                 '</div>\n'
+                 '\n'
+                 '<h2 id="kien-truc-video-doc-vi">1. Kiến Trúc Video Dọc 9:16 và Mã Hóa Độ Nét Cao Full HD</h2>\n'
+                 '<p>Định dạng video ngắn YouTube Shorts đã làm thay đổi hoàn toàn cách chúng ta theo dõi video trên '
+                 'điện thoại di động. Thay vì những thước phim ngang truyền thống với tỷ lệ 16:9, Shorts được sản xuất '
+                 'chuyên biệt theo chiều dọc 9:16, phổ biến ở độ phân giải 1080x1920 pixel. Tỷ lệ này vừa khít với màn '
+                 'hình smartphone, loại bỏ hoàn toàn viền đen hai bên và mang lại trải nghiệm xem trọn vẹn. Khi có nhu '
+                 'cầu <strong>tải youtube shorts</strong> để lưu lại các mẹo nấu ăn nhanh, bài tập thể lực hay trích '
+                 'đoạn giải trí xem khi không có mạng, việc bảo toàn độ sắc nét ban đầu là điều vô cùng cần '
+                 'thiết.</p>\n'
+                 '\n'
+                 '<p>Nhiều trang web tải video thông thường thường gặp trục trặc với các video định dạng đứng. Chúng '
+                 'dễ làm méo hình ảnh theo chiều ngang hoặc ép giảm chất lượng xuống mức 360p mờ nhạt. YouTube phát '
+                 'video độ nét cao bằng giao thức truyền tải thích ứng DASH, tách riêng dòng hình ảnh sắc nét và dòng '
+                 'âm thanh nổi. Một công cụ <strong>tải video shorts youtube</strong> chất lượng phải thu nhận đồng '
+                 'thời cả hai luồng dữ liệu này và ghép chúng vào tệp MP4 H.264 tiêu chuẩn mà không làm mất khung hình '
+                 'hay biến đổi màu sắc.</p>\n'
+                 '\n'
+                 '<p>Tại YT4MP3, hệ thống máy chủ đám mây của chúng tôi nhận diện tức thì các video khung hình dọc. '
+                 'Cho dù đó là pha xử lý game đẹp mắt ở tốc độ 60 khung hình/giây hay một chia sẻ ngắn gọn ba mươi '
+                 'giây, máy chủ sẽ xử lý ngay tức khắc để gửi về cho bạn tệp MP4 chuẩn mực, mở mượt mà trên mọi thư '
+                 'viện ảnh điện thoại hay máy tính.</p>\n'
+                 '\n'
+                 '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                 '<table>\n'
+                 '<thead>\n'
+                 '<tr>\n'
+                 '<th>Cấp Độ Chất Lượng</th>\n'
+                 '<th>Độ Phân Giải & Tỷ Lệ</th>\n'
+                 '<th>Tốc Độ Khung Hình</th>\n'
+                 '<th>Dung Lượng Ước Tính (60s)</th>\n'
+                 '<th>Mục Đích Sử Dụng</th>\n'
+                 '</tr>\n'
+                 '</thead>\n'
+                 '<tbody>\n'
+                 '<tr>\n'
+                 '<td><strong>1080p Full HD (Khuyên dùng)</strong></td>\n'
+                 '<td>1080 x 1920 (9:16)</td>\n'
+                 '<td>30 / 60 FPS</td>\n'
+                 '<td>15 MB &ndash; 35 MB</td>\n'
+                 '<td>Lưu trữ, chỉnh sửa video, xem toàn màn hình sắc nét</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>720p HD Tiêu Chuẩn</strong></td>\n'
+                 '<td>720 x 1280 (9:16)</td>\n'
+                 '<td>30 FPS</td>\n'
+                 '<td>8 MB &ndash; 16 MB</td>\n'
+                 '<td>Gửi qua ứng dụng nhắn tin, tiết kiệm bộ nhớ máy</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Âm Thanh MP3 320kbps</strong></td>\n'
+                 '<td>Chỉ Phần Tiếng Stereo</td>\n'
+                 '<td>44.1 / 48 kHz</td>\n'
+                 '<td>2.5 MB &ndash; 4.5 MB</td>\n'
+                 '<td>Bài hát thịnh hành, hiệu ứng âm thanh, câu nói hài hước</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Âm Thanh MP3 128kbps</strong></td>\n'
+                 '<td>Tối Ưu Cho Giọng Nói</td>\n'
+                 '<td>44.1 kHz</td>\n'
+                 '<td>1.0 MB &ndash; 1.8 MB</td>\n'
+                 '<td>Ghi âm ngắn, trích đoạn hội thoại, kích thước siêu nhỏ</td>\n'
+                 '</tr>\n'
+                 '</tbody>\n'
+                 '</table>\n'
+                 '</div>\n'
+                 '\n'
+                 '<h2 id="huong-dan-thiet-bi-vi">2. Hướng Dẫn Chi Tiết Cho iPhone, Android và Máy Tính</h2>\n'
+                 '<p>Lưu lại những đoạn video ngắn yêu thích về máy không nên là một công việc phức tạp hay đòi hỏi '
+                 'cài đặt các ứng dụng lạ lẫm. Sau đây là hướng dẫn cụ thể cách dùng công cụ <strong>chuyển youtube '
+                 'shorts sang mp4</strong> của chúng tôi trên từng thiết bị:</p>\n'
+                 '\n'
+                 '<h3>Cách Tải YouTube Shorts Trên iPhone và iPad (iOS)</h3>\n'
+                 '<p>Hệ điều hành của Apple có cơ chế bảo mật khá chặt chẽ trên trình duyệt Safari, nhưng bạn hoàn '
+                 'toàn có thể lưu video vào album Ảnh chỉ với vài thao tác:</p>\n'
+                 '<ul>\n'
+                 '  <li>Mở ứng dụng YouTube trên iPhone và tìm đến video Shorts bạn muốn tải.</li>\n'
+                 '  <li>Chạm vào nút <strong>Chia sẻ</strong> bên cạnh phải màn hình rồi chọn <strong>Sao chép liên '
+                 'kết</strong>.</li>\n'
+                 '  <li>Mở Safari, truy cập địa chỉ <strong>yt4mp3.com/vi/youtube-shorts-downloader</strong> và dán '
+                 'link vào khung tìm kiếm.</li>\n'
+                 '  <li>Chọn định dạng video MP4 hoặc nhạc MP3 rồi bấm <strong>Convert</strong>.</li>\n'
+                 '  <li>Chờ vài giây cho hệ thống hoàn tất, chạm vào <strong>Download Now</strong> và xác nhận tải '
+                 'trên thông báo của Safari.</li>\n'
+                 '  <li>Để đưa video vào bộ sưu tập ảnh, chạm vào biểu tượng tải về ở góc Safari, mở video lên, bấm '
+                 'nút Chia sẻ của iOS và chọn <strong>Lưu video</strong>. Clip đã nằm sẵn trong ứng dụng Ảnh của '
+                 'bạn.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>Cách Tải YouTube Shorts Trên Điện Thoại Android</h3>\n'
+                 '<p>Trên các máy Android, việc quản lý tệp tin tải về rất thuận tiện thông qua Google Chrome:</p>\n'
+                 '<ul>\n'
+                 '  <li>Khi đang xem video trên YouTube, chạm vào <strong>Chia sẻ</strong> và sao chép đường '
+                 'link.</li>\n'
+                 '  <li>Truy cập trang web YT4MP3 bằng trình duyệt Chrome trên điện thoại.</li>\n'
+                 '  <li>Dán địa chỉ vào, chạm <strong>Convert</strong> rồi nhấn <strong>Download Now</strong>.</li>\n'
+                 '  <li>File MP4 sẽ được tải thẳng vào thư mục <code>Download</code> và xuất hiện ngay trên Google Ảnh '
+                 'cũng như Bộ sưu tập.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>Cách Tải YouTube Shorts Trên Máy Tính (Windows, Mac, Linux)</h3>\n'
+                 '<p>Với máy tính để bàn hoặc laptop, thao tác còn nhanh gọn hơn nữa:</p>\n'
+                 '<ul>\n'
+                 '  <li>Sao chép trực tiếp URL từ thanh địa chỉ trình duyệt (dạng '
+                 '<code>youtube.com/shorts/...</code>).</li>\n'
+                 '  <li>Dán vào thanh công cụ trên website YT4MP3.</li>\n'
+                 '  <li>Bấm Tải về để lưu tệp tin vào ổ cứng, sẵn sàng xem bằng VLC hoặc đưa vào phần mềm dựng '
+                 'phim.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="tach-nhac-mp3-vi">3. Tách Âm Thanh MP3 320kbps từ Các Đoạn Shorts Thịnh Hành</h2>\n'
+                 '<p>Sức hút của các video ngắn thường bắt nguồn từ phần âm nhạc đi kèm: những giai điệu bắt tai, lời '
+                 'thoại truyền cảm hứng hay tiếng động ngộ nghĩnh. Rất nhiều người dùng mong muốn <strong>chuyển '
+                 'youtube shorts sang mp3</strong> mà không cần tải cả tệp video nặng nề.</p>\n'
+                 '\n'
+                 '<p>Hầu hết các trang tải khác chỉ cho phép lấy video nguyên bản, khiến bạn phải tìm thêm một phần '
+                 'mềm chuyển đổi âm thanh khác. Tại YT4MP3, tính năng trích xuất âm thanh được tích hợp sẵn. Khi bạn '
+                 'chọn định dạng MP3, máy chủ của chúng tôi sẽ bóc tách luồng tiếng và mã hóa thành tệp <strong>MP3 '
+                 '320 kbps</strong> với độ chi tiết âm thanh vượt trội.</p>\n'
+                 '\n'
+                 '<p>Tính năng này cực kỳ phù hợp cho:</p>\n'
+                 '<ul>\n'
+                 '  <li><strong>Nhạc Sĩ & Nhà Sản Xuất:</strong> Lấy các đoạn mẫu âm thanh thoại và nhạc cụ sạch sẽ '
+                 'cho các bản phối mới.</li>\n'
+                 '  <li><strong>Nhạc Chuông & Báo Thức:</strong> Cài đặt câu nói vui nhộn hay câu trích dẫn yêu thích '
+                 'làm chuông báo thức mỗi sáng.</li>\n'
+                 '  <li><strong>Học Ngoại Ngữ:</strong> Lưu lại các câu giao tiếp ngắn của người bản xứ để luyện phát '
+                 'âm hàng ngày.</li>\n'
+                 '  <li><strong>Danh Sách Nhạc Tập Thể Dục:</strong> Gom những trích đoạn bài hát sôi động để tập gym '
+                 'mà không tốn nhiều dung lượng điện thoại.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="so-sanh-cong-cu-vi">4. Bảng So Sánh Chi Tiết: YT4MP3 vs ShortsNoob vs SaveFrom vs '
+                 'Publer</h2>\n'
+                 '<p>Để nhận thấy rõ những điểm vượt trội của nền tảng chúng tôi, hãy cùng nhìn qua cách thức hoạt '
+                 'động của những dịch vụ quen thuộc trên mạng hiện nay:</p>\n'
+                 '\n'
+                 '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                 '<table>\n'
+                 '<thead>\n'
+                 '<tr>\n'
+                 '<th>Tính Năng / Đặc Điểm</th>\n'
+                 '<th>YT4MP3 (Khuyên dùng)</th>\n'
+                 '<th>ShortsNoob</th>\n'
+                 '<th>SaveFrom / SSYouTube</th>\n'
+                 '<th>Publer Downloader</th>\n'
+                 '</tr>\n'
+                 '</thead>\n'
+                 '<tbody>\n'
+                 '<tr>\n'
+                 '<td><strong>Chất Lượng 1080p 60fps</strong></td>\n'
+                 '<td>Có, giữ trọn độ nét gốc</td>\n'
+                 '<td>Thường bị giới hạn ở 720p</td>\n'
+                 '<td>Hay bị hạ xuống 360p/720p</td>\n'
+                 '<td>Có, nhưng yêu cầu tài khoản</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Không Logo Hình Mờ</strong></td>\n'
+                 '<td>100% sạch, không dính logo</td>\n'
+                 '<td>Video sạch</td>\n'
+                 '<td>Video sạch</td>\n'
+                 '<td>Video sạch</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Tách Nhạc MP3 320kbps</strong></td>\n'
+                 '<td>Tải tức thì với 1 cú nhấp</td>\n'
+                 '<td>Không có tùy chọn chỉ lấy nhạc</td>\n'
+                 '<td>Chuyển đổi âm thanh rất chậm</td>\n'
+                 '<td>Không hỗ trợ xuất file MP3</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Quảng Cáo Pop-up Phiền Toái</strong></td>\n'
+                 '<td>Không pop-up, giao diện gọn</td>\n'
+                 '<td>Nhiều banner quảng cáo</td>\n'
+                 '<td>Chuyển hướng liên tục tới trang rác</td>\n'
+                 '<td>Sạch sẽ, nhưng mời mua gói trả phí</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Yêu Cầu Đăng Ký Tài Khoản</strong></td>\n'
+                 '<td>Không cần, miễn phí 100%</td>\n'
+                 '<td>Không cần</td>\n'
+                 '<td>Thúc giục cài tiện ích mở rộng</td>\n'
+                 '<td>Bắt buộc đăng ký bằng email</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Mẹo Gõ Tắt Trên Trình Duyệt</strong></td>\n'
+                 '<td>Có (dùng 4youtube hoặc yt4mp3)</td>\n'
+                 '<td>Không có tính năng này</td>\n'
+                 '<td>Có (thêm ss, nhiều quảng cáo)</td>\n'
+                 '<td>Không có tính năng này</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Ứng Dụng Web Tiện Lợi (PWA)</strong></td>\n'
+                 '<td>Có, 1 chạm trên màn hình</td>\n'
+                 '<td>Không có ứng dụng web</td>\n'
+                 '<td>Giới thiệu file APK tiềm ẩn rủi ro</td>\n'
+                 '<td>Không hỗ trợ PWA</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Tốc Độ Xử Lý Máy Chủ</strong></td>\n'
+                 '<td>Đám mây tốc độ cao, không chờ</td>\n'
+                 '<td>Thường gặp lỗi kết nối (504)</td>\n'
+                 '<td>Máy chủ hay bị nghẽn chậm chạp</td>\n'
+                 '<td>Giới hạn lượt tải cho người dùng miễn phí</td>\n'
+                 '</tr>\n'
+                 '</tbody>\n'
+                 '</table>\n'
+                 '</div>\n'
+                 '\n'
+                 '<p>Các trang như <strong>Savefrom</strong> hay <strong>ShortsNoob</strong> thường khiến người dùng '
+                 'bối rối trước những cảnh báo virus giả mạo. Trong khi đó Publer lại đòi hỏi khai báo tài khoản cá '
+                 'nhân. YT4MP3 đề cao sự thuận tiện: dán liên kết, tải tệp về và sử dụng ngay.</p>\n'
+                 '\n'
+                 '<h2 id="khong-dinh-hinh-mo-vi">5. Cam Kết Tệp Sạch Không Logo Hình Mờ (Watermark)</h2>\n'
+                 '<p>Một trong những băn khoăn hàng đầu của người làm video là liệu bản tải về có dính logo lạ hay '
+                 'không. Trên các ứng dụng như TikTok, video tải trực tiếp từ ứng dụng sẽ bị chèn hình mờ bay nhảy '
+                 'mang tên tác giả.</p>\n'
+                 '\n'
+                 '<p>Trên YouTube Shorts, video được nhà sáng tạo đăng lên hoàn toàn không có sẵn hình mờ như vậy. Mối '
+                 'lo ngại thực sự đến từ những trang tải thiếu uy tín, tự ý dán thêm địa chỉ trang web hoặc logo của '
+                 'họ lên khung hình để quảng bá miễn phí.</p>\n'
+                 '\n'
+                 '<p>Tại YT4MP3, chúng tôi cam kết giữ trọn vẹn tệp tin nguyên bản:</p>\n'
+                 '<ul>\n'
+                 '  <li>Không bao giờ đóng dấu hình mờ, tên website hay thông tin quảng bá lên video của bạn.</li>\n'
+                 '  <li>Không nén lại video nhiều lần nhằm giữ nguyên màu sắc và độ chi tiết vốn có.</li>\n'
+                 '  <li>File MP4 luôn duy trì chuẩn khung hình đứng 9:16 mà không bị gắn thêm viền giả.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="danh-cho-nha-sang-tao-vi">6. Dành Cho Nhà Sáng Tạo: Tái Sử Dụng Trên TikTok và Reels</h2>\n'
+                 '<p>Nếu bạn là người sáng tạo nội dung, việc đăng tải video lên nhiều kênh mạng xã hội khác nhau là '
+                 'chìa khóa vàng để mở rộng tệp khán giả. Một video có lượt xem bình thường trên YouTube hoàn toàn có '
+                 'thể trở thành trào lưu bùng nổ trên Instagram Reels hoặc TikTok.</p>\n'
+                 '\n'
+                 '<p>Nhiều nhà sáng tạo xem trang web của chúng tôi như một kho sao lưu trực tuyến tin cậy. Nếu bạn vô '
+                 'tình làm mất file dự án CapCut hay Premiere trên điện thoại, bạn có thể dễ dàng tải lại bản 1080p '
+                 'nguyên gốc từ kênh của mình mà không sợ vỡ hình.</p>\n'
+                 '\n'
+                 '<p>Một số lưu ý khi đăng lại nội dung:</p>\n'
+                 '<ul>\n'
+                 '  <li><strong>Bản Quyền Âm Nhạc:</strong> Các bài hát có bản quyền trong kho YouTube có thể bị tắt '
+                 'tiếng ở nền tảng khác. Bạn hãy dùng công cụ MP3 của chúng tôi để giữ lại phần thu âm giọng nói và '
+                 'ghép thêm nhạc miễn phí bản quyền.</li>\n'
+                 '  <li><strong>Ưu Tiên Bản 1080p Full HD:</strong> Luôn xuất ở chất lượng cao nhất để thuật toán của '
+                 'TikTok và Reels ưu tiên phân phối nhờ độ sắc nét của hình ảnh.</li>\n'
+                 '  <li><strong>Chuẩn Tệp Tương Thích:</strong> Video MP4 của chúng tôi có mã tiêu đề moov atom chuẩn '
+                 'hóa, giúp quá trình kéo thả vào Premiere Pro, DaVinci Resolve hay CapCut diễn ra mượt mà không gặp '
+                 'lỗi lệch hình.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="meo-url-va-pwa-vi">7. Mẹo Gõ Tắt Đường Dẫn và Ứng Dụng Web PWA Tiện Lợi</h2>\n'
+                 '<p>Việc sao chép và dán liên kết nhiều lần có thể gây bất tiện nếu bạn cần tải liên tiếp nhiều '
+                 'video. YT4MP3 mang đến hai giải pháp nhanh chóng giúp bạn tiết kiệm tối đa thời gian:</p>\n'
+                 '\n'
+                 '<h3>Mẹo Thay Đổi Đường Link Trên Thanh Địa Chỉ</h3>\n'
+                 '<p>Khi đang xem bất kỳ video Shorts nào trên trình duyệt của điện thoại hoặc máy tính, bạn không cần '
+                 'phải quay lại trang chủ của chúng tôi. Chỉ cần chỉnh sửa đường dẫn ngay trên thanh địa chỉ:</p>\n'
+                 '<ul>\n'
+                 '  <li>Đổi <code>youtube.com/shorts/id</code> thành <code>yt4mp3.com/shorts/id</code></li>\n'
+                 '  <li>Hoặc nhập <code>4youtube.com/shorts/id</code></li>\n'
+                 '  <li>Nhấn Enter và video sẽ hiển thị ngay với đầy đủ các nút bấm tải xuống thuận tiện!</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>Cài Ứng Dụng Web (PWA) Lên Màn Hình Chính</h3>\n'
+                 '<p>Bạn có thể đưa biểu tượng YT4MP3 ra màn hình chính của điện thoại giống như một ứng dụng thông '
+                 'thường. Nhấn vào nút <strong>Cài Đặt Ứng Dụng</strong> ở đầu trang web hoặc chọn &ldquo;Thêm vào Màn '
+                 'hình chính&rdquo; trong menu trình duyệt. Biểu tượng này sẽ mở trang web ở chế độ toàn màn hình mà '
+                 'không tiêu tốn bộ nhớ máy cũng như không thu thập thông tin cá nhân của bạn.</p>\n'
+                 '\n'
+                 '<h2 id="dong-bo-luong-dash-vi">8. Khắc Phục Hiện Tượng Lệch Tiếng Bằng Luồng DASH Chuẩn</h2>\n'
+                 '<p>Có lẽ bạn đã từng gặp trường hợp tải video từ các trang kém chất lượng và phát hiện khẩu hình '
+                 'nhân vật không khớp với âm thanh phát ra. Lỗi khó chịu này xuất phát từ cách YouTube phân phối nội '
+                 'dung độ nét cao.</p>\n'
+                 '\n'
+                 '<p>Ở các độ phân giải cao, YouTube chia hình ảnh và tiếng thành hai luồng độc lập qua giao thức '
+                 'DASH. Những trang web sơ sài thường ghép hai luồng này một cách cẩu thả. Chỉ cần lệch một vài phần '
+                 'nghìn giây là âm thanh sẽ bị trễ hẳn so với hình ảnh.</p>\n'
+                 '\n'
+                 '<p>YT4MP3 ứng dụng quy trình ghép luồng chuẩn xác trên máy chủ đám mây. Chúng tôi đọc kỹ các mốc '
+                 'thời gian (PTS) của luồng hình và luồng âm thanh AAC, căn chỉnh khớp đến từng mili-giây trước khi '
+                 'tạo file MP4 hoàn chỉnh. Nhờ vậy, video bạn tải về luôn đạt được sự ăn khớp nhịp nhàng giữa hình và '
+                 'tiếng.</p>'}

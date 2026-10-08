@@ -131,6 +131,11 @@ async def youtube_mp3_page(request: Request):
 async def youtube_mp4_page(request: Request):
     return render_converter_page(request, "youtube-to-mp4", "en")
 
+@app.get("/youtube-shorts-downloader", response_class=HTMLResponse)
+@app.get("/youtube-shorts-downloader/", response_class=HTMLResponse)
+async def youtube_shorts_page(request: Request):
+    return render_converter_page(request, "youtube-shorts-downloader", "en")
+
 # Static Legal Pages (Universal English)
 @app.get("/contact-us", response_class=HTMLResponse)
 async def contact_us_page(request: Request):
@@ -407,4 +412,13 @@ async def localized_youtube_mp4_page(request: Request, lang: str):
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
     return render_converter_page(request, "youtube-to-mp4", lang)
+
+@app.get("/{lang}/youtube-shorts-downloader", response_class=HTMLResponse)
+@app.get("/{lang}/youtube-shorts-downloader/", response_class=HTMLResponse)
+async def localized_youtube_shorts_page(request: Request, lang: str):
+    if lang == "en":
+        return RedirectResponse(url="/youtube-shorts-downloader", status_code=301)
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Page not found")
+    return render_converter_page(request, "youtube-shorts-downloader", lang)
 

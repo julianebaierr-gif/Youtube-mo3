@@ -525,3 +525,417 @@ PAGES = {
 <p>お気に入りの旅行ドキュメンタリーや自然音映像をUSBメモリにまとめてテレビに接続すれば、リラックスタイムのお供に最適です。</p>"""
     }
 }
+
+
+# YouTube Shorts Downloader Integration
+KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
+ 'YouTube Shorts ダウンロード',
+ 'ショート動画保存',
+ 'YouTubeショート動画ダウンロード',
+ 'YouTubeショート MP4変換',
+ 'YouTubeショート MP3変換',
+ 'YouTubeショート ロゴなし',
+ 'ショート動画 高画質 保存',
+ 'YouTubeリール保存',
+ 'YouTubeショート 無料保存',
+ 'スマホ YouTubeショート保存',
+ 'YouTubeショート保存サイト',
+ 'YouTubeショート 音声抽出',
+ 'ショート動画 ダウンロード PC',
+ 'YouTubeショート 縦型動画保存',
+ 'savefrom youtube shorts',
+ 'savefrom shorts',
+ 'shortsnoob 日本語',
+ 'publer youtube shorts',
+ 'y2mate shorts',
+ 'ssyoutube shorts',
+ 'snaptik shorts',
+ '10downloader shorts',
+ 'savefrom net youtube shorts 保存',
+ 'savetube shorts',
+ 'yt shorts downloader publer',
+ 'snaptube shorts',
+ 'vidmate shorts ダウンロード',
+ 'shorts 保存 リンクから',
+ 'savefrom mp4 shorts',
+ 'ss youtube shorts',
+ 'shortsnoob 無料',
+ 'publer ダウンローダー 無料',
+ 'y2mate shorts mp3',
+ 'save from net shorts',
+ 'online video downloader shorts',
+ 'snaptik youtube shorts',
+ '10downloader youtube shorts',
+ 'ショート動画 ダウンローダー オンライン',
+ 'savefrom shorts 変換',
+ 'savefrom net shorts 日本',
+ 'shortsnoob 安全',
+ 'YouTubeショート 保存 広告なし',
+ '9対16 縦型動画比率',
+ '1080p フルHD 高画質',
+ '解像度 1080x1920',
+ '透かしなし ウォーターマークなし',
+ 'ロゴなし保存',
+ '音声抽出 320kbps MP3',
+ 'ショートからBGM抽出',
+ '邪魔なポップアップ広告なし',
+ '広告なし',
+ 'iPhone Safari 写真アプリ カメラロール保存',
+ 'Android Chrome ダウンロードフォルダ',
+ 'アプリ不要 インストールなし',
+ 'TikTok リール クリエイター 再投稿',
+ 'バズ音源 流行りのBGM',
+ 'ショート背景音楽',
+ '音声と映像の同期ズレなし',
+ 'H.264 MP4ファイル形式',
+ '個別DASHストリーム',
+ 'クラウド高速デマルチプレクス',
+ 'URL裏技 4youtube',
+ 'PWA ホーム画面追加',
+ 'オフライン再生 通信量節約',
+ 'ギガ節約',
+ '画面オフ バックグラウンド再生',
+ 'スマホ着信音 アラーム作成 ringtone',
+ 'CapCut Premiere Pro 動画編集',
+ '60fps なめらか再生',
+ '短い縦型ショート動画',
+ 'ブラウザから直接ダウンロード',
+ '待ち時間なし 高速サーバー',
+ '1日のダウンロード制限なし',
+ 'ウイルスなし 安全な変換ツール',
+ 'フォトライブラリ保存',
+ 'moov atom 高速再生',
+ 'Rec.709 色空間',
+ 'セリフ 切り抜き 音声',
+ '面白いミーム 面白動画',
+ '料理レシピ ショート',
+ '裏技 テクノロジー ショート',
+ '軽量 720p HD',
+ 'AAC ステレオ音声',
+ '短い教育動画',
+ '個人用ローカルバックアップ',
+ '数秒で即座にダウンロード',
+ 'クラウド高速処理',
+ 'iPhoneでYouTubeショートを写真アプリのカメラロールに保存する方法',
+ 'Androidスマホでアプリを使わずにYouTubeショートを保存する方法',
+ 'YouTubeショート動画をMP3音楽に変換できますか',
+ '怪しいアプリを入れずにYouTubeショートを保存する方法',
+ '広告やウイルスのない一番安全なYouTubeショート保存サイトはどこ',
+ 'YouTubeショートを1080p 60fpsの高画質で保存する方法',
+ 'YouTubeショートからBGMや流行りの曲だけを抽出する方法',
+ '他のサイトでダウンロードしたショート動画の音が出ない理由',
+ 'Androidでダウンロードしたショート動画はどのフォルダに保存されるか',
+ 'YouTubeの縦長動画だけを保存する方法',
+ 'iPhoneのSafariからショート動画を写真に保存する手順',
+ '音ズレせずにYouTubeショートを綺麗に保存する方法',
+ 'YouTubeショートの音源を最高音質320kbps MP3で保存する方法',
+ 'ショート動画保存の4youtube裏技の使い方',
+ '透かしやロゴが入らないYouTubeショート保存方法',
+ 'パソコンPCでYouTubeショートをダウンロードできますか',
+ 'オンラインのYouTubeショート保存サイトは安全ですか',
+ '保存したYouTubeショートをTikTokやリールに再投稿する方法',
+ 'ダウンロードしたショート動画の音声が遅れる原因と対策',
+ 'うざい広告が出ないYouTubeショート保存ツール',
+ 'YT4MP3をスマホのホーム画面に追加してアプリ化する方法',
+ '1080pのショート動画のファイルサイズ容量はどれくらい']
+UI["nav_shorts"] = 'YouTubeショート'
+PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - ShortsをMP4＆MP3に変換ダウンロード | YT4MP3',
+ 'meta_desc': 'YouTubeショート動画を1080pフルHD MP4および320kbps MP3音声で無料・透かしロゴなし保存。iPhone、Android、PC対応の高速・広告なしダウンローダー。',
+ 'h1': 'YouTubeショート動画をオンライン保存',
+ 'subtitle': 'YouTube Shortsの縦型動画をオリジナルの1080pフルHD高画質または320kbps高音質MP3としてロゴなしで保存。高速・完全無料・アプリ不要。',
+ 'badge': 'YouTubeショート保存ツール',
+ 'placeholder': 'YouTubeショートのリンクを貼り付け（例: youtube.com/shorts/...）...',
+ 'active_tab': 'yt-shorts',
+ 'canonical_url': 'https://www.yt4mp3.com/ja/youtube-shorts-downloader',
+ 'features': [{'icon': 'fa-solid fa-wand-magic-sparkles',
+               'title': '透かし・ロゴなし',
+               'desc': '他社ツールの余計なウォーターマークやサイト名ロゴ、宣伝テキストの一切ない綺麗な元動画を保存。'},
+              {'icon': 'fa-solid fa-mobile-screen',
+               'title': '縦型 1080p 60fps 高画質',
+               'desc': 'スマホ画面に最適な9:16比率の縦長サイズを、60fpsの滑らかなフルHD画質でそのまま美しく保持。'},
+              {'icon': 'fa-solid fa-music',
+               'title': '320kbps MP3 音声抽出',
+               'desc': '話題のバズ音源や流行りのBGM、印象的なセリフを320kbpsのクリアな高音質MP3音楽として直接抽出。'},
+              {'icon': 'fa-solid fa-shield-halved',
+               'title': '邪魔な広告・ポップアップなし',
+               'desc': '怪しい偽警告やウイルス通知、強制的なアプリインストールの誘導が一切ない安心のクリーン環境。'},
+              {'icon': 'fa-solid fa-apple-whole',
+               'title': 'iPhone＆Android 完全対応',
+               'desc': 'iOS Safariから写真アプリ（カメラロール）へ直接保存可能。AndroidやPCのダウンロードにも対応。'},
+              {'icon': 'fa-solid fa-bolt',
+               'title': 'URL短縮裏技＆PWAアプリ',
+               'desc': 'アドレスバーで4youtubeと入力するだけで即時保存画面へ。ホーム画面へのアプリ追加にも対応。'}],
+ 'faq': [{'q': 'スマホでYouTubeショート動画を保存するにはどうすればいいですか？',
+          'a': 'YouTubeアプリで動画を開き、「共有」をタップして「リンクをコピー」を選択します。次にYT4MP3の検索枠に貼り付け、MP4を選択して「ダウンロード」をタップするだけで保存できます。'},
+         {'q': 'iPhoneの写真アプリ（カメラロール）に動画を直接保存できますか？',
+          'a': 'はい、可能です。Safariでダウンロード後、アドレスバーのダウンロード矢印をタップして動画を開き、左下の共有アイコンから「ビデオを保存」を選択すると写真アプリに入ります。'},
+         {'q': '保存したショート動画にロゴや透かし（ウォーターマーク）は入りますか？',
+          'a': 'いいえ、一切入りません。YT4MP3は投稿者がアップロードしたオリジナルの映像ストリームをそのままお届けするため、余計な宣伝ロゴやマークは付加されません。'},
+         {'q': 'YouTubeショートから音楽や音声だけをMP3で抽出できますか？',
+          'a': 'はい。ダウンロード前に「MP3」を選択するだけで、動画から音声トラックのみを分離し、最高音質320kbpsのクリアなMP3ファイルとして保存できます。'},
+         {'q': '対応しているショート動画の画質解像度はどれくらいですか？',
+          'a': '元動画の最高画質に対応しています。多くのショート動画で採用されている1080p フルHD（1080x1920）の30fpsおよび滑らかな60fps、容量を抑えた720p HDに対応しています。'},
+         {'q': '他の保存サイトがショート動画のURLでエラーになるのはなぜですか？',
+          'a': 'YouTubeショートは通常動画と異なる特殊なURL構造（youtube.com/shorts/id）を使用しています。古い仕様のサイトはこれを解析できませんが、YT4MP3は自動判別します。'},
+         {'q': '1日にダウンロードできる本数に制限はありますか？', 'a': '制限はありません。YT4MP3は個人利用、勉強、オフライン再生のために何度でも完全無料で無制限にご利用いただけます。'},
+         {'q': 'アプリのインストールや会員登録は必要ですか？',
+          'a': '一切不要です。ブラウザ上で完結するため、Android、iPhone、Mac、Windowsのどの端末でもソフトウェアを導入することなく即座に使えます。'},
+         {'q': '一瞬で保存できるURLの裏技とは何ですか？',
+          'a': 'アドレスバーのyoutube.comの前に数字の「4」を付けるか（例: '
+               '4youtube.com/shorts/id）、ドメインをyt4mp3.comに変えてEnterを押すだけで直接変換画面が開きます。'},
+         {'q': 'なぜ保存した動画は縦長なのですか？',
+          'a': 'YouTubeショートはスマートフォンの画面全体にぴったりフィットするよう9:16の縦型で撮影されているためです。横長に歪めることなくオリジナルの比率を維持しています。'},
+         {'q': '音声と映像のタイミングがずれない（音ズレしない）仕組みは？',
+          'a': 'YouTubeの高画質ストリームは映像と音声がDASH規格で別々に配信されています。当サーバーは両方の正確なタイムスタンプ（PTS）をミリ秒単位で同期させてMP4化しています。'},
+         {'q': '保存した動画をCapCutやPremiereなどの編集ソフトで使えますか？',
+          'a': 'はい。標準的なH.264 MP4形式およびAAC音声で保存されるため、CapCut、Adobe Premiere Pro、DaVinci Resolveなどでエラーなく読み込めます。'},
+         {'q': '非公開動画や年齢制限動画も保存できますか？', 'a': '当ツールはYouTube上で一般公開されているショート動画のみに対応しています。ログインが必要なプライベート動画は保存できません。'},
+         {'q': '1本のショート動画でどれくらいのデータ容量を消費しますか？', 'a': '60秒の1080p縦型動画でおよそ15MB〜35MB程度です。MP3の音声のみであれば約2.5MB〜4MBと非常に軽量です。'},
+         {'q': 'ウイルスや不正なプログラムの心配はありませんか？', 'a': '安心してお使いいただけます。不要なポップアップや不審なファイルのダウンロード誘導は徹底して排除しており、安全なクラウド上で処理されます。'},
+         {'q': 'YouTubeショートを個人でダウンロードして見るのは合法ですか？',
+          'a': '私的使用のためのオフライン視聴や個人的なバックアップ目的での保存は私的複製の範囲内です。クリエイターの著作権を尊重してご活用ください。'}],
+ 'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
+                 '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid '
+                 'fa-list-ul mr-2 text-rose-600"></i>ガイド目次</p>\n'
+                 '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
+                 '  <li><a href="#tategata-video-kougashitsu-ja" class="hover:text-rose-600 transition-colors">1. '
+                 '9:16縦型動画の設計構造とフルHD高画質エンコード</a></li>\n'
+                 '  <li><a href="#kizubetsu-hozon-tejun-ja" class="hover:text-rose-600 transition-colors">2. '
+                 'iPhone・Android・PC別 簡単保存ステップ</a></li>\n'
+                 '  <li><a href="#ongaku-mp3-chuushutsu-ja" class="hover:text-rose-600 transition-colors">3. '
+                 'バズ音源・流行りのBGMを320kbps MP3で抽出</a></li>\n'
+                 '  <li><a href="#hikaku-hyou-service-ja" class="hover:text-rose-600 transition-colors">4. 徹底比較：YT4MP3 '
+                 'vs ShortsNoob vs SaveFrom vs Publer</a></li>\n'
+                 '  <li><a href="#sukashinashi-gensun-ja" class="hover:text-rose-600 transition-colors">5. '
+                 'ロゴや透かしの一切ない純正動画クオリティの保証</a></li>\n'
+                 '  <li><a href="#creator-repurpose-ja" class="hover:text-rose-600 transition-colors">6. '
+                 'クリエイター向け：TikTokやリールへの再投稿ワークフロー</a></li>\n'
+                 '  <li><a href="#url-urawaza-pwa-ja" class="hover:text-rose-600 transition-colors">7. '
+                 'アドレスバーのURL裏技とPWAホーム画面アプリ</a></li>\n'
+                 '  <li><a href="#dash-otozure-kaishou-ja" class="hover:text-rose-600 transition-colors">8. '
+                 '音ズレを防ぐDASH個別ストリームの高精度同期技術</a></li>\n'
+                 '</ul>\n'
+                 '</div>\n'
+                 '\n'
+                 '<h2 id="tategata-video-kougashitsu-ja">1. 9:16縦型動画の設計構造とフルHD高画質エンコード</h2>\n'
+                 '<p>YouTubeショートの登場により、スマートフォンにおける動画視聴体験は劇的に進化しました。従来の16:9横長動画とは異なり、ショート動画はスマホ画面に特化した9:16の縦型（標準1080x1920ピクセル）で制作されます。画面の左右に無駄な黒帯を生じさせることなく、親指ひとつのスワイプで没入感あふれる映像が広がります。お気に入りの料理レシピ、トレーニング解説、お笑いコントなどを通信制限を気にせず楽しむために<strong>YouTubeショート保存</strong>を行う際、この縦型の解像度を損なわずにそのまま保存することが最も重要です。</p>\n'
+                 '\n'
+                 '<p>一般的な動画変換ツールの多くは縦長動画の処理に弱く、映像を不自然に横へ引き延ばしたり、画質を荒い360pに圧縮してしまいがちです。YouTubeでは高精細な映像ストリームと音声ストリームをDASH規格により別々に配信しています。優れた<strong>YouTube '
+                 'Shorts ダウンロード</strong>ツールは、これら2つのデータを瞬時に取得し、画質の劣化やフレーム落ちを起こすことなくH.264 '
+                 'MP4コンテナへ綺麗に再結合できなければなりません。</p>\n'
+                 '\n'
+                 '<p>YT4MP3のクラウドサーバーは、縦型動画のメタデータを即座に検知します。滑らかな60fpsのゲームプレイ動画でも、30秒の役立つライフハックでも、元の滑らかさと色合いを忠実に保ったまま、スマホの写真アプリやPCで即座に再生できる標準MP4ファイルとして仕上げます。</p>\n'
+                 '\n'
+                 '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                 '<table>\n'
+                 '<thead>\n'
+                 '<tr>\n'
+                 '<th>品質プロファイル</th>\n'
+                 '<th>解像度・アスペクト比</th>\n'
+                 '<th>フレームレート</th>\n'
+                 '<th>平均容量（60秒）</th>\n'
+                 '<th>推奨用途</th>\n'
+                 '</tr>\n'
+                 '</thead>\n'
+                 '<tbody>\n'
+                 '<tr>\n'
+                 '<td><strong>1080p フルHD（推奨）</strong></td>\n'
+                 '<td>1080 x 1920（9:16）</td>\n'
+                 '<td>30 / 60 FPS</td>\n'
+                 '<td>15 MB &ndash; 35 MB</td>\n'
+                 '<td>個人保存、動画編集、大画面での美麗な再生</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>720p HD 標準</strong></td>\n'
+                 '<td>720 x 1280（9:16）</td>\n'
+                 '<td>30 FPS</td>\n'
+                 '<td>8 MB &ndash; 16 MB</td>\n'
+                 '<td>LINE等での共有、端末の容量節約</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>MP3 音声 320kbps</strong></td>\n'
+                 '<td>ステレオ音声のみ</td>\n'
+                 '<td>44.1 / 48 kHz</td>\n'
+                 '<td>2.5 MB &ndash; 4.5 MB</td>\n'
+                 '<td>流行りのBGM、バズ音源、効果音、名言</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>MP3 音声 128kbps</strong></td>\n'
+                 '<td>会話・トーク重視</td>\n'
+                 '<td>44.1 kHz</td>\n'
+                 '<td>1.0 MB &ndash; 1.8 MB</td>\n'
+                 '<td>英会話リスニング、トーク音声、超軽量保存</td>\n'
+                 '</tr>\n'
+                 '</tbody>\n'
+                 '</table>\n'
+                 '</div>\n'
+                 '\n'
+                 '<h2 id="kizubetsu-hozon-tejun-ja">2. iPhone・Android・PC別 簡単保存ステップ</h2>\n'
+                 '<p>ショート動画の保存には、怪しい外部アプリや個人情報の入力などは一切必要ありません。各種端末での最もシンプルで確実な操作手順をご紹介します：</p>\n'
+                 '\n'
+                 '<h3>iPhone・iPad（iOS Safari）での保存手順</h3>\n'
+                 '<p>iOSのSafariはセキュリティが強固ですが、以下の手順で「写真」アプリへ簡単に保存できます：</p>\n'
+                 '<ul>\n'
+                 '  <li>YouTubeアプリで保存したいショート動画を開き、「共有」アイコンから「リンクをコピー」をタップします。</li>\n'
+                 '  <li>Safariを起動し、<strong>yt4mp3.com/ja/youtube-shorts-downloader</strong> を開いて枠内に貼り付けます。</li>\n'
+                 '  <li>MP4（動画）またはMP3（音声）を選択し、「変換」をタップします。</li>\n'
+                 '  <li>変換が完了したら「今すぐダウンロード」を押し、Safariの確認画面で「ダウンロード」を許可します。</li>\n'
+                 '  '
+                 '<li>Safariのアドレスバーにある青いダウンロード矢印をタップして動画を開き、左下の共有ボタンから「ビデオを保存」を選択します。これでiPhoneの写真（カメラロール）内に直接保存されます。</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>Androidスマートフォンでの保存手順</h3>\n'
+                 '<p>Android端末ではGoogle Chromeを使って直感的に端末ストレージへ保存できます：</p>\n'
+                 '<ul>\n'
+                 '  <li>YouTubeで動画再生中に「共有」からリンクをコピーします。</li>\n'
+                 '  <li>ChromeブラウザでYT4MP3を開き、コピーしたリンクを貼り付けます。</li>\n'
+                 '  <li>「変換」を押して「今すぐダウンロード」をタップします。</li>\n'
+                 '  <li>ファイルは端末の <code>Download</code> フォルダに保存され、Googleフォトやギャラリーアプリですぐに視聴できます。</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>PC（Windows・Mac・Linux）での保存手順</h3>\n'
+                 '<p>パソコン環境ではブラウザから最速で保存が完了します：</p>\n'
+                 '<ul>\n'
+                 '  <li>ブラウザのアドレスバーにあるURL（<code>youtube.com/shorts/...</code>）をコピーします。</li>\n'
+                 '  <li>YT4MP3の検索ボックスに貼り付けます。</li>\n'
+                 '  <li>ダウンロードボタンをクリックしてPCのハードディスクに保存。VLCメディアプレイヤーや各種動画編集ソフトですぐに利用できます。</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="ongaku-mp3-chuushutsu-ja">3. バズ音源・流行りのBGMを320kbps MP3で抽出</h2>\n'
+                 '<p>ショート動画が人気を集める最大の要因のひとつは、キャッチーな背景音楽や印象的なフレーズです。動画データ全体を保存するのではなく、音声だけを抜き出して音楽ファイルとして保存したいという需要が非常に多く存在します。</p>\n'
+                 '\n'
+                 '<p>一般的なサイトでは動画全体のダウンロードしか対応していませんが、YT4MP3では音声抽出機能を標準装備しています。フォーマットで「MP3」を指定するだけで、クラウドが映像トラックを切り離し、最高音質である<strong>320 '
+                 'kbpsのMP3</strong>ファイルへと変換します。</p>\n'
+                 '\n'
+                 '<p>以下のようなシーンに大変便利です：</p>\n'
+                 '<ul>\n'
+                 '  <li><strong>作曲・トラックメイカー：</strong> クリエイティブなセリフのサンプルやアコースティックフレーズを楽曲制作の素材としてストック。</li>\n'
+                 '  <li><strong>着信音・アラーム作成：</strong> お気に入りの名言や面白い効果音をスマートフォンの目覚まし音や通知音に設定。</li>\n'
+                 '  <li><strong>語学学習のリスニング：</strong> ネイティブの短い会話フレーズを音声だけで繰り返し聞き流し学習。</li>\n'
+                 '  <li><strong>トレーニング用プレイリスト：</strong> テンポの良いサビ部分を集めて、スマホの容量を圧迫せずにワークアウトのお供に。</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="hikaku-hyou-service-ja">4. 徹底比較：YT4MP3 vs ShortsNoob vs SaveFrom vs Publer</h2>\n'
+                 '<p>数多くのツールが存在する中で、なぜYT4MP3が圧倒的に選ばれているのか、長年運営されている主要サービスとの機能比較をご覧ください：</p>\n'
+                 '\n'
+                 '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                 '<table>\n'
+                 '<thead>\n'
+                 '<tr>\n'
+                 '<th>機能・特徴</th>\n'
+                 '<th>YT4MP3（推奨）</th>\n'
+                 '<th>ShortsNoob</th>\n'
+                 '<th>SaveFrom / SSYouTube</th>\n'
+                 '<th>Publer Downloader</th>\n'
+                 '</tr>\n'
+                 '</thead>\n'
+                 '<tbody>\n'
+                 '<tr>\n'
+                 '<td><strong>1080p 60fps 高画質</strong></td>\n'
+                 '<td>〇（元画質を完全再現）</td>\n'
+                 '<td>△（720pに制限されがち）</td>\n'
+                 '<td>×（360pや720pに低下）</td>\n'
+                 '<td>〇（ただし要会員登録）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>透かし・ロゴなし</strong></td>\n'
+                 '<td>〇（100%完全クリーン）</td>\n'
+                 '<td>〇（動画自体はクリーン）</td>\n'
+                 '<td>〇（動画自体はクリーン）</td>\n'
+                 '<td>〇（動画自体はクリーン）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>320kbps MP3音声抽出</strong></td>\n'
+                 '<td>〇（ワンタップ直接抽出）</td>\n'
+                 '<td>×（音声のみ非対応）</td>\n'
+                 '<td>△（変換が極めて低速）</td>\n'
+                 '<td>×（MP3出力非対応）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>ポップアップ広告</strong></td>\n'
+                 '<td>〇（ゼロ、清潔なUI）</td>\n'
+                 '<td>×（広告バナーが大量）</td>\n'
+                 '<td>×（不審な別タブ転送多数）</td>\n'
+                 '<td>〇（有料プラン案内あり）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>会員登録・個人情報</strong></td>\n'
+                 '<td>〇（不要・完全匿名）</td>\n'
+                 '<td>〇（不要）</td>\n'
+                 '<td>×（拡張機能の導入を要求）</td>\n'
+                 '<td>×（メール登録が必須）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>ブラウザURL裏技</strong></td>\n'
+                 '<td>〇（4youtube または yt4mp3）</td>\n'
+                 '<td>×（ショートカット機能なし）</td>\n'
+                 '<td>△（ss入力・広告過多）</td>\n'
+                 '<td>×（ショートカット機能なし）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>軽量PWAアプリ対応</strong></td>\n'
+                 '<td>〇（ホーム画面に1タップ追加）</td>\n'
+                 '<td>×（Webアプリ非対応）</td>\n'
+                 '<td>×（危険なAPKを推奨）</td>\n'
+                 '<td>×（PWA非対応）</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>サーバー処理速度</strong></td>\n'
+                 '<td>〇（高速クラウド処理）</td>\n'
+                 '<td>△（504エラー等が発生）</td>\n'
+                 '<td>×（回線速度が制限される）</td>\n'
+                 '<td>△（無料枠に上限回数あり）</td>\n'
+                 '</tr>\n'
+                 '</tbody>\n'
+                 '</table>\n'
+                 '</div>\n'
+                 '\n'
+                 '<p><strong>Savefrom</strong>や<strong>ShortsNoob</strong>では、「ウイルスに感染しました」といった偽の警告広告や、不要な通知の許可を迫られるトラブルが後を絶ちません。またPublerはメールアドレス登録が必要です。YT4MP3は徹底したシンプル設計で、リンクを貼ればすぐに目的のファイルが手に入ります。</p>\n'
+                 '\n'
+                 '<h2 id="sukashinashi-gensun-ja">5. ロゴや透かしの一切ない純正動画クオリティの保証</h2>\n'
+                 '<p>保存した動画を編集に使う際、誰もが気にするのが「動画に余計なロゴが入らないか」という点です。TikTokアプリなどで動画を直接保存すると、投稿者のアカウント名が動くウォーターマークとして焼き付けられます。</p>\n'
+                 '\n'
+                 '<p>YouTube '
+                 'Shortsでは、クリエイターがアップロードした元データ自体にはそうしたロゴは付いていません。問題となるのは、悪質なダウンロードサイトが自社のURLやロゴマークを勝手に動画へ合成して配布するケースです。</p>\n'
+                 '\n'
+                 '<p>YT4MP3はコンテンツの原状維持をお約束します：</p>\n'
+                 '<ul>\n'
+                 '  <li>動画内にサイト名やウォーターマーク、宣伝テロップを埋め込むことは一切ありません。</li>\n'
+                 '  <li>不要な再エンコードを行わないため、色彩やコントラスト、解像度のディテールが保たれます。</li>\n'
+                 '  <li>9:16の縦型アスペクト比を崩さず、オリジナルの迫力ある構図のまま保存されます。</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="creator-repurpose-ja">6. クリエイター向け：TikTokやリールへの再投稿ワークフロー</h2>\n'
+                 '<p>SNSで情報発信するクリエイターにとって、制作したショート動画を複数のプラットフォームにマルチポストすることは、認知度拡大のための基本戦略です。YouTubeでそこそこの再生数だった動画が、InstagramリールやTikTokで数百・数千万再生の大バズを起こすことも珍しくありません。</p>\n'
+                 '\n'
+                 '<p>多くの映像制作者がYT4MP3を安心のクラウドバックアップとして活用しています。万が一スマホ内の編集プロジェクトを削除してしまっても、自分のチャンネルからオリジナルの高画質1080p動画をすぐにサルベージできます。</p>\n'
+                 '\n'
+                 '<p>再投稿時のプロのコツ：</p>\n'
+                 '<ul>\n'
+                 '  <li><strong>BGMの著作権：</strong> '
+                 'YouTube内で公式提供されている商用音楽は、他SNSへ転載した際にミュートされる恐れがあります。当サイトのMP3機能でご自身の声だけを取り出し、著作権フリー音源を当て直すのが安全です。</li>\n'
+                 '  <li><strong>1080pフルHDの厳守：</strong> アルゴリズムは画質の鮮明な動画を高く評価するため、常に最高画質の設定でダウンロードしてください。</li>\n'
+                 '  <li><strong>ファイル構造の最適化：</strong> 当サイトのMP4は高速再生用のmoov atom構造が最適化されているため、Adobe Premiere Pro、DaVinci '
+                 'Resolve、CapCutなどへ読み込んだ際にタイムラインでの同期エラーが起きません。</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="url-urawaza-pwa-ja">7. アドレスバーのURL裏技とPWAホーム画面アプリ</h2>\n'
+                 '<p>何本も続けて動画を保存したい場合、毎回アプリを切り替えてリンクをコピー＆ペーストするのは少し手間に感じられます。YT4MP3では時間を劇的に短縮する2つの裏技をご用意しています：</p>\n'
+                 '\n'
+                 '<h3>アドレスバーで直接書き換えるURL裏技</h3>\n'
+                 '<p>パソコンやスマホのブラウザでYouTubeショートを再生している最中なら、わざわざ当サイトのトップページを開く必要はありません：</p>\n'
+                 '<ul>\n'
+                 '  <li>URLの <code>youtube.com/shorts/○○</code> を <code>yt4mp3.com/shorts/○○</code> に書き換える</li>\n'
+                 '  <li>または <code>4youtube.com/shorts/○○</code> と入力する</li>\n'
+                 '  <li>Enterキーを押すだけで、該当動画のダウンロードボタンが用意された画面が一瞬で開きます！</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>1タップで起動するPWAホーム画面アプリ</h3>\n'
+                 '<p>YT4MP3はスマートフォンのホーム画面にネイティブアプリのように常駐させることができます。ページ上部の<strong>「アプリをインストール」</strong>ボタンを押すか、ブラウザメニューから「ホーム画面に追加」を選択するだけです。本体ストレージを消費することなく、フルスクリーンでサクサク動く専用アプリとしていつでも呼び出せます。</p>\n'
+                 '\n'
+                 '<h2 id="dash-otozure-kaishou-ja">8. 音ズレを防ぐDASH個別ストリームの高精度同期技術</h2>\n'
+                 '<p>過去に別のダウンロードサイトを使って、「動画内の人物の口の動きと声が数秒ずれている」という不快な経験をしたことはないでしょうか。これはYouTubeの最新配信システムに起因する問題です。</p>\n'
+                 '\n'
+                 '<p>YouTubeの高精細ストリーミングでは、映像データと音声データがDASH技術によって別々のパケットとして送信されています。技術力の低いツールはこれらを大雑把に結合するため、パケットの欠落や微細なタイムコードのズレによって致命的な音ズレが発生します。</p>\n'
+                 '\n'
+                 '<p>YT4MP3のサーバー群では、高度な再多重化（Remux）プロセスを実行しています。映像とAAC音声それぞれの表示タイムスタンプ（PTS）をミリ秒単位で厳密に照合し、ぴったり重ね合わせてからMP4ファイルを完成させます。最初から最後まで完璧なリップシンクで快適にご視聴いただけます。</p>'}

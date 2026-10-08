@@ -50,6 +50,7 @@ ENGLISH_UI: Dict[str, str] = {
     'nav_home': 'Home',
     'nav_mp3': 'YouTube to MP3',
     'nav_mp4': 'YouTube to MP4',
+    'nav_shorts': 'YouTube Shorts',
     'paste_placeholder': 'Paste YouTube video, Shorts, or Music URL here...',
     'quick_convert': 'Quick Convert',
     'select_format': 'Select Format & Quality',

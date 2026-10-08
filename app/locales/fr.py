@@ -560,3 +560,511 @@ PAGES = {
 </ul>"""
     }
 }
+
+
+# YouTube Shorts Downloader Integration
+KEYWORDS_RESEARCH["shorts_keywords"] = ['télécharger short youtube',
+ 'télécharger youtube shorts',
+ 'télécharger video youtube short',
+ 'télécharger shorts',
+ 'enregistrer youtube shorts',
+ 'convertisseur youtube shorts',
+ 'youtube shorts en mp4',
+ 'youtube shorts en mp3',
+ 'téléchargeur youtube shorts',
+ 'télécharger reels youtube',
+ 'télécharger shorts sans filigrane',
+ 'convertir shorts en mp3',
+ 'télécharger youtube shorts gratuit',
+ 'télécharger shorts en ligne',
+ 'télécharger shorts sur mobile',
+ 'savefrom youtube shorts',
+ 'savefrom shorts',
+ 'shortsnoob francais',
+ 'publer youtube shorts',
+ 'y2mate shorts',
+ 'ssyoutube shorts',
+ 'snaptik shorts',
+ '10downloader shorts',
+ 'savefrom net télécharger short',
+ 'savetube shorts',
+ 'yt shorts downloader publer',
+ 'snaptube shorts',
+ 'vidmate shorts télécharger',
+ 'télécharger shorts par lien',
+ 'savefrom mp4 shorts',
+ 'ss youtube shorts',
+ 'shortsnoob gratuit',
+ 'publer downloader gratuit',
+ 'y2mate shorts mp3',
+ 'save from net shorts',
+ 'online video downloader shorts',
+ 'snaptik youtube shorts',
+ '10downloader youtube shorts',
+ 'téléchargeur de shorts en ligne',
+ 'convertisseur savefrom shorts',
+ 'savefrom net shorts telecharger',
+ 'telecharger video short youtube gratuit',
+ 'telecharger shortsnoob',
+ 'format vertical 9 16',
+ 'résolution 1080p full hd',
+ 'résolution 1080x1920',
+ 'sans filigrane ni logo',
+ 'sans filigrane',
+ 'audio mp3 320 kbps',
+ 'extraction audio shorts',
+ 'sans publicité intrusive',
+ 'sans popups agaçants',
+ 'sauvegarder pellicule photos iphone safari',
+ 'dossier téléchargements android chrome',
+ 'sans installer logiciel ni apk',
+ 'créateurs de contenu tiktok et instagram',
+ 'sons viraux de shorts',
+ 'musique de fond shorts',
+ 'synchronisation audio et vidéo',
+ 'format h264 mp4',
+ 'flux dash séparés',
+ 'démultiplexage et réencodage cloud',
+ 'raccourci url 4youtube',
+ 'application pwa écran d accueil',
+ 'lecture hors ligne sans wifi',
+ 'économie de forfait données mobiles',
+ 'lecture avec écran verrouillé',
+ 'sonneries pour téléphone portable ringtone',
+ 'montage capcut et premiere pro',
+ 'taux de 60 images par seconde 60fps',
+ 'courtes vidéos verticales',
+ 'téléchargement direct navigateur',
+ 'serveurs ultra rapides sans file d attente',
+ 'sans limite quotidienne de téléchargement',
+ 'convertisseur sécurisé sans virus',
+ 'enregistrement galerie de photos',
+ 'moov atom fast start',
+ 'espace colorimétrique rec 709',
+ 'extraits vocaux et répliques cultes',
+ 'mèmes et vidéos drôles',
+ 'recettes rapides shorts',
+ 'astuces tech shorts',
+ 'qualité 720p légère',
+ 'audio aac stéréo',
+ 'vidéos éducatives courtes',
+ 'sauvegarde personnelle locale',
+ 'téléchargement instantané en secondes',
+ 'conversion rapide cloud',
+ 'comment télécharger un short youtube sur iphone dans la galerie',
+ 'comment enregistrer un short youtube dans la galerie de photos',
+ 'peut on convertir un short youtube en mp3',
+ 'comment télécharger des shorts youtube sans installer d application',
+ 'quel est le meilleur téléchargeur youtube shorts gratuit et sans virus',
+ 'comment télécharger des shorts en 1080p 60fps',
+ 'comment extraire la musique d un short youtube',
+ 'pourquoi la vidéo du short se télécharge sans son sur d autres sites',
+ 'où sont enregistrés les shorts téléchargés sur android',
+ 'comment télécharger des vidéos verticales de youtube',
+ 'comment enregistrer des shorts youtube sur iphone dans l application photos',
+ 'comment télécharger des shorts youtube avec le son synchronisé',
+ 'comment télécharger des musiques de youtube shorts en mp3 320kbps',
+ 'comment utiliser l astuce 4youtube pour les shorts',
+ 'comment télécharger des vidéos courtes youtube sans filigrane',
+ 'peut on télécharger des shorts youtube sur pc',
+ 'est il sûr d utiliser des convertisseurs de youtube shorts',
+ 'comment republier des shorts téléchargés sur tiktok ou reels',
+ 'pourquoi les shorts téléchargés ont un décalage de son',
+ 'comment télécharger youtube shorts sans publicités trompeuses',
+ 'comment installer l application yt4mp3 pour télécharger des shorts',
+ 'combien d espace prend un short youtube en 1080p']
+UI["nav_shorts"] = 'YouTube Shorts'
+PAGES["youtube-shorts-downloader"] = {'title': 'Télécharger YouTube Shorts - Convertisseur Shorts en MP4 & MP3 | YT4MP3',
+ 'meta_desc': 'Téléchargez YouTube Shorts en 1080p Full HD MP4 et audio MP3 320kbps gratuit sans filigrane. '
+              'Téléchargeur rapide pour iPhone, Android et PC sans publicités.',
+ 'h1': 'Télécharger YouTube Shorts en Ligne',
+ 'subtitle': "Enregistrez des vidéos verticales YouTube Shorts en 1080p Full HD d'origine ou convertissez en audio MP3 "
+             '320kbps sans filigrane. Rapide, gratuit et sans logiciel.',
+ 'badge': 'Téléchargeur YouTube Shorts',
+ 'placeholder': 'Collez le lien YouTube Shorts ici (ex. youtube.com/shorts/...)...',
+ 'active_tab': 'yt-shorts',
+ 'canonical_url': 'https://www.yt4mp3.com/fr/youtube-shorts-downloader',
+ 'features': [{'icon': 'fa-solid fa-wand-magic-sparkles',
+               'title': 'Sans Filigrane ni Logo',
+               'desc': "Obtenez la vidéo d'origine propre, sans filigranes tiers ajoutés, logos de sites ou bandeaux "
+                       'publicitaires.'},
+              {'icon': 'fa-solid fa-mobile-screen',
+               'title': 'Vidéo Verticale 1080p 60fps',
+               'desc': 'Conserve le format natif 9:16 en Full HD net à 60 images par seconde, parfait pour les écrans '
+                       'de smartphone.'},
+              {'icon': 'fa-solid fa-music',
+               'title': 'Extraction Audio MP3 320kbps',
+               'desc': "Extrayez les musiques tendance, bruitages et répliques virales de n'importe quel short en "
+                       'audio MP3 de haute fidélité.'},
+              {'icon': 'fa-solid fa-shield-halved',
+               'title': 'Zéro Publicité Intrusive',
+               'desc': 'Navigation sereine sans fenêtres pop-up trompeuses, fausses alertes virus ni téléchargements '
+                       "d'applications douteuses."},
+              {'icon': 'fa-solid fa-apple-whole',
+               'title': 'Compatible iPhone et Android',
+               'desc': 'Enregistrement direct dans la pellicule Photos sur iOS Safari et dans le dossier '
+                       'Téléchargements sur Android et PC.'},
+              {'icon': 'fa-solid fa-bolt',
+               'title': 'Astuce Raccourci URL et PWA',
+               'desc': "Tapez 4youtube dans la barre d'adresse pour lancer le téléchargement immédiat ou installez "
+                       "notre icône sur l'écran d'accueil."}],
+ 'faq': [{'q': 'Comment télécharger une vidéo YouTube Shorts sur mon téléphone ?',
+          'a': "Ouvrez la vidéo dans l'application YouTube, touchez Partager puis Copier le lien. Collez l'URL dans la "
+               'barre de recherche YT4MP3, choisissez le format MP4 et appuyez sur Télécharger.'},
+         {'q': 'Comment enregistrer un short dans la pellicule Photos de mon iPhone ?',
+          'a': "Téléchargez le fichier dans Safari. Touchez l'icône de téléchargement de Safari, ouvrez la vidéo, "
+               "touchez le bouton Partager d'iOS et sélectionnez 'Enregistrer la vidéo'. Le clip vertical apparaîtra "
+               'dans votre application Photos.'},
+         {'q': 'Les vidéos Shorts téléchargées comportent-elles des filigranes ?',
+          'a': 'Non. YT4MP3 fournit le flux vidéo source pur sans ajout de filigranes, logos de notre site ou '
+               'marquages publicitaires.'},
+         {'q': 'Puis-je convertir un YouTube Short en fichier audio MP3 ?',
+          'a': "Oui. Sélectionnez simplement l'option MP3 avant de télécharger. Notre serveur sépare la piste audio et "
+               'vous délivre un fichier MP3 à 320 kbps idéal pour vos sonneries ou playlists.'},
+         {'q': 'Quelle est la résolution vidéo des Shorts téléchargés ?',
+          'a': 'Nous prenons en charge la résolution maximale fournie par le créateur, généralement 1080p Full HD '
+               '(1080x1920) à 60 ou 30 images par seconde, ainsi que 720p HD.'},
+         {'q': 'Pourquoi certains convertisseurs échouent avec les liens Shorts ?',
+          'a': 'YouTube utilise une structure de lien spécifique pour les formats courts (youtube.com/shorts/id) '
+               "différente des vidéos classiques. Les anciens outils ne savent pas l'analyser, alors que YT4MP3 la "
+               'prend en charge nativement.'},
+         {'q': 'Y a-t-il une limite quotidienne sur le nombre de Shorts téléchargeables ?',
+          'a': 'Non. YT4MP3 propose des téléchargements 100% gratuits et illimités pour un usage personnel, éducatif '
+               'et une consultation hors ligne.'},
+         {'q': 'Dois-je installer une application ou créer un compte utilisateur ?',
+          'a': "Aucune installation ni création de compte n'est requise. Tout fonctionne en ligne dans votre "
+               'navigateur sur iPhone, Android, Mac, Windows et Linux.'},
+         {'q': "Quel est le raccourci d'URL pour télécharger des Shorts instantanément ?",
+          'a': "Ajoutez simplement le chiffre '4' devant youtube.com (ex: 4youtube.com/shorts/id) ou remplacez le "
+               "domaine par yt4mp3.com dans la barre d'adresse pour ouvrir directement la page de téléchargement."},
+         {'q': 'Pourquoi la vidéo téléchargée est-elle au format vertical ?',
+          'a': "Les Shorts sont filmés au format vertical 9:16 pour remplir l'écran des smartphones. Nous conservons "
+               'ces proportions pour une immersion visuelle parfaite sans bandes noires.'},
+         {'q': "Comment YT4MP3 garantit-il la synchronisation du son et de l'image ?",
+          'a': 'YouTube sépare les flux audio et vidéo via le protocole DASH. Nos serveurs alignent précisément les '
+               'horodatages (PTS) de chaque flux avant de finaliser le fichier MP4 pour un rendu labial parfait.'},
+         {'q': 'Puis-je importer les vidéos téléchargées dans CapCut ou Premiere Pro ?',
+          'a': 'Oui. Les vidéos sont encodées au standard H.264 MP4 avec audio AAC, ce qui permet une importation '
+               'directe et sans erreur dans CapCut, Adobe Premiere, DaVinci Resolve et Final Cut Pro.'},
+         {'q': 'Peut-on télécharger des Shorts privés ou restreints ?',
+          'a': 'Notre outil ne peut traiter que les vidéos YouTube publiques accessibles à tous. Les contenus privés '
+               'ou nécessitant une connexion personnelle ne peuvent pas être téléchargés.'},
+         {'q': 'Quelle quantité de mémoire prend un short téléchargé en moyenne ?',
+          'a': "Un short de 60 secondes en 1080p pèse généralement entre 15 Mo et 35 Mo. L'extraction audio MP3 seule "
+               'prend environ 2,5 Mo à 4 Mo.'},
+         {'q': 'Le site YT4MP3 est-il sûr et sans virus ?',
+          'a': 'Absolument. Nous appliquons une politique sans pop-ups trompeurs ni redirections suspectes. Le '
+               'traitement se fait sur nos serveurs sécurisés sans risque pour votre appareil.'},
+         {'q': 'Est-il légal de télécharger des YouTube Shorts pour un usage personnel ?',
+          'a': 'Télécharger du contenu pour une consultation personnelle hors ligne ou pour des travaux de recherche '
+               "relève de l'usage loyal (fair use). Veillez toujours à respecter les droits des auteurs originaux."}],
+ 'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
+                 '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid '
+                 'fa-list-ul mr-2 text-rose-600"></i>Sommaire du Guide</p>\n'
+                 '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
+                 '  <li><a href="#architecture-video-verticale-fr" class="hover:text-rose-600 transition-colors">1. '
+                 'Architecture Vidéo Verticale 9:16 et Encodage Haute Définition</a></li>\n'
+                 '  <li><a href="#tutoriel-appareils-fr" class="hover:text-rose-600 transition-colors">2. Tutoriel Pas '
+                 'à Pas sur iPhone, Android et Ordinateur</a></li>\n'
+                 '  <li><a href="#extraction-son-mp3-fr" class="hover:text-rose-600 transition-colors">3. Extraction '
+                 'Audio MP3 à 320 kbps depuis des Shorts Viraux</a></li>\n'
+                 '  <li><a href="#tableau-comparatif-fr" class="hover:text-rose-600 transition-colors">4. Tableau '
+                 'Comparatif : YT4MP3 vs ShortsNoob vs SaveFrom vs Publer</a></li>\n'
+                 '  <li><a href="#fichiers-propres-sans-filigrane-fr" class="hover:text-rose-600 transition-colors">5. '
+                 'Garantie de Fichiers Vidéo sans Filigrane ni Logo</a></li>\n'
+                 '  <li><a href="#usage-createurs-fr" class="hover:text-rose-600 transition-colors">6. Pour les '
+                 'Créateurs : Repartager sur TikTok et Instagram Reels</a></li>\n'
+                 '  <li><a href="#astuce-url-pwa-fr" class="hover:text-rose-600 transition-colors">7. L\'Astuce d\'URL '
+                 "Navigateur et l'Application Web PWA</a></li>\n"
+                 '  <li><a href="#synchronisation-dash-fr" class="hover:text-rose-600 transition-colors">8. Résolution '
+                 'des Problèmes de Décalage Audio et Flux DASH</a></li>\n'
+                 '</ul>\n'
+                 '</div>\n'
+                 '\n'
+                 '<h2 id="architecture-video-verticale-fr">1. Architecture Vidéo Verticale 9:16 et Encodage Haute '
+                 'Définition</h2>\n'
+                 '<p>Les vidéos courtes YouTube Shorts ont transformé le divertissement sur mobile. Contrairement aux '
+                 'vidéos horizontales en format 16:9, les Shorts sont conçus au format vertical 9:16, avec une '
+                 "définition standard de 1080x1920 pixels. Cette proportion remplit l'intégralité de l'écran des "
+                 'smartphones sans bandes noires latérales désagréables. Si vous souhaitez <strong>télécharger short '
+                 'youtube</strong> pour enregistrer des recettes rapides, des tutoriels pratiques ou des moments '
+                 "d'humour à regarder hors connexion, préserver cette résolution d'origine est primordial.</p>\n"
+                 '\n'
+                 '<p>De nombreux outils en ligne peinent à traiter les flux verticaux. Ils déforment fréquemment '
+                 "l'image en étirant les visages ou dégradent le rendu à une faible résolution de 360p. YouTube "
+                 'distribue les flux de haute qualité par le biais de technologies de streaming dynamique DASH, '
+                 'isolant la vidéo haute définition de la piste sonore stéréo. Un <strong>téléchargeur youtube '
+                 "shorts</strong> efficace doit récupérer ces deux flux simultanément et les assembler au sein d'un "
+                 'conteneur MP4 H.264 standard sans perte de fluidité.</p>\n'
+                 '\n'
+                 '<p>Sur YT4MP3, notre infrastructure cloud reconnaît immédiatement les spécificités des vidéos '
+                 "verticales. Qu'il s'agisse d'un extrait de jeu vidéo à 60 images par seconde ou d'un conseil "
+                 'pratique de trente secondes, nos serveurs traitent les flux en temps réel pour générer un fichier '
+                 'MP4 parfaitement compatible avec tous vos lecteurs multimédias.</p>\n'
+                 '\n'
+                 '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                 '<table>\n'
+                 '<thead>\n'
+                 '<tr>\n'
+                 '<th>Profil de Qualité</th>\n'
+                 '<th>Résolution & Format</th>\n'
+                 "<th>Fréquence d'Images</th>\n"
+                 '<th>Taille Moyenne (60s)</th>\n'
+                 '<th>Usage Conseillé</th>\n'
+                 '</tr>\n'
+                 '</thead>\n'
+                 '<tbody>\n'
+                 '<tr>\n'
+                 '<td><strong>1080p Full HD (Recommandé)</strong></td>\n'
+                 '<td>1080 x 1920 (9:16)</td>\n'
+                 '<td>30 / 60 FPS</td>\n'
+                 '<td>15 Mo &ndash; 35 Mo</td>\n'
+                 '<td>Archivage, montage vidéo, visionnage plein écran net</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>720p HD Standard</strong></td>\n'
+                 '<td>720 x 1280 (9:16)</td>\n'
+                 '<td>30 FPS</td>\n'
+                 '<td>8 Mo &ndash; 16 Mo</td>\n'
+                 "<td>Partage par messagerie, économie d'espace mémoire</td>\n"
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Audio MP3 à 320 kbps</strong></td>\n'
+                 '<td>Stéréo Pur Son</td>\n'
+                 '<td>44.1 / 48 kHz</td>\n'
+                 '<td>2.5 Mo &ndash; 4.5 Mo</td>\n'
+                 '<td>Musiques tendance, bruitages viraux, citations vocales</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Audio MP3 à 128 kbps</strong></td>\n'
+                 '<td>Optimisé Voix</td>\n'
+                 '<td>44.1 kHz</td>\n'
+                 '<td>1.0 Mo &ndash; 1.8 Mo</td>\n'
+                 '<td>Dialogues humoristiques, mémos sonores, faible encombrement</td>\n'
+                 '</tr>\n'
+                 '</tbody>\n'
+                 '</table>\n'
+                 '</div>\n'
+                 '\n'
+                 '<h2 id="tutoriel-appareils-fr">2. Tutoriel Pas à Pas sur iPhone, Android et Ordinateur</h2>\n'
+                 "<p>Conserver vos vidéos favorites sur votre appareil ne devrait jamais nécessiter l'installation de "
+                 'programmes douteux. Voici la méthode détaillée pour utiliser notre <strong>convertisseur youtube '
+                 'shorts</strong> sur chaque système :</p>\n'
+                 '\n'
+                 '<h3>Télécharger des Shorts YouTube sur iPhone et iPad (iOS)</h3>\n'
+                 "<p>Bien que le système d'Apple impose des règles strictes sur Safari, vous pouvez enregistrer le "
+                 'fichier directement dans Photos en quelques secondes :</p>\n'
+                 '<ul>\n'
+                 "  <li>Ouvrez l'application YouTube sur votre iPhone et accédez au short souhaité.</li>\n"
+                 '  <li>Touchez le bouton <strong>Partager</strong> situé sur le côté droit et choisissez '
+                 '<strong>Copier le lien</strong>.</li>\n'
+                 '  <li>Ouvrez Safari, rendez-vous sur <strong>yt4mp3.com/fr/youtube-shorts-downloader</strong> et '
+                 "collez l'adresse dans la barre de recherche.</li>\n"
+                 '  <li>Sélectionnez le format vidéo MP4 ou audio MP3 et appuyez sur <strong>Convertir</strong>.</li>\n'
+                 '  <li>Le fichier est prêt instantanément ; touchez <strong>Télécharger</strong> et confirmez le '
+                 'téléchargement dans Safari.</li>\n'
+                 "  <li>Pour l'ajouter à vos photos, appuyez sur l'icône de téléchargement dans la barre Safari, "
+                 "ouvrez la vidéo, touchez l'icône Partager d'iOS et choisissez <strong>Enregistrer la vidéo</strong>. "
+                 'Le clip est désormais stocké dans votre pellicule.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>Télécharger des Shorts YouTube sur Android</h3>\n'
+                 '<p>Sur les téléphones Android, la gestion des téléchargements est directe avec Google Chrome :</p>\n'
+                 '<ul>\n'
+                 '  <li>En visionnant un short sur YouTube, touchez <strong>Partager</strong> et copiez le lien.</li>\n'
+                 '  <li>Ouvrez Chrome et accédez à la page de téléchargement YT4MP3.</li>\n'
+                 "  <li>Collez l'adresse web et appuyez sur <strong>Convertir</strong> puis sur "
+                 '<strong>Télécharger</strong>.</li>\n'
+                 '  <li>Le fichier MP4 se télécharge dans votre dossier <code>Téléchargements</code> et devient '
+                 'visible dans Google Photos et votre galerie.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h3>Télécharger des Shorts YouTube sur PC (Windows, Mac, Linux)</h3>\n'
+                 '<p>Sur un ordinateur de bureau ou portable, la démarche est la plus rapide :</p>\n'
+                 '<ul>\n'
+                 "  <li>Copiez l'URL depuis la barre d'adresse de votre navigateur (format "
+                 '<code>youtube.com/shorts/...</code>).</li>\n'
+                 '  <li>Collez-la dans le champ du convertisseur sur YT4MP3.</li>\n'
+                 '  <li>Cliquez sur Télécharger pour sauvegarder le fichier sur votre disque dur, prêt pour VLC ou vos '
+                 'logiciels de montage.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="extraction-son-mp3-fr">3. Extraction Audio MP3 à 320 kbps depuis des Shorts Viraux</h2>\n'
+                 "<p>L'immense popularité de nombreuses courtes vidéos repose sur leur bande-son : refrains "
+                 'accrocheurs, monologues de motivation, extraits de stand-up ou répliques comiques. De nombreux '
+                 "utilisateurs cherchent à <strong>convertir youtube shorts en mp3</strong> sans s'encombrer du "
+                 'fichier vidéo.</p>\n'
+                 '\n'
+                 '<p>La majorité des plateformes concurrentes ne proposent que le format vidéo complet. YT4MP3 intègre '
+                 "l'extraction sonore au sein du même outil. Lorsque vous choisissez le format MP3, nos serveurs "
+                 "isolent la piste audio source et procèdent à un encodage en <strong>MP3 à 320 kbps</strong> d'une "
+                 'netteté sonore irréprochable.</p>\n'
+                 '\n'
+                 "<p>Cette fonctionnalité s'avère particulièrement utile pour :</p>\n"
+                 '<ul>\n'
+                 '  <li><strong>Musiciens et Beatmakers :</strong> Récupérer des échantillons de voix nets et des '
+                 'riffs instrumentaux pour de nouvelles compositions.</li>\n'
+                 '  <li><strong>Sonneries de Téléphone et Alarmes :</strong> Définir une citation marquante ou un '
+                 'audio comique comme réveil matin.</li>\n'
+                 '  <li><strong>Apprentissage des Langues :</strong> Sauvegarder des extraits de prononciation '
+                 'authentiques pour enrichir son vocabulaire.</li>\n'
+                 "  <li><strong>Playlists d'Entraînement :</strong> Créer des sélections de morceaux stimulants sans "
+                 'saturer la mémoire interne du téléphone.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="tableau-comparatif-fr">4. Tableau Comparatif : YT4MP3 vs ShortsNoob vs SaveFrom vs '
+                 'Publer</h2>\n'
+                 '<p>Pour mesurer les atouts de notre outil, il est instructif de comparer ses fonctionnalités à '
+                 'celles des plateformes historiques, dont beaucoup se sont détériorées au fil des années :</p>\n'
+                 '\n'
+                 '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                 '<table>\n'
+                 '<thead>\n'
+                 '<tr>\n'
+                 '<th>Fonctionnalité</th>\n'
+                 '<th>YT4MP3 (Recommandé)</th>\n'
+                 '<th>ShortsNoob</th>\n'
+                 '<th>SaveFrom / SSYouTube</th>\n'
+                 '<th>Publer Downloader</th>\n'
+                 '</tr>\n'
+                 '</thead>\n'
+                 '<tbody>\n'
+                 '<tr>\n'
+                 '<td><strong>Qualité 1080p 60fps</strong></td>\n'
+                 '<td>Oui, fidélité totale</td>\n'
+                 '<td>Souvent limité à 720p</td>\n'
+                 '<td>Dégrade souvent à 360p/720p</td>\n'
+                 '<td>Oui, mais exige une inscription</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Sans Filigrane</strong></td>\n'
+                 '<td>100% propre, sans logo</td>\n'
+                 '<td>Vidéo propre</td>\n'
+                 '<td>Vidéo propre</td>\n'
+                 '<td>Vidéo propre</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Audio MP3 à 320 kbps</strong></td>\n'
+                 '<td>Extraction en 1 clic</td>\n'
+                 "<td>Pas d'option audio seul</td>\n"
+                 '<td>Conversion audio très lente</td>\n'
+                 "<td>Pas d'extraction MP3</td>\n"
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Pop-ups et Publicités</strong></td>\n'
+                 '<td>Zéro pop-up, page épurée</td>\n'
+                 '<td>Bannières publicitaires denses</td>\n'
+                 '<td>Redirections invasives fréquentes</td>\n'
+                 '<td>Page propre, met en avant des offres payantes</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Création de Compte</strong></td>\n'
+                 '<td>Aucune, 100% libre</td>\n'
+                 '<td>Aucune</td>\n'
+                 '<td>Incite à installer des extensions</td>\n'
+                 '<td>Exige de renseigner son e-mail</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Raccourci URL Navigateur</strong></td>\n'
+                 '<td>Oui (utilisez 4youtube ou yt4mp3)</td>\n'
+                 '<td>Pas de raccourci</td>\n'
+                 '<td>Oui (préfixe ss, bannières denses)</td>\n'
+                 '<td>Pas de raccourci</td>\n'
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Application PWA Rapide</strong></td>\n'
+                 "<td>Oui, 1 clic écran d'accueil</td>\n"
+                 "<td>Pas d'application web</td>\n"
+                 '<td>Pousse des fichiers APK suspects</td>\n'
+                 "<td>Pas d'application PWA</td>\n"
+                 '</tr>\n'
+                 '<tr>\n'
+                 '<td><strong>Vitesse des Serveurs</strong></td>\n'
+                 '<td>Traitement rapide sans attente</td>\n'
+                 '<td>Pannes régulières (erreurs 504)</td>\n'
+                 '<td>Serveurs souvent saturés</td>\n'
+                 '<td>Limite le nombre de téléchargements gratuits</td>\n'
+                 '</tr>\n'
+                 '</tbody>\n'
+                 '</table>\n'
+                 '</div>\n'
+                 '\n'
+                 '<p>Des sites comme <strong>Savefrom</strong> ou <strong>ShortsNoob</strong> obligent souvent à '
+                 'esquiver de fausses alertes système ou des autorisations de notifications indésirables. Publer '
+                 'impose quant à lui un formulaire de création de compte. YT4MP3 garantit une efficacité totale : '
+                 'collez votre lien, récupérez votre fichier et profitez-en immédiatement.</p>\n'
+                 '\n'
+                 '<h2 id="fichiers-propres-sans-filigrane-fr">5. Garantie de Fichiers Vidéo sans Filigrane ni '
+                 'Logo</h2>\n'
+                 "<p>L'une des interrogations majeures lors du téléchargement est la présence éventuelle de logos sur "
+                 "la vidéo. Sur des plateformes comme TikTok, les vidéos enregistrées depuis l'application intègrent "
+                 'un logo flottant avec le nom du créateur.</p>\n'
+                 '\n'
+                 "<p>Sur YouTube Shorts, la vidéo publiée par l'auteur ne contient aucun marquage automatique de ce "
+                 'genre. Le problème vient en réalité de certains convertisseurs douteux qui ajoutent leur propre logo '
+                 "ou le nom de leur site web directement sur l'image.</p>\n"
+                 '\n'
+                 "<p>Chez YT4MP3, nous appliquons une charte d'intégrité stricte :</p>\n"
+                 '<ul>\n'
+                 "  <li>Nous n'ajoutons jamais de filigrane, d'adresse web ni d'encart publicitaire sur vos "
+                 'vidéos.</li>\n'
+                 '  <li>Nous évitons toute recompression inutile pour préserver la netteté et les couleurs '
+                 "d'origine.</li>\n"
+                 '  <li>Le fichier MP4 conserve son cadrage vertical 9:16 sans ajout de bordures artificielles.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="usage-createurs-fr">6. Pour les Créateurs : Repartager sur TikTok et Instagram Reels</h2>\n'
+                 '<p>Si vous créez des vidéos pour les réseaux sociaux, rediffuser vos créations sur différentes '
+                 'plateformes est la clé pour élargir votre communauté. Un contenu ayant suscité un intérêt modéré sur '
+                 'YouTube peut très bien devenir viral sur Instagram Reels ou TikTok.</p>\n'
+                 '\n'
+                 '<p>De nombreux vidéastes utilisent notre plateforme comme un système de sauvegarde en ligne. Si vous '
+                 'avez perdu vos montages CapCut ou Premiere sur votre smartphone, vous pouvez récupérer la version '
+                 'haute définition depuis votre chaîne sans dégradation visuelle.</p>\n'
+                 '\n'
+                 '<p>Quelques recommandations pour recycler vos clips :</p>\n'
+                 '<ul>\n'
+                 '  <li><strong>Droits Musicaux :</strong> Les musiques issues du catalogue YouTube peuvent être '
+                 "soumises à des restrictions sur d'autres réseaux. Utilisez notre extracteur MP3 pour isoler votre "
+                 'voix et ajoutez des morceaux libres de droits au besoin.</li>\n'
+                 '  <li><strong>Privilégiez le 1080p Full HD :</strong> Optez toujours pour le réglage 1080p afin que '
+                 'les algorithmes de recommandation de TikTok valorisent la netteté de vos images.</li>\n'
+                 "  <li><strong>Compatibilité du Format :</strong> Nos fichiers MP4 disposent d'un en-tête moov atom "
+                 'optimisé, facilitant leur importation directe dans Adobe Premiere Pro, DaVinci Resolve et CapCut '
+                 'sans bugs de lecture.</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 '<h2 id="astuce-url-pwa-fr">7. L\'Astuce d\'URL Navigateur et l\'Application Web PWA</h2>\n'
+                 '<p>Copier et coller des liens à répétition peut devenir fastidieux si vous souhaitez télécharger '
+                 'plusieurs vidéos à la suite. YT4MP3 met à votre disposition deux raccourcis simples pour gagner du '
+                 'temps :</p>\n'
+                 '\n'
+                 "<h3>Le Raccourci Direct dans la Barre d'Adresse</h3>\n"
+                 "<p>Lorsque vous regardez un short dans le navigateur de votre téléphone ou de votre PC, vous n'avez "
+                 "pas besoin de revenir sur notre page d'accueil. Modifiez simplement l'URL :</p>\n"
+                 '<ul>\n'
+                 '  <li>Remplacez <code>youtube.com/shorts/id</code> par <code>yt4mp3.com/shorts/id</code></li>\n'
+                 '  <li>Ou écrivez <code>4youtube.com/shorts/id</code></li>\n'
+                 '  <li>Appuyez sur Entrée et la vidéo sera prête à être téléchargée en un instant !</li>\n'
+                 '</ul>\n'
+                 '\n'
+                 "<h3>Installez l'Application Web (PWA) sur Votre Écran d'Accueil</h3>\n"
+                 "<p>Vous pouvez ajouter YT4MP3 directement sur l'écran d'accueil de votre smartphone. Touchez le "
+                 "bouton <strong>Installer l'App</strong> en haut de la page ou sélectionnez &ldquo;Ajouter à l'écran "
+                 "d'accueil&rdquo; dans les options de votre navigateur. Une icône dédiée apparaîtra, ouvrant notre "
+                 'outil en plein écran sans ralentir votre téléphone ni collecter de données personnelles.</p>\n'
+                 '\n'
+                 '<h2 id="synchronisation-dash-fr">8. Résolution des Problèmes de Décalage Audio et Flux DASH</h2>\n'
+                 "<p>Il arrive souvent qu'en téléchargeant une vidéo sur un outil mal conçu, les mouvements des lèvres "
+                 'ne correspondent plus aux paroles prononcées. Ce problème découle du mode de diffusion de '
+                 'YouTube.</p>\n'
+                 '\n'
+                 '<p>Pour les résolutions en haute définition, YouTube transmet la piste visuelle et la piste sonore '
+                 'de manière distincte via le protocole DASH. Les sites bas de gamme fusionnent ces deux éléments de '
+                 'façon imprécise. Le moindre décalage temporel se traduit par une désynchronisation flagrante de la '
+                 "voix et de l'image.</p>\n"
+                 '\n'
+                 '<p>Sur YT4MP3, nous réalisons un réencodage propre sur nos serveurs. Nous vérifions les repères '
+                 'temporels (PTS) de la vidéo et du flux audio AAC pour les caler à la milliseconde près avant de '
+                 "créer le fichier MP4. Vous bénéficiez ainsi d'une vidéo parfaitement synchronisée du début à la "
+                 'fin.</p>'}
