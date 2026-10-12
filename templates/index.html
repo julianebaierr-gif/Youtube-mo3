@@ -841,15 +841,10 @@
 
                 <!-- Action Button -->
                 <div id="modal-action-container" class="hidden space-y-2.5">
-                    <a id="modal-download-link" href="#" target="_self" class="w-full py-3.5 px-5 rounded-xl font-black text-white text-base bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer no-underline">
-                        <i class="fa-solid fa-cloud-arrow-down text-lg"></i>
-                        <span id="modal-btn-label">Save File to Device</span>
+                    <a id="modal-download-link" href="#" target="_self" class="w-full py-3.5 px-6 rounded-xl font-extrabold text-white text-base bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 cursor-pointer no-underline">
+                        <i class="fa-solid fa-circle-down text-lg"></i>
+                        <span id="modal-btn-label">Download File</span>
                     </a>
-
-                    <button id="modal-copy-link-btn" type="button" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs text-slate-700 bg-gray-100 hover:bg-gray-200 border border-gray-200 transition-all flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-regular fa-copy text-sm"></i>
-                        <span id="modal-copy-btn-text">Copy Direct Download Link</span>
-                    </button>
 
                     <div id="modal-inapp-notice" class="hidden p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-left text-[11px] text-amber-900 flex items-start gap-2">
                         <i class="fa-solid fa-circle-info text-amber-600 mt-0.5 text-xs flex-shrink-0"></i>
@@ -858,7 +853,7 @@
                         </p>
                     </div>
 
-                    <p class="text-[11px] text-gray-500 font-medium">Download starts automatically. Tap green button if needed.</p>
+                    <p class="text-[11px] text-gray-500 font-medium">Download starts automatically. Tap button if not started.</p>
                 </div>
             </div>
         </div>
@@ -1941,7 +1936,7 @@
 
                     modalDownloadLink.href = finalDownloadUrl;
                     modalDownloadLink.target = '_self';
-                    modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()} (Save to Phone)`;
+                    modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
                     modalActionContainer.classList.remove('hidden');
 
                     // Detect in-app browsers (Instagram, WhatsApp, TikTok, Facebook)
@@ -2106,25 +2101,6 @@
                     console.error('Conversion error:', err);
                     failDownload("An error occurred during conversion. Please try another quality.");
                 }
-            }
-
-            // Wire up copy button and modal click handlers
-            const copyLinkBtn = document.getElementById('modal-copy-link-btn');
-            const copyBtnText = document.getElementById('modal-copy-btn-text');
-            if (copyLinkBtn) {
-                copyLinkBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    if (!window._currentDownloadUrl) return;
-                    try {
-                        await navigator.clipboard.writeText(window._currentDownloadUrl);
-                        if (copyBtnText) copyBtnText.textContent = "Link Copied! Paste in Browser";
-                        setTimeout(() => {
-                            if (copyBtnText) copyBtnText.textContent = "Copy Direct Download Link";
-                        }, 3000);
-                    } catch(err) {
-                        prompt("Copy download link:", window._currentDownloadUrl);
-                    }
-                });
             }
 
             modalDownloadLink.addEventListener('click', (e) => {
