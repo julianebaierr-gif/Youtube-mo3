@@ -275,12 +275,23 @@
             background: #ffffff;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            transition: all 0.12s ease;
+            transition: all 0.15s ease;
+            position: relative;
         }
 
         .format-row:hover {
-            border-color: #0f172a;
-            background: #fafafa;
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .download-action-btn {
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Loading Audio Bars */
@@ -672,10 +683,10 @@
         </section>
 
         <!-- Interactive Results / States Area -->
-        <section class="max-w-3xl mx-auto px-4 sm:px-6 mb-16">
+        <section class="max-w-3xl mx-auto px-3 sm:px-6 mb-16">
             
             <!-- SKELETON LOADING CARD -->
-            <div id="loading-card" class="hidden human-card p-6 sm:p-8">
+            <div id="loading-card" class="hidden human-card p-4 sm:p-8">
                 <div class="flex flex-col sm:flex-row items-center gap-5">
                     <div class="w-full sm:w-52 h-32 rounded-xl bg-gray-200 animate-pulse"></div>
                     <div class="flex-1 w-full space-y-3">
@@ -697,7 +708,7 @@
             </div>
 
             <!-- ERROR CARD -->
-            <div id="error-card" class="hidden human-card p-6 border-red-300 bg-red-50 text-center">
+            <div id="error-card" class="hidden human-card p-5 sm:p-6 border-red-300 bg-red-50 text-center">
                 <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-2 text-lg">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
@@ -709,10 +720,10 @@
             </div>
 
             <!-- RESULT CARD (MEDIA INFO & FORMAT OPTIONS) -->
-            <div id="result-card" class="hidden human-card p-6 sm:p-8">
+            <div id="result-card" class="hidden human-card p-3 sm:p-6 md:p-8">
                 
                 <!-- Media Overview Header -->
-                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 pb-6 border-b border-gray-100">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 pb-4 sm:pb-6 border-b border-gray-100">
                     <div class="relative w-full sm:w-56 aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
                         <img id="res-thumbnail" src="" alt="Thumbnail" class="w-full h-full object-cover">
                         <span id="res-duration" class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-bold font-mono">
@@ -1711,22 +1722,22 @@
                         thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
                         platform: { name: 'YouTube' },
                         audio_formats: [
-                            { format: 'mp3', quality: '320kbps', label: 'MP3 Studio (320kbps)', sub: '320 kbps • High Quality MP3', is_popular: true, badge: '⚡ Pre-Warmed', btn_label: 'Download MP3' },
-                            { format: 'mp3', quality: '256kbps', label: 'MP3 Standard (256kbps)', sub: '256 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
-                            { format: 'mp3', quality: '128kbps', label: 'MP3 Compact (128kbps)', sub: '128 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
-                            { format: 'm4a', quality: 'm4a', label: 'M4A Audio (Apple AAC)', sub: 'High Fidelity • Apple Compatible', is_popular: false, badge: 'Direct Stream', btn_label: 'Get M4A' },
-                            { format: 'flac', quality: 'flac', label: 'FLAC Lossless', sub: 'Hi-Res Lossless Audio', is_popular: false, badge: 'Hi-Fi', btn_label: 'Get FLAC' },
-                            { format: 'wav', quality: 'wav', label: 'WAV Studio Audio', sub: 'Uncompressed Master Audio', is_popular: false, badge: 'Master', btn_label: 'Get WAV' },
-                            { format: 'aac', quality: 'aac', label: 'AAC Audio', sub: 'Crystal Clear Audio Stream', is_popular: false, badge: 'Clean', btn_label: 'Get AAC' }
+                            { format: 'mp3', quality: '320kbps', label: 'MP3 (320kbps)', sub: '320 kbps • Studio Quality', badge: '⚡ Best' },
+                            { format: 'mp3', quality: '256kbps', label: 'MP3 (256kbps)', sub: '256 kbps • High Quality' },
+                            { format: 'mp3', quality: '128kbps', label: 'MP3 (128kbps)', sub: '128 kbps • Standard Quality' },
+                            { format: 'm4a', quality: 'm4a', label: 'M4A (Apple AAC)', sub: 'High Fidelity • Apple AAC', badge: 'Direct' },
+                            { format: 'flac', quality: 'flac', label: 'FLAC (Lossless)', sub: 'Hi-Res Lossless Audio', badge: 'Hi-Fi' },
+                            { format: 'wav', quality: 'wav', label: 'WAV (Master)', sub: 'Uncompressed Studio Audio', badge: 'Master' },
+                            { format: 'aac', quality: 'aac', label: 'AAC (Stereo)', sub: 'Crystal Clear Audio Stream' }
                         ],
                         video_formats: [
-                            { format: 'mp4', quality: '720', label: 'HD Ready (720p)', tag: '720p HD', badge: '⚡ Instant HD (No Wait)', size: 'Fast Stream', is_popular: true },
-                            { format: 'mp4', quality: '1080', label: 'Full HD (1080p)', tag: '1080p FHD', badge: '⚡ Pre-Warmed 1080p', size: 'Crisp HD', is_popular: true },
-                            { format: 'mp4', quality: '4k', label: '4K Ultra HD (2160p)', tag: '4K UHD', badge: 'Ultra HD 4K', size: 'Max Detail', is_popular: false },
-                            { format: 'mp4', quality: '1440', label: '2K Quad HD (1440p)', tag: '1440p QHD', badge: '2K QHD', size: 'Super Sharp', is_popular: false },
-                            { format: 'mp4', quality: '480', label: 'SD Quality (480p)', tag: '480p SD', badge: '480p SD', size: 'Compact Size', is_popular: false },
-                            { format: 'mp4', quality: '360', label: 'Mobile Saver (360p)', tag: '360p Mobile', badge: '360p SD', size: 'Low Bandwidth', is_popular: false },
-                            { format: 'webm', quality: 'webm', label: 'WebM Video (VP9)', tag: 'WebM Modern', badge: 'WebM Codec', size: 'Optimized', is_popular: false }
+                            { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD', badge: '⚡ Instant' },
+                            { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p', badge: 'Full HD' },
+                            { format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p', badge: '4K Ultra' },
+                            { format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p', badge: '2K QHD' },
+                            { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' },
+                            { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' },
+                            { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format', badge: 'VP9' }
                         ]
                     };
 
@@ -1758,29 +1769,32 @@
                 audioFormatsContainer.innerHTML = '';
                 data.audio_formats.forEach((fmt) => {
                     const row = document.createElement('div');
-                    row.className = "format-row p-3 flex items-center justify-between";
+                    row.className = "format-row p-2.5 sm:p-3 flex items-center justify-between gap-2.5 sm:gap-3 transition-colors";
                     row.innerHTML = `
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                             <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
                                 <i class="fa-solid fa-music"></i>
                             </div>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-slate-900 text-sm">${fmt.label}</span>
-                                    ${fmt.is_popular ? '<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700">Recommended</span>' : ''}
-                                    ${fmt.badge ? `<span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-200">${fmt.badge}</span>` : ''}
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <span class="font-bold text-slate-900 text-xs sm:text-sm whitespace-nowrap truncate">${fmt.label}</span>
+                                    ${fmt.badge ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 whitespace-nowrap flex-shrink-0">${fmt.badge}</span>` : ''}
                                 </div>
-                                <p class="text-xs text-gray-500">${fmt.sub}</p>
+                                <p class="text-[11px] sm:text-xs text-gray-500 truncate">${fmt.sub}</p>
                             </div>
                         </div>
-                        <div>
-                            <button class="download-action-btn px-4 py-2 text-xs font-bold btn-download-green flex items-center gap-1.5" 
-                                data-format="${fmt.format}" data-quality="${fmt.quality}">
+                        <div class="flex-shrink-0">
+                            <button class="download-action-btn px-3 py-2 sm:px-4 sm:py-2 text-xs font-bold btn-download-green flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 cursor-pointer shadow-sm" 
+                                data-format="${fmt.format}" data-quality="${fmt.quality}" aria-label="Download ${fmt.label}">
                                 <i class="fa-solid fa-download text-xs"></i>
-                                <span>${fmt.btn_label || 'Get Audio'}</span>
+                                <span>Download</span><span class="hidden sm:inline">&nbsp;${fmt.format.toUpperCase()}</span>
                             </button>
                         </div>
                     `;
+
+                    row.addEventListener('click', () => {
+                        triggerDirectDownload(fmt.format, fmt.quality, fmt.label);
+                    });
 
                     row.querySelector('.download-action-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -1793,29 +1807,32 @@
                 videoFormatsContainer.innerHTML = '';
                 data.video_formats.forEach((fmt) => {
                     const row = document.createElement('div');
-                    row.className = "format-row p-3 flex items-center justify-between";
+                    row.className = "format-row p-2.5 sm:p-3 flex items-center justify-between gap-2.5 sm:gap-3 transition-colors";
                     row.innerHTML = `
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                             <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
                                 <i class="fa-solid fa-video"></i>
                             </div>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-slate-900 text-sm">${fmt.label}</span>
-                                    <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-blue-100 text-blue-700">${fmt.badge}</span>
-                                    ${fmt.size ? `<span class="text-xs text-gray-400 font-mono">~${fmt.size}</span>` : ''}
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 min-w-0">
+                                    <span class="font-bold text-slate-900 text-xs sm:text-sm whitespace-nowrap truncate">${fmt.label}</span>
+                                    ${fmt.badge ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 whitespace-nowrap flex-shrink-0">${fmt.badge}</span>` : ''}
                                 </div>
-                                <p class="text-xs text-gray-500">${fmt.tag} • High Quality Video</p>
+                                <p class="text-[11px] sm:text-xs text-gray-500 truncate">${fmt.sub}</p>
                             </div>
                         </div>
-                        <div>
-                            <button class="download-action-btn px-4 py-2 text-xs font-bold btn-download-blue flex items-center gap-1.5" 
-                                data-format="${fmt.format}" data-quality="${fmt.quality}">
+                        <div class="flex-shrink-0">
+                            <button class="download-action-btn px-3 py-2 sm:px-4 sm:py-2 text-xs font-bold btn-download-blue flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 cursor-pointer shadow-sm" 
+                                data-format="${fmt.format}" data-quality="${fmt.quality}" aria-label="Download ${fmt.label}">
                                 <i class="fa-solid fa-download text-xs"></i>
-                                <span>Get ${fmt.format.toUpperCase()}</span>
+                                <span>Download</span><span class="hidden sm:inline">&nbsp;MP4</span>
                             </button>
                         </div>
                     `;
+
+                    row.addEventListener('click', () => {
+                        triggerDirectDownload(fmt.format, fmt.quality, fmt.label);
+                    });
 
                     row.querySelector('.download-action-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
