@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "youtube converter ohne werbung"
     ],
     "lsi_semantics": [
+        "YouTube Shorts Audio kostenlos herunterladen",
+        "YouTube Playlist Downloader online",
+        "320kbps MP3 Audio herunterladen",
+        "4K MP4 Video herunterladen",
         "320 kbit/s hohe audioqualitaet", "128 kbit/s speicherplatz sparen", "256 kbit/s glasklarer klang",
         "1080p full hd video", "4k ultra hd 60fps", "ohne softwareinstallation",
         "ohne registrierung und ohne konto", "dsgvo konform und datenschutz", "sicher ohne viren und malware",

@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "web tải video youtube"
     ],
     "lsi_semantics": [
+        "tải âm thanh YouTube Shorts miễn phí",
+        "tải toàn bộ danh sách phát YouTube",
+        "tải nhạc MP3 320kbps",
+        "tải video 4K MP4",
         "320 kbps mp3 chất lượng cao", "1080p full hd video", "tải video 4k youtube", "tải youtube shorts",
         "chuyển shorts sang mp3", "tải không cần cài phần mềm", "nghe nhạc offline điện thoại", "tải mp3 trên iphone",
         "tải mp3 trên android", "lưu video vào máy tính", "safari tải video youtube", "không cần tiện ích mở rộng",

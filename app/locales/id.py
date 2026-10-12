@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "cara download video youtube di hp"
     ],
     "lsi_semantics": [
+        "download audio YouTube Shorts gratis",
+        "download playlist YouTube online",
+        "download audio MP3 320kbps",
+        "download video 4K MP4",
         "mp3 320kbps suara jernih", "audio 128kbps hemat kuota", "video 1080p full hd",
         "resolusi 4k ultra hd", "download gratis tanpa aplikasi", "tanpa registrasi akun",
         "hemat kuota data internet", "putar musik offline tanpa kuota", "lagu dj tiktok viral",

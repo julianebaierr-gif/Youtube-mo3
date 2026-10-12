@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "convertitore mp3 online"
     ],
     "lsi_semantics": [
+        "scaricare audio YouTube Shorts gratis",
+        "scaricare playlist di YouTube",
+        "scaricare audio MP3 320kbps",
+        "scaricare video 4K MP4",
         "320 kbps mp3", "1080p full hd video", "4k video download", "youtube shorts scaricare",
         "shorts in mp3", "scaricare senza programmi", "musica offline su smartphone", "iphone scaricare mp3",
         "android download mp3", "salvare video su pc", "safari download youtube", "chrome estensione alternativa",

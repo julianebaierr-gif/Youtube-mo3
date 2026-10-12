@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "extrair audio de video youtube"
     ],
     "lsi_semantics": [
+        "baixar audio do YouTube Shorts gratis",
+        "baixar playlist do YouTube",
+        "baixar audio MP3 320kbps",
+        "baixar video 4K MP4",
         "audio 320 kbps alta qualidade", "128 kbps economico", "256 kbps som cristalino",
         "video 1080p full hd", "videos 4k ultra hd 60fps", "sem instalar aplicativo nem programas",
         "sem cadastro e sem login", "ouvir musica offline sem internet nem wifi", "playlist de sertanejo universitario",

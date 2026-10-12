@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "youtube ダウンローダー"
     ],
     "lsi_semantics": [
+        "YouTube ショート 音声 無料ダウンロード",
+        "YouTube プレイリスト 一括保存",
+        "320kbps MP3 音声 ダウンロード",
+        "4K MP4 動画 ダウンロード",
         "320kbps 最高音質", "1080p フルhd 保存", "4k 動画 ダウンロード", "youtube ショート 保存",
         "ショート動画 mp3", "アプリ不要 保存", "オフライン再生 スマホ", "iphone mp3 保存方法",
         "android 音楽 保存", "pc 動画 保存", "safari 動画 ダウンロード", "拡張機能なし 安全",

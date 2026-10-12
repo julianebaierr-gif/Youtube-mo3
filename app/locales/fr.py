@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "convertir video youtube sans logiciel"
     ],
     "lsi_semantics": [
+        "télécharger audio YouTube Shorts gratuit",
+        "téléchargeur de playlist YouTube",
+        "télécharger audio MP3 320kbps",
+        "télécharger vidéo 4K MP4",
         "haute qualite audio 320 kbps", "debit binaire eleve", "qualite 128 kbps legere",
         "resolution 1080p full hd", "telechargement video 4k 60fps", "sans logiciel tiers a installer",
         "sans inscription et sans compte", "compatible smartphone android", "iphone safari dossier fichiers",
