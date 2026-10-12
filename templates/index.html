@@ -1459,18 +1459,138 @@
                 }
             }
 
+            function fetchWithTimeout(url, opts = {}, ms = 3000) {
+                if (window.AbortController) {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), ms);
+                    return fetch(url, { ...opts, signal: controller.signal })
+                        .finally(() => clearTimeout(timer));
+                }
+                return fetch(url, opts);
+            }
+
+            // Multi-engine stream initiator with cloud proxy fallback (100% resilient across mobile & desktop)
+            async function initiateStream(ytUrl, fmt) {
+                // 1. Direct savenow
+                try {
+                    const u = `https://p.savenow.to/api/v2/download?button=1&format=${fmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const r = await fetchWithTimeout(u, {}, 2800);
+                    if (r.ok) {
+                        const d = await r.json();
+                        if (d && d.id) return { id: d.id, engine: 'savenow', download_url: d.download_url || null };
+                    }
+                } catch(e) {}
+
+                // 2. Server-side API proxy (bypasses mobile carrier blocking, CORS, and ISP firewall)
+                try {
+                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${fmt}`;
+                    const r = await fetchWithTimeout(u, {}, 3500);
+                    if (r.ok) {
+                        const d = await r.json();
+                        if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
+                    }
+                } catch(e) {}
+
+                // 3. Secondary engine: loader.to direct
+                try {
+                    const u = `https://loader.to/ajax/download.php?button=1&start=1&end=1&format=${fmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const r = await fetchWithTimeout(u, {}, 3500);
+                    if (r.ok) {
+                        const d = await r.json();
+                        if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
+                    }
+                } catch(e) {}
+
+                return null;
+            }
+
+            // Multi-endpoint progress poller with rapid fallback
+            async function pollProgressEndpoint(convId, engine) {
+                const endpoints = engine === 'loader'
+                    ? [`https://lto2.affadaffa.com/api/progress?id=${convId}`, `/api/progress?id=${convId}`]
+                    : [`https://p.savenow.to/api/progress?id=${convId}`, `/api/progress?id=${convId}`];
+                
+                for (const ep of endpoints) {
+                    try {
+                        const r = await fetchWithTimeout(ep, {}, 2200);
+                        if (r.ok) {
+                            const d = await r.json();
+                            if (d) return d;
+                        }
+                    } catch(e) {}
+                }
+                return null;
+            }
+
+            // Active Background Pre-Warmer:
+            // Proactively initiates and polls Top Formats (MP3 320k, 720p HD, 1080p FHD) in background
+            // while user is viewing the video thumbnail and title.
+            // When user taps "Download", file is ALREADY ready (Sub-2s / Instant download)!
+            window._prewarmedStreams = window._prewarmedStreams || {};
+            window._prewarmedReady = window._prewarmedReady || {};
+
             function prewarmStreams(ytId) {
                 if (!ytId || (window._lastPrewarmedId === ytId)) return;
                 window._lastPrewarmedId = ytId;
                 window._prewarmedStreams = window._prewarmedStreams || {};
+                window._prewarmedReady = window._prewarmedReady || {};
                 
-                const targetUrlEncoded = encodeURIComponent(`https://www.youtube.com/watch?v=${ytId}`);
-                ['mp3', '1080', '720'].forEach(f => {
-                    if (!window._prewarmedStreams[f + '_' + ytId]) {
-                        window._prewarmedStreams[f + '_' + ytId] = fetch(`https://p.savenow.to/api/v2/download?button=1&format=${f}&url=${targetUrlEncoded}`)
-                            .then(r => r.ok ? r.json() : null)
-                            .catch(() => null);
-                    }
+                const targetUrl = `https://www.youtube.com/watch?v=${ytId}`;
+                const priorityFormats = ['mp3', '720', '1080'];
+
+                priorityFormats.forEach(f => {
+                    const key = f + '_' + ytId;
+                    if (window._prewarmedStreams[key]) return;
+
+                    const streamEntry = {
+                        id: null,
+                        engine: 'savenow',
+                        progress: 250,
+                        download_url: null,
+                        completed: false,
+                        callbacks: []
+                    };
+                    window._prewarmedStreams[key] = streamEntry;
+
+                    initiateStream(targetUrl, f).then(initData => {
+                        if (!initData || !initData.id) return;
+                        streamEntry.id = initData.id;
+                        streamEntry.engine = initData.engine || 'savenow';
+
+                        if (initData.download_url) {
+                            streamEntry.download_url = initData.download_url;
+                            streamEntry.completed = true;
+                            window._prewarmedReady[key] = initData.download_url;
+                            streamEntry.callbacks.forEach(cb => { try { cb(initData.download_url); } catch(e){} });
+                            return;
+                        }
+
+                        // Background poller every 280ms
+                        let attempts = 0;
+                        const maxPoll = 50; // ~14 seconds
+                        const pollBg = async () => {
+                            if (streamEntry.completed || attempts >= maxPoll) return;
+                            attempts++;
+                            try {
+                                const prog = await pollProgressEndpoint(streamEntry.id, streamEntry.engine);
+                                if (prog) {
+                                    if (prog.progress) streamEntry.progress = prog.progress;
+                                    if (prog.download_url && (prog.success === 1 || prog.progress >= 1000)) {
+                                        streamEntry.download_url = prog.download_url;
+                                        streamEntry.completed = true;
+                                        window._prewarmedReady[key] = prog.download_url;
+                                        streamEntry.callbacks.forEach(cb => { try { cb(prog.download_url); } catch(e){} });
+                                        return;
+                                    }
+                                }
+                            } catch(e) {}
+
+                            if (!streamEntry.completed && attempts < maxPoll) {
+                                setTimeout(pollBg, 280);
+                            }
+                        };
+                        setTimeout(pollBg, 200);
+                    }).catch(() => {});
                 });
             }
 
@@ -1578,18 +1698,8 @@
                         title = `YouTube Video (${ytId})`;
                     }
 
-                    // Concurrent background pre-warming for both MP3 & 1080p MP4
-                    const prewarmed = {};
-                    try {
-                        const targetUrlEncoded = encodeURIComponent(`https://www.youtube.com/watch?v=${ytId}`);
-                        prewarmed['mp3'] = fetch(`https://p.savenow.to/api/v2/download?button=1&format=mp3&url=${targetUrlEncoded}`)
-                            .then(r => r.ok ? r.json() : null)
-                            .catch(() => null);
-
-                        prewarmed['1080'] = fetch(`https://p.savenow.to/api/v2/download?button=1&format=1080&url=${targetUrlEncoded}`)
-                            .then(r => r.ok ? r.json() : null)
-                            .catch(() => null);
-                    } catch (e) {}
+                    // Actively trigger and poll background pre-warming for MP3, 720p, and 1080p
+                    prewarmStreams(ytId);
 
                     currentMediaData = {
                         id: ytId,
@@ -1600,21 +1710,20 @@
                         views: "",
                         thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
                         platform: { name: 'YouTube' },
-                        prewarmed: prewarmed,
                         audio_formats: [
-                            { format: 'mp3', quality: '320kbps', label: 'MP3 Studio (320kbps)', sub: '320 kbps • MP3 Audio', is_popular: true, btn_label: 'Get MP3' },
+                            { format: 'mp3', quality: '320kbps', label: 'MP3 Studio (320kbps)', sub: '320 kbps • High Quality MP3', is_popular: true, badge: '⚡ Pre-Warmed', btn_label: 'Download MP3' },
                             { format: 'mp3', quality: '256kbps', label: 'MP3 Standard (256kbps)', sub: '256 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
                             { format: 'mp3', quality: '128kbps', label: 'MP3 Compact (128kbps)', sub: '128 kbps • MP3 Audio', is_popular: false, btn_label: 'Get MP3' },
-                            { format: 'm4a', quality: 'm4a', label: 'M4A Audio (Apple AAC)', sub: 'High Fidelity • Apple Compatible', is_popular: false, badge: 'Fast Stream', btn_label: 'Get M4A' },
+                            { format: 'm4a', quality: 'm4a', label: 'M4A Audio (Apple AAC)', sub: 'High Fidelity • Apple Compatible', is_popular: false, badge: 'Direct Stream', btn_label: 'Get M4A' },
                             { format: 'flac', quality: 'flac', label: 'FLAC Lossless', sub: 'Hi-Res Lossless Audio', is_popular: false, badge: 'Hi-Fi', btn_label: 'Get FLAC' },
                             { format: 'wav', quality: 'wav', label: 'WAV Studio Audio', sub: 'Uncompressed Master Audio', is_popular: false, badge: 'Master', btn_label: 'Get WAV' },
                             { format: 'aac', quality: 'aac', label: 'AAC Audio', sub: 'Crystal Clear Audio Stream', is_popular: false, badge: 'Clean', btn_label: 'Get AAC' }
                         ],
                         video_formats: [
-                            { format: 'mp4', quality: '4k', label: '4K Ultra HD (2160p)', tag: '4K UHD', badge: 'Ultra HD 4K', size: 'Max Detail', is_popular: true },
+                            { format: 'mp4', quality: '720', label: 'HD Ready (720p)', tag: '720p HD', badge: '⚡ Instant HD (No Wait)', size: 'Fast Stream', is_popular: true },
+                            { format: 'mp4', quality: '1080', label: 'Full HD (1080p)', tag: '1080p FHD', badge: '⚡ Pre-Warmed 1080p', size: 'Crisp HD', is_popular: true },
+                            { format: 'mp4', quality: '4k', label: '4K Ultra HD (2160p)', tag: '4K UHD', badge: 'Ultra HD 4K', size: 'Max Detail', is_popular: false },
                             { format: 'mp4', quality: '1440', label: '2K Quad HD (1440p)', tag: '1440p QHD', badge: '2K QHD', size: 'Super Sharp', is_popular: false },
-                            { format: 'mp4', quality: '1080', label: 'Full HD (1080p)', tag: '1080p FHD', badge: '1080p FHD', size: 'Crisp HD', is_popular: true },
-                            { format: 'mp4', quality: '720', label: 'HD Ready (720p)', tag: '720p HD', badge: '720p HD', size: 'Standard HD', is_popular: false },
                             { format: 'mp4', quality: '480', label: 'SD Quality (480p)', tag: '480p SD', badge: '480p SD', size: 'Compact Size', is_popular: false },
                             { format: 'mp4', quality: '360', label: 'Mobile Saver (360p)', tag: '360p Mobile', badge: '360p SD', size: 'Low Bandwidth', is_popular: false },
                             { format: 'webm', quality: 'webm', label: 'WebM Video (VP9)', tag: 'WebM Modern', badge: 'WebM Codec', size: 'Optimized', is_popular: false }
@@ -1744,58 +1853,7 @@
                 });
             }
 
-            // Multi-engine stream initiator with cloud proxy fallback (100% resilient to mobile adblock & ISP firewalls)
-            async function initiateStream(ytUrl, fmt) {
-                // 1. Direct savenow
-                try {
-                    const u = `https://p.savenow.to/api/v2/download?button=1&format=${fmt}&url=${encodeURIComponent(ytUrl)}`;
-                    const r = await fetch(u);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: 'savenow', download_url: d.download_url || null };
-                    }
-                } catch(e) {}
 
-                // 2. Server-side API proxy (bypasses mobile carrier blocking, CORS, and ISP firewall)
-                try {
-                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${fmt}`;
-                    const r = await fetch(u);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
-                    }
-                } catch(e) {}
-
-                // 3. Secondary engine: loader.to direct
-                try {
-                    const u = `https://loader.to/ajax/download.php?button=1&start=1&end=1&format=${fmt}&url=${encodeURIComponent(ytUrl)}`;
-                    const r = await fetch(u);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
-                    }
-                } catch(e) {}
-
-                return null;
-            }
-
-            // Multi-endpoint progress poller with cloud proxy fallback
-            async function pollProgressEndpoint(convId, engine) {
-                const endpoints = engine === 'loader'
-                    ? [`https://lto2.affadaffa.com/api/progress?id=${convId}`, `https://p.savenow.to/api/progress?id=${convId}`, `/api/progress?id=${convId}`]
-                    : [`https://p.savenow.to/api/progress?id=${convId}`, `https://lto2.affadaffa.com/api/progress?id=${convId}`, `/api/progress?id=${convId}`];
-                
-                for (const ep of endpoints) {
-                    try {
-                        const r = await fetch(ep);
-                        if (r.ok) {
-                            const d = await r.json();
-                            if (d) return d;
-                        }
-                    } catch(e) {}
-                }
-                return null;
-            }
 
             async function triggerDirectDownload(format, quality, label) {
                 if (!currentMediaData) return;
@@ -1911,23 +1969,79 @@
                 }
 
                 try {
-                    // Check proactive pre-warm cache
-                    let initData = null;
                     const prewarmKey = fmtParam + '_' + ytId;
-                    if (window._prewarmedStreams && window._prewarmedStreams[prewarmKey]) {
-                        initData = await window._prewarmedStreams[prewarmKey];
+                    const prewarmed = window._prewarmedStreams && window._prewarmedStreams[prewarmKey];
+
+                    // Priority 1: File is ALREADY 100% prepared in background! (Ultra Instant < 0.3s)
+                    if (window._prewarmedReady && window._prewarmedReady[prewarmKey]) {
+                        const readyUrl = window._prewarmedReady[prewarmKey];
+                        modalProgressBar.style.width = '100%';
+                        modalPctText.textContent = '100%';
+                        modalEtaText.textContent = 'Instant';
+                        modalSpeedText.textContent = 'Ultra Fast';
+                        modalStatusMsg.textContent = 'File Ready! Saving to device...';
+                        setTimeout(() => {
+                            completeDownload(readyUrl);
+                        }, 180);
+                        return;
                     }
 
-                    if (!initData || !initData.id) {
-                        initData = await initiateStream(ytUrl, fmtParam);
+                    // Priority 2: Stream was already initiated & polling in background while user looked at screen
+                    if (prewarmed && prewarmed.id && !prewarmed.completed) {
+                        const startPct = Math.min(88, Math.max(50, Math.round(prewarmed.progress / 10)));
+                        curPct = startPct;
+                        modalProgressBar.style.width = `${curPct}%`;
+                        modalPctText.textContent = `${curPct}%`;
+                        modalEtaText.textContent = '~1s';
+                        modalSpeedText.textContent = 'Turbo Stream';
+                        modalStatusMsg.textContent = 'Finalizing audio/video stream...';
+
+                        // Register callback for instant finish
+                        prewarmed.callbacks.push((finalUrl) => {
+                            completeDownload(finalUrl);
+                        });
+
+                        const convId = prewarmed.id;
+                        const engine = prewarmed.engine || 'savenow';
+                        let fgAttempts = 0;
+                        const fgPoll = async () => {
+                            if (completed) return;
+                            fgAttempts++;
+                            try {
+                                const progData = await pollProgressEndpoint(convId, engine);
+                                if (progData) {
+                                    if (progData.download_url && (progData.success === 1 || progData.progress >= 1000)) {
+                                        completeDownload(progData.download_url);
+                                        return;
+                                    }
+                                    if (progData.progress && progData.progress > 0) {
+                                        const realPct = Math.min(94, Math.round(progData.progress / 10));
+                                        if (realPct > curPct) {
+                                            curPct = realPct;
+                                            modalProgressBar.style.width = `${curPct}%`;
+                                            modalPctText.textContent = `${curPct}%`;
+                                        }
+                                    }
+                                }
+                            } catch(e) {}
+
+                            if (!completed && fgAttempts < 55) {
+                                setTimeout(fgPoll, 280);
+                            } else if (!completed && fgAttempts >= 55) {
+                                failDownload("Stream processing took longer than expected. Please tap again to retry.");
+                            }
+                        };
+                        setTimeout(fgPoll, 100);
+                        return;
                     }
 
+                    // Priority 3: Non-prewarmed format (e.g. 4K, 1440p, FLAC) -> Fresh initiate
+                    let initData = await initiateStream(ytUrl, fmtParam);
                     if (!initData || !initData.id) {
                         failDownload("Unable to initiate conversion stream. Please check your network and try again.");
                         return;
                     }
 
-                    // If stream already prepared instantly
                     if (initData.download_url) {
                         completeDownload(initData.download_url);
                         return;
@@ -1937,10 +2051,8 @@
                     const engine = initData.engine || 'savenow';
                     modalStatusMsg.textContent = 'Processing high quality audio/video stream...';
 
-                    // High frequency 350ms rapid polling
                     let attempts = 0;
-                    const maxAttempts = 70;
-                    
+                    const maxAttempts = 65;
                     const pollProgress = async () => {
                         if (completed) return;
                         attempts++;
@@ -1952,7 +2064,7 @@
                                     return;
                                 }
                                 if (progData.progress && progData.progress > 0) {
-                                    const realPct = Math.min(92, Math.round(progData.progress / 10));
+                                    const realPct = Math.min(94, Math.round(progData.progress / 10));
                                     if (realPct > curPct) {
                                         curPct = realPct;
                                         modalProgressBar.style.width = `${curPct}%`;
@@ -1964,9 +2076,9 @@
                             console.warn(e);
                         }
 
-                        if (attempts < maxAttempts) {
-                            setTimeout(pollProgress, 350);
-                        } else {
+                        if (!completed && attempts < maxAttempts) {
+                            setTimeout(pollProgress, 280);
+                        } else if (!completed && attempts >= maxAttempts) {
                             failDownload("Stream processing took longer than expected. Please tap again to retry.");
                         }
                     };
