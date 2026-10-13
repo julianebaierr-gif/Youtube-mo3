@@ -18,6 +18,11 @@ KEYWORDS_RESEARCH = {
         "web tải video youtube"
     ],
     "lsi_semantics": [
+        "chuyển đổi và tải xuống mp3",
+        "chuyển youtube shorts sang mp4",
+        "trích xuất âm thanh từ youtube",
+        "tải âm thanh youtube",
+        "công cụ chuyển đổi video youtube",
         "tải âm thanh YouTube Shorts miễn phí",
         "tải toàn bộ danh sách phát YouTube",
         "tải nhạc MP3 320kbps",

@@ -18,6 +18,10 @@ KEYWORDS_RESEARCH = {
         "convertitore mp3 online"
     ],
     "lsi_semantics": [
+        "convertitore e downloader mp3",
+        "youtube shorts in mp4",
+        "estrarre audio da youtube",
+        "scaricare audio da youtube",
         "scaricare audio YouTube Shorts gratis",
         "scaricare playlist di YouTube",
         "scaricare audio MP3 320kbps",

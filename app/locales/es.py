@@ -26,6 +26,12 @@ KEYWORDS_RESEARCH = {
         "descargar canciones de youtube"
     ],
     "lsi_semantics": [
+        "youtube convertir",
+        "convertidor y descargador mp3",
+        "youtube shorts a mp4",
+        "extraer audio de youtube",
+        "descargar audio de youtube",
+        "convertidor de videos de youtube",
         "320 kbps alta calidad", "128 kbps bitrate estandar", "256 kbps audio profesional",
         "mp3 gratis sin registro", "mp4 1080p full hd", "videos 4k ultra hd 60fps",
         "youtube shorts a mp3", "youtube music descargar canciones", "sin instalar programas ni extensiones",

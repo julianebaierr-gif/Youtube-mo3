@@ -18,6 +18,11 @@ KEYWORDS_RESEARCH = {
         "cara download video youtube di hp"
     ],
     "lsi_semantics": [
+        "pengunduh dan konverter mp3",
+        "youtube shorts ke mp4",
+        "ekstrak audio dari youtube",
+        "download audio youtube",
+        "konverter video youtube",
         "download audio YouTube Shorts gratis",
         "download playlist YouTube online",
         "download audio MP3 320kbps",

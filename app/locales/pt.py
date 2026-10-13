@@ -18,6 +18,11 @@ KEYWORDS_RESEARCH = {
         "extrair audio de video youtube"
     ],
     "lsi_semantics": [
+        "conversor e baixador de mp3",
+        "youtube shorts para mp4",
+        "extrair audio do youtube",
+        "baixar audio do youtube",
+        "conversor de video do youtube",
         "baixar audio do YouTube Shorts gratis",
         "baixar playlist do YouTube",
         "baixar audio MP3 320kbps",

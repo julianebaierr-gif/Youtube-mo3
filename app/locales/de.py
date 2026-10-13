@@ -18,6 +18,11 @@ KEYWORDS_RESEARCH = {
         "youtube converter ohne werbung"
     ],
     "lsi_semantics": [
+        "MP3 Konverter und Downloader",
+        "YouTube Shorts zu MP4",
+        "Audio aus YouTube extrahieren",
+        "YouTube Audio herunterladen",
+        "YouTube Video Konverter",
         "YouTube Shorts Audio kostenlos herunterladen",
         "YouTube Playlist Downloader online",
         "320kbps MP3 Audio herunterladen",

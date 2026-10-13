@@ -20,6 +20,10 @@ KEYWORDS_RESEARCH = {
         "mp3 dönüştürücü"
     ],
     "lsi_semantics": [
+        "mp3 dönüştürücü ve indirici",
+        "youtube shorts mp4 dönüştürme",
+        "youtube ses ayıklama",
+        "youtube ses indirme",
         "320 kbps mp3", "128 kbps ses kalitesi", "1080p full hd video", "4k video indir",
         "youtube shorts indir", "shorts mp3 yapma", "programsız video indirme", "telefona müzik indirme",
         "iphone youtube video indirme", "android mp3 indir", "pc video kaydetme", "safari video indirme",

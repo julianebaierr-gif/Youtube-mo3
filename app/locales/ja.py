@@ -18,6 +18,11 @@ KEYWORDS_RESEARCH = {
         "youtube ダウンローダー"
     ],
     "lsi_semantics": [
+        "MP3 変換 ダウンローダー",
+        "YouTube ショート MP4 変換",
+        "YouTube 音声 抽出",
+        "YouTube 音声 ダウンロード",
+        "YouTube 動画 変換",
         "YouTube ショート 音声 無料ダウンロード",
         "YouTube プレイリスト 一括保存",
         "320kbps MP3 音声 ダウンロード",

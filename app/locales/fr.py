@@ -18,6 +18,12 @@ KEYWORDS_RESEARCH = {
         "convertir video youtube sans logiciel"
     ],
     "lsi_semantics": [
+        "youtube convertir",
+        "convertisseur et téléchargeur mp3",
+        "youtube shorts en mp4",
+        "extraire audio de youtube",
+        "télécharger audio youtube",
+        "convertisseur vidéo youtube",
         "télécharger audio YouTube Shorts gratuit",
         "téléchargeur de playlist YouTube",
         "télécharger audio MP3 320kbps",
