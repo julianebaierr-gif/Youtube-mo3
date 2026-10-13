@@ -49,12 +49,12 @@ async def add_security_headers(request: Request, call_next):
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Content-Security-Policy"] = (
         "default-src 'self' 'unsafe-inline' 'unsafe-eval' "
-        "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.ytimg.com https://*.googlevideo.com https://analytics.ahrefs.com; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com; "
+        "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.ytimg.com https://*.googlevideo.com https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://www.googletagmanager.com https://*.google.com https://*.doubleclick.net; "
         "img-src 'self' data: https:; "
         "media-src 'self' blob: https:; "
-        "connect-src 'self' https: https://noembed.com https://analytics.ahrefs.com; "
-        "frame-src 'self' https://loader.to;"
+        "connect-src 'self' https: https://noembed.com https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; "
+        "frame-src 'self' https://loader.to https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com;"
     )
     return response
 
@@ -186,6 +186,16 @@ async def service_worker_endpoint():
 
 
 # SEO, Discovery & System Endpoints
+@app.api_route("/ads.txt", methods=["GET", "HEAD"])
+async def ads_txt():
+    ads_file = os.path.join(BASE_DIR, "public", "ads.txt")
+    if os.path.exists(ads_file):
+        with open(ads_file, "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="text/plain; charset=utf-8")
+    content = "google.com, pub-2350272227833258, DIRECT, f08c47fec0942fa0\n"
+    return Response(content=content, media_type="text/plain; charset=utf-8")
+
 @app.api_route("/robots.txt", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def robots_txt():
     content = """User-agent: *
