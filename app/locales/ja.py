@@ -116,7 +116,7 @@ UI = {
 PAGES = {
     "home": {
         "title": "YouTube動画保存 & MP3音楽変換 無料ツール | YT4MP3",
-        "meta_desc": "YouTube動画をMP3（最高320kbps）やMP4（1080p/4K）に無料変換・保存。アプリ不要、ウイルスや迷惑広告なし。iPhone・Android・PC対応。",
+        "meta_desc": "YouTube動画をMP3（最高320kbps）やMP4（1080p/4K）に高画質・高音質で無料変換して保存。専用アプリ不要、危険な広告なし。iPhone、Android、PCのブラウザから安全かつ高速にダウンロードできます。完全無料・登録不要。",
         "h1": "YouTube MP3 & MP4 オンライン変換ツール",
         "subtitle": "最大320kbpsのクリアな高音質オーディオと1080p Full HD動画を、専用ソフトのインストールなしでブラウザから直接ダウンロードできます。",
         "badge": "高速＆安全なWebダウンローダー",
@@ -261,7 +261,7 @@ PAGES = {
     },
     "youtube-to-mp3": {
         "title": "YouTube MP3変換 (最高320kbps) 無料保存 | YT4MP3",
-        "meta_desc": "YouTube動画から最高320kbpsのクリアな高音質MP3を無料抽出。登録不要、アプリ不要、カーオーディオ用USBやスマホ保存に最適。",
+        "meta_desc": "YouTube動画から最高320kbpsの高音質ステレオMP3音声を無料抽出。専用ソフトや会員登録不要でブラウザから即座に変換。スマホでのオフライン音楽再生やカーオーディオ用USB保存に最適な無料オーディオダウンローダー。安全・高速。",
         "h1": "YouTube MP3 高音質変換ツール",
         "subtitle": "名曲の生演奏、アコースティックアレンジ、ポッドキャストを最大320kbpsのスタジオ品質で瞬時にMP3化できます。",
         "badge": "高音質ステレオサウンド",
@@ -396,7 +396,7 @@ PAGES = {
     },
     "youtube-to-mp4": {
         "title": "YouTube動画保存 MP4 (1080p & 4K) 無料 | YT4MP3",
-        "meta_desc": "YouTube動画をMP4 Full HD（1080p）や4Kで無料保存。音ズレなし、透かしロゴなし。CapCutやPremiereでの編集素材やテレビ視聴に最適。",
+        "meta_desc": "YouTube動画をMP4 Full HD（1080p）や4K高解像度で安全に無料ダウンロード。音ズレや邪魔な透かしロゴなし。CapCutやPremiereの動画編集素材、スマホやテレビでのオフライン視聴に最適な動画変換ツール。完全無料。",
         "h1": "YouTube MP4 動画ダウンロード Full HD",
         "subtitle": "講義、MV、ドキュメンタリーを高精細1080p・4K映像で。映像と音声が完全に同期した高品質MP4ファイルをすぐに入手できます。",
         "badge": "高解像度ビデオ",
@@ -649,7 +649,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
  '1080pのショート動画のファイルサイズ容量はどれくらい']
 UI["nav_shorts"] = 'YouTubeショート'
 PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - ShortsをMP4＆MP3に変換ダウンロード | YT4MP3',
- 'meta_desc': 'YouTubeショート動画を1080pフルHD MP4および320kbps MP3音声で無料・透かしロゴなし保存。iPhone、Android、PC対応の高速・広告なしダウンローダー。',
+ 'meta_desc': 'YouTubeショート動画を1080pフルHD MP4動画および320kbps MP3音声で無料ダウンロード。透かしロゴなし、危険な広告なし。iPhone、Android、PCのブラウザからワンタップで即座に保存できます。登録不要・完全無料。',
  'h1': 'YouTubeショート動画をオンライン保存',
  'subtitle': 'YouTube Shortsの縦型動画をオリジナルの1080pフルHD高画質または320kbps高音質MP3としてロゴなしで保存。高速・完全無料・アプリ不要。',
  'badge': 'YouTubeショート保存ツール',

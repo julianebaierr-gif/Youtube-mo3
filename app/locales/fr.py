@@ -121,7 +121,7 @@ UI = {
 PAGES = {
     "home": {
         "title": "Convertisseur YouTube en MP3 et MP4 Gratuit | YT4MP3",
-        "meta_desc": "Convertissez et téléchargez des vidéos YouTube en MP3 (320kbps) et MP4 (1080p/4K) gratuitement. Sans logiciel, sans inscription, compatible Android, iPhone et PC.",
+        "meta_desc": "Convertissez et téléchargez des vidéos YouTube en MP3 320kbps et MP4 1080p/4K gratuitement. Sans logiciel ni inscription, compatible mobile et PC.",
         "h1": "Convertisseur YouTube en MP3 et MP4 en Ligne",
         "subtitle": "Extrayez l'audio en haute fidélité jusqu'à 320 kbps et téléchargez des vidéos en Full HD ou 4K directement dans votre navigateur sans installer d'application.",
         "badge": "Convertisseur Multimédia Universel",
@@ -311,7 +311,7 @@ PAGES = {
 <p>L'utilisation d'outils de conversion de flux s'inscrit légitimement dans le cadre de la copie privée pour votre propre usage personnel, de la conservation de documents éducatifs de libre accès, ou de l'archivage de créations sous licence Creative Commons et de domaine public. Disposer d'une copie locale de contenus essentiels garantit la pérennité de votre accès au savoir et à la culture en toutes circonstances.</p>"""
     },
     "youtube-to-mp3": {
-        "title": "Convertisseur YouTube en MP3 (320 kbps) Haute Qualité | YT4MP3",
+        "title": "Convertisseur YouTube MP3 320 kbps Haute Qualité | YT4MP3",
         "meta_desc": "Convertissez des vidéos YouTube en MP3 320 kbps gratuitement en ligne. Son clair, sans logiciel, rapide et compatible smartphones, clé USB et autoradio.",
         "h1": "Convertisseur YouTube en MP3 Haute Définition",
         "subtitle": "Extrayez le son de vos musiques, mix de DJ, podcasts et conférences YouTube au format audio universel MP3 avec un débit allant jusqu'à 320 kbps.",
@@ -438,7 +438,7 @@ PAGES = {
 </ul>"""
     },
     "youtube-to-mp4": {
-        "title": "Télécharger Vidéo YouTube en MP4 1080p et 4K Gratuit | YT4MP3",
+        "title": "Télécharger Vidéo YouTube MP4 1080p et 4K Gratuit | YT4MP3",
         "meta_desc": "Téléchargez des vidéos YouTube en MP4 Full HD (1080p) et 4K gratuitement. Sans filigrane, image nette, rapide et prêt pour le montage vidéo.",
         "h1": "Télécharger Vidéos YouTube en MP4 Full HD",
         "subtitle": "Enregistrez vos documentaires, tutoriels, clips et cours favoris au format universel MP4 avec la résolution maximale disponible et un son synchronisé.",
@@ -684,7 +684,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['télécharger short youtube',
  'comment installer l application yt4mp3 pour télécharger des shorts',
  'combien d espace prend un short youtube en 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Télécharger YouTube Shorts - Convertisseur Shorts en MP4 & MP3 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Télécharger YouTube Shorts en MP4 1080p et MP3 | YT4MP3',
  'meta_desc': 'Téléchargez YouTube Shorts en 1080p Full HD MP4 et audio MP3 320kbps gratuit sans filigrane. '
               'Téléchargeur rapide pour iPhone, Android et PC sans publicités.',
  'h1': 'Télécharger YouTube Shorts en Ligne',

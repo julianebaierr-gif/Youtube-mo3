@@ -115,7 +115,7 @@ UI = {
 PAGES = {
     "home": {
         "title": "Convertitore YouTube MP3 e MP4 Gratis Online | YT4MP3",
-        "meta_desc": "Scarica e converti video YouTube in MP3 (320 kbps) e MP4 (1080p/4K) gratis senza programmi. Veloce, sicuro, senza pubblicità invasive, compatibile con iPhone e Android.",
+        "meta_desc": "Converti e scarica video YouTube in MP3 (320kbps) e MP4 (1080p/4K) gratis senza programmi. Veloce, sicuro, compatibile con iPhone, Android e PC.",
         "h1": "Convertitore YouTube in MP3 e MP4 Online",
         "subtitle": "Salva audio ad alta definizione fino a 320 kbps e video Full HD 1080p direttamente dal tuo browser senza installare applicazioni esterne.",
         "badge": "Scaricatore Multimediale Veloce",
@@ -647,7 +647,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['scaricare youtube shorts',
  'come installare l app yt4mp3 per scaricare shorts',
  'quanto spazio occupa un video shorts a 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Scaricare YouTube Shorts - Convertitore Shorts in MP4 & MP3 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Scaricare YouTube Shorts - Video Shorts in 1080p | YT4MP3',
  'meta_desc': 'Scarica YouTube Shorts in 1080p Full HD MP4 e audio MP3 a 320kbps gratis senza filigrana. Downloader '
               'veloce per iPhone, Android e PC senza pubblicità.',
  'h1': 'Scaricare YouTube Shorts Online',

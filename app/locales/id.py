@@ -690,7 +690,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['download youtube shorts',
  'cara pasang aplikasi yt4mp3 di layar utama hp',
  'berapa ukuran memori video shorts kualitas 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Download YouTube Shorts - Konverter Shorts ke MP4 & MP3 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Download YouTube Shorts - Simpan Shorts 1080p MP4 | YT4MP3',
  'meta_desc': 'Download video YouTube Shorts kualitas 1080p Full HD MP4 dan MP3 320kbps gratis tanpa watermark. '
               'Pengunduh cepat untuk iPhone, Android dan PC tanpa iklan.',
  'h1': 'Download YouTube Shorts Online',

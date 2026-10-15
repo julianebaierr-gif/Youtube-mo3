@@ -648,7 +648,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['скачать шортс',
  'как установить приложение yt4mp3 на экран телефона',
  'сколько весит видео шортс в качестве 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Скачать YouTube Shorts - Конвертер Shorts в MP4 и MP3 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Скачать YouTube Shorts - Видео Shorts в 1080p | YT4MP3',
  'meta_desc': 'Скачать видео YouTube Shorts в 1080p Full HD MP4 и MP3 320 кбит/с бесплатно без водяных знаков. Быстрый '
               'онлайн загрузчик для iPhone, Android и ПК без рекламы.',
  'h1': 'Скачать YouTube Shorts Онлайн',

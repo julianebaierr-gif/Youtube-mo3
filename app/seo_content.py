@@ -1699,10 +1699,8 @@ SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter | 320kbp
                             {'q': 'What should I do if a video download fails midway?',
                              'a': 'Ensure you have adequate device storage, verify your internet connection stability, '
                                   'and click Convert again to restart the stream.'}]},
- 'youtube-shorts-downloader': {'title': 'YouTube Shorts Downloader - Download Shorts to MP4 & MP3 | YT4MP3',
-                               'meta_desc': 'Free online YouTube Shorts downloader. Save YouTube Shorts videos in '
-                                            '1080p Full HD MP4 and convert to 320kbps MP3 audio with no watermarks. '
-                                            'Works on iPhone, Android, and PC.',
+ 'youtube-shorts-downloader': {'title': 'YouTube Shorts Downloader - Download Shorts 1080p | YT4MP3',
+                               'meta_desc': 'Free YouTube Shorts downloader. Save Shorts videos in 1080p Full HD MP4 and convert to 320kbps MP3 audio without watermarks on iPhone, Android, and PC.',
                                'h1': 'YouTube Shorts Downloader Online',
                                'subtitle': 'Save vertical YouTube Shorts in original 1080p HD MP4 video or convert to '
                                            '320kbps MP3 audio with zero watermarks. Fast, free, and runs directly '

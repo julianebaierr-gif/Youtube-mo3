@@ -310,7 +310,7 @@ PAGES = {
 <p>Incentivamos o uso da tecnologia para a preservação de arquivos de estudo, backups de vídeos próprios, conteúdos de domínio público e produções sob licença Creative Commons. Ter uma cópia local de materiais importantes garante seu acesso constante a fontes valiosas de informação e entretenimento, mesmo quando você estiver desconectado da rede mundial de computadores.</p>"""
     },
     "youtube-to-mp3": {
-        "title": "Conversor YouTube para MP3 320kbps de Alta Qualidade | YT4MP3",
+        "title": "Conversor YouTube para MP3 320kbps Alta Qualidade | YT4MP3",
         "meta_desc": "Converta vídeos do YouTube em MP3 de 320 kbps grátis. Som cristalino, sem aplicativo, rápido e compatível com celulares, pendrive e som automotivo.",
         "h1": "Conversor YouTube para MP3 Alta Definição",
         "subtitle": "Baixe músicas, sets de DJ, podcasts, cultos e trilhas sonoras em formato MP3 de alta fidelidade com bitrate de até 320 kbps.",
@@ -683,7 +683,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['baixar shorts youtube',
  'como instalar o app do yt4mp3 para baixar shorts',
  'quanto espaco ocupa um video de shorts em 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Baixar YouTube Shorts - Conversor de Shorts para MP4 e MP3 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Baixar YouTube Shorts - Salvar Shorts em 1080p | YT4MP3',
  'meta_desc': "Baixe YouTube Shorts em 1080p Full HD MP4 e áudio MP3 320kbps grátis sem marca d'água. Baixador rápido "
               'para iPhone, Android e PC sem anúncios chatos.',
  'h1': 'Baixar YouTube Shorts Online',

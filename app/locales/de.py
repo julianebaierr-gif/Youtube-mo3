@@ -653,7 +653,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts downloaden',
  'wie installiere ich die yt4mp3 app zum shorts downloaden',
  'wie viel speicherplatz braucht ein shorts video in 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shorts in MP4 & MP3 Konverter | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shorts in 1080p MP4 | YT4MP3',
  'meta_desc': 'YouTube Shorts in 1080p Full HD MP4 und 320kbps MP3 Audio kostenlos ohne Wasserzeichen herunterladen. '
               'Schneller Downloader für iPhone, Android und PC.',
  'h1': 'YouTube Shorts Online Downloaden',

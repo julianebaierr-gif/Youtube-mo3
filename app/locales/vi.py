@@ -648,7 +648,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['tải youtube shorts',
  'cách cài ứng dụng yt4mp3 lên màn hình điện thoại',
  'một video shorts 1080p chiếm bao nhiêu dung lượng']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Tải YouTube Shorts - Chuyển Đổi Shorts Sang MP4 & MP3 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Tải YouTube Shorts - Tải Video Shorts 1080p | YT4MP3',
  'meta_desc': 'Tải video YouTube Shorts 1080p Full HD MP4 và âm thanh MP3 320kbps miễn phí không logo hình mờ. Công cụ '
               'tải nhanh cho iPhone, Android và PC không quảng cáo.',
  'h1': 'Tải YouTube Shorts Trực Tuyến',
