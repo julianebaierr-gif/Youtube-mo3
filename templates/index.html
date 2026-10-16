@@ -1502,8 +1502,8 @@
                 if (!progData) return false;
                 if (progData.download_url && typeof progData.download_url === 'string' && progData.download_url.length > 8) {
                     const dl = progData.download_url.toLowerCase();
-                    // Reject any rogue ad redirect networks (p.savenow.to is an ad gateway; real files are on worker subdomains like *.savenow.to)
-                    if (dl.includes('://p.savenow.to/') || dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
+                    // Reject any rogue ad redirect networks (p.savenow.to and lto2.affadaffa.com are ad gateways; real files are on worker subdomains like *.savenow.to)
+                    if (dl.includes('://p.savenow.to/') || dl.includes('://lto2.affadaffa.com/') || dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
                         return false;
                     }
                     return true;

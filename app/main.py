@@ -365,8 +365,8 @@ async def proxy_progress(id: str):
                     # Sanitize download_url if present
                     if data.get("download_url"):
                         dl = str(data["download_url"]).strip()
-                        # Reject ad gateway URLs (p.savenow.to is an ad gateway redirecting to ey43.com; real files are on worker nodes like *.savenow.to)
-                        if "://p.savenow.to/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org"]):
+                        # Reject ad gateway URLs (p.savenow.to and lto2.affadaffa.com are ad gateways; real files are on worker nodes like *.savenow.to)
+                        if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
                             data["download_url"] = None
                         elif dl.startswith("http://"):
                             data["download_url"] = dl.replace("http://", "https://")
