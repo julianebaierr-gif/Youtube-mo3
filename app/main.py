@@ -307,7 +307,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     # 1. Primary Engine: savenow.to (unless engine is explicitly loader)
     if engine != "loader":
         try:
-            api_url = f"https://p.savenow.to/api/v2/download?button=1&format={fmt}&url={encoded_url}"
+            api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}"
             req = urllib.request.Request(api_url, headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
                 "Referer": "https://www.yt4mp3.com/"
@@ -315,13 +315,16 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
             with urllib.request.urlopen(req, timeout=9) as r:
                 data = json.loads(r.read())
                 if data and data.get("id"):
-                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": data.get("download_url")}
+                    dl = data.get("download_url")
+                    if dl and dl.startswith("http://"):
+                        dl = dl.replace("http://", "https://")
+                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
         except Exception:
             pass
 
     # 2. Secondary Engine: loader.to
     try:
-        lto_url = f"https://loader.to/ajax/download.php?button=1&start=1&end=1&format={fmt}&url={encoded_url}"
+        lto_url = f"https://loader.to/ajax/download.php?start=1&end=1&format={fmt}&url={encoded_url}"
         req = urllib.request.Request(lto_url, headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Referer": "https://loader.to/"
@@ -329,14 +332,17 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
         with urllib.request.urlopen(req, timeout=9) as r:
             data = json.loads(r.read())
             if data and data.get("id"):
-                return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": data.get("download_url")}
+                dl = data.get("download_url")
+                if dl and dl.startswith("http://"):
+                    dl = dl.replace("http://", "https://")
+                return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
     except Exception:
         pass
 
     # 3. Tertiary Fallback: If loader direct was asked, try savenow as backup
     if engine == "loader":
         try:
-            api_url = f"https://p.savenow.to/api/v2/download?button=1&format={fmt}&url={encoded_url}"
+            api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}"
             req = urllib.request.Request(api_url, headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
                 "Referer": "https://www.yt4mp3.com/"
@@ -344,7 +350,10 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
             with urllib.request.urlopen(req, timeout=8) as r:
                 data = json.loads(r.read())
                 if data and data.get("id"):
-                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": data.get("download_url")}
+                    dl = data.get("download_url")
+                    if dl and dl.startswith("http://"):
+                        dl = dl.replace("http://", "https://")
+                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
         except Exception:
             pass
 
@@ -365,6 +374,14 @@ async def proxy_progress(id: str):
             with urllib.request.urlopen(req, timeout=6) as r:
                 data = json.loads(r.read())
                 if data:
+                    # Sanitize download_url if present
+                    if data.get("download_url"):
+                        dl = str(data["download_url"]).strip()
+                        # Reject rogue ad redirect networks
+                        if any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org"]):
+                            data["download_url"] = None
+                        elif dl.startswith("http://"):
+                            data["download_url"] = dl.replace("http://", "https://")
                     return data
         except Exception:
             continue

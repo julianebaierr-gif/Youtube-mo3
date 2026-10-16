@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ lang | default('en') }}" dir="{{ lang_dir | default('ltr') }}" class="scroll-smooth">
 <head>
-    <!-- Google AdSense Verification -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2350272227833258"
-     crossorigin="anonymous"></script>
+    <!-- Google AdSense Verification (Auto-ad script paused to prevent click hijacking) -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2350272227833258"
+     crossorigin="anonymous"></script> -->
     <meta name="google-adsense-account" content="ca-pub-2350272227833258">
 
     <!-- Google tag (gtag.js) -->
@@ -1501,6 +1501,11 @@
             function isDownloadReady(progData) {
                 if (!progData) return false;
                 if (progData.download_url && typeof progData.download_url === 'string' && progData.download_url.length > 8) {
+                    const dl = progData.download_url.toLowerCase();
+                    // Reject any rogue ad redirect networks
+                    if (dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
+                        return false;
+                    }
                     return true;
                 }
                 return false;
@@ -1532,7 +1537,7 @@
                 // If loader engine is preferred
                 if (preferredEngine === 'loader') {
                     try {
-                        const u = `https://loader.to/ajax/download.php?button=1&start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                        const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
                         const r = await fetchWithTimeout(u, {}, 4500);
                         if (r.ok) {
                             const d = await r.json();
@@ -1552,7 +1557,7 @@
 
                 // 1. Direct savenow
                 try {
-                    const u = `https://p.savenow.to/api/v2/download?button=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const u = `https://p.savenow.to/api/v2/download?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
                     const r = await fetchWithTimeout(u, {}, 4500);
                     if (r.ok) {
                         const d = await r.json();
@@ -1572,7 +1577,7 @@
 
                 // 3. Secondary engine: loader.to direct
                 try {
-                    const u = `https://loader.to/ajax/download.php?button=1&start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
                     const r = await fetchWithTimeout(u, {}, 4500);
                     if (r.ok) {
                         const d = await r.json();
@@ -2017,17 +2022,24 @@
                     if (activePollTimer) clearTimeout(activePollTimer);
                     clearInterval(animTimer);
 
+                    // Ensure HTTPS and clean URL
+                    if (typeof finalDownloadUrl === 'string' && finalDownloadUrl.startsWith('http://')) {
+                        finalDownloadUrl = finalDownloadUrl.replace('http://', 'https://');
+                    }
+
                     modalProgressBar.style.width = '100%';
                     modalProgressBar.className = "h-full rounded-full bg-emerald-600 transition-all duration-300";
                     modalPctText.textContent = '100%';
                     modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
                     modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
-                    modalStatusMsg.textContent = `File Ready! Tap button below to save to device:`;
+                    modalStatusMsg.textContent = `File Ready! Downloading to your device...`;
                     modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-4 bg-emerald-50 py-2.5 px-3 rounded-lg border border-emerald-200";
 
                     window._currentDownloadUrl = finalDownloadUrl;
 
                     modalDownloadLink.href = finalDownloadUrl;
+                    modalDownloadLink.setAttribute('download', '');
+                    modalDownloadLink.setAttribute('rel', 'noopener noreferrer');
                     modalDownloadLink.target = '_self';
                     modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
                     modalActionContainer.classList.remove('hidden');
@@ -2039,21 +2051,18 @@
                         else inAppNotice.classList.add('hidden');
                     }
 
-                    // Native Mobile Download Trigger (Works 100% on iOS Safari, Android Chrome, Mac, Windows)
+                    // Native Mobile & Desktop Download Trigger (Clean Single-Trigger, No Duplicate Navigations)
                     try {
                         const dlAnchor = document.createElement('a');
                         dlAnchor.href = finalDownloadUrl;
                         dlAnchor.setAttribute('download', '');
+                        dlAnchor.setAttribute('rel', 'noopener noreferrer');
                         dlAnchor.setAttribute('target', '_self');
                         dlAnchor.style.display = 'none';
                         document.body.appendChild(dlAnchor);
                         dlAnchor.click();
-                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 400);
+                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 500);
                     } catch(e) {}
-
-                    setTimeout(() => {
-                        try { window.location.href = finalDownloadUrl; } catch(e) {}
-                    }, 250);
                 }
 
                 function failDownload(msg) {
@@ -2267,8 +2276,12 @@
             }
 
             modalDownloadLink.addEventListener('click', (e) => {
-                if (window._currentDownloadUrl) {
-                    window.location.href = window._currentDownloadUrl;
+                // Let native anchor download execute cleanly without competing programmatic navigations
+                if (!modalDownloadLink.href || modalDownloadLink.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    if (window._currentDownloadUrl) {
+                        modalDownloadLink.href = window._currentDownloadUrl;
+                    }
                 }
             });
 
