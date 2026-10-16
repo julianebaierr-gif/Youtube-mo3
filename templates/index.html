@@ -1534,27 +1534,7 @@
                 else if (['720', 'hd'].includes(cleanFmt)) cleanFmt = '720';
                 else if (!['mp3', 'm4a', 'flac', 'wav', 'aac', 'webm', '480', '360'].includes(cleanFmt)) cleanFmt = 'mp3';
 
-                // 1. Primary Engine: loader.to direct (Direct HTTPS media streams on worker nodes, 0 ads, 0 redirects)
-                try {
-                    const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
-                    const r = await fetchWithTimeout(u, {}, 4500);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
-                    }
-                } catch(e) {}
-
-                // 2. Server-side API proxy (uses loader.to as primary backend)
-                try {
-                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=loader`;
-                    const r = await fetchWithTimeout(u, {}, 6000);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: d.engine || 'loader', download_url: d.download_url || null };
-                    }
-                } catch(e) {}
-
-                // 3. Fallback: savenow.to direct
+                // 1. Direct savenow.to from user's browser (ACAO: * CORS enabled, direct worker link, 0 ads)
                 try {
                     const u = `https://p.savenow.to/api/v2/download?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
                     const r = await fetchWithTimeout(u, {}, 4500);
@@ -1564,12 +1544,32 @@
                     }
                 } catch(e) {}
 
+                // 2. Server-side API proxy
+                try {
+                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}`;
+                    const r = await fetchWithTimeout(u, {}, 6000);
+                    if (r.ok) {
+                        const d = await r.json();
+                        if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
+                    }
+                } catch(e) {}
+
+                // 3. Secondary engine: loader.to direct
+                try {
+                    const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const r = await fetchWithTimeout(u, {}, 4500);
+                    if (r.ok) {
+                        const d = await r.json();
+                        if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
+                    }
+                } catch(e) {}
+
                 return null;
             }
 
             // Multi-endpoint progress poller with rapid fallback
             async function pollProgressEndpoint(convId, engine) {
-                const endpoints = [`https://lto2.affadaffa.com/api/progress?id=${convId}`, `/api/progress?id=${convId}`, `https://p.savenow.to/api/progress?id=${convId}`];
+                const endpoints = [`https://p.savenow.to/api/progress?id=${convId}`, `/api/progress?id=${convId}`, `https://lto2.affadaffa.com/api/progress?id=${convId}`];
                 
                 for (const ep of endpoints) {
                     try {
