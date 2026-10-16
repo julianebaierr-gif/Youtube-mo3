@@ -389,9 +389,9 @@ async def report_issue(request: Request):
         # Log incident for analytics
         print(f"[CONVERSION_ISSUE_REPORT] URL: {video_url} | Title: {video_title} | Format: {selected_format} | Error: {error_detail} | IP: {client_ip}")
         
-        # Real-time Telegram Bot Notification (Configured via Vercel Environment Variables)
-        tg_token = os.environ.get("TELEGRAM_BOT_TOKEN")
-        tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+        # Real-time Telegram Bot Notification
+        tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+        tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
         if tg_token and tg_chat_id:
             try:
                 alert_text = (
@@ -403,9 +403,12 @@ async def report_issue(request: Request):
                     f"🌐 *User IP:* `{client_ip}`"
                 )
                 tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
-                payload = json.dumps({"chat_id": tg_chat_id, "text": alert_text, "parse_mode": "Markdown"}).encode("utf-8")
-                tg_req = urllib.request.Request(tg_url, data=payload, headers={"Content-Type": "application/json"})
-                with urllib.request.urlopen(tg_req, timeout=4):
+                tg_req = urllib.request.Request(
+                    tg_url, 
+                    data=payload, 
+                    headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+                )
+                with urllib.request.urlopen(tg_req, timeout=5):
                     pass
             except Exception as tg_err:
                 print(f"Telegram notification dispatch error: {tg_err}")
