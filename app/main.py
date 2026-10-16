@@ -421,10 +421,12 @@ async def report_issue(request: Request):
                     data=tg_payload, 
                     headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
                 )
-                with urllib.request.urlopen(tg_req, timeout=6):
-                    pass
+                with urllib.request.urlopen(tg_req, timeout=6) as tg_res:
+                    tg_resp_data = json.loads(tg_res.read().decode('utf-8'))
+                    return {"success": True, "message": "Issue recorded and Telegram alert sent!", "telegram": tg_resp_data}
             except Exception as tg_err:
                 print(f"Telegram notification dispatch error: {tg_err}")
+                return {"success": True, "message": "Issue recorded", "telegram_error": str(tg_err)}
                 
         return {"success": True, "message": "Issue recorded. Thank you for reporting!"}
     except Exception as e:
