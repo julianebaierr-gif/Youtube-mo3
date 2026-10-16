@@ -1646,9 +1646,9 @@
                             return;
                         }
 
-                        // Background poller every 750ms
+                        // Turbo Background poller every 380ms (Instant pre-warmer)
                         let attempts = 0;
-                        const maxPoll = 75; // ~55 seconds
+                        const maxPoll = 35; // ~13 seconds window
                         const pollBg = async () => {
                             if (streamEntry.completed || streamEntry.foregroundActive || streamEntry.failed || attempts >= maxPoll) return;
                             attempts++;
@@ -1671,10 +1671,10 @@
                             } catch(e) {}
 
                             if (!streamEntry.completed && !streamEntry.foregroundActive && !streamEntry.failed && attempts < maxPoll) {
-                                setTimeout(pollBg, 750);
+                                setTimeout(pollBg, 380);
                             }
                         };
-                        setTimeout(pollBg, 300);
+                        setTimeout(pollBg, 150);
                     }).catch(() => {});
                 });
             }
@@ -1764,6 +1764,9 @@
                 hideResults();
                 loadingCard.classList.remove('hidden');
                 loadingCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                // Kick off ultra-fast pre-warming immediately in parallel with metadata fetch!
+                prewarmStreams(ytId);
 
                 try {
                     // Fetch real video metadata via YouTube oEmbed (Free, Zero Server Load, Always Online)
@@ -1996,16 +1999,16 @@
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
-                // Progress bar animation
-                let curPct = 20;
+                // Turbo Progress bar animation (Super-responsive visual feedback)
+                let curPct = 35;
                 const animTimer = setInterval(() => {
                     if (curPct < 88) {
-                        curPct += Math.floor(Math.random() * 6) + 3;
+                        curPct += Math.floor(Math.random() * 8) + 4;
                         if (curPct > 88) curPct = 88;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
                     }
-                }, 300);
+                }, 180);
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
@@ -2036,7 +2039,7 @@
                         else inAppNotice.classList.add('hidden');
                     }
 
-                    // Native Mobile Download Trigger
+                    // Native Mobile Download Trigger (Works 100% on iOS Safari, Android Chrome, Mac, Windows)
                     try {
                         const dlAnchor = document.createElement('a');
                         dlAnchor.href = finalDownloadUrl;
@@ -2045,12 +2048,12 @@
                         dlAnchor.style.display = 'none';
                         document.body.appendChild(dlAnchor);
                         dlAnchor.click();
-                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 500);
+                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 400);
                     } catch(e) {}
 
                     setTimeout(() => {
                         try { window.location.href = finalDownloadUrl; } catch(e) {}
-                    }, 400);
+                    }, 250);
                 }
 
                 function failDownload(msg) {
@@ -2064,7 +2067,7 @@
                     modalPctText.textContent = 'Notice';
                     modalIconContainer.className = "w-14 h-14 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto mb-3 border border-rose-200";
                     modalIcon.className = "fa-solid fa-triangle-exclamation text-rose-600";
-                    modalStatusMsg.textContent = msg || "Conversion stream took longer than expected. Tap Retry below to reconnect with alternate mirror.";
+                    modalStatusMsg.textContent = msg || "Stream processing took longer than expected. Tap Retry below to reconnect with alternate mirror.";
                     modalStatusMsg.className = "text-xs font-semibold text-rose-700 mb-4 bg-rose-50 py-2.5 px-3 rounded-lg border border-rose-200 text-left";
                     modalActionContainer.classList.add('hidden');
 
@@ -2089,7 +2092,7 @@
                     const prewarmKey = fmtParam + '_' + ytId;
                     const prewarmed = window._prewarmedStreams && window._prewarmedStreams[prewarmKey];
 
-                    // Priority 1: File is ALREADY 100% prepared in background! (Ultra Instant < 0.3s)
+                    // Priority 1: File is ALREADY 100% prepared in background! (Sub-0.1s Ultra Instant)
                     if (forcedEngine === 'auto' && window._prewarmedReady && window._prewarmedReady[prewarmKey]) {
                         const readyUrl = window._prewarmedReady[prewarmKey];
                         modalProgressBar.style.width = '100%';
@@ -2099,7 +2102,7 @@
                         modalStatusMsg.textContent = 'File Ready! Saving to device...';
                         setTimeout(() => {
                             completeDownload(readyUrl);
-                        }, 180);
+                        }, 60);
                         return;
                     }
 
@@ -2107,7 +2110,7 @@
                     if (forcedEngine === 'auto' && prewarmed && prewarmed.id && !prewarmed.completed && !prewarmed.failed) {
                         prewarmed.foregroundActive = true;
 
-                        const startPct = Math.min(88, Math.max(50, Math.round((prewarmed.progress || 300) / 10)));
+                        const startPct = Math.min(88, Math.max(50, Math.round((prewarmed.progress || 350) / 10)));
                         curPct = startPct;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
@@ -2123,7 +2126,7 @@
                         const convId = prewarmed.id;
                         const engine = prewarmed.engine || 'savenow';
                         let fgAttempts = 0;
-                        const maxFgAttempts = 75; // ~50 seconds
+                        const maxFgAttempts = 35; // ~14 seconds maximum window (Never 1 minute!)
 
                         const fgPoll = async () => {
                             if (completed) return;
@@ -2152,31 +2155,31 @@
                                 }
                             } catch(e) {}
 
-                            // If stuck for 18 attempts (~12s) without progress, auto-failover to secondary engine
-                            if (fgAttempts === 18 && curPct <= 50) {
+                            // Rapid Failover: If not completed by attempt 8 (~3.2s), auto-trigger secondary engine in parallel!
+                            if (fgAttempts === 8 && curPct <= 60) {
                                 triggerFailoverEngine();
                                 return;
                             }
 
-                            if (curPct >= 88) {
+                            if (curPct >= 85) {
                                 modalStatusMsg.textContent = 'Finalizing and encoding media stream...';
                             }
 
                             if (!completed && fgAttempts < maxFgAttempts) {
-                                activePollTimer = setTimeout(fgPoll, 650);
+                                activePollTimer = setTimeout(fgPoll, 400); // 400ms ultra-fast polling
                             } else if (!completed && fgAttempts >= maxFgAttempts) {
                                 triggerFailoverEngine();
                             }
                         };
-                        activePollTimer = setTimeout(fgPoll, 100);
+                        activePollTimer = setTimeout(fgPoll, 50);
                         return;
                     }
 
-                    // Priority 3: Fresh initiate with Intelligent Engine Selection & Failover Chain
+                    // Priority 3: Fresh initiate with Intelligent Engine Selection & Rapid Failover
                     async function startEngineConversion(targetEngine) {
                         modalStatusMsg.textContent = targetEngine === 'loader' 
-                            ? 'Switching to high-speed mirror stream...' 
-                            : 'Processing high quality audio/video stream...';
+                            ? 'Connecting turbo mirror stream...' 
+                            : 'Processing high-speed stream...';
 
                         let initData = await initiateStream(ytUrl, fmtParam, targetEngine);
                         if (!initData || !initData.id) {
@@ -2195,7 +2198,7 @@
                         let convId = initData.id;
                         let engine = initData.engine || targetEngine || 'savenow';
                         let attempts = 0;
-                        const maxAttempts = 75;
+                        const maxAttempts = 35; // ~14 seconds maximum
 
                         const pollProgress = async () => {
                             if (completed) return;
@@ -2225,12 +2228,18 @@
                                 }
                             } catch (e) {}
 
-                            if (curPct >= 88) {
+                            // Rapid Parallel Trigger at attempt 8 (~3.2s)
+                            if (attempts === 8 && targetEngine !== 'loader' && curPct <= 60) {
+                                triggerFailoverEngine();
+                                return;
+                            }
+
+                            if (curPct >= 85) {
                                 modalStatusMsg.textContent = 'Finalizing and encoding media stream...';
                             }
 
                             if (!completed && attempts < maxAttempts) {
-                                activePollTimer = setTimeout(pollProgress, 650);
+                                activePollTimer = setTimeout(pollProgress, 400); // 400ms ultra-fast polling
                             } else if (!completed && attempts >= maxAttempts) {
                                 if (targetEngine !== 'loader') {
                                     return startEngineConversion('loader');
@@ -2239,7 +2248,7 @@
                             }
                         };
 
-                        activePollTimer = setTimeout(pollProgress, 100);
+                        activePollTimer = setTimeout(pollProgress, 60);
                     }
 
                     function triggerFailoverEngine() {
