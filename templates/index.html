@@ -1576,9 +1576,9 @@
                             return;
                         }
 
-                        // Background poller every 280ms
+                        // Background poller every 650ms (smooth, extended to ~60s)
                         let attempts = 0;
-                        const maxPoll = 50; // ~14 seconds
+                        const maxPoll = 90; // ~58 seconds
                         const pollBg = async () => {
                             if (streamEntry.completed || attempts >= maxPoll) return;
                             attempts++;
@@ -1597,7 +1597,7 @@
                             } catch(e) {}
 
                             if (!streamEntry.completed && attempts < maxPoll) {
-                                setTimeout(pollBg, 280);
+                                setTimeout(pollBg, 650);
                             }
                         };
                         setTimeout(pollBg, 200);
@@ -2021,6 +2021,7 @@
                         const convId = prewarmed.id;
                         const engine = prewarmed.engine || 'savenow';
                         let fgAttempts = 0;
+                        const maxFgAttempts = 90; // ~60 seconds resilient window
                         const fgPoll = async () => {
                             if (completed) return;
                             fgAttempts++;
@@ -2032,7 +2033,7 @@
                                         return;
                                     }
                                     if (progData.progress && progData.progress > 0) {
-                                        const realPct = Math.min(94, Math.round(progData.progress / 10));
+                                        const realPct = Math.min(96, Math.round(progData.progress / 10));
                                         if (realPct > curPct) {
                                             curPct = realPct;
                                             modalProgressBar.style.width = `${curPct}%`;
@@ -2042,9 +2043,13 @@
                                 }
                             } catch(e) {}
 
-                            if (!completed && fgAttempts < 55) {
-                                setTimeout(fgPoll, 280);
-                            } else if (!completed && fgAttempts >= 55) {
+                            if (curPct >= 90) {
+                                modalStatusMsg.textContent = 'Finalizing and encoding media stream...';
+                            }
+
+                            if (!completed && fgAttempts < maxFgAttempts) {
+                                setTimeout(fgPoll, 650);
+                            } else if (!completed && fgAttempts >= maxFgAttempts) {
                                 failDownload("Stream processing took longer than expected. Please tap again to retry.");
                             }
                         };
@@ -2069,7 +2074,7 @@
                     modalStatusMsg.textContent = 'Processing high quality audio/video stream...';
 
                     let attempts = 0;
-                    const maxAttempts = 65;
+                    const maxAttempts = 90; // ~60 seconds resilient window
                     const pollProgress = async () => {
                         if (completed) return;
                         attempts++;
@@ -2081,7 +2086,7 @@
                                     return;
                                 }
                                 if (progData.progress && progData.progress > 0) {
-                                    const realPct = Math.min(94, Math.round(progData.progress / 10));
+                                    const realPct = Math.min(96, Math.round(progData.progress / 10));
                                     if (realPct > curPct) {
                                         curPct = realPct;
                                         modalProgressBar.style.width = `${curPct}%`;
@@ -2093,8 +2098,12 @@
                             console.warn(e);
                         }
 
+                        if (curPct >= 90) {
+                            modalStatusMsg.textContent = 'Finalizing and encoding media stream...';
+                        }
+
                         if (!completed && attempts < maxAttempts) {
-                            setTimeout(pollProgress, 280);
+                            setTimeout(pollProgress, 650);
                         } else if (!completed && attempts >= maxAttempts) {
                             failDownload("Stream processing took longer than expected. Please tap again to retry.");
                         }
