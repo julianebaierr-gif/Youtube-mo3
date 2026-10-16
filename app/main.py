@@ -394,21 +394,34 @@ async def report_issue(request: Request):
         tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
         if tg_token and tg_chat_id:
             try:
+                import html as html_lib
+                safe_title = html_lib.escape(video_title[:90])
+                safe_url = html_lib.escape(video_url)
+                safe_fmt = html_lib.escape(selected_format)
+                safe_err = html_lib.escape(error_detail)
+                safe_ip = html_lib.escape(client_ip)
+
                 alert_text = (
-                    "🚨 *YT4MP3 Conversion Alert*\n\n"
-                    f"🎬 *Video:* {video_title[:80]}\n"
-                    f"🔗 *Link:* `{video_url}`\n"
-                    f"🎛 *Format:* `{selected_format}`\n"
-                    f"⚠️ *Error:* `{error_detail}`\n"
-                    f"🌐 *User IP:* `{client_ip}`"
+                    "🚨 <b>YT4MP3 Conversion Alert</b>\n\n"
+                    f"🎬 <b>Video:</b> {safe_title}\n"
+                    f"🔗 <b>Link:</b> {safe_url}\n"
+                    f"🎛 <b>Format:</b> {safe_fmt}\n"
+                    f"⚠️ <b>Error:</b> {safe_err}\n"
+                    f"🌐 <b>User IP:</b> <code>{safe_ip}</code>"
                 )
                 tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
+                tg_payload = json.dumps({
+                    "chat_id": tg_chat_id,
+                    "text": alert_text,
+                    "parse_mode": "HTML",
+                    "disable_web_page_preview": True
+                }).encode("utf-8")
                 tg_req = urllib.request.Request(
                     tg_url, 
-                    data=payload, 
+                    data=tg_payload, 
                     headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
                 )
-                with urllib.request.urlopen(tg_req, timeout=5):
+                with urllib.request.urlopen(tg_req, timeout=6):
                     pass
             except Exception as tg_err:
                 print(f"Telegram notification dispatch error: {tg_err}")

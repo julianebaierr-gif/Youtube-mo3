@@ -2060,6 +2060,23 @@
                     const errActions = document.getElementById('modal-error-actions');
                     if (errActions) errActions.classList.remove('hidden');
 
+                    // Auto-report failure immediately to Admin Telegram in background
+                    try {
+                        const failYtId = currentMediaData ? currentMediaData.id : extractYouTubeId(urlInput.value);
+                        const failVidUrl = failYtId ? `https://www.youtube.com/watch?v=${failYtId}` : (urlInput.value || '');
+                        const failVidTitle = currentMediaData ? currentMediaData.title : 'Conversion Error';
+                        fetch('/api/report-issue', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                video_url: failVidUrl,
+                                video_title: failVidTitle,
+                                format: safeFormat,
+                                error: msg || "Stream processing timeout"
+                            })
+                        }).catch(() => {});
+                    } catch(e) {}
+
                     try {
                         if (typeof gtag === 'function') {
                             gtag('event', 'conversion_error', {
