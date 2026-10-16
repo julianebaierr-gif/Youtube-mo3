@@ -281,23 +281,43 @@ async def trigger_indexnow():
     return {"submitted": True, "results": results}
 
 @app.get("/api/convert")
-async def proxy_convert(url: str, format: str = "mp3"):
+async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     encoded_url = urllib.parse.quote(url)
-    fmt = format.lower()
+    raw_fmt = format.lower().strip()
     
-    # 1. Primary Engine: savenow.to
-    try:
-        api_url = f"https://p.savenow.to/api/v2/download?button=1&format={fmt}&url={encoded_url}"
-        req = urllib.request.Request(api_url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Referer": "https://www.yt4mp3.com/"
-        })
-        with urllib.request.urlopen(req, timeout=8) as r:
-            data = json.loads(r.read())
-            if data and data.get("id"):
-                return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": data.get("download_url")}
-    except Exception:
-        pass
+    # Robust format normalization to prevent 422 Unprocessable Entity
+    clean_fmt = raw_fmt.replace("kbps", "").replace("p", "").strip()
+    if clean_fmt in ["320", "256", "128", "64", "mp3", "audio"]:
+        fmt = "mp3"
+    elif clean_fmt in ["2160", "4k"]:
+        fmt = "4k"
+    elif clean_fmt in ["1440", "2k"]:
+        fmt = "1440"
+    elif clean_fmt in ["1080", "fhd"]:
+        fmt = "1080"
+    elif clean_fmt in ["720", "hd"]:
+        fmt = "720"
+    elif clean_fmt in ["480", "360"]:
+        fmt = clean_fmt
+    elif clean_fmt in ["m4a", "flac", "wav", "aac", "webm", "opus", "ogg"]:
+        fmt = clean_fmt
+    else:
+        fmt = "mp3"
+    
+    # 1. Primary Engine: savenow.to (unless engine is explicitly loader)
+    if engine != "loader":
+        try:
+            api_url = f"https://p.savenow.to/api/v2/download?button=1&format={fmt}&url={encoded_url}"
+            req = urllib.request.Request(api_url, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "Referer": "https://www.yt4mp3.com/"
+            })
+            with urllib.request.urlopen(req, timeout=9) as r:
+                data = json.loads(r.read())
+                if data and data.get("id"):
+                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": data.get("download_url")}
+        except Exception:
+            pass
 
     # 2. Secondary Engine: loader.to
     try:
@@ -306,12 +326,27 @@ async def proxy_convert(url: str, format: str = "mp3"):
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Referer": "https://loader.to/"
         })
-        with urllib.request.urlopen(req, timeout=8) as r:
+        with urllib.request.urlopen(req, timeout=9) as r:
             data = json.loads(r.read())
             if data and data.get("id"):
                 return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": data.get("download_url")}
     except Exception:
         pass
+
+    # 3. Tertiary Fallback: If loader direct was asked, try savenow as backup
+    if engine == "loader":
+        try:
+            api_url = f"https://p.savenow.to/api/v2/download?button=1&format={fmt}&url={encoded_url}"
+            req = urllib.request.Request(api_url, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                "Referer": "https://www.yt4mp3.com/"
+            })
+            with urllib.request.urlopen(req, timeout=8) as r:
+                data = json.loads(r.read())
+                if data and data.get("id"):
+                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": data.get("download_url")}
+        except Exception:
+            pass
 
     raise HTTPException(status_code=502, detail="Unable to initiate media conversion")
 
@@ -327,13 +362,52 @@ async def proxy_progress(id: str):
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
                 "Referer": "https://www.yt4mp3.com/"
             })
-            with urllib.request.urlopen(req, timeout=5) as r:
+            with urllib.request.urlopen(req, timeout=6) as r:
                 data = json.loads(r.read())
                 if data:
                     return data
         except Exception:
             continue
     raise HTTPException(status_code=502, detail="Progress check failed")
+
+@app.post("/api/report-issue")
+async def report_issue(request: Request):
+    try:
+        body = await request.json()
+        video_url = str(body.get("video_url", "Unknown"))
+        video_title = str(body.get("video_title", "Unknown"))
+        selected_format = str(body.get("format", "Unknown"))
+        error_detail = str(body.get("error", "Stream conversion failed"))
+        user_agent = request.headers.get("user-agent", "Unknown")
+        client_ip = request.headers.get("x-forwarded-for", request.client.host if request.client else "Unknown")
+        
+        # Log incident for analytics
+        print(f"[CONVERSION_ISSUE_REPORT] URL: {video_url} | Title: {video_title} | Format: {selected_format} | Error: {error_detail} | IP: {client_ip}")
+        
+        # Real-time Telegram Bot Notification (Configured via Vercel Environment Variables)
+        tg_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+        tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+        if tg_token and tg_chat_id:
+            try:
+                alert_text = (
+                    "🚨 *YT4MP3 Conversion Alert*\n\n"
+                    f"🎬 *Video:* {video_title[:80]}\n"
+                    f"🔗 *Link:* `{video_url}`\n"
+                    f"🎛 *Format:* `{selected_format}`\n"
+                    f"⚠️ *Error:* `{error_detail}`\n"
+                    f"🌐 *User IP:* `{client_ip}`"
+                )
+                tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
+                payload = json.dumps({"chat_id": tg_chat_id, "text": alert_text, "parse_mode": "Markdown"}).encode("utf-8")
+                tg_req = urllib.request.Request(tg_url, data=payload, headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(tg_req, timeout=4):
+                    pass
+            except Exception as tg_err:
+                print(f"Telegram notification dispatch error: {tg_err}")
+                
+        return {"success": True, "message": "Issue recorded. Thank you for reporting!"}
+    except Exception as e:
+        return {"success": False, "detail": str(e)}
 
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
