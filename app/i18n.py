@@ -116,6 +116,8 @@ ENGLISH_UI: Dict[str, str] = {
     'pwa_ios_step2': "Scroll down and select 'Add to Home Screen'.",
     'pwa_ios_step3': "Tap 'Add' in the top right corner. Done!",
     'pwa_ios_btn': 'Got it!',
+    'system_update_badge': 'Fixed & Updated:',
+    'system_update_note': 'All MP3 & 4K MP4 download issues have been 100% resolved — enjoy fast, direct & error-free downloads!',
 }
 
 I18N_UI: Dict[str, Dict[str, str]] = {
@@ -174,7 +176,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Toca el botón Compartir en la barra inferior de Safari.',
         'pwa_ios_step2': "Desplázate hacia abajo y selecciona 'Añadir a pantalla de inicio'.",
         'pwa_ios_step3': "Toca 'Añadir' en la esquina superior derecha. ¡Listo!",
-        'pwa_ios_btn': '¡Entendido!'
+        'pwa_ios_btn': '¡Entendido!',
+        'system_update_badge': 'Solucionado:',
+        'system_update_note': 'Todos los problemas de descarga en MP3 y MP4 4K han sido 100% resueltos — ¡descargas rápidas y sin errores!'
     },
     'id': {
         'shortcut_title': 'Trik Pintasan URL Viral: Unduh Langsung',
@@ -197,7 +201,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Ketuk tombol Bagikan di bilah bawah Safari.',
         'pwa_ios_step2': "Gulir ke bawah dan pilih 'Tambahkan ke Layar Utama'.",
         'pwa_ios_step3': "Ketuk 'Tambah' di sudut kanan atas. Selesai!",
-        'pwa_ios_btn': 'Mengerti!'
+        'pwa_ios_btn': 'Mengerti!',
+        'system_update_badge': 'Diperbaiki:',
+        'system_update_note': 'Semua masalah unduhan MP3 & MP4 4K telah 100% teratasi — nikmati unduhan cepat, langsung & bebas error!'
     },
     'pt': {
         'shortcut_title': 'Truque de Atalho Viral de URL: Download Direto',
@@ -220,7 +226,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Toque no botão Compartilhar na barra inferior do Safari.',
         'pwa_ios_step2': "Role para baixo e selecione 'Adicionar à Tela de Início'.",
         'pwa_ios_step3': "Toque em 'Adicionar' no canto superior direito. Concluído!",
-        'pwa_ios_btn': 'Entendi!'
+        'pwa_ios_btn': 'Entendi!',
+        'system_update_badge': 'Resolvido:',
+        'system_update_note': 'Todos os problemas de download em MP3 e MP4 4K foram 100% resolvidos — downloads rápidos e sem erros!'
     },
     'fr': {
         'shortcut_title': 'Astuce Raccourci URL Viral : Téléchargement Direct',
@@ -243,7 +251,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Appuyez sur le bouton Partager dans la barre inférieure de Safari.',
         'pwa_ios_step2': "Faites défiler vers le bas et sélectionnez 'Sur l\'écran d\'accueil'.",
         'pwa_ios_step3': "Appuyez sur 'Ajouter' dans le coin supérieur droit. Terminé !",
-        'pwa_ios_btn': 'Compris !'
+        'pwa_ios_btn': 'Compris !',
+        'system_update_badge': 'Résolu :',
+        'system_update_note': 'Tous les problèmes de téléchargement MP3 et MP4 4K ont été résolus à 100 % — téléchargements rapides et sans erreur !'
     },
     'de': {
         'shortcut_title': 'Viraler URL-Kurzbefehl-Trick: Direkter Download',
@@ -266,7 +276,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Tippen Sie auf die Teilen-Schaltfläche in der unteren Safari-Leiste.',
         'pwa_ios_step2': "Scrollen Sie nach unten und wählen Sie 'Zum Home-Bildschirm'.",
         'pwa_ios_step3': "Tippen Sie oben rechts auf 'Hinzufügen'. Fertig!",
-        'pwa_ios_btn': 'Verstanden!'
+        'pwa_ios_btn': 'Verstanden!',
+        'system_update_badge': 'Behoben:',
+        'system_update_note': 'Alle MP3- & 4K-MP4-Download-Probleme wurden zu 100 % behoben – schnelle, direkte & fehlerfreie Downloads!'
     },
     'tr': {
         'shortcut_title': 'Viral URL Kısayol Hilesi: Doğrudan İndirme',
@@ -289,7 +301,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Safari alt çubuğundaki Paylaş düğmesine dokunun.',
         'pwa_ios_step2': "Aşağı kaydırın ve 'Ana Ekrana Ekle'yi seçin.",
         'pwa_ios_step3': "Sağ üst köşedeki 'Ekle'ye dokunun. Bitti!",
-        'pwa_ios_btn': 'Anladım!'
+        'pwa_ios_btn': 'Anladım!',
+        'system_update_badge': 'Çözüldü:',
+        'system_update_note': 'Tüm MP3 ve 4K MP4 indirme sorunları %100 çözüldü — hızlı, doğrudan ve hatasız indirmelerin keyfini çıkarın!'
     },
     'it': {
         'shortcut_title': 'Trucco Scorciatoia URL Virale: Download Diretto',
@@ -312,7 +326,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Tocca il pulsante Condividi nella barra inferiore di Safari.',
         'pwa_ios_step2': "Scorri verso il basso e seleziona 'Aggiungi a schermata Home'.",
         'pwa_ios_step3': "Tocca 'Aggiungi' nell'angolo in alto a destra. Fatto!",
-        'pwa_ios_btn': 'Ho capito!'
+        'pwa_ios_btn': 'Ho capito!',
+        'system_update_badge': 'Risolto:',
+        'system_update_note': 'Tutti i problemi di download MP3 e MP4 4K sono stati risolti al 100% — download veloci, diretti e senza errori!'
     },
     'ru': {
         'shortcut_title': 'Вирусный трюк с URL: Прямое скачивание',
@@ -335,7 +351,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Нажмите кнопку «Поделиться» на нижней панели Safari.',
         'pwa_ios_step2': "Прокрутите вниз и выберите «На экран «Домой»».",
         'pwa_ios_step3': "Нажмите «Добавить» в правом верхнем углу. Готово!",
-        'pwa_ios_btn': 'Понятно!'
+        'pwa_ios_btn': 'Понятно!',
+        'system_update_badge': 'Исправлено:',
+        'system_update_note': 'Все проблемы со скачиванием MP3 и 4K MP4 решены на 100% — быстрые и прямые загрузки без ошибок!'
     },
     'vi': {
         'shortcut_title': 'Mẹo phím tắt URL lan truyền: Tải xuống trực tiếp',
@@ -358,7 +376,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Nhấn vào nút Chia sẻ ở thanh dưới cùng của Safari.',
         'pwa_ios_step2': "Cuộn xuống và chọn 'Thêm vào MH chính'.",
         'pwa_ios_step3': "Nhấn 'Thêm' ở góc trên cùng bên phải. Hoàn tất!",
-        'pwa_ios_btn': 'Đã hiểu!'
+        'pwa_ios_btn': 'Đã hiểu!',
+        'system_update_badge': 'Đã khắc phục:',
+        'system_update_note': 'Mọi sự cố tải xuống MP3 & MP4 4K đã được khắc phục 100% — tải nhanh, trực tiếp và không lỗi!'
     },
     'ja': {
         'shortcut_title': 'バイラルURLショートカット裏技：直接ダウンロード',
@@ -381,7 +401,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Safari下部バーの「共有」ボタンをタップします。',
         'pwa_ios_step2': "下にスクロールして「ホーム画面に追加」を選択します。",
         'pwa_ios_step3': "右上の「追加」をタップします。完了です！",
-        'pwa_ios_btn': '了解！'
+        'pwa_ios_btn': '了解！',
+        'system_update_badge': '修正完了:',
+        'system_update_note': 'MP3および4K MP4のダウンロード問題はすべて100%解決されました — 高速でエラーのないダウンロードをご利用ください！'
     },
     'ko': {
         'shortcut_title': '바이럴 URL 단축키 트릭: 직접 다운로드',
@@ -404,7 +426,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Safari 하단 바에서 공유 버튼을 탭하세요.',
         'pwa_ios_step2': "아래로 스크롤하여 '홈 화면에 추가'를 선택하세요.",
         'pwa_ios_step3': "오른쪽 상단의 '추가'를 탭하세요. 완료!",
-        'pwa_ios_btn': '알겠습니다!'
+        'pwa_ios_btn': '알겠습니다!',
+        'system_update_badge': '해결 완료:',
+        'system_update_note': '모든 MP3 및 4K MP4 다운로드 오류가 100% 해결되었습니다 — 빠르고 오류 없는 직접 다운로드를 즐기세요!'
     },
     'ar': {
         'shortcut_title': 'خدعة اختصار الرابط الفيروسي: تنزيل مباشر',
@@ -427,7 +451,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'اضغط على زر المشاركة في الشريط السفلي لـ Safari.',
         'pwa_ios_step2': "قم بالتمرير لأسفل وحدد 'إضافة إلى الصفحة الرئيسية'.",
         'pwa_ios_step3': "اضغط على 'إضافة' في الزاوية العلوية اليمنى. تم!",
-        'pwa_ios_btn': 'فهمت!'
+        'pwa_ios_btn': 'فهمت!',
+        'system_update_badge': 'تم الحل:',
+        'system_update_note': 'تم حل جميع مشاكل تنزيل MP3 و 4K MP4 بنسبة 100% — استمتع بتنزيلات سريعة ومباشرة وبدون أي أخطاء!'
     },
     'hi': {
         'shortcut_title': 'वायरल URL शॉर्टकट ट्रिक: डायरेक्ट डाउनलोड',
@@ -450,7 +476,9 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_step1': 'Safari के निचले बार में शेयर बटन पर टैप करें।',
         'pwa_ios_step2': "नीचे स्क्रॉल करें और 'होम स्क्रीन में जोड़ें' चुनें।",
         'pwa_ios_step3': "ऊपर दाईं ओर 'जोड़ें' पर टैप करें। हो गया!",
-        'pwa_ios_btn': 'समझ गया!'
+        'pwa_ios_btn': 'समझ गया!',
+        'system_update_badge': 'समस्या हल:',
+        'system_update_note': 'MP3 और 4K MP4 डाउनलोड की सभी समस्याएं 100% ठीक कर दी गई हैं — अब तेज़ और बिना किसी एरर के डाउनलोड करें!'
     }
 }
 
