@@ -1630,7 +1630,7 @@
 
                         // Turbo Background poller every 380ms (Instant pre-warmer)
                         let attempts = 0;
-                        const maxPoll = 35; // ~13 seconds window
+                        const maxPoll = 120; // ~120 seconds window (fresh conversions take 10-25s)
                         const pollBg = async () => {
                             if (streamEntry.completed || streamEntry.foregroundActive || streamEntry.failed || attempts >= maxPoll) return;
                             attempts++;
@@ -1653,7 +1653,7 @@
                             } catch(e) {}
 
                             if (!streamEntry.completed && !streamEntry.foregroundActive && !streamEntry.failed && attempts < maxPoll) {
-                                setTimeout(pollBg, 380);
+                                setTimeout(pollBg, 1000);
                             }
                         };
                         setTimeout(pollBg, 150);
@@ -1982,15 +1982,14 @@
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
                 // Turbo Progress bar animation (Super-responsive visual feedback)
-                let curPct = 35;
+                let curPct = 20;
                 const animTimer = setInterval(() => {
-                    if (curPct < 88) {
-                        curPct += Math.floor(Math.random() * 8) + 4;
-                        if (curPct > 88) curPct = 88;
+                    if (curPct < 93) {
+                        curPct += curPct < 60 ? 3 : 1;
                         modalProgressBar.style.width = `${curPct}%`;
                         modalPctText.textContent = `${curPct}%`;
                     }
-                }, 180);
+                }, 700);
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
@@ -2109,159 +2108,118 @@
                         return;
                     }
 
-                    // Priority 2: Prewarmed stream is actively polling & healthy (not errored)
+                    // Robust single-conversion pipeline:
+                    // Fresh videos need 10-25s on the converter. We NEVER restart a running conversion;
+                    // we only switch engine on a real error or an unusable (ad-gateway) result.
+                    const MAX_WAIT_MS = 120000;
+                    const pipelineStart = Date.now();
+                    const enginesTried = [];
+
+                    function setRealProgress(p) {
+                        if (p && p.progress > 0) {
+                            const realPct = Math.min(96, Math.round(p.progress / 10));
+                            if (realPct > curPct) {
+                                curPct = realPct;
+                                modalProgressBar.style.width = `${curPct}%`;
+                                modalPctText.textContent = `${curPct}%`;
+                            }
+                        }
+                    }
+
+                    function updateWaitMessage() {
+                        const sec = Math.round((Date.now() - pipelineStart) / 1000);
+                        modalEtaText.textContent = `${sec}s`;
+                        if (sec >= 45) modalStatusMsg.textContent = 'Long video detected, almost done. Please keep this page open...';
+                        else if (sec >= 20) modalStatusMsg.textContent = 'Encoding your file... (larger videos take a bit longer)';
+                        else if (sec >= 6) modalStatusMsg.textContent = 'Converting on our server... usually 10-20 seconds.';
+                    }
+
+                    async function initLoaderDirect() {
+                        let cleanFmt = fmtParam;
+                        try {
+                            const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                            const r = await fetchWithTimeout(u, {}, 8000);
+                            if (r.ok) {
+                                const d = await r.json();
+                                if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
+                            }
+                        } catch(e) {}
+                        try {
+                            const r = await fetchWithTimeout(`/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=loader`, {}, 10000);
+                            if (r.ok) {
+                                const d = await r.json();
+                                if (d && d.id) return { id: d.id, engine: d.engine || 'loader', download_url: d.download_url || null };
+                            }
+                        } catch(e) {}
+                        return null;
+                    }
+
+                    function nextEngine(reason) {
+                        if (completed) return;
+                        if (activePollTimer) clearTimeout(activePollTimer);
+                        if (Date.now() - pipelineStart < MAX_WAIT_MS - 15000) {
+                            if (!enginesTried.includes('savenow')) return runEngine('savenow');
+                            if (!enginesTried.includes('loader')) return runEngine('loader');
+                        }
+                        failDownload(reason || "This video could not be converted right now. Please tap Retry below.");
+                    }
+
+                    function pollConversion(convId) {
+                        let finishedNoFile = 0;
+                        let netFails = 0;
+                        const tick = async () => {
+                            if (completed) return;
+                            let p = null;
+                            try { p = await pollProgressEndpoint(convId); } catch(e) {}
+                            if (p) {
+                                netFails = 0;
+                                if (isDownloadReady(p)) { completeDownload(p.download_url); return; }
+                                if (isConversionError(p)) {
+                                    nextEngine("This video is unavailable, private or restricted by YouTube. Please try another video.");
+                                    return;
+                                }
+                                // Finished but returned an unusable/ad link: switch engine after 3 confirmations
+                                if ((p.progress || 0) >= 1000) {
+                                    finishedNoFile++;
+                                    if (finishedNoFile >= 3) { nextEngine(); return; }
+                                }
+                                setRealProgress(p);
+                            } else {
+                                netFails++;
+                                if (netFails >= 15) { nextEngine("Network connection lost. Please check your internet and tap Retry."); return; }
+                            }
+                            updateWaitMessage();
+                            if (Date.now() - pipelineStart > MAX_WAIT_MS) {
+                                failDownload("This video is taking unusually long. Please tap Retry below.");
+                                return;
+                            }
+                            activePollTimer = setTimeout(tick, 1000);
+                        };
+                        activePollTimer = setTimeout(tick, 300);
+                    }
+
+                    async function runEngine(engine) {
+                        if (completed) return;
+                        enginesTried.push(engine);
+                        modalStatusMsg.textContent = enginesTried.length > 1 ? 'Switching to backup server...' : 'Starting conversion...';
+                        const initData = engine === 'loader' ? await initLoaderDirect() : await initiateStream(ytUrl, fmtParam);
+                        if (completed) return;
+                        if (!initData || !initData.id) { nextEngine("Conversion servers are busy. Please tap Retry in a moment."); return; }
+                        if (isDownloadReady(initData)) { completeDownload(initData.download_url); return; }
+                        pollConversion(initData.id);
+                    }
+
+                    // Reuse background pre-warmed conversion if it is still running
                     if (forcedEngine === 'auto' && prewarmed && prewarmed.id && !prewarmed.completed && !prewarmed.failed) {
                         prewarmed.foregroundActive = true;
-
-                        const startPct = Math.min(88, Math.max(50, Math.round((prewarmed.progress || 350) / 10)));
-                        curPct = startPct;
-                        modalProgressBar.style.width = `${curPct}%`;
-                        modalPctText.textContent = `${curPct}%`;
-                        modalEtaText.textContent = '~1s';
-                        modalSpeedText.textContent = 'Turbo Stream';
-                        modalStatusMsg.textContent = 'Finalizing audio/video stream...';
-
-                        // Register callback for instant finish
-                        prewarmed.callbacks.push((finalUrl) => {
-                            completeDownload(finalUrl);
-                        });
-
-                        const convId = prewarmed.id;
-                        const engine = prewarmed.engine || 'savenow';
-                        let fgAttempts = 0;
-                        const maxFgAttempts = 35; // ~14 seconds maximum window (Never 1 minute!)
-
-                        const fgPoll = async () => {
-                            if (completed) return;
-                            fgAttempts++;
-                            try {
-                                const progData = await pollProgressEndpoint(convId, engine);
-                                if (progData) {
-                                    if (isDownloadReady(progData)) {
-                                        completeDownload(progData.download_url);
-                                        return;
-                                    }
-                                    if (isConversionError(progData)) {
-                                        // Primary failed early! Switch immediately to secondary engine!
-                                        prewarmed.failed = true;
-                                        triggerFailoverEngine();
-                                        return;
-                                    }
-                                    if (progData.progress && progData.progress > 0) {
-                                        const realPct = Math.min(96, Math.round(progData.progress / 10));
-                                        if (realPct > curPct) {
-                                            curPct = realPct;
-                                            modalProgressBar.style.width = `${curPct}%`;
-                                            modalPctText.textContent = `${curPct}%`;
-                                        }
-                                    }
-                                }
-                            } catch(e) {}
-
-                            // Rapid Failover: If not completed by attempt 8 (~3.2s), auto-trigger secondary engine in parallel!
-                            if (fgAttempts === 8 && curPct <= 60) {
-                                triggerFailoverEngine();
-                                return;
-                            }
-
-                            if (curPct >= 85) {
-                                modalStatusMsg.textContent = 'Finalizing and encoding media stream...';
-                            }
-
-                            if (!completed && fgAttempts < maxFgAttempts) {
-                                activePollTimer = setTimeout(fgPoll, 400); // 400ms ultra-fast polling
-                            } else if (!completed && fgAttempts >= maxFgAttempts) {
-                                triggerFailoverEngine();
-                            }
-                        };
-                        activePollTimer = setTimeout(fgPoll, 50);
-                        return;
+                        prewarmed.callbacks.push((finalUrl) => completeDownload(finalUrl));
+                        enginesTried.push(prewarmed.engine || 'savenow');
+                        setRealProgress(prewarmed);
+                        modalStatusMsg.textContent = 'Finalizing your file...';
+                        pollConversion(prewarmed.id);
+                    } else {
+                        runEngine(forcedEngine === 'loader' ? 'loader' : 'savenow');
                     }
-
-                    // Priority 3: Fresh initiate with Intelligent Engine Selection & Rapid Failover
-                    async function startEngineConversion(targetEngine) {
-                        modalStatusMsg.textContent = targetEngine === 'loader' 
-                            ? 'Connecting turbo mirror stream...' 
-                            : 'Processing high-speed stream...';
-
-                        let initData = await initiateStream(ytUrl, fmtParam, targetEngine);
-                        if (!initData || !initData.id) {
-                            if (targetEngine !== 'loader') {
-                                return startEngineConversion('loader');
-                            }
-                            failDownload("Stream server busy. Tap Retry below to reconnect with alternate mirror.");
-                            return;
-                        }
-
-                        if (isDownloadReady(initData)) {
-                            completeDownload(initData.download_url);
-                            return;
-                        }
-
-                        let convId = initData.id;
-                        let engine = initData.engine || targetEngine || 'savenow';
-                        let attempts = 0;
-                        const maxAttempts = 35; // ~14 seconds maximum
-
-                        const pollProgress = async () => {
-                            if (completed) return;
-                            attempts++;
-                            try {
-                                const progData = await pollProgressEndpoint(convId, engine);
-                                if (progData) {
-                                    if (isDownloadReady(progData)) {
-                                        completeDownload(progData.download_url);
-                                        return;
-                                    }
-                                    if (isConversionError(progData)) {
-                                        if (targetEngine !== 'loader') {
-                                            return startEngineConversion('loader');
-                                        }
-                                        failDownload("Stream conversion restricted by YouTube. Please tap Retry below or Report to Admin.");
-                                        return;
-                                    }
-                                    if (progData.progress && progData.progress > 0) {
-                                        const realPct = Math.min(96, Math.round(progData.progress / 10));
-                                        if (realPct > curPct) {
-                                            curPct = realPct;
-                                            modalProgressBar.style.width = `${curPct}%`;
-                                            modalPctText.textContent = `${curPct}%`;
-                                        }
-                                    }
-                                }
-                            } catch (e) {}
-
-                            // Rapid Parallel Trigger at attempt 8 (~3.2s)
-                            if (attempts === 8 && targetEngine !== 'loader' && curPct <= 60) {
-                                triggerFailoverEngine();
-                                return;
-                            }
-
-                            if (curPct >= 85) {
-                                modalStatusMsg.textContent = 'Finalizing and encoding media stream...';
-                            }
-
-                            if (!completed && attempts < maxAttempts) {
-                                activePollTimer = setTimeout(pollProgress, 400); // 400ms ultra-fast polling
-                            } else if (!completed && attempts >= maxAttempts) {
-                                if (targetEngine !== 'loader') {
-                                    return startEngineConversion('loader');
-                                }
-                                failDownload("Stream processing took longer than expected. Please tap Retry below or Report to Admin.");
-                            }
-                        };
-
-                        activePollTimer = setTimeout(pollProgress, 60);
-                    }
-
-                    function triggerFailoverEngine() {
-                        if (completed) return;
-                        modalStatusMsg.textContent = 'Connecting high-speed alternate mirror...';
-                        startEngineConversion('loader');
-                    }
-
-                    // Start conversion
-                    startEngineConversion(forcedEngine);
 
                 } catch (err) {
                     console.error('Conversion error:', err);
