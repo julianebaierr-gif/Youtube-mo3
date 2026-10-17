@@ -297,7 +297,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
         fmt = "1080"
     elif clean_fmt in ["720", "hd"]:
         fmt = "720"
-    elif clean_fmt in ["480", "360"]:
+    elif clean_fmt in ["480", "360", "240"]:
         fmt = clean_fmt
     elif clean_fmt in ["m4a", "flac", "wav", "aac", "webm", "opus", "ogg"]:
         fmt = clean_fmt
@@ -327,7 +327,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
 
     # 2. Secondary Engine: loader.to
     try:
-        lto_url = f"https://loader.to/ajax/download.php?start=1&end=1&format={fmt}&url={encoded_url}"
+        lto_url = f"https://loader.to/ajax/download.php?format={fmt}&url={encoded_url}"
         req = urllib.request.Request(lto_url, headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Referer": "https://loader.to/"

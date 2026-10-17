@@ -1532,7 +1532,7 @@
                 else if (['1440', '2k'].includes(cleanFmt)) cleanFmt = '1440';
                 else if (['1080', 'fhd'].includes(cleanFmt)) cleanFmt = '1080';
                 else if (['720', 'hd'].includes(cleanFmt)) cleanFmt = '720';
-                else if (!['mp3', 'm4a', 'flac', 'wav', 'aac', 'webm', '480', '360'].includes(cleanFmt)) cleanFmt = 'mp3';
+                else if (!['mp3', 'm4a', 'flac', 'wav', 'aac', 'webm', '480', '360', '240'].includes(cleanFmt)) cleanFmt = 'mp3';
 
                 // 1. Direct savenow.to from user's browser (ACAO: * CORS enabled, direct worker link, 0 ads)
                 try {
@@ -1556,7 +1556,7 @@
 
                 // 3. Secondary engine: loader.to direct
                 try {
-                    const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const u = `https://loader.to/ajax/download.php?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
                     const r = await fetchWithTimeout(u, {}, 4500);
                     if (r.ok) {
                         const d = await r.json();
@@ -1584,7 +1584,7 @@
             }
 
             // Active Background Pre-Warmer:
-            // Proactively initiates and polls Top Formats (MP3 320k, 720p HD, 1080p FHD) in background
+            // Proactively initiates and polls Top Formats (MP3 320k, 720p HD, 1080p FHD, 1440p 2K, 4K UHD) in background
             // while user is viewing the video thumbnail and title.
             // When user taps "Download", file is ALREADY ready (Sub-2s / Instant download)!
             window._prewarmedStreams = window._prewarmedStreams || {};
@@ -1597,7 +1597,7 @@
                 window._prewarmedReady = window._prewarmedReady || {};
                 
                 const targetUrl = `https://www.youtube.com/watch?v=${ytId}`;
-                const priorityFormats = ['mp3', '720', '1080'];
+                const priorityFormats = ['mp3', '720', '1080', '1440', '4k'];
 
                 priorityFormats.forEach(f => {
                     const key = f + '_' + ytId;
@@ -1610,6 +1610,7 @@
                         download_url: null,
                         completed: false,
                         failed: false,
+                        errorText: '',
                         foregroundActive: false,
                         callbacks: []
                     };
@@ -1628,9 +1629,9 @@
                             return;
                         }
 
-                        // Turbo Background poller every 380ms (Instant pre-warmer)
+                        // Background poller
                         let attempts = 0;
-                        const maxPoll = 120; // ~120 seconds window (fresh conversions take 10-25s)
+                        const maxPoll = 150; // ~150 seconds window for large videos
                         const pollBg = async () => {
                             if (streamEntry.completed || streamEntry.foregroundActive || streamEntry.failed || attempts >= maxPoll) return;
                             attempts++;
@@ -1646,6 +1647,7 @@
                                     }
                                     if (isConversionError(prog)) {
                                         streamEntry.failed = true;
+                                        streamEntry.errorText = prog.text || '';
                                         return;
                                     }
                                     if (prog.progress) streamEntry.progress = prog.progress;
@@ -1949,7 +1951,10 @@
                 let fmtParam = 'mp3';
                 if (safeFormat === 'mp3') {
                     fmtParam = 'mp3';
-                } else if (['m4a', 'flac', 'wav', 'aac', 'webm'].includes(safeFormat)) {
+                } else if (safeFormat === 'webm') {
+                    // On savenow.to, 'webm' is audio-only; map video WebM button to 1080p HD video stream
+                    fmtParam = '1080';
+                } else if (['m4a', 'flac', 'wav', 'aac'].includes(safeFormat)) {
                     fmtParam = safeFormat;
                 } else if (safeFormat === 'mp4') {
                     if (cleanQ === '4k' || cleanQ === '2160') fmtParam = '4k';
@@ -1962,6 +1967,37 @@
                 } else {
                     fmtParam = 'mp3';
                 }
+
+                // Smart Quality Step-Down Ladder for Long/Large Videos & Non-4K Uploads:
+                // When a long concert/movie exceeds the 4K muxing limit, automatically step down
+                // to the highest supported resolution (1440p 2K -> 1080p FHD -> 720p HD -> 480p -> 360p)
+                const ladderMap = {
+                    '4k':   ['4k', '1440', '1080', '720', '480', '360'],
+                    '1440': ['1440', '1080', '720', '480', '360'],
+                    '1080': ['1080', '720', '480', '360'],
+                    '720':  ['720', '480', '360', '1080'],
+                    '480':  ['480', '360', '720'],
+                    '360':  ['360', '480', '720'],
+                    'mp3':  ['mp3', 'm4a', 'aac'],
+                    'm4a':  ['m4a', 'mp3', 'aac'],
+                    'flac': ['flac', 'mp3', 'm4a'],
+                    'wav':  ['wav', 'flac', 'mp3', 'm4a'],
+                    'aac':  ['aac', 'mp3', 'm4a']
+                };
+                const formatLadder = ladderMap[fmtParam] ? [...ladderMap[fmtParam]] : [fmtParam];
+                let ladderIdx = 0;
+
+                // Skip any top resolutions that already failed in background pre-warming (e.g., 4K duration limit on long videos)
+                if (forcedEngine === 'auto' && window._prewarmedStreams) {
+                    while (
+                        ladderIdx < formatLadder.length - 1 &&
+                        window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId] &&
+                        window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId].failed
+                    ) {
+                        ladderIdx++;
+                    }
+                }
+                let activeFmt = formatLadder[ladderIdx];
 
                 progressModal.classList.remove('hidden');
                 modalTitle.textContent = safeLabel;
@@ -2070,7 +2106,7 @@
                             body: JSON.stringify({
                                 video_url: failVidUrl,
                                 video_title: failVidTitle,
-                                format: safeFormat,
+                                format: `${safeFormat} (${fmtParam})`,
                                 error: msg || "Stream processing timeout"
                             })
                         }).catch(() => {});
@@ -2091,10 +2127,10 @@
                 let activePollTimer = null;
 
                 try {
-                    const prewarmKey = fmtParam + '_' + ytId;
+                    const prewarmKey = activeFmt + '_' + ytId;
                     const prewarmed = window._prewarmedStreams && window._prewarmedStreams[prewarmKey];
 
-                    // Priority 1: File is ALREADY 100% prepared in background! (Sub-0.1s Ultra Instant)
+                    // Priority 1: File (or best fallback resolution) is ALREADY 100% prepared in background! (Sub-0.1s Ultra Instant)
                     if (forcedEngine === 'auto' && window._prewarmedReady && window._prewarmedReady[prewarmKey]) {
                         const readyUrl = window._prewarmedReady[prewarmKey];
                         modalProgressBar.style.width = '100%';
@@ -2108,12 +2144,11 @@
                         return;
                     }
 
-                    // Robust single-conversion pipeline:
-                    // Fresh videos need 10-25s on the converter. We NEVER restart a running conversion;
-                    // we only switch engine on a real error or an unusable (ad-gateway) result.
-                    const MAX_WAIT_MS = 120000;
+                    // Robust single-conversion pipeline with automatic quality step-down for long/large videos:
+                    const MAX_WAIT_MS = 180000; // 3 minutes window for large/long videos
                     const pipelineStart = Date.now();
-                    const enginesTried = [];
+                    let loaderFallbackTried = false;
+                    let lastServerErrorText = '';
 
                     function setRealProgress(p) {
                         if (p && p.progress > 0) {
@@ -2131,13 +2166,13 @@
                         modalEtaText.textContent = `${sec}s`;
                         if (sec >= 45) modalStatusMsg.textContent = 'Long video detected, almost done. Please keep this page open...';
                         else if (sec >= 20) modalStatusMsg.textContent = 'Encoding your file... (larger videos take a bit longer)';
-                        else if (sec >= 6) modalStatusMsg.textContent = 'Converting on our server... usually 10-20 seconds.';
+                        else if (sec >= 6 && ladderIdx === 0) modalStatusMsg.textContent = 'Converting on our server... usually 10-20 seconds.';
                     }
 
-                    async function initLoaderDirect() {
-                        let cleanFmt = fmtParam;
+                    async function initLoaderDirect(targetFmt) {
+                        let cleanFmt = targetFmt || activeFmt;
                         try {
-                            const u = `https://loader.to/ajax/download.php?start=1&end=1&format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                            const u = `https://loader.to/ajax/download.php?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
                             const r = await fetchWithTimeout(u, {}, 8000);
                             if (r.ok) {
                                 const d = await r.json();
@@ -2154,14 +2189,63 @@
                         return null;
                     }
 
-                    function nextEngine(reason) {
+                    function stepDownOrSwitchEngine(errText) {
                         if (completed) return;
                         if (activePollTimer) clearTimeout(activePollTimer);
-                        if (Date.now() - pipelineStart < MAX_WAIT_MS - 15000) {
-                            if (!enginesTried.includes('savenow')) return runEngine('savenow');
-                            if (!enginesTried.includes('loader')) return runEngine('loader');
+                        if (errText) lastServerErrorText = errText;
+
+                        // Mark current format as failed in cache so we don't retry it
+                        if (window._prewarmedStreams && window._prewarmedStreams[activeFmt + '_' + ytId]) {
+                            window._prewarmedStreams[activeFmt + '_' + ytId].failed = true;
                         }
-                        failDownload(reason || "This video could not be converted right now. Please tap Retry below.");
+
+                        // Advance to the next highest non-failed resolution/format in the ladder
+                        while (ladderIdx < formatLadder.length - 1) {
+                            ladderIdx++;
+                            const candidateFmt = formatLadder[ladderIdx];
+                            const candStream = window._prewarmedStreams && window._prewarmedStreams[candidateFmt + '_' + ytId];
+                            if (candStream && candStream.failed) {
+                                continue;
+                            }
+                            activeFmt = candidateFmt;
+                            const resLabel = ['4k', '1440', '1080', '720', '480', '360'].includes(activeFmt) ? `${activeFmt}p HD` : activeFmt.toUpperCase();
+                            modalStatusMsg.textContent = `Large video detected — optimizing stream (${resLabel})...`;
+
+                            // 1. If this fallback format is ALREADY 100% ready in background pre-warmer, deliver immediately!
+                            if (window._prewarmedReady && window._prewarmedReady[activeFmt + '_' + ytId]) {
+                                completeDownload(window._prewarmedReady[activeFmt + '_' + ytId]);
+                                return;
+                            }
+
+                            // 2. If this fallback format is currently converting in background, attach to it!
+                            if (candStream && candStream.id && !candStream.completed && !candStream.failed) {
+                                candStream.foregroundActive = true;
+                                candStream.callbacks.push((finalUrl) => completeDownload(finalUrl));
+                                setRealProgress(candStream);
+                                pollConversion(candStream.id);
+                                return;
+                            }
+
+                            // 3. Otherwise initiate conversion for this fallback format
+                            runEngine('savenow');
+                            return;
+                        }
+
+                        // If all resolutions in ladder were tried on primary engine, try backup loader engine once
+                        if (!loaderFallbackTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
+                            loaderFallbackTried = true;
+                            activeFmt = formatLadder[Math.min(2, formatLadder.length - 1)]; // Use reliable 1080/720/mp3 on backup
+                            runEngine('loader');
+                            return;
+                        }
+
+                        // Final accurate error message
+                        const lowErr = (lastServerErrorText || '').toLowerCase();
+                        if (lowErr.includes('3 hours') || lowErr.includes('duration limit')) {
+                            failDownload("This video exceeds the maximum 3-hour duration limit for online conversion. Please try a shorter video.");
+                        } else {
+                            failDownload("This video could not be converted right now. Please tap Retry below.");
+                        }
                     }
 
                     function pollConversion(convId) {
@@ -2175,18 +2259,18 @@
                                 netFails = 0;
                                 if (isDownloadReady(p)) { completeDownload(p.download_url); return; }
                                 if (isConversionError(p)) {
-                                    nextEngine("This video is unavailable, private or restricted by YouTube. Please try another video.");
+                                    stepDownOrSwitchEngine(p.text || '');
                                     return;
                                 }
-                                // Finished but returned an unusable/ad link: switch engine after 3 confirmations
+                                // Finished but returned an unusable/ad link: step down after 3 confirmations
                                 if ((p.progress || 0) >= 1000) {
                                     finishedNoFile++;
-                                    if (finishedNoFile >= 3) { nextEngine(); return; }
+                                    if (finishedNoFile >= 3) { stepDownOrSwitchEngine(p.text || ''); return; }
                                 }
                                 setRealProgress(p);
                             } else {
                                 netFails++;
-                                if (netFails >= 15) { nextEngine("Network connection lost. Please check your internet and tap Retry."); return; }
+                                if (netFails >= 15) { stepDownOrSwitchEngine("Network connection lost."); return; }
                             }
                             updateWaitMessage();
                             if (Date.now() - pipelineStart > MAX_WAIT_MS) {
@@ -2200,11 +2284,12 @@
 
                     async function runEngine(engine) {
                         if (completed) return;
-                        enginesTried.push(engine);
-                        modalStatusMsg.textContent = enginesTried.length > 1 ? 'Switching to backup server...' : 'Starting conversion...';
-                        const initData = engine === 'loader' ? await initLoaderDirect() : await initiateStream(ytUrl, fmtParam);
+                        if (ladderIdx === 0 && !loaderFallbackTried) {
+                            modalStatusMsg.textContent = 'Starting conversion...';
+                        }
+                        const initData = engine === 'loader' ? await initLoaderDirect(activeFmt) : await initiateStream(ytUrl, activeFmt);
                         if (completed) return;
-                        if (!initData || !initData.id) { nextEngine("Conversion servers are busy. Please tap Retry in a moment."); return; }
+                        if (!initData || !initData.id) { stepDownOrSwitchEngine("Conversion servers are busy."); return; }
                         if (isDownloadReady(initData)) { completeDownload(initData.download_url); return; }
                         pollConversion(initData.id);
                     }
@@ -2213,7 +2298,6 @@
                     if (forcedEngine === 'auto' && prewarmed && prewarmed.id && !prewarmed.completed && !prewarmed.failed) {
                         prewarmed.foregroundActive = true;
                         prewarmed.callbacks.push((finalUrl) => completeDownload(finalUrl));
-                        enginesTried.push(prewarmed.engine || 'savenow');
                         setRealProgress(prewarmed);
                         modalStatusMsg.textContent = 'Finalizing your file...';
                         pollConversion(prewarmed.id);
