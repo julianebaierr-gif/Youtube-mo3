@@ -1524,12 +1524,60 @@
                 if (!progData) return false;
                 if (progData.success === 0 && !progData.download_url && (progData.progress >= 1000 || progData.progress === 0)) return true;
                 if (progData.success === -1) return true;
-                if (progData.text && typeof progData.text === 'string') {
-                    const txt = progData.text.toLowerCase();
-                    if (txt.includes('unavailable') || txt.includes('error') || txt.includes('removed') || txt.includes('copyright') || txt.includes('failed') || txt.includes('restricted')) return true;
+                const rawTxt = (progData.text || progData.message || '').toString().toLowerCase();
+                if (rawTxt) {
+                    if (rawTxt.includes('membership') || rawTxt.includes('private') || rawTxt.includes('unavailable') || rawTxt.includes('error') || rawTxt.includes('removed') || rawTxt.includes('copyright') || rawTxt.includes('failed') || rawTxt.includes('restricted') || rawTxt.includes('duration limit')) return true;
                 }
                 if (progData.error) return true;
                 return false;
+            }
+
+            function getSpecificVideoRestriction(rawErr) {
+                if (!rawErr || typeof rawErr !== 'string') return null;
+                const low = rawErr.toLowerCase();
+                if (low.includes('membership') || low.includes('members only') || low.includes('members-only')) {
+                    return {
+                        fatal: true,
+                        message: "🔒 Channel Membership Required: This video requires a paid YouTube Channel Membership and cannot be downloaded publicly."
+                    };
+                }
+                if (low.includes('private')) {
+                    return {
+                        fatal: true,
+                        message: "🔒 Private Video: This YouTube video is set to Private by the uploader and cannot be downloaded."
+                    };
+                }
+                if (low.includes('age') || low.includes('sign in to confirm') || low.includes('inappropriate for some users')) {
+                    return {
+                        fatal: true,
+                        message: "🔞 Age-Restricted Video: This video is age-restricted by YouTube and requires account sign-in, so it cannot be converted publicly."
+                    };
+                }
+                if (low.includes('copyright') || low.includes('drm') || low.includes('blocked in your country') || low.includes('not available in your country')) {
+                    return {
+                        fatal: true,
+                        message: "⚠️ Copyright / Region Restricted: This video is blocked by YouTube copyright or regional restrictions and cannot be downloaded."
+                    };
+                }
+                if (low.includes('live stream') || low.includes('premiere') || low.includes('upcoming')) {
+                    return {
+                        fatal: true,
+                        message: "📡 Live Stream / Premiere: Active live streams or upcoming premieres cannot be downloaded until the broadcast finishes."
+                    };
+                }
+                if (low.includes('unavailable') || low.includes('removed') || low.includes('deleted') || low.includes('does not exist')) {
+                    return {
+                        fatal: true,
+                        message: "❌ Video Unavailable: This video has been removed, deleted, or made unavailable on YouTube."
+                    };
+                }
+                if (low.includes('3 hours') || low.includes('duration limit') || low.includes('exceeds the duration')) {
+                    return {
+                        fatal: false,
+                        message: "⏱ Duration Limit Exceeded: This video exceeds the maximum duration limit for online conversion. Please try a shorter video or MP3 audio."
+                    };
+                }
+                return null;
             }
 
             // Multi-engine stream initiator with cloud proxy fallback (100% clean media, 0 ad redirects)
@@ -1655,8 +1703,14 @@
                                         return;
                                     }
                                     if (isConversionError(prog)) {
+                                        const errTxt = prog.text || prog.message || '';
                                         streamEntry.failed = true;
-                                        streamEntry.errorText = prog.text || '';
+                                        streamEntry.errorText = errTxt;
+                                        const restr = getSpecificVideoRestriction(errTxt);
+                                        if (restr && restr.fatal) {
+                                            window._videoFatalRestriction = window._videoFatalRestriction || {};
+                                            window._videoFatalRestriction[ytId] = restr.message;
+                                        }
                                         return;
                                     }
                                     if (prog.progress) streamEntry.progress = prog.progress;
@@ -1995,6 +2049,7 @@
                 };
                 const formatLadder = ladderMap[fmtParam] ? [...ladderMap[fmtParam]] : [fmtParam];
                 let ladderIdx = 0;
+                let initialPrewarmErrorText = '';
 
                 // Skip any top resolutions that already failed in background pre-warming (e.g., 4K duration limit on long videos)
                 if (forcedEngine === 'auto' && window._prewarmedStreams) {
@@ -2003,7 +2058,13 @@
                         window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId] &&
                         window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId].failed
                     ) {
+                        const failedEntry = window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId];
+                        if (failedEntry.errorText) initialPrewarmErrorText = failedEntry.errorText;
                         ladderIdx++;
+                    }
+                    const curCand = window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId];
+                    if (curCand && curCand.failed && curCand.errorText) {
+                        initialPrewarmErrorText = curCand.errorText;
                     }
                 }
                 let activeFmt = formatLadder[ladderIdx];
@@ -2113,21 +2174,25 @@
                     const errActions = document.getElementById('modal-error-actions');
                     if (errActions) errActions.classList.remove('hidden');
 
-                    // Auto-report failure immediately to Admin Telegram in background
+                    // Auto-report failure immediately to Admin Telegram in background (once per video ID per session)
                     try {
                         const failYtId = currentMediaData ? currentMediaData.id : extractYouTubeId(urlInput.value);
-                        const failVidUrl = failYtId ? `https://www.youtube.com/watch?v=${failYtId}` : (urlInput.value || '');
-                        const failVidTitle = currentMediaData ? currentMediaData.title : 'Conversion Error';
-                        fetch('/api/report-issue', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                video_url: failVidUrl,
-                                video_title: failVidTitle,
-                                format: `${safeFormat} (${fmtParam})`,
-                                error: msg || "Stream processing timeout"
-                            })
-                        }).catch(() => {});
+                        window._reportedVideoIds = window._reportedVideoIds || {};
+                        if (!failYtId || !window._reportedVideoIds[failYtId]) {
+                            if (failYtId) window._reportedVideoIds[failYtId] = true;
+                            const failVidUrl = failYtId ? `https://www.youtube.com/watch?v=${failYtId}` : (urlInput.value || '');
+                            const failVidTitle = currentMediaData ? currentMediaData.title : 'Conversion Error';
+                            fetch('/api/report-issue', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    video_url: failVidUrl,
+                                    video_title: failVidTitle,
+                                    format: `${safeFormat} (${fmtParam})`,
+                                    error: msg || "Stream processing timeout"
+                                })
+                            }).catch(() => {});
+                        }
                     } catch(e) {}
 
                     try {
@@ -2145,6 +2210,19 @@
                 let activePollTimer = null;
 
                 try {
+                    // Priority 0: If background pre-warmer already detected a fatal video restriction (e.g., Channel Membership / Private / Age-Restricted), show the exact reason immediately!
+                    if (window._videoFatalRestriction && window._videoFatalRestriction[ytId]) {
+                        failDownload(window._videoFatalRestriction[ytId]);
+                        return;
+                    }
+                    const prewarmCheckRestr = getSpecificVideoRestriction(initialPrewarmErrorText);
+                    if (prewarmCheckRestr && prewarmCheckRestr.fatal) {
+                        window._videoFatalRestriction = window._videoFatalRestriction || {};
+                        window._videoFatalRestriction[ytId] = prewarmCheckRestr.message;
+                        failDownload(prewarmCheckRestr.message);
+                        return;
+                    }
+
                     const prewarmKey = activeFmt + '_' + ytId;
                     const prewarmed = window._prewarmedStreams && window._prewarmedStreams[prewarmKey];
 
@@ -2166,7 +2244,7 @@
                     const MAX_WAIT_MS = 180000; // 3 minutes window for large/long videos
                     const pipelineStart = Date.now();
                     let loaderFallbackTried = false;
-                    let lastServerErrorText = '';
+                    let lastServerErrorText = initialPrewarmErrorText || '';
 
                     function setRealProgress(p) {
                         if (p && p.progress > 0) {
@@ -2215,6 +2293,17 @@
                         // Mark current format as failed in cache so we don't retry it
                         if (window._prewarmedStreams && window._prewarmedStreams[activeFmt + '_' + ytId]) {
                             window._prewarmedStreams[activeFmt + '_' + ytId].failed = true;
+                            if (errText) window._prewarmedStreams[activeFmt + '_' + ytId].errorText = errText;
+                        }
+
+                        // If this video has a fatal video-level restriction (Paid Channel Membership, Private, Age-Restricted, Deleted, etc.),
+                        // stop immediately and show the exact reason to the user!
+                        const fatalRestr = getSpecificVideoRestriction(errText || lastServerErrorText);
+                        if (fatalRestr && fatalRestr.fatal) {
+                            window._videoFatalRestriction = window._videoFatalRestriction || {};
+                            window._videoFatalRestriction[ytId] = fatalRestr.message;
+                            failDownload(fatalRestr.message);
+                            return;
                         }
 
                         // Advance to the next highest non-failed resolution/format in the ladder
@@ -2223,6 +2312,7 @@
                             const candidateFmt = formatLadder[ladderIdx];
                             const candStream = window._prewarmedStreams && window._prewarmedStreams[candidateFmt + '_' + ytId];
                             if (candStream && candStream.failed) {
+                                if (candStream.errorText && !lastServerErrorText) lastServerErrorText = candStream.errorText;
                                 continue;
                             }
                             activeFmt = candidateFmt;
@@ -2258,9 +2348,9 @@
                         }
 
                         // Final accurate error message
-                        const lowErr = (lastServerErrorText || '').toLowerCase();
-                        if (lowErr.includes('3 hours') || lowErr.includes('duration limit')) {
-                            failDownload("This video exceeds the maximum 3-hour duration limit for online conversion. Please try a shorter video.");
+                        const finalRestr = getSpecificVideoRestriction(lastServerErrorText);
+                        if (finalRestr) {
+                            failDownload(finalRestr.message);
                         } else {
                             failDownload("This video could not be converted right now. Please tap Retry below.");
                         }
@@ -2277,13 +2367,13 @@
                                 netFails = 0;
                                 if (isDownloadReady(p)) { completeDownload(p.download_url); return; }
                                 if (isConversionError(p)) {
-                                    stepDownOrSwitchEngine(p.text || '');
+                                    stepDownOrSwitchEngine(p.text || p.message || '');
                                     return;
                                 }
                                 // Finished but returned an unusable/ad link: step down after 3 confirmations
                                 if ((p.progress || 0) >= 1000) {
                                     finishedNoFile++;
-                                    if (finishedNoFile >= 3) { stepDownOrSwitchEngine(p.text || ''); return; }
+                                    if (finishedNoFile >= 3) { stepDownOrSwitchEngine(p.text || p.message || ''); return; }
                                 }
                                 setRealProgress(p);
                             } else {
