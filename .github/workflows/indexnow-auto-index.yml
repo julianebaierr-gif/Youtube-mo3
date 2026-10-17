@@ -1,0 +1,74 @@
+name: Auto IndexNow Sitemap Submission (Every 12 Hours)
+
+on:
+  schedule:
+    # Runs automatically every 12 hours (00:00 UTC and 12:00 UTC)
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+jobs:
+  submit-sitemap-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Submit all Sitemap URLs to Non-Google Search Engines (IndexNow, Bing, Yandex, Seznam, Naver, Yep)
+        run: |
+          python3 - << 'EOF'
+          import json
+          import re
+          import urllib.request
+          import urllib.error
+
+          with open("public/sitemap.xml", "r", encoding="utf-8") as f:
+              xml_content = f.read()
+
+          urls = re.findall(r"<loc>\s*(https?://[^<\s]+)\s*</loc>", xml_content, re.I)
+          print(f"Found {len(urls)} URLs in public/sitemap.xml")
+
+          payload = {
+              "host": "www.yt4mp3.com",
+              "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
+              "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
+              "urlList": urls
+          }
+          data = json.dumps(payload).encode("utf-8")
+
+          endpoints = [
+              "https://api.indexnow.org/indexnow",
+              "https://www.bing.com/indexnow",
+              "https://yandex.com/indexnow",
+              "https://search.seznam.cz/indexnow",
+              "https://searchadvisor.naver.com/indexnow",
+              "https://indexnow.yep.com/indexnow"
+          ]
+
+          for ep in endpoints:
+              try:
+                  req = urllib.request.Request(
+                      ep,
+                      data=data,
+                      headers={
+                          "Content-Type": "application/json; charset=utf-8",
+                          "User-Agent": "YT4MP3-AutoIndexer/2.0 (+https://www.yt4mp3.com)"
+                      }
+                  )
+                  with urllib.request.urlopen(req, timeout=15) as res:
+                      print(f"[OK] {ep} -> HTTP {res.status}")
+              except urllib.error.HTTPError as he:
+                  print(f"[HTTP {he.code}] {ep} -> {he.reason}")
+              except Exception as e:
+                  print(f"[WARN] {ep} -> {e}")
+
+          # Also ping the live /api/indexnow endpoint on yt4mp3.com
+          try:
+              req_live = urllib.request.Request(
+                  "https://www.yt4mp3.com/api/indexnow",
+                  headers={"User-Agent": "YT4MP3-GitHubCron/2.0"}
+              )
+              with urllib.request.urlopen(req_live, timeout=20) as res_live:
+                  print("[LIVE ENDPOINT]", res_live.read().decode("utf-8"))
+          except Exception as e:
+              print("[LIVE ENDPOINT WARN]", e)
+          EOF

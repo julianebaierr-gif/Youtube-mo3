@@ -244,19 +244,26 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 async def indexnow_key():
     return Response(content="8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b", media_type="text/plain; charset=utf-8")
 
-@app.api_route("/api/indexnow", methods=["GET", "POST"])
-async def trigger_indexnow():
-    import urllib.request
-    import json
-    payload = {
-        "host": "www.yt4mp3.com",
-        "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
-        "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
-        "urlList": (
+def get_all_sitemap_urls() -> list:
+    sitemap_file = os.path.join(BASE_DIR, "public", "sitemap.xml")
+    urls = []
+    if os.path.exists(sitemap_file):
+        try:
+            with open(sitemap_file, "r", encoding="utf-8") as f:
+                xml_content = f.read()
+            found = re.findall(r"<loc>\s*(https?://[^<\s]+)\s*</loc>", xml_content, re.I)
+            for u in found:
+                if u not in urls:
+                    urls.append(u)
+        except Exception:
+            pass
+    if not urls:
+        urls = (
             [
                 "https://www.yt4mp3.com/",
                 "https://www.yt4mp3.com/youtube-to-mp3",
                 "https://www.yt4mp3.com/youtube-to-mp4",
+                "https://www.yt4mp3.com/youtube-shorts-downloader",
                 "https://www.yt4mp3.com/contact-us",
                 "https://www.yt4mp3.com/terms-of-service",
                 "https://www.yt4mp3.com/privacy-policy"
@@ -266,19 +273,55 @@ async def trigger_indexnow():
                 f"https://www.yt4mp3.com/{c}/youtube-to-mp3" for c in SUPPORTED_LANGUAGES if c != "en"
             ] + [
                 f"https://www.yt4mp3.com/{c}/youtube-to-mp4" for c in SUPPORTED_LANGUAGES if c != "en"
+            ] + [
+                f"https://www.yt4mp3.com/{c}/youtube-shorts-downloader" for c in SUPPORTED_LANGUAGES if c != "en"
             ]
         )
+    return urls
+
+@app.api_route("/api/indexnow", methods=["GET", "POST"])
+async def trigger_indexnow():
+    url_list = get_all_sitemap_urls()
+    payload = {
+        "host": "www.yt4mp3.com",
+        "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
+        "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
+        "urlList": url_list
     }
     data = json.dumps(payload).encode("utf-8")
+    # All non-Google search engines supporting IndexNow protocol (Bing/Yahoo/DuckDuckGo/Ecosia, Yandex, Seznam, Naver, Yep)
+    endpoints = [
+        "https://api.indexnow.org/indexnow",
+        "https://www.bing.com/indexnow",
+        "https://yandex.com/indexnow",
+        "https://search.seznam.cz/indexnow",
+        "https://searchadvisor.naver.com/indexnow",
+        "https://indexnow.yep.com/indexnow"
+    ]
     results = {}
-    for ep in ["https://api.indexnow.org/indexnow", "https://www.bing.com/indexnow"]:
+    for ep in endpoints:
         try:
-            req = urllib.request.Request(ep, data=data, headers={"Content-Type": "application/json; charset=utf-8"})
-            with urllib.request.urlopen(req, timeout=5) as res:
+            req = urllib.request.Request(
+                ep,
+                data=data,
+                headers={
+                    "Content-Type": "application/json; charset=utf-8",
+                    "User-Agent": "YT4MP3-AutoIndexer/2.0 (+https://www.yt4mp3.com)"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=6) as res:
                 results[ep] = {"status": res.status, "msg": "ok"}
+        except urllib.error.HTTPError as he:
+            results[ep] = {"status": he.code, "msg": "accepted" if he.code in [200, 202] else str(he)}
         except Exception as e:
-            results[ep] = {"status": 200, "detail": str(e)}
-    return {"submitted": True, "results": results}
+            results[ep] = {"status": "error", "detail": str(e)}
+    return {
+        "submitted": True,
+        "schedule": "every_12_hours",
+        "excluded_engines": ["google"],
+        "url_count": len(url_list),
+        "results": results
+    }
 
 @app.get("/api/convert")
 async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
