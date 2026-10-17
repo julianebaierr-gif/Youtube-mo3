@@ -1,0 +1,24 @@
+name: 12-Hour PKT Telegram Website Traffic Report
+
+on:
+  schedule:
+    # Runs every 12 hours at 9:00 AM PKT (04:00 UTC) and 9:00 PM PKT (16:00 UTC)
+    - cron: '0 4,16 * * *'
+  workflow_dispatch:
+
+jobs:
+  send-telegram-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger 12-Hour PKT Telegram Analytics Report
+        run: |
+          echo "Triggering 12-hour Pakistan Standard Time (PKT) Telegram analytics report..."
+          RESPONSE=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" -X POST "https://www.yt4mp3.com/api/telegram-stats-report?reset=1")
+          BODY=$(echo "$RESPONSE" | sed -e 's/HTTP_STATUS\:.*//g')
+          STATUS=$(echo "$RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
+          echo "Response Status: $STATUS"
+          echo "Response Body: $BODY"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Endpoint returned non-200 status: $STATUS"
+            exit 1
+          fi

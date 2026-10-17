@@ -475,6 +475,306 @@ async def report_issue(request: Request):
     except Exception as e:
         return {"success": False, "detail": str(e)}
 
+
+# ==============================================================================
+# REAL-TIME VISITOR, DWELL-TIME & 12-HOUR PKT TELEGRAM ANALYTICS SYSTEM
+# ==============================================================================
+ANALYTICS_TMP_FILE = "/tmp/yt4mp3_analytics.json"
+_LAST_CLOUD_SYNC_TS = 0.0
+
+def _default_analytics() -> dict:
+    import time
+    return {
+        "ts": int(time.time()),
+        "all_u": 0,
+        "all_dl": 0,
+        "u": 0,
+        "pv": 0,
+        "dur_s": 0,
+        "dur_n": 0,
+        "max_s": 0,
+        "dl": 0,
+        "mp3": 0,
+        "mp4": 0,
+        "mob": 0,
+        "dsk": 0,
+        "c": {}
+    }
+
+def _fetch_cloud_analytics() -> dict:
+    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+    if not tg_token:
+        return {}
+    try:
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{tg_token}/getMyDescription",
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+        with urllib.request.urlopen(req, timeout=4) as res:
+            data = json.loads(res.read().decode("utf-8"))
+            desc = (data.get("result") or {}).get("description", "")
+            if desc and desc.startswith("YT4MP3_STATS:"):
+                raw_json = desc[len("YT4MP3_STATS:"):]
+                parsed = json.loads(raw_json)
+                if isinstance(parsed, dict):
+                    return parsed
+    except Exception as e:
+        print(f"Cloud analytics fetch notice: {e}")
+    return {}
+
+def _merge_analytics(base: dict, incoming: dict) -> dict:
+    if not incoming:
+        return base
+    merged = _default_analytics()
+    # If incoming has a newer period reset timestamp, prefer the newer period counters
+    base_ts = int(base.get("ts") or 0)
+    inc_ts = int(incoming.get("ts") or 0)
+    merged["all_u"] = max(int(base.get("all_u") or 0), int(incoming.get("all_u") or 0))
+    merged["all_dl"] = max(int(base.get("all_dl") or 0), int(incoming.get("all_dl") or 0))
+
+    if abs(base_ts - inc_ts) <= 60 or base_ts == 0 or inc_ts == 0:
+        merged["ts"] = max(base_ts, inc_ts) or merged["ts"]
+        for k in ["u", "pv", "dur_s", "dur_n", "max_s", "dl", "mp3", "mp4", "mob", "dsk"]:
+            merged[k] = max(int(base.get(k) or 0), int(incoming.get(k) or 0))
+        c_merged = {}
+        for src in [base.get("c") or {}, incoming.get("c") or {}]:
+            if isinstance(src, dict):
+                for ck, cv in src.items():
+                    c_merged[ck] = max(int(c_merged.get(ck) or 0), int(cv or 0))
+        merged["c"] = dict(sorted(c_merged.items(), key=lambda x: x[1], reverse=True)[:6])
+    else:
+        newer = incoming if inc_ts > base_ts else base
+        merged["ts"] = int(newer.get("ts") or merged["ts"])
+        for k in ["u", "pv", "dur_s", "dur_n", "max_s", "dl", "mp3", "mp4", "mob", "dsk"]:
+            merged[k] = int(newer.get(k) or 0)
+        c_new = newer.get("c") if isinstance(newer.get("c"), dict) else {}
+        merged["c"] = dict(sorted(c_new.items(), key=lambda x: x[1], reverse=True)[:6])
+    return merged
+
+def _load_analytics(force_cloud: bool = False) -> dict:
+    local_data = {}
+    if os.path.exists(ANALYTICS_TMP_FILE):
+        try:
+            with open(ANALYTICS_TMP_FILE, "r", encoding="utf-8") as f:
+                local_data = json.load(f)
+        except Exception:
+            local_data = {}
+
+    if not local_data or force_cloud:
+        cloud_data = _fetch_cloud_analytics()
+        merged = _merge_analytics(local_data or _default_analytics(), cloud_data)
+        try:
+            with open(ANALYTICS_TMP_FILE, "w", encoding="utf-8") as f:
+                json.dump(merged, f, separators=(",", ":"))
+        except Exception:
+            pass
+        return merged
+
+    base = _default_analytics()
+    base.update(local_data)
+    return base
+
+def _save_analytics(stats: dict, force_cloud: bool = False) -> None:
+    global _LAST_CLOUD_SYNC_TS
+    import time
+    # Keep top 6 countries so compact JSON stays well under 512 chars
+    if isinstance(stats.get("c"), dict):
+        stats["c"] = dict(sorted(stats["c"].items(), key=lambda x: x[1], reverse=True)[:6])
+    else:
+        stats["c"] = {}
+
+    try:
+        with open(ANALYTICS_TMP_FILE, "w", encoding="utf-8") as f:
+            json.dump(stats, f, separators=(",", ":"))
+    except Exception:
+        pass
+
+    now = time.time()
+    if force_cloud or (now - _LAST_CLOUD_SYNC_TS >= 12.0):
+        _LAST_CLOUD_SYNC_TS = now
+        tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+        if tg_token:
+            try:
+                compact = "YT4MP3_STATS:" + json.dumps(stats, separators=(",", ":"))
+                if len(compact) <= 512:
+                    payload = json.dumps({"description": compact}).encode("utf-8")
+                    req = urllib.request.Request(
+                        f"https://api.telegram.org/bot{tg_token}/setMyDescription",
+                        data=payload,
+                        headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+                    )
+                    urllib.request.urlopen(req, timeout=3).read()
+            except Exception as e:
+                print(f"Cloud analytics sync notice: {e}")
+
+def _format_duration_human(seconds: float) -> str:
+    sec = max(0, int(round(seconds)))
+    if sec < 60:
+        return f"{sec} sec"
+    mins, rem_sec = divmod(sec, 60)
+    if mins < 60:
+        return f"{mins}m {rem_sec}s"
+    hrs, rem_mins = divmod(mins, 60)
+    return f"{hrs}h {rem_mins}m {rem_sec}s"
+
+@app.post("/api/analytics-ping")
+async def analytics_ping(request: Request):
+    try:
+        raw_body = await request.body()
+        body = json.loads(raw_body.decode("utf-8")) if raw_body else {}
+    except Exception:
+        body = {}
+
+    event_type = str(body.get("event", "visit")).lower()
+    stats = _load_analytics(force_cloud=False)
+    ua = request.headers.get("user-agent", "").lower()
+    country = (
+        request.headers.get("x-vercel-ip-country")
+        or request.headers.get("cf-ipcountry")
+        or str(body.get("country", ""))
+        or "GLB"
+    ).upper()[:4]
+
+    force_sync = False
+    if event_type == "visit":
+        is_new_session = bool(body.get("new_session", True))
+        stats["pv"] = int(stats.get("pv", 0)) + 1
+        if is_new_session:
+            stats["u"] = int(stats.get("u", 0)) + 1
+            stats["all_u"] = int(stats.get("all_u", 0)) + 1
+            is_mobile = any(m in ua for m in ["mobile", "android", "iphone", "ipad", "ipod"])
+            if is_mobile:
+                stats["mob"] = int(stats.get("mob", 0)) + 1
+            else:
+                stats["dsk"] = int(stats.get("dsk", 0)) + 1
+            c_map = stats.get("c") if isinstance(stats.get("c"), dict) else {}
+            c_map[country] = int(c_map.get(country, 0)) + 1
+            stats["c"] = c_map
+            force_sync = True
+
+    elif event_type == "duration":
+        delta_sec = max(0, min(600, int(body.get("delta_sec", 0) or 0)))
+        total_sec = max(0, min(14400, int(body.get("total_sec", 0) or 0)))
+        first_ping = bool(body.get("first_ping", False))
+        if delta_sec > 0:
+            stats["dur_s"] = int(stats.get("dur_s", 0)) + delta_sec
+        if first_ping:
+            stats["dur_n"] = int(stats.get("dur_n", 0)) + 1
+        if total_sec > int(stats.get("max_s", 0)):
+            stats["max_s"] = total_sec
+
+    elif event_type == "download":
+        fmt = str(body.get("format", "mp3")).lower()
+        stats["dl"] = int(stats.get("dl", 0)) + 1
+        stats["all_dl"] = int(stats.get("all_dl", 0)) + 1
+        if fmt in ["mp3", "m4a", "flac", "wav", "ogg", "opus", "aac"]:
+            stats["mp3"] = int(stats.get("mp3", 0)) + 1
+        else:
+            stats["mp4"] = int(stats.get("mp4", 0)) + 1
+        force_sync = True
+
+    _save_analytics(stats, force_cloud=force_sync)
+    return {"ok": True}
+
+@app.get("/api/telegram-stats-report")
+@app.post("/api/telegram-stats-report")
+async def telegram_stats_report(reset: int = 0):
+    from datetime import datetime, timezone, timedelta
+    import time
+
+    stats = _load_analytics(force_cloud=True)
+    pkt_tz = timezone(timedelta(hours=5))
+    now_pkt = datetime.now(pkt_tz)
+    pkt_str = now_pkt.strftime("%d %b %Y, %I:%M %p PKT")
+
+    start_ts = int(stats.get("ts") or int(time.time()))
+    start_pkt = datetime.fromtimestamp(start_ts, tz=pkt_tz).strftime("%d %b, %I:%M %p PKT")
+
+    users_12h = int(stats.get("u", 0))
+    pageviews_12h = int(stats.get("pv", 0))
+    dur_s = int(stats.get("dur_s", 0))
+    dur_n = max(1, int(stats.get("dur_n", 0)) or users_12h or 1)
+    avg_stay_sec = (dur_s / dur_n) if dur_s > 0 else 0
+    max_stay_sec = int(stats.get("max_s", 0))
+
+    avg_stay_str = _format_duration_human(avg_stay_sec) if dur_s > 0 else "0 sec (No active stay yet)"
+    max_stay_str = _format_duration_human(max_stay_sec)
+    total_time_str = _format_duration_human(dur_s)
+
+    dl_12h = int(stats.get("dl", 0))
+    mp3_12h = int(stats.get("mp3", 0))
+    mp4_12h = int(stats.get("mp4", 0))
+    mob_12h = int(stats.get("mob", 0))
+    dsk_12h = int(stats.get("dsk", 0))
+    all_users = max(int(stats.get("all_u", 0)), users_12h)
+    all_downloads = max(int(stats.get("all_dl", 0)), dl_12h)
+
+    c_map = stats.get("c") if isinstance(stats.get("c"), dict) else {}
+    if c_map:
+        top_countries = ", ".join([f"{k} ({v})" for k, v in sorted(c_map.items(), key=lambda x: x[1], reverse=True)[:5]])
+    else:
+        top_countries = "N/A"
+
+    report_text = (
+        "📊 <b>YT4MP3.com — 12-Hour Traffic &amp; User Report</b>\n"
+        f"🇵🇰 <b>Pakistan Time:</b> {pkt_str}\n"
+        f"⏳ <b>Tracking Since:</b> {start_pkt}\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"👥 <b>Kitne Users Aaye (12h):</b> <code>{users_12h}</code> Unique Users\n"
+        f"👀 <b>Total Pageviews (12h):</b> <code>{pageviews_12h}</code> Views\n"
+        f"⏱ <b>Average Stay Time (Kitni Der Ruke):</b> <code>{avg_stay_str}</code>\n"
+        f"🏅 <b>Longest User Stay:</b> <code>{max_stay_str}</code>\n"
+        f"🕒 <b>Total Combined Watch/Stay Time:</b> <code>{total_time_str}</code>\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📥 <b>Total Downloads (12h):</b> <code>{dl_12h}</code>\n"
+        f"   ├─ 🎵 <b>Audio (MP3):</b> <code>{mp3_12h}</code>\n"
+        f"   └─ 🎬 <b>Video (MP4/4K):</b> <code>{mp4_12h}</code>\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"📱 <b>Devices:</b> Mobile: <code>{mob_12h}</code> | Desktop: <code>{dsk_12h}</code>\n"
+        f"🌍 <b>Top Countries:</b> {top_countries}\n"
+        "━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"🏆 <b>Ab Tak Total (All-Time):</b> <code>{all_users}</code> Users | <code>{all_downloads}</code> Downloads"
+    )
+
+    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+    tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
+    tg_result = None
+    tg_error = None
+
+    if tg_token and tg_chat_id:
+        try:
+            tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
+            tg_payload = json.dumps({
+                "chat_id": tg_chat_id,
+                "text": report_text,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True
+            }).encode("utf-8")
+            tg_req = urllib.request.Request(
+                tg_url,
+                data=tg_payload,
+                headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+            )
+            with urllib.request.urlopen(tg_req, timeout=8) as tg_res:
+                tg_result = json.loads(tg_res.read().decode("utf-8"))
+        except Exception as e:
+            tg_error = str(e)
+
+    if int(reset) == 1 and tg_result and tg_result.get("ok"):
+        new_stats = _default_analytics()
+        new_stats["all_u"] = all_users
+        new_stats["all_dl"] = all_downloads
+        _save_analytics(new_stats, force_cloud=True)
+
+    return {
+        "success": tg_error is None,
+        "pkt_time": pkt_str,
+        "stats_snapshot": stats,
+        "reset_applied": bool(int(reset) == 1 and tg_result and tg_result.get("ok")),
+        "telegram_ok": bool(tg_result and tg_result.get("ok")),
+        "telegram_error": tg_error
+    }
+
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">

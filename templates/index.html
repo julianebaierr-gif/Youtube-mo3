@@ -2058,6 +2058,15 @@
 
                     window._currentDownloadUrl = finalDownloadUrl;
 
+                    try {
+                        fetch('/api/analytics-ping', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ event: 'download', format: safeFormat }),
+                            keepalive: true
+                        }).catch(() => {});
+                    } catch (e) {}
+
                     modalDownloadLink.href = finalDownloadUrl;
                     modalDownloadLink.setAttribute('download', '');
                     modalDownloadLink.setAttribute('rel', 'noopener noreferrer');
@@ -2596,6 +2605,81 @@
                     });
             });
         }
+
+        // Real-time Visitor & Active Stay Duration (Dwell Time) Tracker for 12h PKT Telegram Reports
+        (function() {
+            try {
+                const SESSION_KEY = 'yt4mp3_sess_ts';
+                const nowMs = Date.now();
+                const lastSess = parseInt(sessionStorage.getItem(SESSION_KEY) || '0', 10);
+                const isNewSession = !lastSess || (nowMs - lastSess > 30 * 60 * 1000);
+                sessionStorage.setItem(SESSION_KEY, String(nowMs));
+
+                fetch('/api/analytics-ping', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event: 'visit', new_session: isNewSession }),
+                    keepalive: true
+                }).catch(() => {});
+
+                let activeSec = 0;
+                let flushedSec = 0;
+                let sentFirstDur = false;
+
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        activeSec += 1;
+                        if ((activeSec === 10 && !sentFirstDur) || (activeSec - flushedSec >= 30)) {
+                            const delta = activeSec - flushedSec;
+                            flushedSec = activeSec;
+                            const firstFlag = !sentFirstDur;
+                            sentFirstDur = true;
+                            fetch('/api/analytics-ping', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    event: 'duration',
+                                    delta_sec: delta,
+                                    total_sec: activeSec,
+                                    first_ping: firstFlag
+                                }),
+                                keepalive: true
+                            }).catch(() => {});
+                        }
+                    }
+                }, 1000);
+
+                function flushRemainingStay() {
+                    const delta = activeSec - flushedSec;
+                    if (delta <= 0) return;
+                    flushedSec = activeSec;
+                    const firstFlag = !sentFirstDur;
+                    sentFirstDur = true;
+                    const payload = JSON.stringify({
+                        event: 'duration',
+                        delta_sec: delta,
+                        total_sec: activeSec,
+                        first_ping: firstFlag
+                    });
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([payload], { type: 'application/json' });
+                        navigator.sendBeacon('/api/analytics-ping', blob);
+                    } else {
+                        fetch('/api/analytics-ping', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: payload,
+                            keepalive: true
+                        }).catch(() => {});
+                    }
+                }
+
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') flushRemainingStay();
+                });
+                window.addEventListener('pagehide', flushRemainingStay);
+            } catch (e) {}
+        })();
     </script>
     <script>
         // Deferred non-critical icons loading so PageSpeed unused CSS audit is 100% clean
