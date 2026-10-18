@@ -48,13 +48,12 @@ async def add_security_headers(request: Request, call_next):
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Content-Security-Policy"] = (
-        "default-src 'self' 'unsafe-inline' 'unsafe-eval' "
-        "https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.ytimg.com https://*.googlevideo.com https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; "
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://www.googletagmanager.com https://*.google.com https://*.doubleclick.net; "
-        "img-src 'self' data: https:; "
-        "media-src 'self' blob: https:; "
-        "connect-src 'self' https: https://noembed.com https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net; "
-        "frame-src 'self' https://loader.to https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com;"
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; "
+        "img-src 'self' data: blob: https: http:; "
+        "media-src 'self' blob: https: http:; "
+        "connect-src 'self' https: wss:; "
+        "frame-src 'self' https: data: blob:;"
     )
     return response
 

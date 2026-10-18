@@ -647,6 +647,33 @@
                 <span>{{ t.step1_title | default('Paste Link') }} ➔ {{ t.step2_title | default('Select Format') }} ➔ {{ t.step3_title | default('Download') }}</span>
             </div>
 
+            <!-- Responsive Adsterra Top Banner (728x90 Desktop / 320x50 Mobile) -->
+            <div class="mt-5 flex justify-center items-center overflow-hidden min-h-[50px]">
+                <div id="adsterra-top-banner" class="flex justify-center items-center mx-auto">
+                    <script>
+                        if (window.innerWidth >= 768) {
+                            atOptions = {
+                                'key' : 'e1886e8899030e780e40e0389c45c772',
+                                'format' : 'iframe',
+                                'height' : 90,
+                                'width' : 728,
+                                'params' : {}
+                            };
+                            document.write('<scr' + 'ipt src="https://bauval.org/22/e1886e8899030e780e40e0389c45c772"></scr' + 'ipt>');
+                        } else {
+                            atOptions = {
+                                'key' : 'e82ae77543615e4688bb815e6f17eeef',
+                                'format' : 'iframe',
+                                'height' : 50,
+                                'width' : 320,
+                                'params' : {}
+                            };
+                            document.write('<scr' + 'ipt src="https://bauval.org/22/e82ae77543615e4688bb815e6f17eeef"></scr' + 'ipt>');
+                        }
+                    </script>
+                </div>
+            </div>
+
             <!-- Viral Shortcut Trick Card (like SSYouTube / 4YouTube) -->
             <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-50 via-slate-50 to-blue-50 border border-rose-200 text-left max-w-2xl mx-auto shadow-sm">
                 <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
@@ -821,6 +848,12 @@
                         Convert another link
                     </button>
                 </div>
+            </div>
+
+            <!-- Adsterra Native Banner -->
+            <div class="mt-6">
+                <script async="async" data-cfasync="false" src="https://bauval.org/21/24fd8cec5921c16ccabed4a6fef2e394"></script>
+                <div id="container-24fd8cec5921c16ccabed4a6fef2e394"></div>
             </div>
 
         </section>
@@ -2884,5 +2917,7 @@
             document.head.appendChild(fa);
         });
     </script>
+    <!-- Adsterra Social Bar -->
+    <script data-cfasync="false" src="https://bauval.org/14/e1026c28c5771ae509b2bb35e241b07a"></script>
 </body>
 </html>
