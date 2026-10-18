@@ -451,23 +451,89 @@
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
-        @keyframes barShimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        @keyframes barStripeMove {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 32px 0, -200% 0; }
+        }
+        @keyframes barLaserSweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(220%); }
         }
         @keyframes readyGlow {
             0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.35); }
             50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
         }
+        @keyframes pillPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.3); }
+            50% { box-shadow: 0 0 0 5px rgba(225, 29, 72, 0); }
+        }
+        .progress-track-modern {
+            width: 100%;
+            height: 16px;
+            background: #f1f5f9;
+            border-radius: 9999px;
+            border: 1px solid #cbd5e1;
+            padding: 2px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.08);
+            margin-bottom: 10px;
+        }
         .progress-shimmer-bar {
-            background: linear-gradient(90deg, #e11d48 0%, #fb7185 50%, #e11d48 100%);
-            background-size: 200% 100%;
-            animation: barShimmer 1.6s linear infinite;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.35);
+            height: 100%;
+            border-radius: 9999px;
+            position: relative;
+            overflow: hidden;
+            background-image:
+                linear-gradient(45deg, rgba(255,255,255,0.28) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.28) 75%, transparent 75%, transparent),
+                linear-gradient(90deg, #e11d48 0%, #fb7185 50%, #f43f5e 100%);
+            background-size: 32px 32px, 200% 100%;
+            animation: barStripeMove 0.9s linear infinite;
+            box-shadow: 0 0 12px rgba(225, 29, 72, 0.5);
+            transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .progress-shimmer-bar::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 45%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+            animation: barLaserSweep 1.3s ease-in-out infinite;
         }
         .progress-ready-bar {
-            background: linear-gradient(90deg, #059669 0%, #10b981 50%, #059669 100%);
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #059669 0%, #10b981 50%, #34d399 100%);
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.55);
+            transition: width 0.3s ease-out;
+        }
+        .progress-error-bar {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #e11d48 0%, #f43f5e 100%);
+            transition: width 0.3s ease-out;
+        }
+        .stage-pill-active {
+            background: #ffe4e6;
+            color: #be123c;
+            border: 1px solid #fda4af;
+            animation: pillPulse 1.5s infinite;
+        }
+        .stage-pill-done {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .stage-pill-ready-final {
+            background: #059669;
+            color: #ffffff;
+            border: 1px solid #047857;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+        }
+        .stage-pill-idle {
+            background: #f3f4f6;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
         }
         .btn-ready-pulse {
             animation: readyGlow 2s infinite;
@@ -916,17 +982,17 @@
                 <p id="modal-subtitle" class="text-xs text-gray-500 mb-4 truncate max-w-[90%] mx-auto">Preparing media stream...</p>
 
                 <!-- Engaging Live Conversion Stage Pills -->
-                <div id="modal-stage-pills" class="flex items-center justify-center gap-1.5 mb-3 text-[10px] font-bold">
-                    <span id="stage-pill-1" class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 transition-all">1. Fetch</span>
+                <div id="modal-stage-pills" class="flex items-center justify-center gap-1.5 mb-3 text-[11px] font-bold">
+                    <span id="stage-pill-1" class="px-2.5 py-0.5 rounded-full stage-pill-active transition-all">1. Fetch</span>
                     <span class="text-gray-300">➔</span>
-                    <span id="stage-pill-2" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-200 transition-all">2. Encode</span>
+                    <span id="stage-pill-2" class="px-2.5 py-0.5 rounded-full stage-pill-idle transition-all">2. Encode</span>
                     <span class="text-gray-300">➔</span>
-                    <span id="stage-pill-3" class="px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-200 transition-all">3. Ready</span>
+                    <span id="stage-pill-3" class="px-2.5 py-0.5 rounded-full stage-pill-idle transition-all">3. Ready</span>
                 </div>
 
                 <!-- Progress Bar -->
-                <div class="w-full bg-gray-100 rounded-full h-3.5 mb-2 overflow-hidden border border-gray-200 p-0.5">
-                    <div id="modal-progress-bar" class="h-full rounded-full progress-shimmer-bar transition-all duration-300 w-[20%]"></div>
+                <div class="progress-track-modern">
+                    <div id="modal-progress-bar" class="progress-shimmer-bar" style="width: 20%;"></div>
                 </div>
 
                 <!-- Progress Meta -->
@@ -2322,17 +2388,17 @@
                     document.title = `⏳ (${pct}%) Converting... | YT4MP3`;
                     if (stagePill1 && stagePill2 && stagePill3) {
                         if (pct < 40) {
-                            stagePill1.className = "px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 transition-all";
-                            stagePill1.textContent = "1. Fetch";
-                            stagePill2.className = "px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-200 transition-all";
+                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
+                            stagePill1.textContent = "⚡ 1. Fetch";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
                             stagePill2.textContent = "2. Encode";
                         } else {
-                            stagePill1.className = "px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 transition-all";
+                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
                             stagePill1.textContent = "✓ 1. Fetch";
-                            stagePill2.className = "px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 transition-all";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
                             stagePill2.textContent = "⚡ 2. Encode";
                         }
-                        stagePill3.className = "px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 border border-gray-200 transition-all";
+                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
                         stagePill3.textContent = "3. Ready";
                     }
                 }
@@ -2340,7 +2406,7 @@
                 progressModal.classList.remove('hidden');
                 modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
-                modalProgressBar.className = "h-full rounded-full progress-shimmer-bar transition-all duration-300";
+                modalProgressBar.className = "progress-shimmer-bar";
                 modalSpeedText.textContent = '⚡ Turbo Speed';
                 modalEtaText.textContent = '~2s';
                 modalStatusMsg.textContent = 'Connecting high-speed stream...';
@@ -2361,7 +2427,7 @@
                         curPct += curPct < 60 ? 3 : 1;
                         updateConversionVisuals(curPct);
                     }
-                }, 700);
+                }, 650);
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
@@ -2376,15 +2442,15 @@
                     }
 
                     modalProgressBar.style.width = '100%';
-                    modalProgressBar.className = "h-full rounded-full progress-ready-bar transition-all duration-300";
+                    modalProgressBar.className = "progress-ready-bar";
                     modalPctText.textContent = '100%';
                     document.title = '✅ Download Ready! | YT4MP3';
                     if (stagePill1 && stagePill2 && stagePill3) {
-                        stagePill1.className = "px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 transition-all";
+                        stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
                         stagePill1.textContent = "✓ 1. Fetch";
-                        stagePill2.className = "px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 transition-all";
+                        stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
                         stagePill2.textContent = "✓ 2. Encode";
-                        stagePill3.className = "px-2 py-0.5 rounded-full bg-emerald-600 text-white border border-emerald-600 transition-all shadow-sm";
+                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-ready-final transition-all";
                         stagePill3.textContent = "✓ 3. Ready!";
                     }
                     try {
@@ -2471,7 +2537,7 @@
                     if (window._origPageTitle) document.title = window._origPageTitle;
 
                     modalProgressBar.style.width = '100%';
-                    modalProgressBar.className = "h-full rounded-full bg-rose-500 transition-all duration-300";
+                    modalProgressBar.className = "progress-error-bar";
                     modalPctText.textContent = 'Notice';
                     modalIconContainer.className = "w-14 h-14 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto mb-3 border border-rose-200";
                     modalIcon.className = "fa-solid fa-triangle-exclamation text-rose-600";
