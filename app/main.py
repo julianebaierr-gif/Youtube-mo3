@@ -497,7 +497,8 @@ async def long_video(url: str, mode: str = "audio", quality: str = "720"):
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
         if q not in ["144", "240", "360", "480", "720", "1080", "1440", "2160"]:
             q = "720"
-        body.update({"downloadMode": "auto", "videoQuality": q, "youtubeVideoCodec": "h264"})
+        codec = "vp9" if q in ("1440", "2160") else "h264"
+        body.update({"downloadMode": "auto", "videoQuality": q, "youtubeVideoCodec": codec})
 
     last_err = "No long-video engine available"
     for inst in COBALT_INSTANCES:
