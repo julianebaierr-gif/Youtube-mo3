@@ -477,6 +477,57 @@ async def report_issue(request: Request):
 
 
 # ==============================================================================
+# LONG VIDEO ENGINE (3+ hours) via public cobalt instances
+# savenow.to / loader.to reject videos longer than 3 hours. Cobalt instances have
+# no such limit and return a direct streaming "tunnel" URL. Cobalt does not send
+# CORS headers, so the browser calls this proxy, then downloads the tunnel URL directly.
+# ==============================================================================
+COBALT_INSTANCES = [
+    i.strip() for i in (os.environ.get("COBALT_INSTANCES") or "https://api.cobalt.liubquanti.click/").split(",") if i.strip()
+]
+
+@app.get("/api/long-video")
+async def long_video(url: str, mode: str = "audio", quality: str = "720"):
+    if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
+        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+    body = {"url": url, "filenameStyle": "basic"}
+    if mode == "audio":
+        body.update({"downloadMode": "audio", "audioFormat": "mp3", "audioBitrate": "320"})
+    else:
+        q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+        if q not in ["144", "240", "360", "480", "720", "1080", "1440", "2160"]:
+            q = "720"
+        body.update({"downloadMode": "auto", "videoQuality": q, "youtubeVideoCodec": "h264"})
+
+    last_err = "No long-video engine available"
+    for inst in COBALT_INSTANCES:
+        try:
+            req = urllib.request.Request(
+                inst,
+                data=json.dumps(body).encode("utf-8"),
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+                },
+            )
+            with urllib.request.urlopen(req, timeout=25) as res:
+                data = json.loads(res.read().decode("utf-8"))
+            if data.get("status") in ("tunnel", "redirect") and data.get("url"):
+                return {"success": True, "download_url": data["url"], "filename": data.get("filename", ""), "engine": "cobalt"}
+            last_err = str((data.get("error") or {}).get("code") or data.get("status") or "unknown")
+        except urllib.error.HTTPError as e:
+            try:
+                err_body = json.loads(e.read().decode("utf-8", "ignore"))
+                last_err = str((err_body.get("error") or {}).get("code") or f"HTTP {e.code}")
+            except Exception:
+                last_err = f"HTTP {e.code}"
+        except Exception as e:
+            last_err = str(e)
+    return {"success": False, "error": last_err}
+
+
+# ==============================================================================
 # REAL-TIME VISITOR, DWELL-TIME & 12-HOUR PKT TELEGRAM ANALYTICS SYSTEM
 # ==============================================================================
 ANALYTICS_TMP_FILE = "/tmp/yt4mp3_analytics.json"
