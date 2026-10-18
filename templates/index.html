@@ -1647,14 +1647,13 @@
             window._prewarmedStreams = window._prewarmedStreams || {};
             window._prewarmedReady = window._prewarmedReady || {};
 
-            function prewarmStreams(ytId) {
-                if (!ytId || (window._lastPrewarmedId === ytId)) return;
-                window._lastPrewarmedId = ytId;
+            function prewarmStreams(ytId, extraFormats) {
+                if (!ytId) return;
                 window._prewarmedStreams = window._prewarmedStreams || {};
                 window._prewarmedReady = window._prewarmedReady || {};
                 
                 const targetUrl = `https://www.youtube.com/watch?v=${ytId}`;
-                const priorityFormats = ['mp3', '720', '1080', '1440', '4k'];
+                const priorityFormats = extraFormats || ['mp3', '720', '1080'];
 
                 priorityFormats.forEach(f => {
                     const key = f + '_' + ytId;
@@ -1816,32 +1815,66 @@
                 prewarmStreams(ytId);
 
                 try {
-                    // Fetch real video metadata via YouTube oEmbed (Free, Zero Server Load, Always Online)
                     const oembedUrl = `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`;
                     let title = "YouTube Media Stream";
                     let author = "YouTube Creator";
+                    let has4K = false;
+                    let has2K = false;
 
-                    try {
-                        const oembedResp = await fetch(oembedUrl);
-                        if (oembedResp.ok) {
-                            const data = await oembedResp.json();
-                            if (data.title) title = data.title;
-                            if (data.author_name) author = data.author_name;
-                        }
-                    } catch (e) {
-                        // fallback title
-                        title = `YouTube Video (${ytId})`;
+                    // Fetch metadata and real video resolutions in parallel
+                    await Promise.all([
+                        (async () => {
+                            try {
+                                const oembedResp = await fetch(oembedUrl);
+                                if (oembedResp.ok) {
+                                    const data = await oembedResp.json();
+                                    if (data.title) title = data.title;
+                                    if (data.author_name) author = data.author_name;
+                                }
+                            } catch (e) {
+                                title = `YouTube Video (${ytId})`;
+                            }
+                        })(),
+                        (async () => {
+                            try {
+                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 6000);
+                                if (resResp.ok) {
+                                    const resData = await resResp.json();
+                                    has4K = !!resData.has_4k;
+                                    has2K = !!resData.has_2k;
+                                }
+                            } catch (e) {}
+                        })()
+                    ]);
+
+                    // Pre-warm 2K/4K only if this video genuinely has them
+                    const hiResToPrewarm = [];
+                    if (has2K) hiResToPrewarm.push('1440');
+                    if (has4K) hiResToPrewarm.push('4k');
+                    if (hiResToPrewarm.length > 0) prewarmStreams(ytId, hiResToPrewarm);
+
+                    const videoFormatsList = [
+                        { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD', badge: '⚡ Instant' },
+                        { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p', badge: 'Full HD' }
+                    ];
+                    if (has4K) {
+                        videoFormatsList.push({ format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p', badge: '4K Ultra' });
                     }
-
-                    // Actively trigger and poll background pre-warming for MP3, 720p, and 1080p
-                    prewarmStreams(ytId);
+                    if (has2K) {
+                        videoFormatsList.push({ format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p', badge: '2K QHD' });
+                    }
+                    videoFormatsList.push(
+                        { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' },
+                        { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' },
+                        { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format', badge: 'VP9' }
+                    );
 
                     currentMediaData = {
                         id: ytId,
                         url: url,
                         title: title,
                         uploader: author,
-                        duration: "HD Video",
+                        duration: has4K ? "4K UHD Video" : (has2K ? "2K QHD Video" : "HD Video"),
                         views: "",
                         thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
                         platform: { name: 'YouTube' },
@@ -1854,15 +1887,7 @@
                             { format: 'wav', quality: 'wav', label: 'WAV (Master)', sub: 'Uncompressed Studio Audio', badge: 'Master' },
                             { format: 'aac', quality: 'aac', label: 'AAC (Stereo)', sub: 'Crystal Clear Audio Stream' }
                         ],
-                        video_formats: [
-                            { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD', badge: '⚡ Instant' },
-                            { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p', badge: 'Full HD' },
-                            { format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p', badge: '4K Ultra' },
-                            { format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p', badge: '2K QHD' },
-                            { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' },
-                            { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' },
-                            { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format', badge: 'VP9' }
-                        ]
+                        video_formats: videoFormatsList
                     };
 
                     loadingCard.classList.add('hidden');

@@ -580,6 +580,73 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         return {"success": False, "error": str(e)}
 
 
+_VIDEO_RES_CACHE = {}
+
+@app.get("/api/video-resolutions")
+async def get_video_resolutions(id: str):
+    vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
+    if len(vid) != 11:
+        return {"has_4k": False, "has_2k": False, "max_height": 1080}
+    if vid in _VIDEO_RES_CACHE:
+        return _VIDEO_RES_CACHE[vid]
+
+    yt_url = f"https://www.youtube.com/watch?v={vid}"
+    # 1. Fast, zero-credit check via YouTube watch page player response
+    try:
+        req = urllib.request.Request(
+            yt_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=5) as res:
+            html = res.read().decode("utf-8", "ignore")
+        heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
+        if heights:
+            max_h = max(heights)
+            result = {
+                "has_4k": max_h >= 2160 or 2160 in heights,
+                "has_2k": max_h >= 1440 or 1440 in heights,
+                "max_height": max_h,
+                "source": "yt_watch",
+            }
+            _VIDEO_RES_CACHE[vid] = result
+            return result
+    except Exception:
+        pass
+
+    # 2. Fallback: FastSaver /v1/youtube/info (accurate format list when datacenter IP is blocked by YouTube)
+    try:
+        info_url = f"https://api.fastsaver.io/v1/youtube/info?url={urllib.parse.quote(yt_url)}"
+        req = urllib.request.Request(
+            info_url,
+            headers={
+                "X-Api-Key": FASTSAVER_API_KEY,
+                "Accept": "application/json",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=8) as res:
+            data = json.loads(res.read().decode("utf-8"))
+        if data.get("ok") and isinstance(data.get("formats"), list):
+            fmt_names = [str(f.get("format", "")).lower() for f in data["formats"]]
+            has_4k = any("2160" in f or "4k" in f for f in fmt_names)
+            has_2k = any("1440" in f or "2k" in f for f in fmt_names)
+            result = {
+                "has_4k": has_4k,
+                "has_2k": has_2k,
+                "max_height": 2160 if has_4k else (1440 if has_2k else 1080),
+                "source": "fastsaver_info",
+            }
+            _VIDEO_RES_CACHE[vid] = result
+            return result
+    except Exception:
+        pass
+
+    return {"has_4k": False, "has_2k": False, "max_height": 1080, "source": "default"}
+
+
 # ==============================================================================
 # REAL-TIME VISITOR, DWELL-TIME & 12-HOUR PKT TELEGRAM ANALYTICS SYSTEM
 # ==============================================================================
