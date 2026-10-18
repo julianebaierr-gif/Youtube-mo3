@@ -533,6 +533,101 @@ async def long_video(url: str, mode: str = "audio", quality: str = "720"):
 # Uses api.fastsaver.io with API key. Costs credits per download.
 # ==============================================================================
 FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY") or "fs_sk_9w9n0d9x3t0r0g2g0d3e0j3f6u7q"
+FASTSAVER_LOW_CREDIT_THRESHOLD = 10000
+_LAST_FS_BALANCE_CHECK_TS = 0.0
+_LAST_FS_LOW_ALERT_TS = 0.0
+
+def _fetch_fastsaver_balance() -> dict:
+    try:
+        req = urllib.request.Request(
+            "https://api.fastsaver.io/v1/balance",
+            headers={
+                "X-Api-Key": FASTSAVER_API_KEY,
+                "Accept": "application/json",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=6) as res:
+            data = json.loads(res.read().decode("utf-8"))
+            if isinstance(data, dict) and data.get("ok"):
+                return data
+    except Exception:
+        pass
+    return {}
+
+def _check_fastsaver_credits_and_alert(force_check: bool = False, test_alert: bool = False) -> dict:
+    global _LAST_FS_BALANCE_CHECK_TS, _LAST_FS_LOW_ALERT_TS
+    import time
+    now = time.time()
+    if not force_check and not test_alert and (now - _LAST_FS_BALANCE_CHECK_TS < 300):
+        return {"checked": False}
+    _LAST_FS_BALANCE_CHECK_TS = now
+
+    bal = _fetch_fastsaver_balance()
+    if not bal:
+        return {"checked": True, "ok": False}
+
+    credits = int(bal.get("credits", 0))
+    plan_credits = int(bal.get("plan_credits", 100000))
+    plan_name = str(bal.get("plan", "Pro"))
+    expire_label = str(bal.get("expire_label", ""))
+
+    should_alert = test_alert or (credits <= FASTSAVER_LOW_CREDIT_THRESHOLD)
+    alert_sent = False
+
+    if should_alert:
+        stats = _load_analytics(force_cloud=False)
+        last_alert_ts = max(float(_LAST_FS_LOW_ALERT_TS), float(stats.get("fs_al_ts", 0) or 0))
+        # Send immediately on first drop <= 10k, then remind at most once every 6 hours
+        if test_alert or (now - last_alert_ts >= 21600):
+            tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+            tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
+            if tg_token and tg_chat_id:
+                try:
+                    header_tag = "🧪 <b>[TEST] FastSaver Low Credits Alert</b>" if test_alert else "⚠️ <b>FastSaver API Low Credits Alert!</b>"
+                    msg = (
+                        f"{header_tag}\n\n"
+                        f"🔋 <b>Remaining Credits:</b> <code>{credits:,}</code> / <code>{plan_credits:,}</code>\n"
+                        f"📉 <b>Alert Threshold:</b> <code>{FASTSAVER_LOW_CREDIT_THRESHOLD:,} credits</code>\n"
+                        f"📦 <b>Current Plan:</b> {plan_name} ({expire_label})\n\n"
+                        "⚡ <i>Aapke FastSaver API me 10,000 ya us se kam credits reh gaye hain. 4K aur long videos ka backup chalta rakhne ke liye credits top-up kar lein:</i>\n"
+                        "🔗 https://api.fastsaver.io/pricing"
+                    )
+                    tg_payload = json.dumps({
+                        "chat_id": tg_chat_id,
+                        "text": msg,
+                        "parse_mode": "HTML",
+                        "disable_web_page_preview": True,
+                    }).encode("utf-8")
+                    tg_req = urllib.request.Request(
+                        f"https://api.telegram.org/bot{tg_token}/sendMessage",
+                        data=tg_payload,
+                        headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"},
+                    )
+                    with urllib.request.urlopen(tg_req, timeout=6) as tg_res:
+                        tg_data = json.loads(tg_res.read().decode("utf-8"))
+                        alert_sent = bool(tg_data.get("ok"))
+                    if alert_sent and not test_alert:
+                        _LAST_FS_LOW_ALERT_TS = now
+                        stats["fs_al_ts"] = int(now)
+                        _save_analytics(stats, force_cloud=True)
+                except Exception as e:
+                    print(f"FastSaver low-credit Telegram alert error: {e}")
+
+    return {
+        "checked": True,
+        "ok": True,
+        "credits": credits,
+        "plan_credits": plan_credits,
+        "plan": plan_name,
+        "threshold": FASTSAVER_LOW_CREDIT_THRESHOLD,
+        "is_low": credits <= FASTSAVER_LOW_CREDIT_THRESHOLD,
+        "alert_sent": alert_sent,
+    }
+
+@app.get("/api/fastsaver-balance-check")
+async def fastsaver_balance_check(test_alert: int = 0):
+    return _check_fastsaver_credits_and_alert(force_check=True, test_alert=(int(test_alert) == 1))
 
 @app.get("/api/fastsaver-video")
 async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
@@ -561,6 +656,8 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         )
         with urllib.request.urlopen(req, timeout=55) as res:
             data = json.loads(res.read().decode("utf-8"))
+        # Check remaining credits after download and alert if <= 10,000
+        _check_fastsaver_credits_and_alert(force_check=True)
         if data.get("ok") and data.get("download_url"):
             return {
                 "success": True,
@@ -575,6 +672,7 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
             detail = err_body.get("detail", f"HTTP {e.code}")
         except Exception:
             detail = f"HTTP {e.code}"
+        _check_fastsaver_credits_and_alert(force_check=False)
         return {"success": False, "error": str(detail)}
     except Exception as e:
         return {"success": False, "error": str(e)}
@@ -629,6 +727,7 @@ async def get_video_resolutions(id: str):
         )
         with urllib.request.urlopen(req, timeout=8) as res:
             data = json.loads(res.read().decode("utf-8"))
+        _check_fastsaver_credits_and_alert(force_check=False)
         if data.get("ok") and isinstance(data.get("formats"), list):
             fmt_names = [str(f.get("format", "")).lower() for f in data["formats"]]
             has_4k = any("2160" in f or "4k" in f for f in fmt_names)
@@ -886,6 +985,16 @@ async def telegram_stats_report(reset: int = 0):
     else:
         top_countries = "N/A"
 
+    # Also check FastSaver API credits and trigger low-credit alert if <= 10,000
+    fs_status = _check_fastsaver_credits_and_alert(force_check=True, test_alert=False)
+    if fs_status.get("ok"):
+        fs_c = int(fs_status.get("credits", 0))
+        fs_max = int(fs_status.get("plan_credits", 100000))
+        fs_warn = " ⚠️ <b>(LOW! &lt;=10k)</b>" if fs_c <= FASTSAVER_LOW_CREDIT_THRESHOLD else ""
+        fs_line = f"⚡ <b>FastSaver Credits:</b> <code>{fs_c:,}</code> / <code>{fs_max:,}</code>{fs_warn}\n"
+    else:
+        fs_line = ""
+
     report_text = (
         "📊 <b>YT4MP3.com — 12-Hour Traffic &amp; User Report</b>\n"
         f"🇵🇰 <b>Pakistan Time:</b> {pkt_str}\n"
@@ -904,6 +1013,7 @@ async def telegram_stats_report(reset: int = 0):
         f"📱 <b>Devices:</b> Mobile: <code>{mob_12h}</code> | Desktop: <code>{dsk_12h}</code>\n"
         f"🌍 <b>Top Countries:</b> {top_countries}\n"
         "━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"{fs_line}"
         f"🏆 <b>Ab Tak Total (All-Time):</b> <code>{all_users}</code> Users | <code>{all_downloads}</code> Downloads"
     )
 
