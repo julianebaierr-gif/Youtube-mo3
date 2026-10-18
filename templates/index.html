@@ -1541,7 +1541,7 @@
                         message: "🔒 Channel Membership Required: This video requires a paid YouTube Channel Membership and cannot be downloaded publicly."
                     };
                 }
-                if (low.includes('private')) {
+                if (low.includes('private video') || low === 'private') {
                     return {
                         fatal: true,
                         message: "🔒 Private Video: This YouTube video is set to Private by the uploader and cannot be downloaded."
@@ -1549,25 +1549,25 @@
                 }
                 if (low.includes('age') || low.includes('sign in to confirm') || low.includes('inappropriate for some users')) {
                     return {
-                        fatal: true,
+                        fatal: false,
                         message: "🔞 Age-Restricted Video: This video is age-restricted by YouTube and requires account sign-in, so it cannot be converted publicly."
                     };
                 }
                 if (low.includes('copyright') || low.includes('drm') || low.includes('blocked in your country') || low.includes('not available in your country')) {
                     return {
-                        fatal: true,
+                        fatal: false,
                         message: "⚠️ Copyright / Region Restricted: This video is blocked by YouTube copyright or regional restrictions and cannot be downloaded."
                     };
                 }
                 if (low.includes('live stream') || low.includes('premiere') || low.includes('upcoming')) {
                     return {
-                        fatal: true,
+                        fatal: false,
                         message: "📡 Live Stream / Premiere: Active live streams or upcoming premieres cannot be downloaded until the broadcast finishes."
                     };
                 }
-                if (low.includes('unavailable') || low.includes('removed') || low.includes('deleted') || low.includes('does not exist')) {
+                if (low.includes('video unavailable') || low.includes('has been removed') || low.includes('deleted') || low.includes('does not exist')) {
                     return {
-                        fatal: true,
+                        fatal: false,
                         message: "❌ Video Unavailable: This video has been removed, deleted, or made unavailable on YouTube."
                     };
                 }
@@ -2317,13 +2317,17 @@
                                 return;
                             }
                             const errCode = data.error || 'unknown';
-                            if (errCode.includes('credits') || errCode.includes('limit')) {
+                            const restr = getSpecificVideoRestriction(lastServerErrorText || errCode);
+                            if (restr) {
+                                failDownload(restr.message);
+                            } else if (errCode.includes('credits') || errCode.includes('limit')) {
                                 failDownload("⏳ Server Busy: All download servers are currently at capacity. Please wait a few minutes and try again.");
                             } else {
-                                failDownload("⏱ Video Too Long: Online conversion supports videos up to 3 hours. This video is longer than 3 hours, so it cannot be converted. Please try a shorter video.");
+                                failDownload("This video could not be converted right now. Please tap Retry below.");
                             }
                         } catch (e) {
-                            failDownload("⏱ Video Too Long: Online conversion supports videos up to 3 hours. This video is longer than 3 hours, so it cannot be converted. Please try a shorter video.");
+                            const restr = getSpecificVideoRestriction(lastServerErrorText);
+                            failDownload(restr ? restr.message : "This video could not be converted right now. Please tap Retry below.");
                         }
                     }
 
