@@ -950,10 +950,12 @@ async def analytics_ping(request: Request):
 @app.post("/api/telegram-stats-report")
 async def telegram_stats_report(reset: int = 0):
     # 12-hour traffic report disabled per user request; only check FastSaver <= 10k credits alert
+    stats = _load_analytics(force_cloud=True)
     fs_status = _check_fastsaver_credits_and_alert(force_check=True, test_alert=False)
     return {
         "success": True,
         "report_disabled": True,
+        "stats_snapshot": stats,
         "fastsaver_check": fs_status
     }
 
