@@ -2257,15 +2257,19 @@
                     modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
                     modalActionContainer.classList.remove('hidden');
 
-                    // Setup QR Code for PC-to-Mobile Instant Transfer
+                    // Setup QR Code for PC-to-Mobile Instant Transfer (100% Lazy: loads ONLY when clicked)
                     const qrToggleBtn = document.getElementById('modal-qr-toggle-btn');
                     const qrBox = document.getElementById('modal-qr-box');
                     const qrImg = document.getElementById('modal-qr-img');
                     if (qrToggleBtn && qrBox && qrImg && ytId) {
                         qrBox.classList.add('hidden');
+                        qrImg.removeAttribute('src');
                         const mobileTargetUrl = `https://www.yt4mp3.com/watch?v=${encodeURIComponent(ytId)}&dl=${encodeURIComponent(safeFormat)}&qual=${encodeURIComponent(safeQuality)}`;
-                        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent(mobileTargetUrl)}`;
+                        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent(mobileTargetUrl)}`;
                         qrToggleBtn.onclick = () => {
+                            if (!qrImg.getAttribute('src')) {
+                                qrImg.src = qrApiUrl;
+                            }
                             qrBox.classList.toggle('hidden');
                         };
                     }
