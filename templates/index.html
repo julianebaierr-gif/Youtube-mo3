@@ -1574,7 +1574,7 @@
                 if (low.includes('3 hours') || low.includes('duration limit') || low.includes('exceeds the duration')) {
                     return {
                         fatal: false,
-                        message: "⏱ Duration Limit Exceeded: This video exceeds the maximum duration limit for online conversion. Please try a shorter video or MP3 audio."
+                        message: "⏱ Video Too Long: Online conversion supports videos up to 3 hours. This video is longer than 3 hours, so it cannot be converted. Please try a shorter video."
                     };
                 }
                 return null;
