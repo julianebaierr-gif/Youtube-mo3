@@ -1,19 +1,19 @@
-name: 12-Hour PKT Telegram Website Traffic Report
+name: FastSaver Low Credits Alert Check (10k Threshold)
 
 on:
   schedule:
-    # Runs every 12 hours at 9:00 AM PKT (04:00 UTC) and 9:00 PM PKT (16:00 UTC)
-    - cron: '0 4,16 * * *'
+    # Periodically checks FastSaver API balance and only sends a Telegram message if credits <= 10,000
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
-  send-telegram-report:
+  check-fastsaver-credits:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger 12-Hour PKT Telegram Analytics Report
+      - name: Check FastSaver API Credits (Alert only if <= 10k)
         run: |
-          echo "Triggering 12-hour Pakistan Standard Time (PKT) Telegram analytics report..."
-          RESPONSE=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" -X POST "https://www.yt4mp3.com/api/telegram-stats-report?reset=1")
+          echo "Checking FastSaver API balance (alerts Telegram only when credits <= 10,000)..."
+          RESPONSE=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" "https://www.yt4mp3.com/api/fastsaver-balance-check")
           BODY=$(echo "$RESPONSE" | sed -e 's/HTTP_STATUS\:.*//g')
           STATUS=$(echo "$RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
           echo "Response Status: $STATUS"

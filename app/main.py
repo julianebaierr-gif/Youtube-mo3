@@ -949,111 +949,12 @@ async def analytics_ping(request: Request):
 @app.get("/api/telegram-stats-report")
 @app.post("/api/telegram-stats-report")
 async def telegram_stats_report(reset: int = 0):
-    from datetime import datetime, timezone, timedelta
-    import time
-
-    stats = _load_analytics(force_cloud=True)
-    pkt_tz = timezone(timedelta(hours=5))
-    now_pkt = datetime.now(pkt_tz)
-    pkt_str = now_pkt.strftime("%d %b %Y, %I:%M %p PKT")
-
-    start_ts = int(stats.get("ts") or int(time.time()))
-    start_pkt = datetime.fromtimestamp(start_ts, tz=pkt_tz).strftime("%d %b, %I:%M %p PKT")
-
-    users_12h = int(stats.get("u", 0))
-    pageviews_12h = int(stats.get("pv", 0))
-    dur_s = int(stats.get("dur_s", 0))
-    dur_n = max(1, int(stats.get("dur_n", 0)) or users_12h or 1)
-    avg_stay_sec = (dur_s / dur_n) if dur_s > 0 else 0
-    max_stay_sec = int(stats.get("max_s", 0))
-
-    avg_stay_str = _format_duration_human(avg_stay_sec) if dur_s > 0 else "0 sec (No active stay yet)"
-    max_stay_str = _format_duration_human(max_stay_sec)
-    total_time_str = _format_duration_human(dur_s)
-
-    dl_12h = int(stats.get("dl", 0))
-    mp3_12h = int(stats.get("mp3", 0))
-    mp4_12h = int(stats.get("mp4", 0))
-    mob_12h = int(stats.get("mob", 0))
-    dsk_12h = int(stats.get("dsk", 0))
-    all_users = max(int(stats.get("all_u", 0)), users_12h)
-    all_downloads = max(int(stats.get("all_dl", 0)), dl_12h)
-
-    c_map = stats.get("c") if isinstance(stats.get("c"), dict) else {}
-    if c_map:
-        top_countries = ", ".join([f"{k} ({v})" for k, v in sorted(c_map.items(), key=lambda x: x[1], reverse=True)[:5]])
-    else:
-        top_countries = "N/A"
-
-    # Also check FastSaver API credits and trigger low-credit alert if <= 10,000
+    # 12-hour traffic report disabled per user request; only check FastSaver <= 10k credits alert
     fs_status = _check_fastsaver_credits_and_alert(force_check=True, test_alert=False)
-    if fs_status.get("ok"):
-        fs_c = int(fs_status.get("credits", 0))
-        fs_max = int(fs_status.get("plan_credits", 100000))
-        fs_warn = " ⚠️ <b>(LOW! &lt;=10k)</b>" if fs_c <= FASTSAVER_LOW_CREDIT_THRESHOLD else ""
-        fs_line = f"⚡ <b>FastSaver Credits:</b> <code>{fs_c:,}</code> / <code>{fs_max:,}</code>{fs_warn}\n"
-    else:
-        fs_line = ""
-
-    report_text = (
-        "📊 <b>YT4MP3.com — 12-Hour Traffic &amp; User Report</b>\n"
-        f"🇵🇰 <b>Pakistan Time:</b> {pkt_str}\n"
-        f"⏳ <b>Tracking Since:</b> {start_pkt}\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"👥 <b>Kitne Users Aaye (12h):</b> <code>{users_12h}</code> Unique Users\n"
-        f"👀 <b>Total Pageviews (12h):</b> <code>{pageviews_12h}</code> Views\n"
-        f"⏱ <b>Average Stay Time (Kitni Der Ruke):</b> <code>{avg_stay_str}</code>\n"
-        f"🏅 <b>Longest User Stay:</b> <code>{max_stay_str}</code>\n"
-        f"🕒 <b>Total Combined Watch/Stay Time:</b> <code>{total_time_str}</code>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"📥 <b>Total Downloads (12h):</b> <code>{dl_12h}</code>\n"
-        f"   ├─ 🎵 <b>Audio (MP3):</b> <code>{mp3_12h}</code>\n"
-        f"   └─ 🎬 <b>Video (MP4/4K):</b> <code>{mp4_12h}</code>\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"📱 <b>Devices:</b> Mobile: <code>{mob_12h}</code> | Desktop: <code>{dsk_12h}</code>\n"
-        f"🌍 <b>Top Countries:</b> {top_countries}\n"
-        "━━━━━━━━━━━━━━━━━━━━━━\n"
-        f"{fs_line}"
-        f"🏆 <b>Ab Tak Total (All-Time):</b> <code>{all_users}</code> Users | <code>{all_downloads}</code> Downloads"
-    )
-
-    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
-    tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
-    tg_result = None
-    tg_error = None
-
-    if tg_token and tg_chat_id:
-        try:
-            tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
-            tg_payload = json.dumps({
-                "chat_id": tg_chat_id,
-                "text": report_text,
-                "parse_mode": "HTML",
-                "disable_web_page_preview": True
-            }).encode("utf-8")
-            tg_req = urllib.request.Request(
-                tg_url,
-                data=tg_payload,
-                headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
-            )
-            with urllib.request.urlopen(tg_req, timeout=8) as tg_res:
-                tg_result = json.loads(tg_res.read().decode("utf-8"))
-        except Exception as e:
-            tg_error = str(e)
-
-    if int(reset) == 1 and tg_result and tg_result.get("ok"):
-        new_stats = _default_analytics()
-        new_stats["all_u"] = all_users
-        new_stats["all_dl"] = all_downloads
-        _save_analytics(new_stats, force_cloud=True)
-
     return {
-        "success": tg_error is None,
-        "pkt_time": pkt_str,
-        "stats_snapshot": stats,
-        "reset_applied": bool(int(reset) == 1 and tg_result and tg_result.get("ok")),
-        "telegram_ok": bool(tg_result and tg_result.get("ok")),
-        "telegram_error": tg_error
+        "success": True,
+        "report_disabled": True,
+        "fastsaver_check": fs_status
     }
 
 FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
