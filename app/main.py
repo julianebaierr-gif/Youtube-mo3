@@ -53,7 +53,8 @@ async def add_security_headers(request: Request, call_next):
         "img-src 'self' data: blob: https: http:; "
         "media-src 'self' blob: https: http:; "
         "connect-src 'self' https: wss:; "
-        "frame-src 'self' https: data: blob:;"
+        "frame-src 'self' https: data: blob:; "
+        "worker-src 'self' blob: https:;"
     )
     return response
 
