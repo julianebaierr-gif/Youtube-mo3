@@ -684,11 +684,12 @@ _VIDEO_RES_CACHE = {}
 async def get_video_resolutions(id: str):
     vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
     if len(vid) != 11:
-        return {"has_4k": False, "has_2k": False, "max_height": 1080}
+        return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0}
     if vid in _VIDEO_RES_CACHE:
         return _VIDEO_RES_CACHE[vid]
 
     yt_url = f"https://www.youtube.com/watch?v={vid}"
+    duration_sec = 0
     # 1. Fast, zero-credit check via YouTube watch page player response
     try:
         req = urllib.request.Request(
@@ -700,6 +701,9 @@ async def get_video_resolutions(id: str):
         )
         with urllib.request.urlopen(req, timeout=5) as res:
             html = res.read().decode("utf-8", "ignore")
+        dur_match = re.search(r'"lengthSeconds":"(\d+)"', html)
+        if dur_match:
+            duration_sec = int(dur_match.group(1))
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         if heights:
             max_h = max(heights)
@@ -707,6 +711,7 @@ async def get_video_resolutions(id: str):
                 "has_4k": max_h >= 2160 or 2160 in heights,
                 "has_2k": max_h >= 1440 or 1440 in heights,
                 "max_height": max_h,
+                "duration_sec": duration_sec,
                 "source": "yt_watch",
             }
             _VIDEO_RES_CACHE[vid] = result
@@ -728,6 +733,19 @@ async def get_video_resolutions(id: str):
         with urllib.request.urlopen(req, timeout=8) as res:
             data = json.loads(res.read().decode("utf-8"))
         _check_fastsaver_credits_and_alert(force_check=False)
+        if data.get("ok"):
+            raw_dur = data.get("duration") or data.get("lengthSeconds") or 0
+            if isinstance(raw_dur, (int, float)):
+                duration_sec = int(raw_dur)
+            elif isinstance(raw_dur, str):
+                if raw_dur.isdigit():
+                    duration_sec = int(raw_dur)
+                elif ":" in raw_dur:
+                    parts = [int(p) for p in raw_dur.split(":") if p.isdigit()]
+                    if len(parts) == 2:
+                        duration_sec = parts[0] * 60 + parts[1]
+                    elif len(parts) == 3:
+                        duration_sec = parts[0] * 3600 + parts[1] * 60 + parts[2]
         if data.get("ok") and isinstance(data.get("formats"), list):
             fmt_names = [str(f.get("format", "")).lower() for f in data["formats"]]
             has_4k = any("2160" in f or "4k" in f for f in fmt_names)
@@ -736,6 +754,7 @@ async def get_video_resolutions(id: str):
                 "has_4k": has_4k,
                 "has_2k": has_2k,
                 "max_height": 2160 if has_4k else (1440 if has_2k else 1080),
+                "duration_sec": duration_sec,
                 "source": "fastsaver_info",
             }
             _VIDEO_RES_CACHE[vid] = result
@@ -743,7 +762,7 @@ async def get_video_resolutions(id: str):
     except Exception:
         pass
 
-    return {"has_4k": False, "has_2k": False, "max_height": 1080, "source": "default"}
+    return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": duration_sec, "source": "default"}
 
 
 @app.get("/api/download-thumbnail")
