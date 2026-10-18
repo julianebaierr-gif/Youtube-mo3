@@ -529,6 +529,58 @@ async def long_video(url: str, mode: str = "audio", quality: str = "720"):
 
 
 # ==============================================================================
+# FASTSAVER ENGINE (4th fallback) — paid API with 4K support, no duration limit
+# Uses api.fastsaver.io with API key. Costs credits per download.
+# ==============================================================================
+FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY") or "fs_sk_9w9n0d9x3t0r0g2g0d3e0j3f6u7q"
+
+@app.get("/api/fastsaver-video")
+async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
+    if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
+        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+    headers = {
+        "X-Api-Key": FASTSAVER_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+    }
+    # Determine format string for FastSaver
+    if mode == "audio":
+        fmt = "audio"
+    else:
+        q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+        fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
+        fmt = fmt_map.get(q, "720p")
+    body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+    try:
+        req = urllib.request.Request(
+            "https://api.fastsaver.io/v1/youtube/download",
+            data=body,
+            headers=headers,
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=55) as res:
+            data = json.loads(res.read().decode("utf-8"))
+        if data.get("ok") and data.get("download_url"):
+            return {
+                "success": True,
+                "download_url": data["download_url"],
+                "filename": data.get("filename", ""),
+                "engine": "fastsaver",
+            }
+        return {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
+    except urllib.error.HTTPError as e:
+        try:
+            err_body = json.loads(e.read().decode("utf-8", "ignore"))
+            detail = err_body.get("detail", f"HTTP {e.code}")
+        except Exception:
+            detail = f"HTTP {e.code}"
+        return {"success": False, "error": str(detail)}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+# ==============================================================================
 # REAL-TIME VISITOR, DWELL-TIME & 12-HOUR PKT TELEGRAM ANALYTICS SYSTEM
 # ==============================================================================
 ANALYTICS_TMP_FILE = "/tmp/yt4mp3_analytics.json"
