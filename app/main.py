@@ -746,6 +746,35 @@ async def get_video_resolutions(id: str):
     return {"has_4k": False, "has_2k": False, "max_height": 1080, "source": "default"}
 
 
+@app.get("/api/download-thumbnail")
+async def download_thumbnail(id: str = ""):
+    vid = (id or "").strip()
+    if not re.match(r"^[a-zA-Z0-9_-]{11}$", vid):
+        raise HTTPException(status_code=400, detail="Invalid YouTube video ID")
+    for tier in ("maxresdefault", "sddefault", "hqdefault"):
+        thumb_url = f"https://i.ytimg.com/vi/{vid}/{tier}.jpg"
+        try:
+            req = urllib.request.Request(
+                thumb_url,
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36"},
+            )
+            with urllib.request.urlopen(req, timeout=6) as res:
+                if res.status == 200:
+                    img_bytes = res.read()
+                    if len(img_bytes) > 1500:
+                        return Response(
+                            content=img_bytes,
+                            media_type="image/jpeg",
+                            headers={
+                                "Content-Disposition": f'attachment; filename="YT4MP3-Thumbnail-{vid}-HD.jpg"',
+                                "Cache-Control": "public, max-age=86400",
+                            },
+                        )
+        except Exception:
+            continue
+    return RedirectResponse(url=f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg")
+
+
 # ==============================================================================
 # REAL-TIME VISITOR, DWELL-TIME & 12-HOUR PKT TELEGRAM ANALYTICS SYSTEM
 # ==============================================================================

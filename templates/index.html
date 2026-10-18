@@ -772,12 +772,21 @@
                 
                 <!-- Media Overview Header -->
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 pb-4 sm:pb-6 border-b border-gray-100">
-                    <div class="relative w-full sm:w-56 aspect-video rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
-                        <img id="res-thumbnail" src="" alt="Thumbnail" class="w-full h-full object-cover">
-                        <span id="res-duration" class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-bold font-mono">
+                    <div id="res-preview-box" class="relative w-full sm:w-56 aspect-video rounded-xl overflow-hidden bg-gray-900 border border-gray-200 flex-shrink-0 group cursor-pointer" title="Click to preview video">
+                        <img id="res-thumbnail" src="" alt="Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div id="res-play-overlay" class="absolute inset-0 bg-black/30 group-hover:bg-black/45 transition-colors flex flex-col items-center justify-center gap-1">
+                            <span class="w-11 h-11 rounded-full bg-rose-600/95 group-hover:bg-rose-600 group-hover:scale-110 transition-all text-white flex items-center justify-center shadow-lg border-2 border-white/80">
+                                <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full bg-black/75 text-white text-[10px] font-bold tracking-wide">
+                                Preview Video
+                            </span>
+                        </div>
+                        <div id="res-video-iframe-wrap" class="hidden absolute inset-0 w-full h-full bg-black z-10"></div>
+                        <span id="res-duration" class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-bold font-mono pointer-events-none">
                             00:00
                         </span>
-                        <span id="res-platform-tag" class="absolute top-2 left-2 px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold uppercase">
+                        <span id="res-platform-tag" class="absolute top-2 left-2 px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-extrabold uppercase pointer-events-none">
                             YouTube
                         </span>
                     </div>
@@ -793,10 +802,14 @@
                             </span>
                             <span id="res-views" class="text-gray-400"></span>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex flex-wrap items-center gap-2">
                             <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
                                 <i class="fa-solid fa-check text-xs"></i> Streams Ready
                             </span>
+                            <button id="save-thumbnail-btn" type="button" class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 border border-slate-300 transition-all cursor-pointer shadow-sm" title="Download HD Cover Thumbnail">
+                                <i class="fa-solid fa-image text-rose-600 text-xs"></i>
+                                <span id="save-thumbnail-text">Save Thumbnail (HD)</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -845,7 +858,7 @@
                     <span class="flex items-center gap-1">
                         <i class="fa-solid fa-shield-check text-emerald-500"></i> Direct browser download. No popups.
                     </span>
-                    <button onclick="document.getElementById('media-url-input').value=''; document.getElementById('result-card').classList.add('hidden'); document.getElementById('media-url-input').focus();" class="text-rose-600 font-bold hover:underline">
+                    <button onclick="const w=document.getElementById('res-video-iframe-wrap'); if(w){w.innerHTML='';w.classList.add('hidden');} document.getElementById('media-url-input').value=''; document.getElementById('result-card').classList.add('hidden'); document.getElementById('media-url-input').focus();" class="text-rose-600 font-bold hover:underline">
                         Convert another link
                     </button>
                 </div>
@@ -899,6 +912,16 @@
                         <i class="fa-solid fa-circle-down text-lg"></i>
                         <span id="modal-btn-label">Download File</span>
                     </a>
+
+                    <button id="modal-qr-toggle-btn" type="button" class="w-full py-2.5 px-4 rounded-xl font-bold text-slate-700 text-xs bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-qrcode text-rose-600 text-sm"></i>
+                        <span id="modal-qr-toggle-text">Scan QR on Phone (Mobile Transfer)</span>
+                    </button>
+
+                    <div id="modal-qr-box" class="hidden p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
+                        <img id="modal-qr-img" src="" alt="QR Code for Mobile Download" class="w-36 h-36 mx-auto rounded-lg border border-gray-200 bg-white p-1.5 shadow-sm">
+                        <p class="text-[11px] text-slate-600 font-semibold mt-2 leading-snug">Point your phone camera at this QR code to save directly on mobile</p>
+                    </div>
 
                     <div id="modal-inapp-notice" class="hidden p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-left text-[11px] text-amber-900 flex items-start gap-2">
                         <i class="fa-solid fa-circle-info text-amber-600 mt-0.5 text-xs flex-shrink-0"></i>
@@ -1812,6 +1835,11 @@
                 loadingCard.classList.add('hidden');
                 resultCard.classList.add('hidden');
                 errorCard.classList.add('hidden');
+                const iframeWrap = document.getElementById('res-video-iframe-wrap');
+                if (iframeWrap) {
+                    iframeWrap.innerHTML = '';
+                    iframeWrap.classList.add('hidden');
+                }
             }
 
             function extractYouTubeId(url) {
@@ -1946,6 +1974,41 @@
                 resDuration.textContent = data.duration || '00:00';
                 resViews.textContent = data.views ? `${data.views} views` : '';
                 resPlatformTag.textContent = data.platform.name || 'YouTube';
+
+                // Reset inline Video Preview iframe on new conversion
+                const previewBox = document.getElementById('res-preview-box');
+                const iframeWrap = document.getElementById('res-video-iframe-wrap');
+                if (iframeWrap) {
+                    iframeWrap.innerHTML = '';
+                    iframeWrap.classList.add('hidden');
+                }
+                if (previewBox && iframeWrap) {
+                    previewBox.onclick = () => {
+                        if (!iframeWrap.classList.contains('hidden')) return;
+                        iframeWrap.classList.remove('hidden');
+                        iframeWrap.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(data.id)}?autoplay=1&rel=0" title="Video Preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full border-0"></iframe>`;
+                    };
+                }
+
+                // Wire up 1-Click Save HD Thumbnail button
+                const saveThumbBtn = document.getElementById('save-thumbnail-btn');
+                const saveThumbText = document.getElementById('save-thumbnail-text');
+                if (saveThumbBtn && saveThumbText) {
+                    saveThumbText.textContent = 'Save Thumbnail (HD)';
+                    saveThumbBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        saveThumbText.textContent = 'Saving HD...';
+                        const dlThumbUrl = `/api/download-thumbnail?id=${encodeURIComponent(data.id)}`;
+                        const a = document.createElement('a');
+                        a.href = dlThumbUrl;
+                        a.setAttribute('download', `YT4MP3-Thumbnail-${data.id}-HD.jpg`);
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => { try { a.remove(); } catch(err){} }, 400);
+                        setTimeout(() => { saveThumbText.textContent = '✓ Saved HD!'; }, 600);
+                        setTimeout(() => { saveThumbText.textContent = 'Save Thumbnail (HD)'; }, 3000);
+                    };
+                }
 
                 const pageActiveTab = "{{ seo.active_tab }}";
 
@@ -2193,6 +2256,19 @@
                     modalDownloadLink.target = '_self';
                     modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
                     modalActionContainer.classList.remove('hidden');
+
+                    // Setup QR Code for PC-to-Mobile Instant Transfer
+                    const qrToggleBtn = document.getElementById('modal-qr-toggle-btn');
+                    const qrBox = document.getElementById('modal-qr-box');
+                    const qrImg = document.getElementById('modal-qr-img');
+                    if (qrToggleBtn && qrBox && qrImg && ytId) {
+                        qrBox.classList.add('hidden');
+                        const mobileTargetUrl = `https://www.yt4mp3.com/watch?v=${encodeURIComponent(ytId)}&dl=${encodeURIComponent(safeFormat)}&qual=${encodeURIComponent(safeQuality)}`;
+                        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent(mobileTargetUrl)}`;
+                        qrToggleBtn.onclick = () => {
+                            qrBox.classList.toggle('hidden');
+                        };
+                    }
 
                     const isInApp = /FBAN|FBAV|Instagram|TikTok|musical_ly|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
                     const inAppNotice = document.getElementById('modal-inapp-notice');
@@ -2739,8 +2815,13 @@
                             urlInput.value = detectedUrl;
                             updatePlatformIndicator(detectedUrl);
                             prewarmStreams(ytId);
-                            setTimeout(() => {
-                                startConversion();
+                            const autoDlFmt = searchParams.get('dl');
+                            const autoDlQual = searchParams.get('qual') || (autoDlFmt === 'mp3' ? '320kbps' : '720');
+                            setTimeout(async () => {
+                                await startConversion();
+                                if (autoDlFmt && currentMediaData) {
+                                    triggerDirectDownload(autoDlFmt, autoDlQual, `${autoDlFmt.toUpperCase()} (${autoDlQual})`);
+                                }
                             }, 350);
                         }
                     }
