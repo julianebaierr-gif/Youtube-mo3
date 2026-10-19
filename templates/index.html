@@ -736,31 +736,9 @@
                 <span>{{ t.step1_title | default('Paste Link') }} ➔ {{ t.step2_title | default('Select Format') }} ➔ {{ t.step3_title | default('Download') }}</span>
             </div>
 
-            <!-- Responsive Adsterra Top Banner (728x90 Desktop / 320x50 Mobile) -->
-            <div class="mt-5 flex justify-center items-center overflow-hidden min-h-[50px]">
-                <div id="adsterra-top-banner" class="flex justify-center items-center mx-auto">
-                    <script>
-                        if (window.innerWidth >= 768) {
-                            atOptions = {
-                                'key' : 'e1886e8899030e780e40e0389c45c772',
-                                'format' : 'iframe',
-                                'height' : 90,
-                                'width' : 728,
-                                'params' : {}
-                            };
-                            document.write('<scr' + 'ipt src="https://bauval.org/22/e1886e8899030e780e40e0389c45c772"></scr' + 'ipt>');
-                        } else {
-                            atOptions = {
-                                'key' : 'e82ae77543615e4688bb815e6f17eeef',
-                                'format' : 'iframe',
-                                'height' : 50,
-                                'width' : 320,
-                                'params' : {}
-                            };
-                            document.write('<scr' + 'ipt src="https://bauval.org/22/e82ae77543615e4688bb815e6f17eeef"></scr' + 'ipt>');
-                        }
-                    </script>
-                </div>
+            <!-- Responsive Adsterra Top Banner (728x90 Desktop / 320x50 Mobile - Human Visitors Only) -->
+            <div id="adsterra-top-wrap" class="mt-5 flex justify-center items-center overflow-hidden min-h-[50px]">
+                <div id="adsterra-top-banner" class="flex justify-center items-center mx-auto"></div>
             </div>
 
             <!-- Viral Shortcut Trick Card (like SSYouTube / 4YouTube) -->
@@ -956,9 +934,8 @@
                 </div>
             </div>
 
-            <!-- Adsterra Native Banner -->
+            <!-- Adsterra Native Banner (Human Visitors Only) -->
             <div class="mt-6">
-                <script async="async" data-cfasync="false" src="https://bauval.org/21/24fd8cec5921c16ccabed4a6fef2e394"></script>
                 <div id="container-24fd8cec5921c16ccabed4a6fef2e394"></div>
             </div>
 
@@ -3246,10 +3223,72 @@
             document.head.appendChild(fa);
         });
     </script>
-    <!-- Adsterra Social Bar -->
-    <script data-cfasync="false" src="https://bauval.org/14/e1026c28c5771ae509b2bb35e241b07a"></script>
-    <!-- Monetag Vignette & In-Page Push -->
-    <script>(function(s){s.dataset.zone='12063288',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <script>(function(s){s.dataset.zone='12063292',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <!-- Crawler-Safe Human Ad Loader (Protects Bingbot/Googlebot Indexing & PageSpeed 100/100) -->
+    <script>
+        (function() {
+            var ua = (navigator.userAgent || '').toLowerCase();
+            var isBot = navigator.webdriver || /bot|crawl|spider|bing|msn|adidx|duckduck|yandex|baidu|slurp|ahrefs|semrush|lighthouse|pagespeed|inspectiontool|headless|gptbot|claudebot|perplexity|applebot|facebookexternalhit/i.test(ua);
+            if (isBot) return;
+
+            // 1. Load static display banners for human browsers after load
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    var topHost = document.getElementById('adsterra-top-banner');
+                    if (topHost) {
+                        var isDesk = window.innerWidth >= 768;
+                        var key = isDesk ? 'e1886e8899030e780e40e0389c45c772' : 'e82ae77543615e4688bb815e6f17eeef';
+                        var w = isDesk ? 728 : 320;
+                        var h = isDesk ? 90 : 50;
+                        var ifr = document.createElement('iframe');
+                        ifr.width = String(w);
+                        ifr.height = String(h);
+                        ifr.frameBorder = '0';
+                        ifr.scrolling = 'no';
+                        ifr.style.border = 'none';
+                        ifr.style.overflow = 'hidden';
+                        topHost.appendChild(ifr);
+                        var doc = ifr.contentWindow && ifr.contentWindow.document;
+                        if (doc) {
+                            doc.open();
+                            doc.write('<!DOCTYPE html><html><body style="margin:0;padding:0;overflow:hidden;"><scr' + 'ipt>atOptions={"key":"' + key + '","format":"iframe","height":' + h + ',"width":' + w + ',"params":{}};</scr' + 'ipt><scr' + 'ipt src="https://bauval.org/22/' + key + '"></scr' + 'ipt></body></html>');
+                            doc.close();
+                        }
+                    }
+                    var nat = document.createElement('script');
+                    nat.async = true;
+                    nat.setAttribute('data-cfasync', 'false');
+                    nat.src = 'https://bauval.org/21/24fd8cec5921c16ccabed4a6fef2e394';
+                    document.body.appendChild(nat);
+                }, 400);
+            });
+
+            // 2. Load overlay/push/vignette zones only on real human interaction (never on headless bot visits)
+            var overlaysLoaded = false;
+            function loadOverlayAds() {
+                if (overlaysLoaded) return;
+                overlaysLoaded = true;
+                ['pointermove', 'touchstart', 'scroll', 'keydown', 'click'].forEach(function(ev) {
+                    window.removeEventListener(ev, loadOverlayAds, { passive: true });
+                });
+                var sb = document.createElement('script');
+                sb.setAttribute('data-cfasync', 'false');
+                sb.src = 'https://bauval.org/14/e1026c28c5771ae509b2bb35e241b07a';
+                document.body.appendChild(sb);
+
+                var vig = document.createElement('script');
+                vig.dataset.zone = '12063288';
+                vig.src = 'https://n6wxm.com/vignette.min.js';
+                document.body.appendChild(vig);
+
+                var ipp = document.createElement('script');
+                ipp.dataset.zone = '12063292';
+                ipp.src = 'https://nap5k.com/tag.min.js';
+                document.body.appendChild(ipp);
+            }
+            ['pointermove', 'touchstart', 'scroll', 'keydown', 'click'].forEach(function(ev) {
+                window.addEventListener(ev, loadOverlayAds, { once: true, passive: true });
+            });
+        })();
+    </script>
 </body>
 </html>

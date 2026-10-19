@@ -320,14 +320,9 @@ async def trigger_indexnow():
         "urlList": url_list
     }
     data = json.dumps(payload).encode("utf-8")
-    # All non-Google search engines supporting IndexNow protocol (Bing/Yahoo/DuckDuckGo/Ecosia, Yandex, Seznam, Naver, Yep)
+    # Official unified IndexNow endpoint (automatically shares with Bing, Yandex, Seznam, Naver, Yep without duplicate spam pings)
     endpoints = [
-        "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow",
-        "https://yandex.com/indexnow",
-        "https://search.seznam.cz/indexnow",
-        "https://searchadvisor.naver.com/indexnow",
-        "https://indexnow.yep.com/indexnow"
+        "https://api.indexnow.org/indexnow"
     ]
     results = {}
     for ep in endpoints:
@@ -337,7 +332,7 @@ async def trigger_indexnow():
                 data=data,
                 headers={
                     "Content-Type": "application/json; charset=utf-8",
-                    "User-Agent": "YT4MP3-AutoIndexer/2.0 (+https://www.yt4mp3.com)"
+                    "User-Agent": "Mozilla/5.0 (compatible; YT4MP3-SitemapNotifier/1.0; +https://www.yt4mp3.com)"
                 }
             )
             with urllib.request.urlopen(req, timeout=6) as res:
@@ -348,8 +343,6 @@ async def trigger_indexnow():
             results[ep] = {"status": "error", "detail": str(e)}
     return {
         "submitted": True,
-        "schedule": "every_12_hours",
-        "excluded_engines": ["google"],
         "url_count": len(url_list),
         "results": results
     }

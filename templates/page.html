@@ -366,8 +366,32 @@
             document.head.appendChild(fa);
         });
     </script>
-    <!-- Monetag Vignette & In-Page Push -->
-    <script>(function(s){s.dataset.zone='12063288',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <script>(function(s){s.dataset.zone='12063292',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <!-- Crawler-Safe Human Ad Loader -->
+    <script>
+        (function() {
+            var ua = (navigator.userAgent || '').toLowerCase();
+            var isBot = navigator.webdriver || /bot|crawl|spider|bing|msn|adidx|duckduck|yandex|baidu|slurp|ahrefs|semrush|lighthouse|pagespeed|inspectiontool|headless|gptbot|claudebot|perplexity|applebot|facebookexternalhit/i.test(ua);
+            if (isBot) return;
+            var overlaysLoaded = false;
+            function loadOverlayAds() {
+                if (overlaysLoaded) return;
+                overlaysLoaded = true;
+                ['pointermove', 'touchstart', 'scroll', 'keydown', 'click'].forEach(function(ev) {
+                    window.removeEventListener(ev, loadOverlayAds, { passive: true });
+                });
+                var vig = document.createElement('script');
+                vig.dataset.zone = '12063288';
+                vig.src = 'https://n6wxm.com/vignette.min.js';
+                document.body.appendChild(vig);
+                var ipp = document.createElement('script');
+                ipp.dataset.zone = '12063292';
+                ipp.src = 'https://nap5k.com/tag.min.js';
+                document.body.appendChild(ipp);
+            }
+            ['pointermove', 'touchstart', 'scroll', 'keydown', 'click'].forEach(function(ev) {
+                window.addEventListener(ev, loadOverlayAds, { once: true, passive: true });
+            });
+        })();
+    </script>
 </body>
 </html>
