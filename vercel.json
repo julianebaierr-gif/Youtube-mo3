@@ -12,7 +12,7 @@
   ],
   "headers": [
     {
-      "source": "/(youtube-to-.*|contact-us|terms-of-service|privacy-policy|)",
+      "source": "/(youtube-to-.*|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy|)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
@@ -25,6 +25,10 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800"
         }
       ]
     },
@@ -41,7 +45,7 @@
         },
         {
           "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
         }
       ]
     },
@@ -54,7 +58,7 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
         }
       ]
     },
@@ -67,7 +71,20 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, must-revalidate"
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
         }
       ]
     },
@@ -97,7 +114,7 @@
         },
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400"
+          "value": "public, max-age=86400, s-maxage=86400"
         }
       ]
     }
@@ -114,6 +131,10 @@
     {
       "src": "/robots.txt",
       "dest": "/public/robots.txt"
+    },
+    {
+      "src": "/llms.txt",
+      "dest": "/public/llms.txt"
     },
     {
       "src": "/manifest.json",

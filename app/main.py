@@ -43,6 +43,9 @@ async def domain_redirect_middleware(request: Request, call_next):
 
 @app.middleware("http")
 async def add_security_headers(request: Request, call_next):
+    is_head = request.method == "HEAD"
+    if is_head and not request.url.path.startswith("/api/"):
+        request.scope["method"] = "GET"
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
@@ -56,6 +59,11 @@ async def add_security_headers(request: Request, call_next):
         "frame-src 'self' https: data: blob:; "
         "worker-src 'self' blob: https:;"
     )
+    if not request.url.path.startswith("/api/"):
+        if "vary" in response.headers:
+            del response.headers["vary"]
+    if is_head:
+        return Response(status_code=response.status_code, headers=dict(response.headers), media_type=response.media_type)
     return response
 
 if os.path.exists(STATIC_DIR):
@@ -75,48 +83,62 @@ from app.i18n import (
     get_language_switcher_links
 )
 
+_CONVERTER_HTML_CACHE: dict[tuple[str, str], str] = {}
+_LEGAL_HTML_CACHE: dict[str, str] = {}
+
+EDGE_HTML_HEADERS = {
+    "Cache-Control": "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800",
+    "CDN-Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+    "Vercel-CDN-Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+}
+
 def render_converter_page(request: Request, page_key: str, lang: str = "en"):
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Language not found")
     
-    seo_data = get_page_content(lang, page_key)
-    ui_strings = get_ui_strings(lang)
-    hreflangs = get_hreflang_links(page_key)
-    switcher = get_language_switcher_links(page_key, lang)
-    current_meta = SUPPORTED_LANGUAGES[lang]
+    cache_key = (lang, page_key)
+    html_str = _CONVERTER_HTML_CACHE.get(cache_key)
+    if html_str is None:
+        seo_data = get_page_content(lang, page_key)
+        ui_strings = get_ui_strings(lang)
+        hreflangs = get_hreflang_links(page_key)
+        switcher = get_language_switcher_links(page_key, lang)
+        current_meta = SUPPORTED_LANGUAGES[lang]
+        tmpl = templates.env.get_template("index.html")
+        html_str = tmpl.render(
+            request=request,
+            seo=seo_data,
+            t=ui_strings,
+            lang=lang,
+            lang_dir=current_meta.get("dir", "ltr"),
+            hreflangs=hreflangs,
+            switcher=switcher,
+            current_lang=current_meta,
+            supported_languages=SUPPORTED_LANGUAGES
+        )
+        _CONVERTER_HTML_CACHE[cache_key] = html_str
     
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={
-            "seo": seo_data,
-            "t": ui_strings,
-            "lang": lang,
-            "lang_dir": current_meta.get("dir", "ltr"),
-            "hreflangs": hreflangs,
-            "switcher": switcher,
-            "current_lang": current_meta,
-            "supported_languages": SUPPORTED_LANGUAGES
-        }
-    )
+    return HTMLResponse(content=html_str, headers=EDGE_HTML_HEADERS)
 
 def render_legal_page(request: Request, page_key: str):
-    ui_strings = get_ui_strings("en")
-    switcher = get_language_switcher_links("home", "en")
-    current_meta = SUPPORTED_LANGUAGES["en"]
-    return templates.TemplateResponse(
-        request=request,
-        name="page.html",
-        context={
-            "seo": LEGAL_PAGES[page_key],
-            "t": ui_strings,
-            "lang": "en",
-            "lang_dir": "ltr",
-            "switcher": switcher,
-            "current_lang": current_meta,
-            "supported_languages": SUPPORTED_LANGUAGES
-        }
-    )
+    html_str = _LEGAL_HTML_CACHE.get(page_key)
+    if html_str is None:
+        ui_strings = get_ui_strings("en")
+        switcher = get_language_switcher_links("home", "en")
+        current_meta = SUPPORTED_LANGUAGES["en"]
+        tmpl = templates.env.get_template("page.html")
+        html_str = tmpl.render(
+            request=request,
+            seo=LEGAL_PAGES[page_key],
+            t=ui_strings,
+            lang="en",
+            lang_dir="ltr",
+            switcher=switcher,
+            current_lang=current_meta,
+            supported_languages=SUPPORTED_LANGUAGES
+        )
+        _LEGAL_HTML_CACHE[page_key] = html_str
+    return HTMLResponse(content=html_str, headers=EDGE_HTML_HEADERS)
 
 # Root English Routes
 @app.get("/", response_class=HTMLResponse)
@@ -173,7 +195,7 @@ async def manifest_endpoint():
     manifest_file = os.path.join(BASE_DIR, "public", "manifest.json")
     if os.path.exists(manifest_file):
         with open(manifest_file, "r", encoding="utf-8") as f:
-            return Response(content=f.read(), media_type="application/manifest+json; charset=utf-8")
+            return Response(content=f.read(), media_type="application/manifest+json; charset=utf-8", headers=EDGE_HTML_HEADERS)
     raise HTTPException(status_code=404, detail="Manifest not found")
 
 @app.get("/sw.js")
@@ -192,12 +214,16 @@ async def ads_txt():
     if os.path.exists(ads_file):
         with open(ads_file, "r", encoding="utf-8") as f:
             content = f.read()
-        return Response(content=content, media_type="text/plain; charset=utf-8")
+        return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
     content = "google.com, pub-2350272227833258, DIRECT, f08c47fec0942fa0\n"
-    return Response(content=content, media_type="text/plain; charset=utf-8")
+    return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
-@app.api_route("/robots.txt", methods=["GET", "HEAD"], response_class=HTMLResponse)
+@app.api_route("/robots.txt", methods=["GET", "HEAD"])
 async def robots_txt():
+    robots_file = os.path.join(BASE_DIR, "public", "robots.txt")
+    if os.path.exists(robots_file):
+        with open(robots_file, "r", encoding="utf-8") as f:
+            return Response(content=f.read(), media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
     content = """User-agent: *
 Allow: /
 Disallow: /?s=
@@ -206,7 +232,7 @@ Disallow: /*?*q=
 Disallow: /*?*ref=
 Sitemap: https://www.yt4mp3.com/sitemap.xml
 """
-    return Response(content=content, media_type="text/plain; charset=utf-8")
+    return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
 @app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
 async def sitemap_xml():
@@ -214,11 +240,15 @@ async def sitemap_xml():
     if os.path.exists(sitemap_file):
         with open(sitemap_file, "r", encoding="utf-8") as f:
             content = f.read()
-        return Response(content=content, media_type="application/xml; charset=utf-8")
+        return Response(content=content, media_type="application/xml; charset=utf-8", headers=EDGE_HTML_HEADERS)
     raise HTTPException(status_code=404, detail="Sitemap not found")
 
 @app.api_route("/llms.txt", methods=["GET", "HEAD"])
 async def llms_txt():
+    llms_file = os.path.join(BASE_DIR, "public", "llms.txt")
+    if os.path.exists(llms_file):
+        with open(llms_file, "r", encoding="utf-8") as f:
+            return Response(content=f.read(), media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
     content = """# YT4MP3
 > Free Online YouTube to MP3 and MP4 Converter
 
@@ -234,15 +264,16 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 - [Home](https://www.yt4mp3.com/): Free Online YouTube to MP3 and MP4 Converter.
 - [YouTube to MP3 Converter](https://www.yt4mp3.com/youtube-to-mp3): Convert YouTube videos and music into high quality 320kbps MP3 audio files.
 - [YouTube to MP4 Converter](https://www.yt4mp3.com/youtube-to-mp4): Download YouTube videos in 1080p, 720p, and 4K MP4 format.
-- [Contact Us](https://www.yt4mp3.com/contact-us): Get in touch with our team for questions, feedback, or DMCA inquiries.
+- [YouTube Shorts Downloader](https://www.yt4mp3.com/youtube-shorts-downloader): Download YouTube Shorts videos in HD MP4 or convert Shorts to MP3.
+- [Contact Us](https://www.yt4mp3.com/contact-us): Official support and DMCA contact (contact.yt4mp3@gmail.com).
 - [Terms of Service](https://www.yt4mp3.com/terms-of-service): Terms governing the personal and fair use of the converter tool.
 - [Privacy Policy](https://www.yt4mp3.com/privacy-policy): Privacy practices and data handling information.
 """
-    return Response(content=content, media_type="text/plain; charset=utf-8")
+    return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
 @app.get("/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt")
 async def indexnow_key():
-    return Response(content="8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b", media_type="text/plain; charset=utf-8")
+    return Response(content="8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b", media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
 def get_all_sitemap_urls() -> list:
     sitemap_file = os.path.join(BASE_DIR, "public", "sitemap.xml")
