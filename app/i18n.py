@@ -12,7 +12,7 @@ Google International SEO Compliant:
 from typing import Dict, List, Any
 from app.seo_content import SEO_PAGES
 from app.locales import (
-    es, id, pt, fr, de, tr, it, ru, vi, ja, ko, ar, hi
+    es, id, pt, fr, de, tr, it, ru, vi, ja, ko, ar, hi, my
 )
 
 SUPPORTED_LANGUAGES: Dict[str, Dict[str, str]] = {
@@ -30,6 +30,7 @@ SUPPORTED_LANGUAGES: Dict[str, Dict[str, str]] = {
     'ko': {'code': 'ko', 'dir': 'ltr', 'flag': '🇰🇷', 'name': 'Korean', 'native': '한국어'},
     'ar': {'code': 'ar', 'dir': 'rtl', 'flag': '🇸🇦', 'name': 'Arabic', 'native': 'العربية'},
     'hi': {'code': 'hi', 'dir': 'ltr', 'flag': '🇮🇳', 'name': 'Hindi', 'native': 'हिन्दी'},
+    'my': {'code': 'my', 'dir': 'ltr', 'flag': '🇲🇲', 'name': 'Burmese', 'native': 'မြန်မာစာ'},
 }
 
 ENGLISH_UI: Dict[str, str] = {
@@ -135,6 +136,7 @@ I18N_UI: Dict[str, Dict[str, str]] = {
     'ko': ko.UI,
     'ar': ar.UI,
     'hi': hi.UI,
+    'my': my.UI,
 }
 
 I18N_PAGES: Dict[str, Dict[str, Any]] = {
@@ -151,6 +153,7 @@ I18N_PAGES: Dict[str, Dict[str, Any]] = {
     'ko': ko.PAGES,
     'ar': ar.PAGES,
     'hi': hi.PAGES,
+    'my': my.PAGES,
 }
 
 
@@ -479,6 +482,31 @@ SHORTCUT_AND_PWA_TRANSLATIONS: Dict[str, Dict[str, str]] = {
         'pwa_ios_btn': 'समझ गया!',
         'system_update_badge': 'समस्या हल:',
         'system_update_note': 'MP3 और 4K MP4 डाउनलोड की सभी समस्याएं 100% ठीक कर दी गई हैं — अब तेज़ और बिना किसी एरर के डाउनलोड करें!'
+    },
+    'my': {
+        'shortcut_title': 'URL Shortcut Trick: လင့်ခ်မကူးဘဲ တိုက်ရိုက်ဒေါင်းနည်း',
+        'shortcut_badge': 'Copy-Paste လုပ်စရာမလို',
+        'shortcut_guide_prefix': 'YouTube ဗီဒီယိုကြည့်နေစဉ် Browser လိပ်စာဘားရှိ',
+        'shortcut_guide_suffix': 'နေရာတွင်',
+        'shortcut_guide_end': 'ဟု အစားထိုးရိုက်ထည့်ပြီး Enter နှိပ်လိုက်ပါ:',
+        'shortcut_before': 'မပြောင်းမီ:',
+        'shortcut_after': 'ပြောင်းပြီးနောက်:',
+        'shortcut_test_btn': 'စမ်းသပ်ကြည့်မည်',
+        'shortcut_shorts_note': 'YouTube Shorts တွင်လည်း အလုပ်လုပ်ပါသည်:',
+        'shortcut_instant_note': 'တိုက်ရိုက် အလိုအလျောက် ဒေါင်းလုဒ်စတင်ပါမည်!',
+        'pwa_install_btn': 'App သွင်းမည်',
+        'pwa_install_short': 'App',
+        'pwa_banner_title': 'YT4MP3 App ကို ဖုန်းထဲထည့်ပါ',
+        'pwa_banner_desc': 'Home Screen မှ ၁-ချက်နှိပ် YouTube Downloader',
+        'pwa_banner_install': 'ထည့်သွင်းမည်',
+        'pwa_ios_title': 'iPhone တွင် YT4MP3 ထည့်သွင်းနည်း',
+        'pwa_ios_desc': '၁-ချက်နှိပ် အမြန်ဒေါင်းရန် Home Screen သို့ ထည့်ပါ:',
+        'pwa_ios_step1': 'Safari အောက်ခြေဘားရှိ မျှဝေမည် (Share) ကို နှိပ်ပါ။',
+        'pwa_ios_step2': "'Add to Home Screen' ကို အောက်သို့ဆွဲချ၍ ရွေးပါ။",
+        'pwa_ios_step3': "ညာဘက်ထိပ်ရှိ 'Add' ကို နှိပ်ပါ။ ပြီးပါပြီ!",
+        'pwa_ios_btn': 'နားလည်ပါပြီ!',
+        'system_update_badge': 'ပြုပြင်ပြီးစီး:',
+        'system_update_note': 'MP3 နှင့် 4K MP4 ဒေါင်းလုဒ် ပြဿနာအားလုံးကို ၁၀၀% ဖြေရှင်းပြီးပါပြီ — မြန်ဆန်၍ အမှားအယွင်းကင်းစွာ ဒေါင်းလုဒ်ဆွဲလိုက်ပါ!'
     }
 }
 
@@ -496,6 +524,7 @@ I18N_KEYWORDS: Dict[str, Dict[str, Any]] = {
     'ko': ko.KEYWORDS_RESEARCH,
     'ar': ar.KEYWORDS_RESEARCH,
     'hi': hi.KEYWORDS_RESEARCH,
+    'my': my.KEYWORDS_RESEARCH,
 }
 
 def get_supported_languages() -> Dict[str, Dict[str, str]]:
