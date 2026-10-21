@@ -322,7 +322,8 @@ async def trigger_indexnow():
     data = json.dumps(payload).encode("utf-8")
     # Official unified IndexNow endpoint (automatically shares with Bing, Yandex, Seznam, Naver, Yep without duplicate spam pings)
     endpoints = [
-        "https://api.indexnow.org/indexnow"
+        "https://api.indexnow.org/indexnow",
+        "https://www.bing.com/indexnow"
     ]
     results = {}
     for ep in endpoints:
