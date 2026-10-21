@@ -234,16 +234,42 @@ Sitemap: https://www.yt4mp3.com/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
-@app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
-async def sitemap_xml():
+_SITEMAP_CACHE_XML = None
+
+def get_authoritative_sitemap_xml() -> str:
+    global _SITEMAP_CACHE_XML
+    if _SITEMAP_CACHE_XML:
+        return _SITEMAP_CACHE_XML
     sitemap_file = os.path.join(BASE_DIR, "public", "sitemap.xml")
     if os.path.exists(sitemap_file):
-        with open(sitemap_file, "r", encoding="utf-8") as f:
-            content = f.read()
-        sitemap_headers = dict(EDGE_HTML_HEADERS)
-        sitemap_headers["Content-Disposition"] = 'inline; filename="sitemap.xml"'
-        return Response(content=content, media_type="application/xml; charset=utf-8", headers=sitemap_headers)
-    raise HTTPException(status_code=404, detail="Sitemap not found")
+        try:
+            with open(sitemap_file, "r", encoding="utf-8") as f:
+                content = f.read()
+                if content and "<urlset" in content:
+                    _SITEMAP_CACHE_XML = content
+                    return _SITEMAP_CACHE_XML
+        except Exception:
+            pass
+    # Dynamic fallback: build sitemap from all 63 authoritative canonical URLs
+    urls = get_all_sitemap_urls()
+    items = []
+    for u in urls:
+        priority = "1.0" if u == "https://www.yt4mp3.com/" or u.endswith("/") else "0.8"
+        items.append(f"""  <url>
+    <loc>{u}</loc>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>{priority}</priority>
+  </url>""")
+    _SITEMAP_CACHE_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(items) + "\n</urlset>"
+    return _SITEMAP_CACHE_XML
+
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
+async def sitemap_xml():
+    xml_content = get_authoritative_sitemap_xml()
+    sitemap_headers = dict(EDGE_HTML_HEADERS)
+    sitemap_headers["Content-Disposition"] = 'inline; filename="sitemap.xml"'
+    return Response(content=xml_content, media_type="application/xml; charset=utf-8", headers=sitemap_headers)
 
 # Redirect any alternate/legacy sitemap endpoints to the single authoritative sitemap
 @app.api_route("/sitemap_index.xml", methods=["GET", "HEAD"])
