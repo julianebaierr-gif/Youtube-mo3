@@ -240,8 +240,21 @@ async def sitemap_xml():
     if os.path.exists(sitemap_file):
         with open(sitemap_file, "r", encoding="utf-8") as f:
             content = f.read()
-        return Response(content=content, media_type="application/xml; charset=utf-8", headers=EDGE_HTML_HEADERS)
+        sitemap_headers = dict(EDGE_HTML_HEADERS)
+        sitemap_headers["Content-Disposition"] = 'inline; filename="sitemap.xml"'
+        return Response(content=content, media_type="application/xml; charset=utf-8", headers=sitemap_headers)
     raise HTTPException(status_code=404, detail="Sitemap not found")
+
+# Redirect any alternate/legacy sitemap endpoints to the single authoritative sitemap
+@app.api_route("/sitemap_index.xml", methods=["GET", "HEAD"])
+@app.api_route("/sitemap-index.xml", methods=["GET", "HEAD"])
+@app.api_route("/sitemaps.xml", methods=["GET", "HEAD"])
+@app.api_route("/sitemap1.xml", methods=["GET", "HEAD"])
+@app.api_route("/sitemap.xml.gz", methods=["GET", "HEAD"])
+@app.api_route("/sitemap", methods=["GET", "HEAD"])
+@app.api_route("/sitemap/", methods=["GET", "HEAD"])
+async def redirect_duplicate_sitemaps():
+    return RedirectResponse(url="https://www.yt4mp3.com/sitemap.xml", status_code=301)
 
 @app.api_route("/llms.txt", methods=["GET", "HEAD"])
 async def llms_txt():
