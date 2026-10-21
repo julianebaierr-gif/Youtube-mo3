@@ -117,12 +117,50 @@
           "@id": "https://www.yt4mp3.com/#organization",
           "name": "YT4MP3",
           "url": "https://www.yt4mp3.com/",
+          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
+          "email": "contact.yt4mp3@gmail.com",
           "logo": {
             "@type": "ImageObject",
             "url": "https://www.yt4mp3.com/static/icon-512.png",
             "width": 512,
             "height": 512
-          }
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "contactType": "Customer Support",
+              "email": "contact.yt4mp3@gmail.com",
+              "url": "https://www.yt4mp3.com/contact-us"
+            }
+          ]
+        },
+        {
+          "@type": "Article",
+          "@id": "{{ seo.canonical_url }}#article",
+          "headline": {{ seo.title | tojson }},
+          "description": {{ seo.meta_desc | tojson }},
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ seo.canonical_url }}"
+          },
+          "image": "https://www.yt4mp3.com/static/og-image.png",
+          "author": {
+            "@type": "Organization",
+            "@id": "https://www.yt4mp3.com/#organization",
+            "name": "YT4MP3"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://www.yt4mp3.com/#organization",
+            "name": "YT4MP3",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.yt4mp3.com/static/icon-512.png"
+            }
+          },
+          "datePublished": "2026-01-01T00:00:00+00:00",
+          "dateModified": "2026-10-21T00:00:00+00:00",
+          "inLanguage": "{{ lang }}"
         },
         {
           "@type": "BreadcrumbList",
