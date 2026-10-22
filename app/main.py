@@ -493,6 +493,11 @@ async def report_issue(request: Request):
         user_agent = request.headers.get("user-agent", "Unknown")
         client_ip = request.headers.get("x-forwarded-for", request.client.host if request.client else "Unknown")
         
+        # Ignore malformed or fake URLs (e.g. "www.youtube", empty, or non-YouTube inputs)
+        has_valid_id = bool(re.search(r"(?:v=|\/shorts\/|\/live\/|\/)([a-zA-Z0-9_-]{11})(?:[?&#/\s]|$)", video_url))
+        if not has_valid_id or "www.youtube" in video_url.lower() and not re.search(r"v=[a-zA-Z0-9_-]{11}", video_url):
+            return {"success": False, "ignored": True, "reason": "invalid_url_input"}
+
         # Log incident for analytics
         print(f"[CONVERSION_ISSUE_REPORT] URL: {video_url} | Title: {video_title} | Format: {selected_format} | Error: {error_detail} | IP: {client_ip}")
         
@@ -508,14 +513,19 @@ async def report_issue(request: Request):
                 safe_err = html_lib.escape(error_detail)
                 safe_ip = html_lib.escape(client_ip)
 
+                is_expected_restr = any(k in error_detail for k in ["Broadcaster Protection", "Live Stream", "Private Video", "Age-Restricted", "Video Too Long", "Membership Required"])
+                header_badge = "ℹ️ <b>[Broadcaster DRM / Restricted]</b>" if is_expected_restr else "🚨 <b>YT4MP3 Conversion Alert</b>"
+
                 alert_text = (
-                    "🚨 <b>YT4MP3 Conversion Alert</b>\n\n"
+                    f"{header_badge}\n\n"
                     f"🎬 <b>Video:</b> {safe_title}\n"
                     f"🔗 <b>Link:</b> {safe_url}\n"
                     f"🎛 <b>Format:</b> {safe_fmt}\n"
-                    f"⚠️ <b>Error:</b> {safe_err}\n"
+                    f"⚠️ <b>Status:</b> {safe_err}\n"
                     f"🌐 <b>User IP:</b> <code>{safe_ip}</code>"
                 )
+                if is_expected_restr:
+                    alert_text += "\n💡 <i>Handled gracefully by Broadcaster DRM Shield.</i>"
                 tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
                 tg_payload = json.dumps({
                     "chat_id": tg_chat_id,

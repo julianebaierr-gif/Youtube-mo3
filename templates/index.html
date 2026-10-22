@@ -1727,8 +1727,21 @@
             }
 
             function getSpecificVideoRestriction(rawErr) {
-                if (!rawErr || typeof rawErr !== 'string') return null;
-                const low = rawErr.toLowerCase();
+                const low = (rawErr || '').toString().toLowerCase();
+                const uploaderLow = (window.currentMediaData && window.currentMediaData.uploader ? window.currentMediaData.uploader : (typeof currentMediaData !== 'undefined' && currentMediaData && currentMediaData.uploader ? currentMediaData.uploader : '')).toLowerCase();
+                const titleLow = (window.currentMediaData && window.currentMediaData.title ? window.currentMediaData.title : (typeof currentMediaData !== 'undefined' && currentMediaData && currentMediaData.title ? currentMediaData.title : '')).toLowerCase();
+                const durLow = (window.currentMediaData && window.currentMediaData.duration ? String(window.currentMediaData.duration) : (typeof currentMediaData !== 'undefined' && currentMediaData && currentMediaData.duration ? String(currentMediaData.duration) : '')).toLowerCase();
+
+                // 1. Official Sports Broadcaster DRM & Rights Protection (CANAL+, beIN SPORTS, UEFA, FIFA, etc.)
+                const sportsKeywords = ['canal+', 'bein sports', 'uefa', 'fifa', 'champions league', 'premier league', 'laliga', 'serie a', 'bundesliga', 'espn', 'sky sports', 'tnt sports', 'dazn', 'sony liv', 'star sports', 'formula 1', 'f1', 'motogp', 'wwe', 'ufc', 'nba', 'nfl'];
+                const isSportsBroadcaster = sportsKeywords.some(k => uploaderLow.includes(k) || titleLow.includes(k));
+                if (isSportsBroadcaster && (low.includes('fetch.error') || low.includes('unavailable') || low.includes('blocked') || low.includes('copyright') || low.includes('drm') || low.includes('not available') || low.includes('fail') || low === '')) {
+                    return {
+                        fatal: true,
+                        message: "🔒 Official Broadcaster Protection: This video is an official sports/TV broadcast protected by broadcaster DRM and cannot be converted. Please try any standard YouTube video, music track, or podcast!"
+                    };
+                }
+
                 if (low.includes('membership') || low.includes('members only') || low.includes('members-only')) {
                     return {
                         fatal: true,
@@ -1741,33 +1754,33 @@
                         message: "🔒 Private Video: This YouTube video is set to Private by the uploader and cannot be downloaded."
                     };
                 }
-                if (low.includes('age') || low.includes('sign in to confirm') || low.includes('inappropriate for some users')) {
+                if (low.includes('age') || low.includes('sign in to confirm') || low.includes('inappropriate for some users') || low.includes('age-restricted') || low.includes('confirm your age')) {
                     return {
-                        fatal: false,
-                        message: "🔞 Age-Restricted Video: This video is age-restricted by YouTube and requires account sign-in, so it cannot be converted publicly."
+                        fatal: true,
+                        message: "🔞 Age-Restricted Video: This video is age-restricted by YouTube and requires account sign-in, so it cannot be converted publicly. Please try any standard video."
                     };
                 }
                 if (low.includes('copyright') || low.includes('drm') || low.includes('blocked in your country') || low.includes('not available in your country')) {
                     return {
-                        fatal: false,
+                        fatal: true,
                         message: "⚠️ Copyright / Region Restricted: This video is blocked by YouTube copyright or regional restrictions and cannot be downloaded."
                     };
                 }
-                if (low.includes('live stream') || low.includes('premiere') || low.includes('upcoming')) {
+                if (durLow.includes('live') || low.includes('live stream') || low.includes('premiere') || low.includes('upcoming')) {
                     return {
-                        fatal: false,
-                        message: "📡 Live Stream / Premiere: Active live streams or upcoming premieres cannot be downloaded until the broadcast finishes."
+                        fatal: true,
+                        message: "📡 Live Stream in Progress: Active live streams cannot be downloaded until the broadcast finishes and is saved on YouTube."
                     };
                 }
                 if (low.includes('video unavailable') || low.includes('has been removed') || low.includes('deleted') || low.includes('does not exist')) {
                     return {
-                        fatal: false,
+                        fatal: true,
                         message: "❌ Video Unavailable: This video has been removed, deleted, or made unavailable on YouTube."
                     };
                 }
                 if (low.includes('3 hours') || low.includes('duration limit') || low.includes('exceeds the duration')) {
                     return {
-                        fatal: false,
+                        fatal: true,
                         message: "⏱ Video Too Long: Online conversion supports videos up to 3 hours. This video is longer than 3 hours, so it cannot be converted. Please try a shorter video."
                     };
                 }
@@ -1920,6 +1933,7 @@
             }
 
             urlInput.addEventListener('input', (e) => {
+                urlInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/20');
                 const val = e.target.value;
                 updatePlatformIndicator(val);
                 const ytId = extractYouTubeId(val);
@@ -2001,12 +2015,12 @@
                 if (!url) return null;
                 const clean = url.trim();
                 if (/^[a-zA-Z0-9_-]{11}$/.test(clean)) return clean;
-                const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
+                const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts|live)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[?&#/\s]|$)/i;
                 const match = clean.match(regExp);
-                if (match && match[1]) return match[1];
-                const vMatch = clean.match(/[?&]v=([a-zA-Z0-9_-]{11})/i);
+                if (match && match[1] && /^[a-zA-Z0-9_-]{11}$/.test(match[1])) return match[1];
+                const vMatch = clean.match(/[?&]v=([a-zA-Z0-9_-]{11})(?:[?&#/\s]|$)/i);
                 if (vMatch && vMatch[1]) return vMatch[1];
-                const beMatch = clean.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/i);
+                const beMatch = clean.match(/youtu\.be\/([a-zA-Z0-9_-]{11})(?:[?&#/\s]|$)/i);
                 if (beMatch && beMatch[1]) return beMatch[1];
                 return null;
             }
@@ -2039,15 +2053,20 @@
             async function startConversion() {
                 const url = urlInput.value.trim();
                 if (!url) {
-                    showError("Please paste a valid YouTube video link.");
+                    showError("⚠️ Please paste a valid YouTube video link.");
+                    urlInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/20');
+                    urlInput.focus();
                     return;
                 }
 
                 const ytId = extractYouTubeId(url);
                 if (!ytId) {
-                    showError("Invalid YouTube URL. Please copy and paste a direct YouTube video or Shorts link.");
+                    showError("⚠️ Please paste a complete YouTube video link (e.g. https://www.youtube.com/watch?v=... or youtu.be/...)");
+                    urlInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-500/20');
+                    urlInput.focus();
                     return;
                 }
+                urlInput.classList.remove('border-rose-500', 'ring-2', 'ring-rose-500/20');
 
                 hideResults();
                 loadingCard.classList.remove('hidden');
@@ -2573,7 +2592,16 @@
                     modalActionContainer.classList.add('hidden');
 
                     const errActions = document.getElementById('modal-error-actions');
+                    const retryBtn = document.getElementById('modal-retry-btn');
                     if (errActions) errActions.classList.remove('hidden');
+                    const isFatalRestr = msg && (msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long'));
+                    if (retryBtn) {
+                        if (isFatalRestr) {
+                            retryBtn.classList.add('hidden');
+                        } else {
+                            retryBtn.classList.remove('hidden');
+                        }
+                    }
 
                     // Auto-report failure immediately to Admin Telegram in background (once per video ID per session)
                     try {
@@ -3048,16 +3076,19 @@
 
                     // 1. Check query parameters: ?v=..., ?url=..., ?link=..., ?q=...
                     if (searchParams.has('v')) {
-                        const vid = searchParams.get('v');
-                        if (vid && vid.length >= 11) {
+                        const vid = (searchParams.get('v') || '').trim();
+                        if (/^[a-zA-Z0-9_-]{11}$/.test(vid)) {
                             detectedUrl = `https://www.youtube.com/watch?v=${vid}`;
                         }
                     } else if (searchParams.has('url')) {
-                        detectedUrl = searchParams.get('url');
+                        const candidate = (searchParams.get('url') || '').trim();
+                        if (extractYouTubeId(candidate)) detectedUrl = candidate;
                     } else if (searchParams.has('link')) {
-                        detectedUrl = searchParams.get('link');
+                        const candidate = (searchParams.get('link') || '').trim();
+                        if (extractYouTubeId(candidate)) detectedUrl = candidate;
                     } else if (searchParams.has('q')) {
-                        detectedUrl = searchParams.get('q');
+                        const candidate = (searchParams.get('q') || '').trim();
+                        if (extractYouTubeId(candidate)) detectedUrl = candidate;
                     }
 
                     // 2. Check pathname patterns if not found in query params
