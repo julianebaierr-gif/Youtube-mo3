@@ -4,7 +4,7 @@ import urllib.parse
 import json
 import re
 from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
@@ -750,6 +750,174 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         return {"success": False, "error": str(detail)}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+
+# ==============================================================================
+# DATAIMPULSE RESIDENTIAL PROXY STREAMING SYSTEM (GEO-BLOCKED / REGION-LOCKED)
+# ==============================================================================
+DATAIMPULSE_USER = os.environ.get("DATAIMPULSE_USER") or "ec64aa02fac86dc58f59"
+DATAIMPULSE_PASS = os.environ.get("DATAIMPULSE_PASS") or "b0ec68a6ff8231c0"
+DATAIMPULSE_HOST = os.environ.get("DATAIMPULSE_HOST") or "gw.dataimpulse.com"
+DATAIMPULSE_PORT = os.environ.get("DATAIMPULSE_PORT") or "823"
+
+def detect_video_allowed_countries(vid: str) -> list:
+    yt_url = f"https://www.youtube.com/watch?v={vid}"
+    req = urllib.request.Request(
+        yt_url,
+        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"}
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as r:
+            html = r.read().decode("utf-8", "ignore")
+        m = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
+        if m:
+            return json.loads(m.group(1))
+    except Exception as e:
+        print("Country detection error:", e)
+    return []
+
+@app.get("/api/geo-stream")
+async def geo_stream(url: str = "", format: str = "mp3"):
+    clean_url = (url or "").strip()
+    vid = None
+    m = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", clean_url)
+    if m:
+        vid = m.group(1)
+    elif len(clean_url) == 11 and re.match(r"^[a-zA-Z0-9_-]{11}$", clean_url):
+        vid = clean_url
+
+    if not vid or len(vid) != 11:
+        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+
+    # Detect allowed country
+    allowed = detect_video_allowed_countries(vid)
+    priority_fast_countries = ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR"]
+    target_country = None
+    if allowed:
+        for pc in priority_fast_countries:
+            if pc in allowed:
+                target_country = pc.lower()
+                break
+        if not target_country:
+            target_country = str(allowed[0]).lower()
+
+    if target_country:
+        proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country}"
+    else:
+        proxy_user = DATAIMPULSE_USER
+
+    proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
+
+    fmt_clean = (format or "mp3").lower().strip()
+    is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio"]
+    if is_audio:
+        fmt_selector = "bestaudio/140/b/best"
+        ext_to_save = "mp3"
+        content_type = "audio/mpeg"
+    else:
+        q_num = re.sub(r"[^0-9]", "", fmt_clean) or "720"
+        if int(q_num) <= 360:
+            fmt_selector = "18/best[height<=360][ext=mp4]/b/best"
+        elif int(q_num) <= 720:
+            fmt_selector = "22/18/best[height<=720][ext=mp4]/b/best"
+        else:
+            fmt_selector = "best[height<=1080][ext=mp4]/22/18/b/best"
+        ext_to_save = "mp4"
+        content_type = "video/mp4"
+
+    try:
+        import yt_dlp
+        ydl_opts = {
+            "proxy": proxy_url,
+            "quiet": True,
+            "no_warnings": True,
+            "format": fmt_selector,
+            "noplaylist": True,
+            "extract_flat": False,
+            "socket_timeout": 20,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android", "mweb"]
+                }
+            }
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
+            stream_url = info.get("url")
+            raw_title = info.get("title") or f"YT4MP3_{vid}"
+
+        if not stream_url:
+            raise HTTPException(status_code=502, detail="Stream URL could not be extracted.")
+
+        safe_title = re.sub(r'[\\/*?:"<>|]', "", raw_title).strip()
+        safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
+        filename = f"{safe_title}.{ext_to_save}"
+
+        proxy_handler = urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url})
+        opener = urllib.request.build_opener(proxy_handler)
+        req = urllib.request.Request(
+            stream_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Accept": "*/*",
+                "Connection": "keep-alive",
+            }
+        )
+        upstream_res = opener.open(req, timeout=30)
+        content_len = upstream_res.headers.get("Content-Length")
+
+        # Telegram notification of successful unlock
+        try:
+            tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+            tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "-1003463852033"
+            if tg_token and tg_chat_id:
+                alert_text = (
+                    f"🌍 <b>Residential Proxy Stream:</b>\n"
+                    f"Unlocked <code>{vid}</code> via {target_country.upper() if target_country else 'GLOBAL'} ({fmt_clean.upper()})\n"
+                    f"Title: {safe_title}"
+                )
+                payload = json.dumps({
+                    "chat_id": tg_chat_id,
+                    "text": alert_text,
+                    "parse_mode": "HTML",
+                    "disable_web_page_preview": True,
+                }).encode("utf-8")
+                tg_req = urllib.request.Request(
+                    f"https://api.telegram.org/bot{tg_token}/sendMessage",
+                    data=payload,
+                    headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+                )
+                urllib.request.urlopen(tg_req, timeout=3).read()
+        except Exception:
+            pass
+
+        def stream_chunks():
+            try:
+                while True:
+                    chunk = upstream_res.read(128 * 1024)
+                    if not chunk:
+                        break
+                    yield chunk
+            finally:
+                try:
+                    upstream_res.close()
+                except Exception:
+                    pass
+
+        resp_headers = {
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Accept-Ranges": "bytes",
+        }
+        if content_len:
+            resp_headers["Content-Length"] = str(content_len)
+
+        return StreamingResponse(stream_chunks(), media_type=content_type, headers=resp_headers)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Geo-proxy stream error: {str(e)}")
 
 
 _VIDEO_RES_CACHE = {}
