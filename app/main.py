@@ -826,26 +826,32 @@ async def geo_stream(url: str = "", format: str = "mp3"):
 
     fmt_clean = (format or "mp3").lower().strip()
     is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
-    ext_to_save = "mp3" if is_audio else "mp4"
-    content_type = "audio/mpeg" if is_audio else "video/mp4"
+    default_ext = "m4a" if fmt_clean in ["m4a", "aac"] else ("mp3" if is_audio else "mp4")
 
     # 1. Zero-Bandwidth Cache Check: If file was already streamed, serve from /tmp with 0 MB proxy usage!
     import tempfile
-    cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}.mp4")
-    meta_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}.meta")
+    cache_type = "audio" if is_audio else "video"
+    cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.dat")
+    meta_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.meta")
 
     if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
         saved_title = f"YT4MP3_{vid}"
+        saved_ext = default_ext
         if os.path.exists(meta_path):
             try:
                 with open(meta_path, "r", encoding="utf-8") as mf:
-                    saved_title = mf.read().strip()
+                    meta_lines = mf.read().splitlines()
+                    if meta_lines:
+                        saved_title = meta_lines[0].strip()
+                    if len(meta_lines) > 1 and meta_lines[1].strip():
+                        saved_ext = meta_lines[1].strip()
             except Exception:
                 pass
         safe_title = re.sub(r'[\\/*?:"<>|]', "", saved_title).strip()
         safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
-        filename = f"{safe_title}.{ext_to_save}"
+        filename = f"{safe_title}.{saved_ext}"
         file_size = os.path.getsize(cache_path)
+        content_type = "audio/mp4" if saved_ext == "m4a" else ("audio/mpeg" if saved_ext == "mp3" else "video/mp4")
 
         def iter_cached_file():
             with open(cache_path, "rb") as cf:
@@ -864,9 +870,9 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         }
         return StreamingResponse(iter_cached_file(), media_type=content_type, headers=resp_headers)
 
-    # For geo-blocked & age-restricted streams, strictly use compact progressive stream (format 18 / 360p, ~4-6 MB total)
-    # This prevents users from accidentally downloading 100 MB 1080p files that burn proxy quota!
-    fmt_selector = "18/b/best"
+    # Audio format selector: prefer lightweight pure AAC audio (140/ba, ~20MB) to conserve proxy bandwidth;
+    # Video format selector: progressive video stream (18/22/b, ~360p-720p).
+    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/best"
 
     try:
         import yt_dlp
@@ -895,40 +901,66 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                     cookie_file = c_path
                     break
 
-        ydl_opts = {
-            "proxy": proxy_url,
-            "quiet": True,
-            "no_warnings": True,
-            "format": fmt_selector,
-            "noplaylist": True,
-            "extract_flat": False,
-            "socket_timeout": 20,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["android"]
-                }
+        info = None
+        stream_url = None
+        raw_title = f"YT4MP3_{vid}"
+        actual_ext = default_ext
+        last_extract_err = None
+
+        # Two-attempt smart rotation: Attempt 1 uses clean residential session, Attempt 2 adds android client fallback
+        for attempt in range(2):
+            cur_sess = uuid.uuid4().hex[:8]
+            if target_country:
+                proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country};sessid.{cur_sess};sessttl.10"
+            else:
+                proxy_user = f"{DATAIMPULSE_USER}__sessid.{cur_sess};sessttl.10"
+            proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
+
+            ydl_opts = {
+                "proxy": proxy_url,
+                "quiet": True,
+                "no_warnings": True,
+                "format": fmt_selector if attempt == 0 else "18/b/best",
+                "noplaylist": True,
+                "extract_flat": False,
+                "socket_timeout": 15,
             }
-        }
-        if cookie_file:
-            ydl_opts["cookiefile"] = cookie_file
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
-            stream_url = info.get("url")
-            raw_title = info.get("title") or f"YT4MP3_{vid}"
+            if attempt == 1:
+                ydl_opts["extractor_args"] = {"youtube": {"player_client": ["android"]}}
+            if cookie_file:
+                ydl_opts["cookiefile"] = cookie_file
+
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
+                    if info and info.get("url"):
+                        stream_url = info.get("url")
+                        raw_title = info.get("title") or raw_title
+                        extracted_ext = info.get("ext") or ""
+                        if is_audio:
+                            actual_ext = extracted_ext if extracted_ext in ["m4a", "mp3", "aac"] else ("m4a" if extracted_ext == "mp4" else default_ext)
+                        else:
+                            actual_ext = extracted_ext or "mp4"
+                        break
+            except Exception as e:
+                last_extract_err = e
+                if attempt == 1:
+                    break
 
         if not stream_url:
-            raise HTTPException(status_code=502, detail="Stream URL could not be extracted.")
+            raise HTTPException(status_code=502, detail=f"Stream URL could not be extracted: {str(last_extract_err)}")
 
         safe_title = re.sub(r'[\\/*?:"<>|]', "", raw_title).strip()
         safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
-        filename = f"{safe_title}.{ext_to_save}"
+        filename = f"{safe_title}.{actual_ext}"
+        content_type = "audio/mp4" if actual_ext == "m4a" else ("audio/mpeg" if actual_ext == "mp3" else "video/mp4")
 
         proxy_handler = urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url})
         opener = urllib.request.build_opener(proxy_handler)
         req = urllib.request.Request(
             stream_url,
             headers={
-                "User-Agent": "com.google.android.youtube/19.29.37 (Linux; U; Android 14)",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
                 "Accept": "*/*",
                 "Connection": "keep-alive",
             }
@@ -994,7 +1026,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                                 os.remove(cache_path)
                             os.rename(cache_part, cache_path)
                             with open(meta_path, "w", encoding="utf-8") as mf:
-                                mf.write(raw_title)
+                                mf.write(f"{raw_title}\n{actual_ext}")
                         except Exception:
                             pass
                     else:
