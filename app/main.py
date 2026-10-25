@@ -3,6 +3,7 @@ import urllib.request
 import urllib.parse
 import json
 import re
+import uuid
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -801,17 +802,18 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         if not target_country:
             target_country = str(allowed[0]).lower()
 
+    sess_id = uuid.uuid4().hex[:8]
     if target_country:
-        proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country}"
+        proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country};sessid.{sess_id};sessttl.10"
     else:
-        proxy_user = DATAIMPULSE_USER
+        proxy_user = f"{DATAIMPULSE_USER}__sessid.{sess_id};sessttl.10"
 
     proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
 
     fmt_clean = (format or "mp3").lower().strip()
     is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio"]
     if is_audio:
-        fmt_selector = "bestaudio/140/b/best"
+        fmt_selector = "140/bestaudio/18/b/best"
         ext_to_save = "mp3"
         content_type = "audio/mpeg"
     else:
@@ -821,7 +823,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         elif int(q_num) <= 720:
             fmt_selector = "22/18/best[height<=720][ext=mp4]/b/best"
         else:
-            fmt_selector = "best[height<=1080][ext=mp4]/22/18/b/best"
+            fmt_selector = "22/18/best[height<=1080][ext=mp4]/b/best"
         ext_to_save = "mp4"
         content_type = "video/mp4"
 
@@ -837,7 +839,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             "socket_timeout": 20,
             "extractor_args": {
                 "youtube": {
-                    "player_client": ["android", "mweb"]
+                    "player_client": ["android"]
                 }
             }
         }
@@ -858,7 +860,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         req = urllib.request.Request(
             stream_url,
             headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "User-Agent": "com.google.android.youtube/19.29.37 (Linux; U; Android 14)",
                 "Accept": "*/*",
                 "Connection": "keep-alive",
             }
