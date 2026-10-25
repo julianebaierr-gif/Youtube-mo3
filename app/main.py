@@ -905,7 +905,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             "socket_timeout": 20,
             "extractor_args": {
                 "youtube": {
-                    "player_client": ["android", "ios", "tv_embedded", "web_embedded"]
+                    "player_client": ["android"]
                 }
             }
         }
