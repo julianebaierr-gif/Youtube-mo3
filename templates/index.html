@@ -2309,6 +2309,13 @@
                                     const data = await oembedResp.json();
                                     if (data.title) title = data.title;
                                     if (data.author_name) author = data.author_name;
+                                    const authorLow = (data.author_name || '').toLowerCase();
+                                    const titleLow = (data.title || '').toLowerCase();
+                                    // French and European Sports Broadcasters (beIN SPORTS, CANAL+, etc.) are strictly geo-restricted to their home territories
+                                    if (authorLow.includes('bein') || authorLow.includes('canal+') || authorLow.includes('rmc') || titleLow.includes('résumé :') || titleLow.includes('resume :')) {
+                                        window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                                        window._isGeoBlockedVideo[ytId] = true;
+                                    }
                                 }
                             } catch (e) {
                                 title = `YouTube Video (${ytId})`;
@@ -3071,9 +3078,11 @@
                         }
 
                         // Regional Geo-block or Age Restriction: Immediately route to Unlocker Engine!
+                        const restrCheck = getSpecificVideoRestriction(errText || lastServerErrorText || '');
                         if (!geoProxyTried && (
                             (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) ||
-                            /not available in your country|blocked in your country|unavailable in your country|region|video unavailable|blocked|\bage[- ]?restrict|confirm your age|sign in to confirm/i.test(errText || lastServerErrorText || '')
+                            (restrCheck && (restrCheck.isGeoBlock || restrCheck.isBroadcaster)) ||
+                            /not available in your country|blocked in your country|unavailable in your country|region|video unavailable|blocked|\bage[- ]?restrict|confirm your age|sign in to confirm|stuck|timeout/i.test(errText || lastServerErrorText || '')
                         )) {
                             window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                             window._isGeoBlockedVideo[ytId] = true;
@@ -3171,6 +3180,8 @@
                     function pollConversion(convId) {
                         let finishedNoFile = 0;
                         let netFails = 0;
+                        let lastProgressVal = -1;
+                        let stuckTicks = 0;
                         const tick = async () => {
                             if (completed) return;
                             let p = null;
@@ -3189,6 +3200,20 @@
                                         // Server says "Finished" but gave no usable download link: go straight to FastSaver backup
                                         if (!fastSaverTried) { if (activePollTimer) clearTimeout(activePollTimer); tryFastSaverEngine(); return; }
                                         stepDownOrSwitchEngine(p.text || p.message || ''); return;
+                                    }
+                                } else if (p.progress !== undefined && p.progress !== null) {
+                                    if (p.progress === lastProgressVal && p.progress < 1000) {
+                                        stuckTicks++;
+                                        // Watchdog: If primary engine progress does not advance for 7 seconds (e.g. hung at 50%),
+                                        // immediately switch to next engine / proxy instead of keeping user stuck for 3 minutes!
+                                        if (stuckTicks >= 7) {
+                                            if (activePollTimer) clearTimeout(activePollTimer);
+                                            stepDownOrSwitchEngine(p.text || "Conversion server unresponsive");
+                                            return;
+                                        }
+                                    } else {
+                                        lastProgressVal = p.progress;
+                                        stuckTicks = 0;
                                     }
                                 }
                                 setRealProgress(p);
