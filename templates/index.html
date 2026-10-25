@@ -2870,6 +2870,8 @@
                 }
 
                 let activePollTimer = null;
+                // Declared BEFORE the try-block: Priority-0 geo routing calls tryGeoProxyEngine() early (avoids TDZ ReferenceError that froze UI at 93%)
+                let geoProxyTried = false;
 
                 try {
                     // Priority 0: Geo-blocked or regionally restricted video -> route straight to Residential Proxy!
@@ -2999,7 +3001,6 @@
                     }
 
                     // DataImpulse Residential Proxy Engine: Unlocks geo-blocked / country-restricted videos
-                    let geoProxyTried = false;
                     async function tryGeoProxyEngine() {
                         if (completed || geoProxyTried || window._activeConversionToken !== conversionToken) return;
                         geoProxyTried = true;
