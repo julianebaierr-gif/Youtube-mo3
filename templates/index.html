@@ -3218,9 +3218,12 @@
                                 } else if (p.progress !== undefined && p.progress !== null) {
                                     if (p.progress === lastProgressVal && p.progress < 1000) {
                                         stuckTicks++;
-                                        // Watchdog: If primary engine progress does not advance for 7 seconds (e.g. hung at 50%),
-                                        // immediately switch to next engine / proxy instead of keeping user stuck for 3 minutes!
-                                        if (stuckTicks >= 7) {
+                                        // Watchdog: Savenow/loader can legitimately sit at progress=50 for up to ~20s
+                                        // while it processes the conversion server-side. Only switch engine if stuck
+                                        // for >25 seconds (25 ticks × 1s each). This prevents premature abandonment
+                                        // of a valid in-progress Savenow job that returns 1000% on poll ~18-20.
+                                        const stuckLimit = (p.progress === 50) ? 25 : 7;
+                                        if (stuckTicks >= stuckLimit) {
                                             if (activePollTimer) clearTimeout(activePollTimer);
                                             stepDownOrSwitchEngine(p.text || "Conversion server unresponsive");
                                             return;
