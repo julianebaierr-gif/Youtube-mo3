@@ -172,6 +172,11 @@ async def terms_page(request: Request):
 async def privacy_page(request: Request):
     return render_legal_page(request, "privacy-policy")
 
+# /dmca redirects to contact-us which contains the full DMCA section
+@app.get("/dmca", response_class=HTMLResponse)
+async def dmca_page(request: Request):
+    return RedirectResponse(url="/contact-us#dmca", status_code=301)
+
 # Viral URL Shortcut Routes (e.g. yt4mp3.com/watch?v=..., yt4mp3.com/shorts/..., yt4mp3.com/4youtube/...)
 @app.get("/watch", response_class=HTMLResponse)
 async def watch_shortcut_page(request: Request):

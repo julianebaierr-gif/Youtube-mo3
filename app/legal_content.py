@@ -125,7 +125,7 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                                 'timeout alert").</li>\n'
                                 '</ul>\n'
                                 '\n'
-                                '<h3>Copyright and DMCA Notification Guidelines</h3>\n'
+                                '<h3 id="dmca">Copyright and DMCA Notification Guidelines</h3>\n'
                                 '\n'
                                 '<p>YT4MP3 respects the intellectual property rights of content creators, musical '
                                 'artists, and production companies. We maintain a zero-tolerance policy toward '
