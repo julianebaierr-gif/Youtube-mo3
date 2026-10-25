@@ -934,10 +934,12 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         except Exception:
             pass
 
+        cache_part = f"{cache_path}.part"
         def stream_chunks():
             f_cache = None
+            fully_downloaded = False
             try:
-                f_cache = open(cache_path, "wb")
+                f_cache = open(cache_part, "wb")
             except Exception:
                 f_cache = None
 
@@ -945,6 +947,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                 while True:
                     chunk = upstream_res.read(128 * 1024)
                     if not chunk:
+                        fully_downloaded = True
                         break
                     if f_cache:
                         try:
@@ -956,10 +959,23 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                 if f_cache:
                     try:
                         f_cache.close()
-                        with open(meta_path, "w", encoding="utf-8") as mf:
-                            mf.write(raw_title)
                     except Exception:
                         pass
+                    if fully_downloaded:
+                        try:
+                            if os.path.exists(cache_path):
+                                os.remove(cache_path)
+                            os.rename(cache_part, cache_path)
+                            with open(meta_path, "w", encoding="utf-8") as mf:
+                                mf.write(raw_title)
+                        except Exception:
+                            pass
+                    else:
+                        try:
+                            if os.path.exists(cache_part):
+                                os.remove(cache_part)
+                        except Exception:
+                            pass
                 try:
                     upstream_res.close()
                 except Exception:
