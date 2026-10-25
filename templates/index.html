@@ -2289,8 +2289,8 @@
                 loadingCard.classList.remove('hidden');
                 loadingCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-                // Kick off ultra-fast pre-warming immediately in parallel with metadata fetch!
-                prewarmStreams(ytId);
+                // NOTE: prewarmStreams is called AFTER geo-detection below (not here), so geo-blocked
+                // videos never waste time on Savenow and jump straight to residential proxy.
 
                 try {
                     const oembedUrl = `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`;
@@ -2311,8 +2311,15 @@
                                     if (data.author_name) author = data.author_name;
                                     const authorLow = (data.author_name || '').toLowerCase();
                                     const titleLow = (data.title || '').toLowerCase();
-                                    // French and European Sports Broadcasters (beIN SPORTS, CANAL+, etc.) are strictly geo-restricted to their home territories
-                                    if (authorLow.includes('bein') || authorLow.includes('canal+') || authorLow.includes('rmc') || titleLow.includes('résumé :') || titleLow.includes('resume :')) {
+                                    // Sports/broadcaster channels that are ALWAYS geo-restricted to specific countries
+                                    // Detect early so we never waste time on Savenow for these
+                                    const isGeoChannel = authorLow.includes('bein') || authorLow.includes('canal+') ||
+                                        authorLow.includes('tnt sports') || authorLow.includes('sky sports') ||
+                                        authorLow.includes('rmc sport') || authorLow.includes('dazn') ||
+                                        authorLow.includes('sport1') || authorLow.includes('ziggo sport') ||
+                                        titleLow.includes('résumé :') || titleLow.includes('resume :') ||
+                                        titleLow.includes('rétro xxl') || titleLow.includes('retro xxl');
+                                    if (isGeoChannel) {
                                         window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                                         window._isGeoBlockedVideo[ytId] = true;
                                     }
@@ -2338,11 +2345,17 @@
                         })()
                     ]);
 
-                    // Pre-warm 2K/4K only if this video genuinely has them
+                    // Only start pre-warming if this is NOT a geo-blocked video.
+                    // Geo-blocked videos go straight to residential proxy — no Savenow needed.
+                    const isGeoBlocked = window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId];
+
+                    // Pre-warm 2K/4K only if this video genuinely has them AND is not geo-blocked
                     const hiResToPrewarm = [];
-                    if (has2K) hiResToPrewarm.push('1440');
-                    if (has4K) hiResToPrewarm.push('4k');
-                    if (hiResToPrewarm.length > 0) prewarmStreams(ytId, hiResToPrewarm);
+                    if (!isGeoBlocked) {
+                        if (has2K) hiResToPrewarm.push('1440');
+                        if (has4K) hiResToPrewarm.push('4k');
+                        if (hiResToPrewarm.length > 0) prewarmStreams(ytId, hiResToPrewarm);
+                    }
 
                     const videoFormatsList = [
                         { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD' + calcEstSize(durationSec, 1150), badge: '⚡ Instant' },
