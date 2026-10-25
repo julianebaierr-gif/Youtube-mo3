@@ -864,12 +864,37 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         }
         return StreamingResponse(iter_cached_file(), media_type=content_type, headers=resp_headers)
 
-    # For geo-blocked proxy streams, strictly use compact progressive stream (format 18 / 360p, ~4-6 MB total)
+    # For geo-blocked & age-restricted streams, strictly use compact progressive stream (format 18 / 360p, ~4-6 MB total)
     # This prevents users from accidentally downloading 100 MB 1080p files that burn proxy quota!
     fmt_selector = "18/b/best"
 
     try:
         import yt_dlp
+
+        # Check for cookies (from env var or file) to 100% unlock age-restricted/member videos
+        cookie_file = None
+        raw_cookies = os.environ.get("YOUTUBE_COOKIES")
+        if raw_cookies and len(raw_cookies.strip()) > 20:
+            import tempfile
+            env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
+            try:
+                with open(env_cookie_path, "w", encoding="utf-8") as cf:
+                    cf.write(raw_cookies.strip())
+                cookie_file = env_cookie_path
+            except Exception:
+                pass
+
+        if not cookie_file:
+            candidates = [
+                os.path.join(os.getcwd(), "cookies.txt"),
+                "/etc/secrets/cookies.txt",
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "cookies.txt"),
+            ]
+            for c_path in candidates:
+                if os.path.exists(c_path) and os.path.getsize(c_path) > 20:
+                    cookie_file = c_path
+                    break
+
         ydl_opts = {
             "proxy": proxy_url,
             "quiet": True,
@@ -880,10 +905,12 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             "socket_timeout": 20,
             "extractor_args": {
                 "youtube": {
-                    "player_client": ["android"]
+                    "player_client": ["android", "ios", "tv_embedded", "web_embedded"]
                 }
             }
         }
+        if cookie_file:
+            ydl_opts["cookiefile"] = cookie_file
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
             stream_url = info.get("url")
