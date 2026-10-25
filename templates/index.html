@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ lang | default('en') }}" dir="{{ lang_dir | default('ltr') }}" class="scroll-smooth">
 <head>
     <!-- Google AdSense Verification (Auto-ad script paused to prevent click hijacking) -->
@@ -1915,8 +1915,11 @@
                     return re.test(uploaderLow) || re.test(titleLow);
                 });
                 if (isSportsBroadcaster && (low.includes('fetch.error') || low.includes('unavailable') || low.includes('blocked') || low.includes('copyright') || low.includes('drm') || low.includes('not available') || low.includes('fail') || low === '')) {
+                    // NOT fatal: most sports clips/highlights download fine through backup engines (FastSaver/Cobalt/proxy).
+                    // The broadcaster message is shown only as the LAST resort after every engine has failed.
                     return {
-                        fatal: true,
+                        fatal: false,
+                        isBroadcaster: true,
                         message: getI18nMsg('broadcaster_drm')
                     };
                 }
@@ -2972,7 +2975,7 @@
                                 return;
                             }
                             const restr = getSpecificVideoRestriction(lastServerErrorText || errCode);
-                            if (restr && restr.fatal) {
+                            if (restr && (restr.fatal || restr.isBroadcaster)) {
                                 failDownload(restr.message);
                             } else if (errCode.includes('credits') || errCode.includes('limit')) {
                                 failDownload("⏳ Server Busy: All download servers are currently at capacity. Please wait a few minutes and try again.");
@@ -2983,7 +2986,7 @@
                         } catch (e) {
                             if (!geoProxyTried) { tryGeoProxyEngine(); return; }
                             const restr = getSpecificVideoRestriction(lastServerErrorText);
-                            failDownload((restr && restr.fatal) ? restr.message : "This video could not be converted right now. Please tap Retry below.");
+                            failDownload((restr && (restr.fatal || restr.isBroadcaster)) ? restr.message : "This video could not be converted right now. Please tap Retry below.");
                         }
                     }
 
