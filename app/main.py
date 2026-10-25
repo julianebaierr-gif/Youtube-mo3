@@ -812,20 +812,47 @@ async def geo_stream(url: str = "", format: str = "mp3"):
 
     fmt_clean = (format or "mp3").lower().strip()
     is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio"]
-    if is_audio:
-        fmt_selector = "140/bestaudio/18/b/best"
-        ext_to_save = "mp3"
-        content_type = "audio/mpeg"
-    else:
-        q_num = re.sub(r"[^0-9]", "", fmt_clean) or "720"
-        if int(q_num) <= 360:
-            fmt_selector = "18/best[height<=360][ext=mp4]/b/best"
-        elif int(q_num) <= 720:
-            fmt_selector = "22/18/best[height<=720][ext=mp4]/b/best"
-        else:
-            fmt_selector = "22/18/best[height<=1080][ext=mp4]/b/best"
-        ext_to_save = "mp4"
-        content_type = "video/mp4"
+    ext_to_save = "mp3" if is_audio else "mp4"
+    content_type = "audio/mpeg" if is_audio else "video/mp4"
+
+    # 1. Zero-Bandwidth Cache Check: If file was already streamed, serve from /tmp with 0 MB proxy usage!
+    import tempfile
+    cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}.mp4")
+    meta_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}.meta")
+
+    if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
+        saved_title = f"YT4MP3_{vid}"
+        if os.path.exists(meta_path):
+            try:
+                with open(meta_path, "r", encoding="utf-8") as mf:
+                    saved_title = mf.read().strip()
+            except Exception:
+                pass
+        safe_title = re.sub(r'[\\/*?:"<>|]', "", saved_title).strip()
+        safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
+        filename = f"{safe_title}.{ext_to_save}"
+        file_size = os.path.getsize(cache_path)
+
+        def iter_cached_file():
+            with open(cache_path, "rb") as cf:
+                while True:
+                    chunk = cf.read(128 * 1024)
+                    if not chunk:
+                        break
+                    yield chunk
+
+        resp_headers = {
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "public, max-age=3600",
+            "Content-Length": str(file_size),
+            "Accept-Ranges": "bytes",
+            "X-Proxy-Cached": "1",
+        }
+        return StreamingResponse(iter_cached_file(), media_type=content_type, headers=resp_headers)
+
+    # For geo-blocked proxy streams, strictly use compact progressive stream (format 18 / 360p, ~4-6 MB total)
+    # This prevents users from accidentally downloading 100 MB 1080p files that burn proxy quota!
+    fmt_selector = "18/b/best"
 
     try:
         import yt_dlp
@@ -894,13 +921,31 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             pass
 
         def stream_chunks():
+            f_cache = None
+            try:
+                f_cache = open(cache_path, "wb")
+            except Exception:
+                f_cache = None
+
             try:
                 while True:
                     chunk = upstream_res.read(128 * 1024)
                     if not chunk:
                         break
+                    if f_cache:
+                        try:
+                            f_cache.write(chunk)
+                        except Exception:
+                            pass
                     yield chunk
             finally:
+                if f_cache:
+                    try:
+                        f_cache.close()
+                        with open(meta_path, "w", encoding="utf-8") as mf:
+                            mf.write(raw_title)
+                    except Exception:
+                        pass
                 try:
                     upstream_res.close()
                 except Exception:
