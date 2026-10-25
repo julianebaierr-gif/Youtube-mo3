@@ -1908,7 +1908,12 @@
 
                 // 1. Official Sports Broadcaster DRM & Rights Protection (CANAL+, beIN SPORTS, UEFA, FIFA, etc.)
                 const sportsKeywords = ['canal+', 'bein sports', 'uefa', 'fifa', 'champions league', 'premier league', 'laliga', 'serie a', 'bundesliga', 'espn', 'sky sports', 'tnt sports', 'dazn', 'sony liv', 'star sports', 'formula 1', 'f1', 'motogp', 'wwe', 'ufc', 'nba', 'nfl'];
-                const isSportsBroadcaster = sportsKeywords.some(k => uploaderLow.includes(k) || titleLow.includes(k));
+                const isSportsBroadcaster = sportsKeywords.some(k => {
+                    // Whole-word match only (prevents false positives like "nfl" inside "influence", "f1" inside "f12")
+                    const esc = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const re = new RegExp('(^|[^a-z0-9])' + esc + '($|[^a-z0-9])', 'i');
+                    return re.test(uploaderLow) || re.test(titleLow);
+                });
                 if (isSportsBroadcaster && (low.includes('fetch.error') || low.includes('unavailable') || low.includes('blocked') || low.includes('copyright') || low.includes('drm') || low.includes('not available') || low.includes('fail') || low === '')) {
                     return {
                         fatal: true,
@@ -1928,7 +1933,7 @@
                         message: getI18nMsg('private_video')
                     };
                 }
-                if (low.includes('age') || low.includes('sign in to confirm') || low.includes('inappropriate for some users') || low.includes('age-restricted') || low.includes('confirm your age')) {
+                if (/\bage[- ]?restrict|\bage[- ]?gate|confirm your age|sign in to confirm|inappropriate for some users/.test(low)) {
                     return {
                         fatal: false,
                         isGeoBlock: true,
@@ -3056,7 +3061,7 @@
                         // Regional Geo-block or Age Restriction: Immediately route to Unlocker Engine!
                         if (!geoProxyTried && (
                             (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) ||
-                            /not available in your country|blocked in your country|unavailable in your country|region|video unavailable|blocked|age|confirm your age|sign in to confirm/i.test(errText || lastServerErrorText || '')
+                            /not available in your country|blocked in your country|unavailable in your country|region|video unavailable|blocked|\bage[- ]?restrict|confirm your age|sign in to confirm/i.test(errText || lastServerErrorText || '')
                         )) {
                             window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                             window._isGeoBlockedVideo[ytId] = true;
@@ -3168,7 +3173,11 @@
                                 // Finished but returned an unusable/ad link: step down after 3 confirmations
                                 if ((p.progress || 0) >= 1000) {
                                     finishedNoFile++;
-                                    if (finishedNoFile >= 3) { stepDownOrSwitchEngine(p.text || p.message || ''); return; }
+                                    if (finishedNoFile >= 3) {
+                                        // Server says "Finished" but gave no usable download link: go straight to FastSaver backup
+                                        if (!fastSaverTried) { if (activePollTimer) clearTimeout(activePollTimer); tryFastSaverEngine(); return; }
+                                        stepDownOrSwitchEngine(p.text || p.message || ''); return;
+                                    }
                                 }
                                 setRealProgress(p);
                             } else {
