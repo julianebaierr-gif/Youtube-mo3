@@ -1975,6 +1975,9 @@
                 else if (['720', 'hd'].includes(cleanFmt)) cleanFmt = '720';
                 else if (!['mp3', 'm4a', 'flac', 'wav', 'aac', 'webm', '480', '360', '240'].includes(cleanFmt)) cleanFmt = 'mp3';
 
+                let capturedError = '';
+                let isGeo = false;
+
                 // 1. Direct savenow.to from user's browser (ACAO: * CORS enabled, direct worker link, 0 ads)
                 try {
                     const u = `https://p.savenow.to/api/v2/download?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
@@ -1982,6 +1985,10 @@
                     if (r.ok) {
                         const d = await r.json();
                         if (d && d.id) return { id: d.id, engine: 'savenow', download_url: d.download_url || null };
+                        if (d && (d.text || d.error || d.message)) {
+                            capturedError = (d.text || d.error || d.message || '').toString();
+                            if (/country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
+                        }
                     }
                 } catch(e) {}
 
@@ -1992,6 +1999,10 @@
                     if (r.ok) {
                         const d = await r.json();
                         if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
+                        if (d && (d.error || d.text)) {
+                            capturedError = (d.error || d.text || '').toString();
+                            if (d.is_geo_blocked || /country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
+                        }
                     }
                 } catch(e) {}
 
@@ -2002,9 +2013,19 @@
                     if (r.ok) {
                         const d = await r.json();
                         if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
+                        if (d && (d.text || d.error || d.message)) {
+                            capturedError = (d.text || d.error || d.message || '').toString();
+                            if (/country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
+                        }
                     }
                 } catch(e) {}
 
+                if (isGeo || /country|region|unavailable|blocked|not available/i.test(capturedError)) {
+                    return { id: null, errorText: capturedError || "Video not available in your country", isGeoBlock: true };
+                }
+                if (capturedError) {
+                    return { id: null, errorText: capturedError, isGeoBlock: false };
+                }
                 return null;
             }
 
@@ -2057,7 +2078,17 @@
                     window._prewarmedStreams[key] = streamEntry;
 
                     initiateStream(targetUrl, f).then(initData => {
-                        if (!initData || !initData.id) return;
+                        if (!initData || !initData.id) {
+                            if (initData && initData.isGeoBlock) {
+                                window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                                window._isGeoBlockedVideo[ytId] = true;
+                            }
+                            if (initData && initData.errorText) {
+                                streamEntry.failed = true;
+                                streamEntry.errorText = initData.errorText;
+                            }
+                            return;
+                        }
                         streamEntry.id = initData.id;
                         streamEntry.engine = initData.engine || 'savenow';
 
@@ -2282,6 +2313,10 @@
                                     has4K = !!resData.has_4k;
                                     has2K = !!resData.has_2k;
                                     durationSec = parseInt(resData.duration_sec || 0, 10) || 0;
+                                    if (resData.is_geo_blocked) {
+                                        window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                                        window._isGeoBlockedVideo[ytId] = true;
+                                    }
                                 }
                             } catch (e) {}
                         })()
@@ -2644,6 +2679,9 @@
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
+                const conversionToken = Date.now();
+                window._activeConversionToken = conversionToken;
+
                 // Turbo Progress bar animation (Super-responsive visual feedback)
                 let curPct = 20;
                 const animTimer = setInterval(() => {
@@ -2655,7 +2693,7 @@
 
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
-                    if (completed) return;
+                    if (completed || window._activeConversionToken !== conversionToken) return;
                     completed = true;
                     if (activePollTimer) clearTimeout(activePollTimer);
                     clearInterval(animTimer);
@@ -2754,7 +2792,7 @@
                 }
 
                 function failDownload(msg) {
-                    if (completed) return;
+                    if (completed || window._activeConversionToken !== conversionToken) return;
                     completed = true;
                     if (activePollTimer) clearTimeout(activePollTimer);
                     clearInterval(animTimer);
@@ -2817,11 +2855,16 @@
                 let activePollTimer = null;
 
                 try {
-                    // Priority 0: If background pre-warmer already detected a fatal video restriction (e.g., Channel Membership / Private / Age-Restricted), show the exact reason immediately!
-                    // BUT if it was a regional restriction, DO NOT fail! Unlock it via Residential Proxy!
+                    // Priority 0: Geo-blocked or regionally restricted video -> route straight to Residential Proxy!
+                    if (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) {
+                        tryGeoProxyEngine();
+                        return;
+                    }
                     if (window._videoFatalRestriction && window._videoFatalRestriction[ytId]) {
                         if (/region|country|copyright|unavailable/i.test(window._videoFatalRestriction[ytId])) {
                             delete window._videoFatalRestriction[ytId];
+                            window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                            window._isGeoBlockedVideo[ytId] = true;
                             tryGeoProxyEngine();
                             return;
                         }
@@ -2830,6 +2873,8 @@
                     }
                     const prewarmCheckRestr = getSpecificVideoRestriction(initialPrewarmErrorText);
                     if (prewarmCheckRestr && prewarmCheckRestr.isGeoBlock) {
+                        window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                        window._isGeoBlockedVideo[ytId] = true;
                         tryGeoProxyEngine();
                         return;
                     }
@@ -2939,9 +2984,11 @@
                     // DataImpulse Residential Proxy Engine: Unlocks geo-blocked / country-restricted videos
                     let geoProxyTried = false;
                     async function tryGeoProxyEngine() {
-                        if (completed || geoProxyTried) return;
+                        if (completed || geoProxyTried || window._activeConversionToken !== conversionToken) return;
                         geoProxyTried = true;
                         if (window._videoFatalRestriction) delete window._videoFatalRestriction[ytId];
+                        window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                        window._isGeoBlockedVideo[ytId] = true;
                         modalStatusMsg.textContent = 'Unlocking regional stream via high-speed residential proxy...';
                         modalStatusMsg.className = "text-xs font-semibold text-emerald-700 mb-4 bg-emerald-50 py-2.5 px-3 rounded-lg border border-emerald-200";
                         modalIcon.className = "fa-solid fa-earth-americas fa-spin text-emerald-600";
@@ -2995,7 +3042,7 @@
                     }
 
                     function stepDownOrSwitchEngine(errText) {
-                        if (completed) return;
+                        if (completed || window._activeConversionToken !== conversionToken) return;
                         if (activePollTimer) clearTimeout(activePollTimer);
                         if (errText) lastServerErrorText = errText;
 
@@ -3006,7 +3053,12 @@
                         }
 
                         // Regional Geo-block: Immediately route to DataImpulse Residential Proxy!
-                        if (!geoProxyTried && /not available in your country|blocked in your country|unavailable in your country|region|video unavailable/i.test(errText || lastServerErrorText || '')) {
+                        if (!geoProxyTried && (
+                            (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) ||
+                            /not available in your country|blocked in your country|unavailable in your country|region|video unavailable|blocked/i.test(errText || lastServerErrorText || '')
+                        )) {
+                            window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                            window._isGeoBlockedVideo[ytId] = true;
                             tryGeoProxyEngine();
                             return;
                         }
@@ -3064,6 +3116,8 @@
                         // If all resolutions in ladder were tried on primary engine, try backup loader engine once
                         if (!loaderFallbackTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
                             loaderFallbackTried = true;
+                            modalStatusMsg.textContent = 'Optimizing conversion stream...';
+                            modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                             activeFmt = formatLadder[Math.min(2, formatLadder.length - 1)]; // Use reliable 1080/720/mp3 on backup
                             runEngine('loader');
                             return;
@@ -3131,13 +3185,26 @@
                     }
 
                     async function runEngine(engine) {
-                        if (completed) return;
+                        if (completed || window._activeConversionToken !== conversionToken) return;
                         if (ladderIdx === 0 && !loaderFallbackTried) {
                             modalStatusMsg.textContent = 'Starting conversion...';
                         }
                         const initData = engine === 'loader' ? await initLoaderDirect(activeFmt) : await initiateStream(ytUrl, activeFmt);
-                        if (completed) return;
-                        if (!initData || !initData.id) { stepDownOrSwitchEngine("Conversion servers are busy."); return; }
+                        if (completed || window._activeConversionToken !== conversionToken) return;
+                        if (!initData || !initData.id) {
+                            if (initData && initData.isGeoBlock) {
+                                window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                                window._isGeoBlockedVideo[ytId] = true;
+                                tryGeoProxyEngine();
+                                return;
+                            }
+                            if (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) {
+                                tryGeoProxyEngine();
+                                return;
+                            }
+                            stepDownOrSwitchEngine((initData && initData.errorText) ? initData.errorText : "Conversion servers are busy.");
+                            return;
+                        }
                         if (isDownloadReady(initData)) { completeDownload(initData.download_url); return; }
                         pollConversion(initData.id);
                     }
@@ -3145,8 +3212,12 @@
                     // Check if video is longer than 2.5 hours (9000 seconds)
                     const isLongVideo = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 9000);
 
-                    // If prewarm failed due to regional restriction, route directly to Residential Proxy
-                    if (!geoProxyTried && initialPrewarmErrorText && /not available in your country|blocked in your country|unavailable in your country|region/i.test(initialPrewarmErrorText)) {
+                    // If video is geo-blocked or prewarm failed due to regional restriction, route directly to Residential Proxy
+                    if (!geoProxyTried && (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId])) {
+                        tryGeoProxyEngine();
+                    } else if (!geoProxyTried && initialPrewarmErrorText && /not available in your country|blocked in your country|unavailable in your country|region/i.test(initialPrewarmErrorText)) {
+                        window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
+                        window._isGeoBlockedVideo[ytId] = true;
                         tryGeoProxyEngine();
                     } else if (forcedEngine === 'auto' && prewarmed && prewarmed.id && !prewarmed.completed && !prewarmed.failed && !isLongVideo) {
                         prewarmed.foregroundActive = true;

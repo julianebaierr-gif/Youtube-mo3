@@ -412,6 +412,9 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     else:
         fmt = "mp3"
     
+    captured_err = None
+    is_geo = False
+
     # 1. Primary Engine: savenow.to (clean stream without button=1)
     if engine != "loader":
         try:
@@ -430,6 +433,10 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
                         elif dl.startswith("http://"):
                             dl = dl.replace("http://", "https://")
                     return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
+                elif data and (data.get("text") or data.get("error") or data.get("message")):
+                    captured_err = str(data.get("text") or data.get("error") or data.get("message"))
+                    if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
+                        is_geo = True
         except Exception:
             pass
 
@@ -450,8 +457,15 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
                     elif dl.startswith("http://"):
                         dl = dl.replace("http://", "https://")
                 return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
+            elif data and (data.get("text") or data.get("error") or data.get("message")):
+                captured_err = str(data.get("text") or data.get("error") or data.get("message"))
+                if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
+                    is_geo = True
     except Exception:
         pass
+
+    if captured_err:
+        return {"success": False, "error": captured_err, "is_geo_blocked": is_geo}
 
     raise HTTPException(status_code=502, detail="Unable to initiate media conversion")
 
@@ -811,7 +825,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
     proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
 
     fmt_clean = (format or "mp3").lower().strip()
-    is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio"]
+    is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
     ext_to_save = "mp3" if is_audio else "mp4"
     content_type = "audio/mpeg" if is_audio else "video/mp4"
 
@@ -993,18 +1007,27 @@ async def get_video_resolutions(id: str):
         dur_match = re.search(r'"lengthSeconds":"(\d+)"', html)
         if dur_match:
             duration_sec = int(dur_match.group(1))
+
+        # Detect regional country restrictions
+        m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
+        allowed_countries = json.loads(m_c.group(1)) if m_c else []
+        is_geo_blocked = bool(
+            (len(allowed_countries) > 0 and len(allowed_countries) < 150) or
+            (re.search(r'"status":\s*"UNPLAYABLE"', html) and not re.search(r'Private|deleted|removed|terminated', html, re.I))
+        )
+
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
-        if heights:
-            max_h = max(heights)
-            result = {
-                "has_4k": max_h >= 2160 or 2160 in heights,
-                "has_2k": max_h >= 1440 or 1440 in heights,
-                "max_height": max_h,
-                "duration_sec": duration_sec,
-                "source": "yt_watch",
-            }
-            _VIDEO_RES_CACHE[vid] = result
-            return result
+        max_h = max(heights) if heights else 1080
+        result = {
+            "has_4k": max_h >= 2160 or 2160 in heights,
+            "has_2k": max_h >= 1440 or 1440 in heights,
+            "max_height": max_h,
+            "duration_sec": duration_sec,
+            "is_geo_blocked": is_geo_blocked,
+            "source": "yt_watch",
+        }
+        _VIDEO_RES_CACHE[vid] = result
+        return result
     except Exception:
         pass
 
