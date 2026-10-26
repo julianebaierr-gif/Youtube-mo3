@@ -926,7 +926,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
 
     # Audio format selector: prefer lightweight pure AAC audio (140/ba, ~20MB) to conserve proxy bandwidth;
     # Video format selector: progressive video stream (18/22/b, ~360p-720p).
-    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/best"
+    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
 
     try:
         import yt_dlp
