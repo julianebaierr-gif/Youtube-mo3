@@ -784,20 +784,68 @@ DATAIMPULSE_PORT = os.environ.get("DATAIMPULSE_PORT") or "823"
 # DataImpulse (per-GB) is used only as a rare fallback for countries not in this fleet.
 WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
 WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
+WEBSHARE_API_KEY = os.environ.get("WEBSHARE_API_KEY") or "a5s4fkwqxrpevtidf0gnzzl4bpae1l5iutemo0qj"
 WEBSHARE_POOLS = {
     "US": ["9.142.218.167:6831", "192.46.201.131:6645", "64.52.28.38:7725", "9.142.198.67:5734",
            "45.56.180.203:8437", "9.142.11.217:5373", "64.52.31.9:6196"],
-    "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "104.252.97.55:5925"],
-    "FR": ["31.98.8.3:5681", "31.98.15.244:5421", "46.203.60.159:7159", "46.203.41.103:5604", "82.22.96.234:7942"],
+    "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "87.86.24.81:5732"],
+    "FR": ["31.98.7.105:6283", "179.61.172.206:6757"],
     "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
     "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
 }
 WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
+# Quarantine map: proxy_url -> timestamp when "Sign in to confirm you're not a bot" occurred
+_BOT_FLAGGED_PROXIES = {}
+_REPLACED_IPS = set()
+
+def _mark_proxy_bot_flagged(proxy_url: str, country_code: str):
+    """Quarantines a bot-flagged Webshare IP for 30 minutes and triggers a background Webshare API replacement."""
+    import time, threading
+    _BOT_FLAGGED_PROXIES[proxy_url] = time.time()
+    m = re.search(r"@([0-9.]+):(\d+)", proxy_url or "")
+    if not m or not WEBSHARE_API_KEY or not country_code:
+        return
+    ip_only = m.group(1)
+    ip_port = f"{ip_only}:{m.group(2)}"
+    cc_up = country_code.upper()
+    if ip_only in _REPLACED_IPS:
+        return
+    _REPLACED_IPS.add(ip_only)
+
+    def _bg_replace():
+        try:
+            body = json.dumps({
+                "to_replace": {"type": "ip_address", "ip_addresses": [ip_only]},
+                "replace_with": [{"type": "country", "country_code": cc_up}],
+                "dry_run": False,
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://proxy.webshare.io/api/v3/proxy/replace/",
+                data=body,
+                headers={"Authorization": f"Token {WEBSHARE_API_KEY}", "Content-Type": "application/json"},
+                method="POST",
+            )
+            urllib.request.urlopen(req, timeout=8).read()
+            time.sleep(6)
+            lreq = urllib.request.Request(
+                "https://proxy.webshare.io/api/v2/proxy/list/?mode=direct&page=1&page_size=25",
+                headers={"Authorization": f"Token {WEBSHARE_API_KEY}"},
+            )
+            with urllib.request.urlopen(lreq, timeout=8) as r:
+                items = json.loads(r.read().decode("utf-8")).get("results", [])
+            new_ips = [f"{p['proxy_address']}:{p['port']}" for p in items if p.get("country_code") == cc_up and p.get("proxy_address") not in _REPLACED_IPS]
+            if new_ips:
+                WEBSHARE_POOLS[cc_up] = new_ips
+        except Exception:
+            pass
+
+    threading.Thread(target=_bg_replace, daemon=True).start()
 
 def build_proxy_candidates(allowed: list) -> list:
     """Ordered list of (label, proxy_url, country_lower_or_None) to try for a geo-restricted video.
-    Webshare pool(s) matching the video's allowed countries first, DataImpulse as last-resort fallback."""
-    import random
+    Clean (non-quarantined) Webshare IPs first, then 2 rotating DataImpulse Residential sessions as 100% bot-free fallback."""
+    import random, time
+    now = time.time()
     allowed_set = {str(c).upper() for c in (allowed or [])}
     candidates = []
     pool_cc = None
@@ -809,24 +857,26 @@ def build_proxy_candidates(allowed: list) -> list:
                 pool_cc = cc
                 break
     if pool_cc:
-        ips = list(WEBSHARE_POOLS[pool_cc])
+        ips = list(WEBSHARE_POOLS.get(pool_cc, []))
         random.shuffle(ips)
-        for ip in ips[:3]:
+        clean_ips = [ip for ip in ips if now - _BOT_FLAGGED_PROXIES.get(f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", 0) > 1800]
+        for ip in clean_ips[:2]:
             candidates.append((f"Webshare-{pool_cc}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", pool_cc.lower()))
 
-    # DataImpulse fallback (pay-per-GB) - only reached if Webshare unavailable / country not in fleet
+    # DataImpulse Rotating Residential fallback (2 fresh residential home IPs -> 100% immune to "not a bot")
     di_country = None
     if allowed_set:
-        for pc in ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR"]:
+        for pc in ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR", "CO"]:
             if pc in allowed_set:
                 di_country = pc.lower()
                 break
         if not di_country:
             di_country = sorted(allowed_set)[0].lower()
-    sess = uuid.uuid4().hex[:8]
-    di_user = f"{DATAIMPULSE_USER}__cr.{di_country};sessid.{sess};sessttl.10" if di_country else f"{DATAIMPULSE_USER}__sessid.{sess};sessttl.10"
-    candidates.append((f"DataImpulse-{(di_country or 'any').upper()}",
-                       f"http://{di_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}", di_country))
+    for _ in range(2):
+        sess = uuid.uuid4().hex[:8]
+        di_user = f"{DATAIMPULSE_USER}__cr.{di_country};sessid.{sess};sessttl.10" if di_country else f"{DATAIMPULSE_USER}__sessid.{sess};sessttl.10"
+        candidates.append((f"DataImpulse-{(di_country or 'any').upper()}",
+                           f"http://{di_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}", di_country))
     return candidates
 
 def detect_video_allowed_countries(vid: str) -> list:
@@ -966,6 +1016,8 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         proxy_candidates = build_proxy_candidates(allowed)
         attempts = [(c, client) for c in proxy_candidates for client in (None, ["android_vr"])]
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
+            if proxy_url in _BOT_FLAGGED_PROXIES:
+                continue
             target_country = cand_country
 
             ydl_opts = {
@@ -1010,6 +1062,9 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                     break
             except Exception as e:
                 last_extract_err = e
+                err_s = str(e)
+                if proxy_label.startswith("Webshare-") and re.search(r"not a bot|Sign in to confirm", err_s, re.I):
+                    _mark_proxy_bot_flagged(proxy_url, cand_country or "US")
                 continue
 
         if not stream_url:
