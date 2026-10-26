@@ -56,3 +56,7 @@ Thumbs.db
 
 .vercel
 scratch/
+
+# Cookies & Auth Secrets
+cookies.txt
+*cookies*.txt

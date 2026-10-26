@@ -937,10 +937,21 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         raw_cookies = os.environ.get("YOUTUBE_COOKIES")
         if raw_cookies and len(raw_cookies.strip()) > 20:
             import tempfile
+            import base64
+            cleaned_cookies = raw_cookies.strip()
+            # Handle base64 encoded cookies or literal \n newlines
+            if not cleaned_cookies.startswith("#") and "\t" not in cleaned_cookies:
+                try:
+                    cleaned_cookies = base64.b64decode(cleaned_cookies).decode("utf-8", errors="ignore")
+                except Exception:
+                    pass
+            if "\\n" in cleaned_cookies and "\n" not in cleaned_cookies:
+                cleaned_cookies = cleaned_cookies.replace("\\n", "\n")
+
             env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
             try:
                 with open(env_cookie_path, "w", encoding="utf-8") as cf:
-                    cf.write(raw_cookies.strip())
+                    cf.write(cleaned_cookies)
                 cookie_file = env_cookie_path
             except Exception:
                 pass
@@ -973,7 +984,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                 "proxy": proxy_url,
                 "quiet": True,
                 "no_warnings": True,
-                "format": fmt_selector if client is None else "18/b/best",
+                "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
                 "noplaylist": True,
                 "extract_flat": False,
                 "socket_timeout": 15,
@@ -985,21 +996,36 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             if cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
-            # PO Token (Proof of Origin) support to bypass bot challenges on datacenter IPs
+            # PO Token (Proof of Origin) & Visitor Data support to bypass bot challenges on datacenter IPs
             po_token = os.environ.get("YOUTUBE_PO_TOKEN")
             visitor_data = os.environ.get("YOUTUBE_VISITOR_DATA")
-            if po_token:
+            if po_token or visitor_data:
                 yt_args = ydl_opts.setdefault("extractor_args", {}).setdefault("youtube", {})
-                pot_list = [f"web.gvs+{po_token}", f"web.player+{po_token}"]
+                if po_token:
+                    yt_args["po_token"] = [
+                        f"web.gvs+{po_token}",
+                        f"web.player+{po_token}",
+                        f"mweb.gvs+{po_token}",
+                        f"mweb.player+{po_token}",
+                    ]
                 if visitor_data:
-                    pot_list.append(f"visitor_data+{visitor_data}")
-                yt_args["po_token"] = pot_list
+                    yt_args["visitor_data"] = [visitor_data]
 
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
-                if info and info.get("url"):
+
+                cand_url = None
+                if info:
                     cand_url = info.get("url")
+                    if not cand_url and info.get("requested_formats"):
+                        if is_audio:
+                            audio_fmts = [f for f in info["requested_formats"] if f.get("vcodec") == "none"]
+                            cand_url = audio_fmts[-1].get("url") if audio_fmts else info["requested_formats"][-1].get("url")
+                        else:
+                            cand_url = info["requested_formats"][0].get("url")
+
+                if cand_url:
                     upstream_headers = {
                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
                         "Accept": "*/*",
