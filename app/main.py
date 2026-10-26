@@ -780,6 +780,55 @@ DATAIMPULSE_PASS = os.environ.get("DATAIMPULSE_PASS") or "b0ec68a6ff8231c0"
 DATAIMPULSE_HOST = os.environ.get("DATAIMPULSE_HOST") or "gw.dataimpulse.com"
 DATAIMPULSE_PORT = os.environ.get("DATAIMPULSE_PORT") or "823"
 
+# Webshare static ISP proxies (unlimited bandwidth) - primary geo-unlock fleet.
+# DataImpulse (per-GB) is used only as a rare fallback for countries not in this fleet.
+WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
+WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
+WEBSHARE_POOLS = {
+    "US": ["9.142.218.167:6831", "192.46.201.131:6645", "64.52.28.38:7725", "9.142.198.67:5734",
+           "45.56.180.203:8437", "9.142.11.217:5373", "64.52.31.9:6196"],
+    "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "104.252.97.55:5925"],
+    "FR": ["31.98.8.3:5681", "31.98.15.244:5421", "46.203.60.159:7159", "46.203.41.103:5604", "82.22.96.234:7942"],
+    "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
+    "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
+}
+WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
+
+def build_proxy_candidates(allowed: list) -> list:
+    """Ordered list of (label, proxy_url, country_lower_or_None) to try for a geo-restricted video.
+    Webshare pool(s) matching the video's allowed countries first, DataImpulse as last-resort fallback."""
+    import random
+    allowed_set = {str(c).upper() for c in (allowed or [])}
+    candidates = []
+    pool_cc = None
+    if not allowed_set:
+        pool_cc = "US"
+    else:
+        for cc in WEBSHARE_POOL_PRIORITY:
+            if cc in allowed_set:
+                pool_cc = cc
+                break
+    if pool_cc:
+        ips = list(WEBSHARE_POOLS[pool_cc])
+        random.shuffle(ips)
+        for ip in ips[:3]:
+            candidates.append((f"Webshare-{pool_cc}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", pool_cc.lower()))
+
+    # DataImpulse fallback (pay-per-GB) - only reached if Webshare unavailable / country not in fleet
+    di_country = None
+    if allowed_set:
+        for pc in ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR"]:
+            if pc in allowed_set:
+                di_country = pc.lower()
+                break
+        if not di_country:
+            di_country = sorted(allowed_set)[0].lower()
+    sess = uuid.uuid4().hex[:8]
+    di_user = f"{DATAIMPULSE_USER}__cr.{di_country};sessid.{sess};sessttl.10" if di_country else f"{DATAIMPULSE_USER}__sessid.{sess};sessttl.10"
+    candidates.append((f"DataImpulse-{(di_country or 'any').upper()}",
+                       f"http://{di_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}", di_country))
+    return candidates
+
 def detect_video_allowed_countries(vid: str) -> list:
     yt_url = f"https://www.youtube.com/watch?v={vid}"
     req = urllib.request.Request(
@@ -912,45 +961,56 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         actual_ext = default_ext
         last_extract_err = None
 
-        # Two-attempt smart rotation: Attempt 1 uses clean residential session, Attempt 2 adds android client fallback
-        for attempt in range(2):
-            cur_sess = uuid.uuid4().hex[:8]
-            if target_country:
-                proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country};sessid.{cur_sess};sessttl.10"
-            else:
-                proxy_user = f"{DATAIMPULSE_USER}__sessid.{cur_sess};sessttl.10"
-            proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
+        # Smart rotation: Webshare unlimited pool (3 IPs) first, DataImpulse only as last-resort fallback.
+        # Each proxy is tried with the default web client, then the android_vr client (works without a JS runtime).
+        proxy_candidates = build_proxy_candidates(allowed)
+        attempts = [(c, client) for c in proxy_candidates for client in (None, ["android_vr"])]
+        for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
+            target_country = cand_country
 
             ydl_opts = {
                 "proxy": proxy_url,
                 "quiet": True,
                 "no_warnings": True,
-                "format": fmt_selector if attempt == 0 else "18/b/best",
+                "format": fmt_selector if client is None else "18/b/best",
                 "noplaylist": True,
                 "extract_flat": False,
                 "socket_timeout": 15,
+                # Let yt-dlp solve YouTube JS challenges with whichever runtime exists (deno default, node if installed)
+                "js_runtimes": {"deno": {}, "node": {}},
             }
-            if attempt == 1:
-                ydl_opts["extractor_args"] = {"youtube": {"player_client": ["android"]}}
+            if client:
+                ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
             if cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
-                    if info and info.get("url"):
-                        stream_url = info.get("url")
-                        raw_title = info.get("title") or raw_title
-                        extracted_ext = info.get("ext") or ""
-                        if is_audio:
-                            actual_ext = extracted_ext if extracted_ext in ["m4a", "mp3", "aac"] else ("m4a" if extracted_ext == "mp4" else default_ext)
-                        else:
-                            actual_ext = extracted_ext or "mp4"
-                        break
+                if info and info.get("url"):
+                    cand_url = info.get("url")
+                    upstream_headers = {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                        "Accept": "*/*",
+                        "Connection": "keep-alive",
+                    }
+                    # Use the exact headers yt-dlp resolved for this player client
+                    if isinstance(info.get("http_headers"), dict):
+                        upstream_headers.update({k: v for k, v in info["http_headers"].items() if k.lower() != "accept-encoding"})
+                    opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+                    # Open the stream inside the attempt: an unsolved/blocked URL (403) falls through to the next client/proxy
+                    upstream_res = opener.open(urllib.request.Request(cand_url, headers=upstream_headers), timeout=30)
+                    stream_url = cand_url
+                    raw_title = info.get("title") or raw_title
+                    extracted_ext = info.get("ext") or ""
+                    if is_audio:
+                        actual_ext = extracted_ext if extracted_ext in ["m4a", "mp3", "aac"] else ("m4a" if extracted_ext == "mp4" else default_ext)
+                    else:
+                        actual_ext = extracted_ext or "mp4"
+                    break
             except Exception as e:
                 last_extract_err = e
-                if attempt == 1:
-                    break
+                continue
 
         if not stream_url:
             raise HTTPException(status_code=502, detail=f"Stream URL could not be extracted: {str(last_extract_err)}")
@@ -960,17 +1020,6 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         filename = f"{safe_title}.{actual_ext}"
         content_type = "audio/mp4" if actual_ext == "m4a" else ("audio/mpeg" if actual_ext == "mp3" else "video/mp4")
 
-        proxy_handler = urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url})
-        opener = urllib.request.build_opener(proxy_handler)
-        req = urllib.request.Request(
-            stream_url,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Accept": "*/*",
-                "Connection": "keep-alive",
-            }
-        )
-        upstream_res = opener.open(req, timeout=30)
         content_len = upstream_res.headers.get("Content-Length")
 
         # Telegram notification of successful unlock
@@ -979,8 +1028,8 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "-1003463852033"
             if tg_token and tg_chat_id:
                 alert_text = (
-                    f"🌍 <b>Residential Proxy Stream:</b>\n"
-                    f"Unlocked <code>{vid}</code> via {target_country.upper() if target_country else 'GLOBAL'} ({fmt_clean.upper()})\n"
+                    f"🌍 <b>Geo Proxy Stream:</b>\n"
+                    f"Unlocked <code>{vid}</code> via {proxy_label} ({fmt_clean.upper()})\n"
                     f"Title: {safe_title}"
                 )
                 payload = json.dumps({
