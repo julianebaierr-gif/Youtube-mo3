@@ -985,6 +985,16 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             if cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
+            # PO Token (Proof of Origin) support to bypass bot challenges on datacenter IPs
+            po_token = os.environ.get("YOUTUBE_PO_TOKEN")
+            visitor_data = os.environ.get("YOUTUBE_VISITOR_DATA")
+            if po_token:
+                yt_args = ydl_opts.setdefault("extractor_args", {}).setdefault("youtube", {})
+                pot_list = [f"web.gvs+{po_token}", f"web.player+{po_token}"]
+                if visitor_data:
+                    pot_list.append(f"visitor_data+{visitor_data}")
+                yt_args["po_token"] = pot_list
+
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
