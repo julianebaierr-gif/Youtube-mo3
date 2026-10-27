@@ -393,6 +393,21 @@ async def trigger_indexnow():
         "results": results
     }
 
+@app.on_event("startup")
+async def start_auto_indexnow_scheduler():
+    import asyncio
+    async def _auto_index_loop():
+        # Wait 90 seconds after server startup before initial run
+        await asyncio.sleep(90)
+        while True:
+            try:
+                await trigger_indexnow()
+            except Exception as e:
+                print(f"[AUTO_INDEXNOW_WARN] {e}")
+            # Automatically push all URLs to Bing/IndexNow every 4 hours (14,400 seconds)
+            await asyncio.sleep(14400)
+    asyncio.create_task(_auto_index_loop())
+
 @app.get("/api/convert")
 async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     encoded_url = urllib.parse.quote(url)

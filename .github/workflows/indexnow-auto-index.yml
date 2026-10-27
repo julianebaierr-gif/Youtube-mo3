@@ -1,9 +1,9 @@
-name: Auto IndexNow Sitemap Submission (Every 12 Hours)
+name: Auto IndexNow Sitemap Submission (Every 4 Hours)
 
 on:
   schedule:
-    # Runs automatically every 12 hours (00:00 UTC and 12:00 UTC)
-    - cron: '0 */12 * * *'
+    # Runs automatically every 4 hours (00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC)
+    - cron: '0 */4 * * *'
   workflow_dispatch:
 
 jobs:
