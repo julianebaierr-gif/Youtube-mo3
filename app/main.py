@@ -560,8 +560,8 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     is_geo = False
 
     is_video_fmt = fmt in ["1080", "720", "480", "360", "1440", "4k"]
-    # Prioritize official Loader cluster (p.lbserver.xyz) which mints clean worker CDN download links (*.savenow.to) without ad redirects
-    engine_order = ["loader", "savenow"]
+    # Prioritize authenticated Savenow cluster which mints genuine worker CDN download links (*.savenow.to) without ad redirects
+    engine_order = ["savenow", "loader"]
 
     for eng in engine_order:
         if eng == "loader":
@@ -626,8 +626,8 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
 async def proxy_progress(id: str):
     token = get_savenow_pow_token()
     endpoints = [
-        f"https://p.lbserver.xyz/api/progress?id={id}",
         f"https://p.savenow.to/api/progress?id={id}",
+        f"https://p.lbserver.xyz/api/progress?id={id}",
         f"https://lto2.affadaffa.com/api/progress?id={id}"
     ]
     for ep in endpoints:
