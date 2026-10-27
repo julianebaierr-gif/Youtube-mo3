@@ -517,14 +517,22 @@ async def proxy_progress(id: str):
             continue
     raise HTTPException(status_code=502, detail="Progress check failed")
 
+@app.get("/api/report-issue")
 @app.post("/api/report-issue")
 async def report_issue(request: Request):
     try:
-        body = await request.json()
+        if request.method == "POST":
+            try:
+                body = await request.json()
+            except Exception:
+                body = {}
+        else:
+            body = dict(request.query_params)
+
         video_url = str(body.get("video_url", "Unknown"))
         video_title = str(body.get("video_title", "Unknown"))
-        selected_format = str(body.get("format", "Unknown"))
-        error_detail = str(body.get("error", "Stream conversion failed"))
+        selected_format = str(body.get("format", body.get("selected_format", "Unknown")))
+        error_detail = str(body.get("error", body.get("error_detail", "Stream conversion failed")))
         user_agent = request.headers.get("user-agent", "Unknown")
         client_ip = request.headers.get("x-forwarded-for", request.client.host if request.client else "Unknown")
         
@@ -1146,6 +1154,33 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 continue
 
         if not stream_url:
+            # Telegram notification of DRM / proxy exhaust failure
+            try:
+                tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
+                tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
+                if tg_token and tg_chat_id:
+                    alert_text = (
+                        f"🔒 <b>Geo Stream Blocked:</b>\n"
+                        f"🎬 Video: <code>{vid}</code>\n"
+                        f"🔗 Link: https://www.youtube.com/watch?v={vid}\n"
+                        f"🎛 Format: {fmt_clean.upper()}\n"
+                        f"⚠️ All proxies exhausted ({str(last_extract_err)[:70]})"
+                    )
+                    payload = json.dumps({
+                        "chat_id": tg_chat_id,
+                        "text": alert_text,
+                        "parse_mode": "HTML",
+                        "disable_web_page_preview": True,
+                    }).encode("utf-8")
+                    tg_req = urllib.request.Request(
+                        f"https://api.telegram.org/bot{tg_token}/sendMessage",
+                        data=payload,
+                        headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
+                    )
+                    urllib.request.urlopen(tg_req, timeout=3).read()
+            except Exception:
+                pass
+
             return HTMLResponse(content=f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Playback Restricted | YT4MP3</title>
 <style>body{{font-family:sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}}
