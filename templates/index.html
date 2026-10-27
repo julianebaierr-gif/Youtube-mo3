@@ -3017,9 +3017,17 @@
                                     return;
                                 }
                             }
-                            // If all proxies failed to extract stream, display localized restriction message — NEVER trigger a fake download!
+                            // If cookies & proxy check failed, try FastSaver as last resort
+                            if (!fastSaverTried) {
+                                tryFastSaverEngine();
+                                return;
+                            }
                             failDownload(getI18nMsg('region_restricted'));
                         } catch (e) {
+                            if (!fastSaverTried) {
+                                tryFastSaverEngine();
+                                return;
+                            }
                             failDownload(getI18nMsg('region_restricted'));
                         }
                     }
@@ -3083,15 +3091,16 @@
                             return;
                         }
 
-                        // 2. High-speed FastSaver Pro API fallback: handles 4K, 2K, beIN Sports, and all failed streams
-                        if (!fastSaverTried) {
-                            tryFastSaverEngine();
+                        // 2. Authenticated Cookies & Multi-Proxy Fleet fallback (100% FREE, 0 API credits):
+                        // Tries unlocking age-restricted, blocked, or failed streams before any paid API is touched!
+                        if (!geoProxyTried) {
+                            tryGeoProxyEngine();
                             return;
                         }
 
-                        // 3. Multi-Proxy Fleet fallback for strictly regionally locked videos (e.g. France, Japan)
-                        if (!geoProxyTried && /not available in your country|blocked in your country|unavailable in your country|region/i.test(errText || lastServerErrorText || '')) {
-                            tryGeoProxyEngine();
+                        // 3. High-speed FastSaver Pro API fallback: handles 4K, 2K, beIN Sports, and ultimate fallback
+                        if (!fastSaverTried) {
+                            tryFastSaverEngine();
                             return;
                         }
 
@@ -3185,8 +3194,10 @@
                                 if ((p.progress || 0) >= 1000) {
                                     finishedNoFile++;
                                     if (finishedNoFile >= 3) {
-                                        // Server says "Finished" but gave no usable download link: go straight to FastSaver backup
-                                        if (!fastSaverTried) { if (activePollTimer) clearTimeout(activePollTimer); tryFastSaverEngine(); return; }
+                                        // Server says "Finished" but gave no usable download link: try free cookies/proxy unlock first, then FastSaver
+                                        if (activePollTimer) clearTimeout(activePollTimer);
+                                        if (!geoProxyTried) { tryGeoProxyEngine(); return; }
+                                        if (!fastSaverTried) { tryFastSaverEngine(); return; }
                                         stepDownOrSwitchEngine(p.text || p.message || ''); return;
                                     }
                                 } else if (p.progress !== undefined && p.progress !== null) {

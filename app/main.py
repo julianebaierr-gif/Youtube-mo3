@@ -1453,7 +1453,39 @@ async def get_video_resolutions(id: str):
     except Exception:
         pass
 
-    # 2. Fallback: FastSaver /v1/youtube/info (accurate format list when datacenter IP is blocked by YouTube)
+    # 2. Free yt-dlp check with authenticated cookies (zero credits, handles 18+ and unplayable watch pages)
+    try:
+        cookie_file = get_yt_cookies_file()
+        ydl_opts = {
+            "quiet": True,
+            "no_warnings": True,
+            "noplaylist": True,
+            "extract_flat": True,
+            "socket_timeout": 6,
+            "js_runtimes": {"node": {}, "deno": {}},
+        }
+        if cookie_file:
+            ydl_opts["cookiefile"] = cookie_file
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(yt_url, download=False)
+        if info:
+            dur = info.get("duration") or duration_sec or 0
+            formats = info.get("formats", [])
+            heights = [int(f.get("height")) for f in formats if f.get("height")]
+            max_h = max(heights) if heights else 1080
+            result = {
+                "has_4k": max_h >= 2160 or 2160 in heights,
+                "has_2k": max_h >= 1440 or 1440 in heights,
+                "max_height": max_h,
+                "duration_sec": int(dur),
+                "source": "ytdlp_cookies",
+            }
+            _VIDEO_RES_CACHE[vid] = result
+            return result
+    except Exception:
+        pass
+
+    # 3. Fallback: FastSaver /v1/youtube/info (accurate format list when datacenter IP is blocked by YouTube)
     try:
         info_url = f"https://api.fastsaver.io/v1/youtube/info?url={urllib.parse.quote(yt_url)}"
         req = urllib.request.Request(
