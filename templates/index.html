@@ -2061,10 +2061,14 @@
                     const key = f + '_' + ytId;
                     if (window._prewarmedStreams[key]) return;
 
+                    const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac'].includes(f);
+                    const mode = isAudio ? 'audio' : 'video';
+                    const q = isAudio ? '320' : (f === '1080' ? '1080' : (f === '480' ? '480' : (f === '360' ? '360' : '720')));
+
                     const streamEntry = {
-                        id: null,
-                        engine: 'savenow',
-                        progress: 250,
+                        id: 'cobalt_' + key,
+                        engine: 'cobalt',
+                        progress: 500,
                         download_url: null,
                         completed: false,
                         failed: false,
@@ -2074,66 +2078,34 @@
                     };
                     window._prewarmedStreams[key] = streamEntry;
 
-                    initiateStream(targetUrl, f).then(initData => {
-                        if (!initData || !initData.id) {
-                            if (initData && initData.isGeoBlock) {
-                                window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
-                                window._isGeoBlockedVideo[ytId] = true;
+                    // Pre-warm with clean, fast, free Cobalt engine
+                    fetchWithTimeout(`/api/free-convert?url=${encodeURIComponent(targetUrl)}&mode=${mode}&quality=${q}&format=${f}`, {}, 18000)
+                        .then(r => r.ok ? r.json() : null)
+                        .then(d => {
+                            if (d && d.success && d.download_url) {
+                                streamEntry.download_url = d.download_url;
+                                streamEntry.completed = true;
+                                streamEntry.progress = 1000;
+                                window._prewarmedReady[key] = d.download_url;
+                                streamEntry.callbacks.forEach(cb => { try { cb(d.download_url); } catch(e){} });
+                                return;
                             }
-                            if (initData && initData.errorText) {
+                            if (d && d.is_age_restricted) {
+                                window._videoFatalRestriction = window._videoFatalRestriction || {};
+                                window._videoFatalRestriction[ytId] = getI18nMsg('age_restricted');
                                 streamEntry.failed = true;
-                                streamEntry.errorText = initData.errorText;
+                                return;
                             }
-                            return;
-                        }
-                        streamEntry.id = initData.id;
-                        streamEntry.engine = initData.engine || 'savenow';
-
-                        if (isDownloadReady(initData)) {
-                            streamEntry.download_url = initData.download_url;
-                            streamEntry.completed = true;
-                            window._prewarmedReady[key] = initData.download_url;
-                            streamEntry.callbacks.forEach(cb => { try { cb(initData.download_url); } catch(e){} });
-                            return;
-                        }
-
-                        // Background poller
-                        let attempts = 0;
-                        const maxPoll = 150; // ~150 seconds window for large videos
-                        const pollBg = async () => {
-                            if (streamEntry.completed || streamEntry.foregroundActive || streamEntry.failed || attempts >= maxPoll) return;
-                            attempts++;
-                            try {
-                                const prog = await pollProgressEndpoint(streamEntry.id, streamEntry.engine);
-                                if (prog) {
-                                    if (isDownloadReady(prog)) {
-                                        streamEntry.download_url = prog.download_url;
-                                        streamEntry.completed = true;
-                                        window._prewarmedReady[key] = prog.download_url;
-                                        streamEntry.callbacks.forEach(cb => { try { cb(prog.download_url); } catch(e){} });
-                                        return;
-                                    }
-                                    if (isConversionError(prog)) {
-                                        const errTxt = prog.text || prog.message || '';
-                                        streamEntry.failed = true;
-                                        streamEntry.errorText = errTxt;
-                                        const restr = getSpecificVideoRestriction(errTxt);
-                                        if (restr && restr.fatal && !restr.isGeoBlock) {
-                                            window._videoFatalRestriction = window._videoFatalRestriction || {};
-                                            window._videoFatalRestriction[ytId] = restr.message;
-                                        }
-                                        return;
-                                    }
-                                    if (prog.progress) streamEntry.progress = prog.progress;
+                            // Fallback to background initiateStream if cobalt fails
+                            return initiateStream(targetUrl, f).then(initData => {
+                                if (initData && isDownloadReady(initData)) {
+                                    streamEntry.download_url = initData.download_url;
+                                    streamEntry.completed = true;
+                                    window._prewarmedReady[key] = initData.download_url;
+                                    streamEntry.callbacks.forEach(cb => { try { cb(initData.download_url); } catch(e){} });
                                 }
-                            } catch(e) {}
-
-                            if (!streamEntry.completed && !streamEntry.foregroundActive && !streamEntry.failed && attempts < maxPoll) {
-                                setTimeout(pollBg, 1000);
-                            }
-                        };
-                        setTimeout(pollBg, 150);
-                    }).catch(() => {});
+                            });
+                        }).catch(() => {});
                 });
             }
 
@@ -2677,10 +2649,10 @@
                 modalProgressBar.className = "progress-shimmer-bar";
                 modalSpeedText.textContent = '⚡ Turbo Speed';
                 modalEtaText.textContent = '~2s';
-                modalStatusMsg.textContent = 'Connecting high-speed stream...';
-                modalStatusMsg.className = "text-xs font-semibold text-gray-700 mb-4 bg-gray-50 py-2.5 px-3 rounded-lg border border-gray-200";
+                modalStatusMsg.textContent = 'Preparing clean high-speed download (100% Free)...';
+                modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                 modalActionContainer.classList.add('hidden');
-                updateConversionVisuals(20);
+                updateConversionVisuals(35);
 
                 const errActions = document.getElementById('modal-error-actions');
                 if (errActions) errActions.classList.add('hidden');
@@ -2895,6 +2867,15 @@
                             completeDownload(readyUrl);
                         }, 60);
                         return;
+                    }
+
+                    // Priority 1b: If background pre-warmer is already running, hook into it!
+                    if (forcedEngine === 'auto' && prewarmed && !prewarmed.failed && !prewarmed.completed) {
+                        prewarmed.foregroundActive = true;
+                        prewarmed.callbacks.push((finalUrl) => completeDownload(finalUrl));
+                        modalStatusMsg.textContent = 'Finalizing your download stream...';
+                        curPct = Math.max(curPct, 65);
+                        updateConversionVisuals(curPct);
                     }
 
                     // Robust single-conversion pipeline with automatic quality step-down for long/large videos:

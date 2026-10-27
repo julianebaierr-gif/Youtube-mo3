@@ -88,9 +88,9 @@ _CONVERTER_HTML_CACHE: dict[tuple[str, str], str] = {}
 _LEGAL_HTML_CACHE: dict[str, str] = {}
 
 EDGE_HTML_HEADERS = {
-    "Cache-Control": "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800",
-    "CDN-Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
-    "Vercel-CDN-Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+    "Cache-Control": "public, max-age=0, must-revalidate",
+    "CDN-Cache-Control": "public, max-age=0, must-revalidate",
+    "Vercel-CDN-Cache-Control": "public, max-age=0, must-revalidate",
 }
 
 def render_converter_page(request: Request, page_key: str, lang: str = "en"):
