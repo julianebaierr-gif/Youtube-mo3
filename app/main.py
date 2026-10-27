@@ -977,11 +977,17 @@ def detect_video_allowed_countries(vid: str) -> list:
     return []
 
 def get_yt_cookies_file():
-    """Resolves YouTube cookies from environment variable YOUTUBE_COOKIES or local cookies.txt."""
+    """Resolves YouTube cookies from environment variable YOUTUBE_COOKIES or local cookies.txt.
+    Always copies or writes to a writable temporary directory so yt-dlp cookie writebacks
+    never fail with [Errno 30] Read-only file system on Vercel/AWS Lambda."""
+    import tempfile
+    import shutil
+    import base64
+
+    writable_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
+
     raw_cookies = os.environ.get("YOUTUBE_COOKIES")
     if raw_cookies and len(raw_cookies.strip()) > 50:
-        import tempfile
-        import base64
         cleaned_cookies = raw_cookies.strip()
         if not cleaned_cookies.startswith("#") and "\t" not in cleaned_cookies:
             try:
@@ -991,12 +997,11 @@ def get_yt_cookies_file():
         if "\\n" in cleaned_cookies and "\n" not in cleaned_cookies:
             cleaned_cookies = cleaned_cookies.replace("\\n", "\n")
 
-        if cleaned_cookies.startswith("# Netscape HTTP Cookie File") and "\t" in cleaned_cookies and "LOGIN_INFO" in cleaned_cookies:
-            env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
+        if "\t" in cleaned_cookies and ("youtube" in cleaned_cookies or "google" in cleaned_cookies):
             try:
-                with open(env_cookie_path, "w", encoding="utf-8") as cf:
+                with open(writable_path, "w", encoding="utf-8") as cf:
                     cf.write(cleaned_cookies)
-                return env_cookie_path
+                return writable_path
             except Exception:
                 pass
 
@@ -1009,7 +1014,11 @@ def get_yt_cookies_file():
     ]
     for c_path in candidates:
         if os.path.exists(c_path) and os.path.getsize(c_path) > 20:
-            return c_path
+            try:
+                shutil.copy2(c_path, writable_path)
+                return writable_path
+            except Exception:
+                return c_path
     return None
 
 @app.get("/api/geo-stream-check")
