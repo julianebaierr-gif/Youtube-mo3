@@ -738,16 +738,24 @@ async def report_issue(request: Request):
 # CORS headers, so the browser calls this proxy, then downloads the tunnel URL directly.
 # ==============================================================================
 COBALT_INSTANCES = [
-    i.strip() for i in (os.environ.get("COBALT_INSTANCES") or "https://api.cobalt.liubquanti.click/").split(",") if i.strip()
+    i.strip() for i in (os.environ.get("COBALT_INSTANCES") or "https://cobaltapi.cjs.nz/,https://rue-cobalt.xenon.zone/,https://api.cobalt.liubquanti.click/").split(",") if i.strip()
 ]
 
 @app.get("/api/long-video")
-async def long_video(url: str, mode: str = "audio", quality: str = "720"):
+@app.get("/api/free-convert")
+async def long_video(url: str, mode: str = "audio", quality: str = "720", format: str = "mp3"):
     if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+    
+    clean_fmt = (format or "mp3").lower().strip()
     body = {"url": url, "filenameStyle": "basic"}
     if mode == "audio":
-        body.update({"downloadMode": "audio", "audioFormat": "mp3", "audioBitrate": "320"})
+        audio_fmt = "mp3"
+        if clean_fmt in ["wav", "opus"]:
+            audio_fmt = clean_fmt
+        elif clean_fmt in ["m4a", "aac"]:
+            audio_fmt = "best"
+        body.update({"downloadMode": "audio", "audioFormat": audio_fmt, "audioBitrate": "320"})
     else:
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
         if q not in ["144", "240", "360", "480", "720", "1080", "1440", "2160"]:
@@ -755,7 +763,10 @@ async def long_video(url: str, mode: str = "audio", quality: str = "720"):
         codec = "vp9" if q in ("1440", "2160") else "h264"
         body.update({"downloadMode": "auto", "videoQuality": q, "youtubeVideoCodec": codec})
 
-    last_err = "No long-video engine available"
+    last_err = "No free conversion engine available"
+    is_age = False
+    is_unavail = False
+
     for inst in COBALT_INSTANCES:
         try:
             req = urllib.request.Request(
@@ -767,20 +778,46 @@ async def long_video(url: str, mode: str = "audio", quality: str = "720"):
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
                 },
             )
-            with urllib.request.urlopen(req, timeout=25) as res:
+            with urllib.request.urlopen(req, timeout=12) as res:
                 data = json.loads(res.read().decode("utf-8"))
             if data.get("status") in ("tunnel", "redirect") and data.get("url"):
                 return {"success": True, "download_url": data["url"], "filename": data.get("filename", ""), "engine": "cobalt"}
-            last_err = str((data.get("error") or {}).get("code") or data.get("status") or "unknown")
+            
+            err_code = str((data.get("error") or {}).get("code") or data.get("status") or "")
+            if "age" in err_code:
+                is_age = True
+                last_err = "This video is 18+ age-restricted on YouTube."
+                break
+            elif "unavailable" in err_code:
+                is_unavail = True
+                last_err = "This video is unavailable or private on YouTube."
+                break
+            last_err = err_code or "unknown"
         except urllib.error.HTTPError as e:
             try:
                 err_body = json.loads(e.read().decode("utf-8", "ignore"))
-                last_err = str((err_body.get("error") or {}).get("code") or f"HTTP {e.code}")
+                err_code = str((err_body.get("error") or {}).get("code") or "")
+                if "age" in err_code:
+                    is_age = True
+                    last_err = "This video is 18+ age-restricted on YouTube."
+                    break
+                elif "unavailable" in err_code:
+                    is_unavail = True
+                    last_err = "This video is unavailable or private on YouTube."
+                    break
+                last_err = err_code or f"HTTP {e.code}"
             except Exception:
                 last_err = f"HTTP {e.code}"
         except Exception as e:
             last_err = str(e)
-    return {"success": False, "error": last_err}
+
+    return {
+        "success": False, 
+        "error": last_err, 
+        "is_age_restricted": is_age, 
+        "is_unavailable": is_unavail, 
+        "engine": "cobalt"
+    }
 
 
 # ==============================================================================
