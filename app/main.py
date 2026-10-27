@@ -530,13 +530,15 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
         except Exception as e:
             print(f"[SAVENOW_CONVERT_WARN] {e}")
 
-    # 2. Secondary Engine: loader.to
+    # 2. Secondary Engine: Loader cluster via official p.lbserver.xyz API
     try:
-        lto_url = f"https://loader.to/ajax/download.php?format={fmt}&url={encoded_url}"
-        req = urllib.request.Request(lto_url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Referer": "https://loader.to/"
-        })
+        lto_url = f"https://p.lbserver.xyz/api/v2/download?format={fmt}&url={encoded_url}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+            "Referer": "https://loader.to/",
+            "Origin": "https://loader.to",
+        }
+        req = urllib.request.Request(lto_url, headers=headers)
         with urllib.request.urlopen(req, timeout=9) as r:
             data = json.loads(r.read())
             if data and data.get("id"):
@@ -551,8 +553,8 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
                 captured_err = str(data.get("text") or data.get("error") or data.get("message"))
                 if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
                     is_geo = True
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[LOADER_LBSERVER_WARN] {e}")
 
     if captured_err:
         return {"success": False, "error": captured_err, "is_geo_blocked": is_geo}
@@ -563,6 +565,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
 async def proxy_progress(id: str):
     token = get_savenow_pow_token()
     endpoints = [
+        f"https://p.lbserver.xyz/api/progress?id={id}",
         f"https://p.savenow.to/api/progress?id={id}",
         f"https://lto2.affadaffa.com/api/progress?id={id}"
     ]

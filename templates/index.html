@@ -2003,9 +2003,9 @@
                     }
                 } catch(e) {}
 
-                // 3. Secondary engine: loader.to direct
+                // 3. Secondary engine: official Loader cluster via p.lbserver.xyz
                 try {
-                    const u = `https://loader.to/ajax/download.php?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                    const u = `https://p.lbserver.xyz/api/v2/download?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222`;
                     const r = await fetchWithTimeout(u, {}, 4500);
                     if (r.ok) {
                         const d = await r.json();
@@ -2026,9 +2026,9 @@
                 return null;
             }
 
-            // Multi-endpoint progress poller with rapid fallback (authenticated server /api/progress prioritized)
+            // Multi-endpoint progress poller with rapid fallback (authenticated server /api/progress & p.lbserver.xyz prioritized)
             async function pollProgressEndpoint(convId, engine) {
-                const endpoints = [`/api/progress?id=${convId}`, `https://p.savenow.to/api/progress?id=${convId}`, `https://lto2.affadaffa.com/api/progress?id=${convId}`];
+                const endpoints = [`/api/progress?id=${convId}`, `https://p.lbserver.xyz/api/progress?id=${convId}`, `https://p.savenow.to/api/progress?id=${convId}`];
                 
                 for (const ep of endpoints) {
                     try {
@@ -2940,16 +2940,27 @@
                             const mode = isAudio ? 'audio' : 'video';
                             const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : '720')));
 
-                            // 30-Minute Client Cache (0 API calls, 0 credits used on repeat clicks/downloads)
-                            const fsCacheKey = `${ytId}_${mode}_${q}`;
+                            // 1-Hour Multi-Tier Cache (0 API calls, 0 credits used on repeat clicks/downloads)
+                            const fsCacheKey = `yt4mp3_fs_${ytId}_${mode}_${q}`;
                             window._fastsaverClientCache = window._fastsaverClientCache || {};
                             if (window._fastsaverClientCache[fsCacheKey]) {
                                 const cachedEntry = window._fastsaverClientCache[fsCacheKey];
-                                if (Date.now() - cachedEntry.ts < 1800000) {
+                                if (Date.now() - cachedEntry.ts < 3600000) {
                                     completeDownload(cachedEntry.url);
                                     return;
                                 }
                             }
+                            try {
+                                const stored = localStorage.getItem(fsCacheKey);
+                                if (stored) {
+                                    const parsed = JSON.parse(stored);
+                                    if (parsed && parsed.url && (Date.now() - parsed.ts < 3600000)) {
+                                        window._fastsaverClientCache[fsCacheKey] = parsed;
+                                        completeDownload(parsed.url);
+                                        return;
+                                    }
+                                }
+                            } catch(e) {}
 
                             let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 60000);
                             if (!resp.ok && mode === 'video' && q !== '720') {
@@ -2958,7 +2969,9 @@
                             if (resp && resp.ok) {
                                 const data = await resp.json();
                                 if (data && data.success && data.download_url) {
-                                    window._fastsaverClientCache[fsCacheKey] = { url: data.download_url, ts: Date.now() };
+                                    const cacheObj = { url: data.download_url, ts: Date.now() };
+                                    window._fastsaverClientCache[fsCacheKey] = cacheObj;
+                                    try { localStorage.setItem(fsCacheKey, JSON.stringify(cacheObj)); } catch(e) {}
                                     completeDownload(data.download_url);
                                     return;
                                 }
@@ -3032,7 +3045,7 @@
                     async function initLoaderDirect(targetFmt) {
                         let cleanFmt = targetFmt || activeFmt;
                         try {
-                            const u = `https://loader.to/ajax/download.php?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
+                            const u = `https://p.lbserver.xyz/api/v2/download?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222`;
                             const r = await fetchWithTimeout(u, {}, 8000);
                             if (r.ok) {
                                 const d = await r.json();
