@@ -2939,6 +2939,18 @@
                             const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
                             const mode = isAudio ? 'audio' : 'video';
                             const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : '720')));
+
+                            // 30-Minute Client Cache (0 API calls, 0 credits used on repeat clicks/downloads)
+                            const fsCacheKey = `${ytId}_${mode}_${q}`;
+                            window._fastsaverClientCache = window._fastsaverClientCache || {};
+                            if (window._fastsaverClientCache[fsCacheKey]) {
+                                const cachedEntry = window._fastsaverClientCache[fsCacheKey];
+                                if (Date.now() - cachedEntry.ts < 1800000) {
+                                    completeDownload(cachedEntry.url);
+                                    return;
+                                }
+                            }
+
                             let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 60000);
                             if (!resp.ok && mode === 'video' && q !== '720') {
                                 resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=720`, {}, 60000);
@@ -2946,6 +2958,7 @@
                             if (resp && resp.ok) {
                                 const data = await resp.json();
                                 if (data && data.success && data.download_url) {
+                                    window._fastsaverClientCache[fsCacheKey] = { url: data.download_url, ts: Date.now() };
                                     completeDownload(data.download_url);
                                     return;
                                 }

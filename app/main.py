@@ -746,16 +746,20 @@ def _check_fastsaver_credits_and_alert(force_check: bool = False, test_alert: bo
 async def fastsaver_balance_check(test_alert: int = 0):
     return _check_fastsaver_credits_and_alert(force_check=True, test_alert=(int(test_alert) == 1))
 
+# FastSaver 30-minute link cache to eliminate duplicate credit consumption
+_FASTSAVER_LINK_CACHE = {}
+
 @app.get("/api/fastsaver-video")
 async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
-    headers = {
-        "X-Api-Key": FASTSAVER_API_KEY,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
-    }
+
+    # Extract YouTube ID for smart caching
+    vid = None
+    m = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
+    if m:
+        vid = m.group(1)
+
     # Determine format string for FastSaver
     if mode == "audio":
         fmt = "audio"
@@ -763,6 +767,22 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
         fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
         fmt = fmt_map.get(q, "720p")
+
+    # 30-Minute Cache Lookup (0 Credits used if already converted within 30 min)
+    import time
+    now = time.time()
+    cache_key = f"{vid}_{mode}_{fmt}"
+    if vid and cache_key in _FASTSAVER_LINK_CACHE:
+        cached = _FASTSAVER_LINK_CACHE[cache_key]
+        if (now - cached.get("ts", 0)) < 1800:  # 30 minutes TTL
+            return cached["data"]
+
+    headers = {
+        "X-Api-Key": FASTSAVER_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+    }
     body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
     try:
         req = urllib.request.Request(
@@ -776,12 +796,21 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         # Check remaining credits after download and alert if <= 10,000
         _check_fastsaver_credits_and_alert(force_check=True)
         if data.get("ok") and data.get("download_url"):
-            return {
+            resp_payload = {
                 "success": True,
                 "download_url": data["download_url"],
                 "filename": data.get("filename", ""),
                 "engine": "fastsaver",
+                "cached": False,
             }
+            # Cache for 30 minutes
+            if vid:
+                if len(_FASTSAVER_LINK_CACHE) > 1000:
+                    expired = [k for k, v in _FASTSAVER_LINK_CACHE.items() if (now - v.get("ts", 0)) >= 1800]
+                    for k in expired:
+                        _FASTSAVER_LINK_CACHE.pop(k, None)
+                _FASTSAVER_LINK_CACHE[cache_key] = {"data": {**resp_payload, "cached": True}, "ts": now}
+            return resp_payload
         return {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
     except urllib.error.HTTPError as e:
         try:
