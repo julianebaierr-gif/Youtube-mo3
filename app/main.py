@@ -560,8 +560,8 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     is_geo = False
 
     is_video_fmt = fmt in ["1080", "720", "480", "360", "1440", "4k"]
-    # For video formats, prioritize p.lbserver.xyz which muxes full 1080p and 720p without ad gateways
-    engine_order = ["loader", "savenow"] if (engine == "loader" or is_video_fmt) else ["savenow", "loader"]
+    # Prioritize official Loader cluster (p.lbserver.xyz) which mints clean worker CDN download links (*.savenow.to) without ad redirects
+    engine_order = ["loader", "savenow"]
 
     for eng in engine_order:
         if eng == "loader":
