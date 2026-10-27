@@ -821,13 +821,55 @@ async def long_video(url: str, mode: str = "audio", quality: str = "720", format
 
 
 # ==============================================================================
-# FASTSAVER ENGINE (4th fallback) — paid API with 4K support, no duration limit
-# Uses api.fastsaver.io with API key. Costs credits per download.
+# FASTSAVER ENGINE — Paid Pro API with multi-tier caching & in-flight locking
+# Prevents duplicate credit consumption on repeat clicks and concurrent requests
 # ==============================================================================
 FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY") or "fs_sk_9w9n0d9x3t0r0g2g0d3e0j3f6u7q"
 FASTSAVER_LOW_CREDIT_THRESHOLD = 10000
+FASTSAVER_CACHE_FILE = "/tmp/fastsaver_cache.json"
 _LAST_FS_BALANCE_CHECK_TS = 0.0
 _LAST_FS_LOW_ALERT_TS = 0.0
+_FASTSAVER_LINK_CACHE = {}
+_FASTSAVER_IN_FLIGHT = {}
+_FASTSAVER_LOCK = asyncio.Lock()
+
+def _get_fastsaver_cache(key: str) -> dict:
+    global _FASTSAVER_LINK_CACHE
+    import time
+    now = time.time()
+    # 1. In-memory check
+    if key in _FASTSAVER_LINK_CACHE:
+        entry = _FASTSAVER_LINK_CACHE[key]
+        if (now - entry.get("ts", 0)) < 250:  # 250s TTL (safe margin before FastSaver 5m expiry)
+            return entry.get("data")
+        else:
+            _FASTSAVER_LINK_CACHE.pop(key, None)
+    # 2. Local disk (/tmp) check across container warm starts
+    if os.path.exists(FASTSAVER_CACHE_FILE):
+        try:
+            with open(FASTSAVER_CACHE_FILE, "r", encoding="utf-8") as f:
+                disk = json.load(f)
+                if key in disk:
+                    d_entry = disk[key]
+                    if (now - d_entry.get("ts", 0)) < 250:
+                        _FASTSAVER_LINK_CACHE[key] = d_entry
+                        return d_entry.get("data")
+        except Exception:
+            pass
+    return None
+
+def _set_fastsaver_cache(key: str, data: dict) -> None:
+    global _FASTSAVER_LINK_CACHE
+    import time
+    now = time.time()
+    _FASTSAVER_LINK_CACHE[key] = {"data": data, "ts": now}
+    try:
+        active = {k: v for k, v in _FASTSAVER_LINK_CACHE.items() if (now - v.get("ts", 0)) < 250}
+        _FASTSAVER_LINK_CACHE = active
+        with open(FASTSAVER_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(active, f)
+    except Exception:
+        pass
 
 def _fetch_fastsaver_balance() -> dict:
     try:
@@ -921,9 +963,6 @@ def _check_fastsaver_credits_and_alert(force_check: bool = False, test_alert: bo
 async def fastsaver_balance_check(test_alert: int = 0):
     return _check_fastsaver_credits_and_alert(force_check=True, test_alert=(int(test_alert) == 1))
 
-# FastSaver 30-minute link cache to eliminate duplicate credit consumption
-_FASTSAVER_LINK_CACHE = {}
-
 @app.get("/api/fastsaver-video")
 async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", format: str = ""):
     if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
@@ -935,26 +974,51 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", f
     if m:
         vid = m.group(1)
 
-    # Determine format string for FastSaver
     req_fmt = (format or "").strip().lower()
-    if req_fmt in ("m4a", "mp3"):
-        fmt = req_fmt
-    elif mode == "audio" or req_fmt in ("flac", "wav", "aac", "ogg", "opus"):
+    is_audio = (mode == "audio") or (req_fmt in ("audio", "mp3", "m4a", "flac", "wav", "aac", "ogg", "opus"))
+
+    # Shared cache key: all audio formats for same video share 1 key (0 repeat credit consumption!)
+    if is_audio:
+        mode = "audio"
         fmt = "audio"
+        cache_key = f"{vid}_audio"
     else:
+        mode = "video"
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
         fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
         fmt = fmt_map.get(q, "720p")
+        cache_key = f"{vid}_{fmt}"
 
-    # 30-Minute Cache Lookup (0 Credits used if already converted within 30 min)
-    import time
-    now = time.time()
-    cache_key = f"{vid}_{mode}_{fmt}"
-    if vid and cache_key in _FASTSAVER_LINK_CACHE:
-        cached = _FASTSAVER_LINK_CACHE[cache_key]
-        if (now - cached.get("ts", 0)) < 1800:  # 30 minutes TTL
-            return cached["data"]
+    # Edge CDN caching headers: Vercel CDN caches at Edge nodes worldwide for 240s
+    edge_headers = {
+        "Cache-Control": "public, s-maxage=240, max-age=240, stale-while-revalidate=30",
+        "Content-Type": "application/json; charset=utf-8"
+    }
 
+    # 1. Multi-tier Cache check (Memory + /tmp disk)
+    if vid:
+        cached_entry = _get_fastsaver_cache(cache_key)
+        if cached_entry:
+            return Response(content=json.dumps(cached_entry), media_type="application/json", headers=edge_headers)
+
+    # 2. In-flight request deduplication lock (If 2 clicks happen simultaneously, request 2 waits for request 1)
+    future_to_wait = None
+    async with _FASTSAVER_LOCK:
+        if cache_key in _FASTSAVER_IN_FLIGHT:
+            future_to_wait = _FASTSAVER_IN_FLIGHT[cache_key]
+        else:
+            loop = asyncio.get_running_loop()
+            _FASTSAVER_IN_FLIGHT[cache_key] = loop.create_future()
+
+    if future_to_wait:
+        try:
+            in_flight_resp = await asyncio.wait_for(future_to_wait, timeout=45)
+            if in_flight_resp and in_flight_resp.get("success"):
+                return Response(content=json.dumps(in_flight_resp), media_type="application/json", headers=edge_headers)
+        except Exception:
+            pass
+
+    # 3. Call FastSaver API directly
     headers = {
         "X-Api-Key": FASTSAVER_API_KEY,
         "Content-Type": "application/json",
@@ -962,6 +1026,7 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", f
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
     }
     body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+    resp_payload = None
     try:
         req = urllib.request.Request(
             "https://api.fastsaver.io/v1/youtube/download",
@@ -971,7 +1036,6 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", f
         )
         with urllib.request.urlopen(req, timeout=55) as res:
             data = json.loads(res.read().decode("utf-8"))
-        # Check remaining credits after download and alert if <= 10,000
         _check_fastsaver_credits_and_alert(force_check=True)
         if data.get("ok") and data.get("download_url"):
             resp_payload = {
@@ -981,15 +1045,10 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", f
                 "engine": "fastsaver",
                 "cached": False,
             }
-            # Cache for 30 minutes
             if vid:
-                if len(_FASTSAVER_LINK_CACHE) > 1000:
-                    expired = [k for k, v in _FASTSAVER_LINK_CACHE.items() if (now - v.get("ts", 0)) >= 1800]
-                    for k in expired:
-                        _FASTSAVER_LINK_CACHE.pop(k, None)
-                _FASTSAVER_LINK_CACHE[cache_key] = {"data": {**resp_payload, "cached": True}, "ts": now}
-            return resp_payload
-        return {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
+                _set_fastsaver_cache(cache_key, {**resp_payload, "cached": True})
+        else:
+            resp_payload = {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
     except urllib.error.HTTPError as e:
         try:
             err_body = json.loads(e.read().decode("utf-8", "ignore"))
@@ -998,9 +1057,21 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", f
             detail = f"HTTP {e.code}"
         _check_fastsaver_credits_and_alert(force_check=False)
         is_age = ("age" in str(detail).lower() or (e.code == 400 and "fail" in str(detail).lower()))
-        return {"success": False, "error": str(detail), "is_age_restricted": is_age}
+        resp_payload = {"success": False, "error": str(detail), "is_age_restricted": is_age}
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        resp_payload = {"success": False, "error": str(e)}
+    finally:
+        # Resolve all waiting in-flight coroutines
+        async with _FASTSAVER_LOCK:
+            fut = _FASTSAVER_IN_FLIGHT.pop(cache_key, None)
+            if fut and not fut.done():
+                fut.set_result(resp_payload or {"success": False, "error": "unknown"})
+
+    if resp_payload and resp_payload.get("success"):
+        return Response(content=json.dumps(resp_payload), media_type="application/json", headers=edge_headers)
+    else:
+        no_cache_headers = {"Cache-Control": "no-store, max-age=0", "Content-Type": "application/json; charset=utf-8"}
+        return Response(content=json.dumps(resp_payload or {"success": False}), media_type="application/json", headers=no_cache_headers)
 
 
 def build_proxy_candidates(allowed: list) -> list:

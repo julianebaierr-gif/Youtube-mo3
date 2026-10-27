@@ -2495,6 +2495,43 @@
                 window._lastRequestedQuality = safeQuality;
                 window._lastRequestedLabel = safeLabel;
 
+                // Client-side instant cache check (0 credits used on repeat clicks!)
+                const isAudioReq = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
+                const clientCacheKey = isAudioReq ? `yt4mp3_fs_${ytId}_audio` : `yt4mp3_fs_${ytId}_video_${cleanQ}`;
+                const CLIENT_CACHE_TTL_MS = 240 * 1000; // 4 minutes (safe margin before FastSaver 5m link expiry)
+
+                window._fastsaverClientCache = window._fastsaverClientCache || {};
+                let cachedItem = window._fastsaverClientCache[clientCacheKey];
+                if (!cachedItem) {
+                    try {
+                        const stored = localStorage.getItem(clientCacheKey) || sessionStorage.getItem(clientCacheKey);
+                        if (stored) {
+                            const parsed = JSON.parse(stored);
+                            if (parsed && parsed.url && (Date.now() - (parsed.ts || 0) < CLIENT_CACHE_TTL_MS)) {
+                                cachedItem = parsed;
+                                window._fastsaverClientCache[clientCacheKey] = parsed;
+                            }
+                        }
+                    } catch(e) {}
+                }
+
+                if (cachedItem && cachedItem.url && (Date.now() - (cachedItem.ts || 0) < CLIENT_CACHE_TTL_MS)) {
+                    // Instant delivery from browser cache
+                    progressModal.classList.remove('hidden');
+                    modalTitle.textContent = safeLabel;
+                    modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
+                    modalProgressBar.style.width = '100%';
+                    modalProgressBar.className = "progress-ready-bar";
+                    modalPctText.textContent = '100%';
+                    modalEtaText.textContent = 'Instant';
+                    modalSpeedText.textContent = 'Ultra Fast';
+                    modalStatusMsg.textContent = 'File Ready! Saving to device...';
+                    setTimeout(() => {
+                        completeDownload(cachedItem.url);
+                    }, 40);
+                    return;
+                }
+
                 // Clean format mapping
                 let fmtParam = 'mp3';
                 if (safeFormat === 'mp3') {
@@ -2890,21 +2927,23 @@
                             const mode = isAudio ? 'audio' : 'video';
                             const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : (fmtParam === '480' ? '480' : (fmtParam === '360' ? '360' : '720')))));
 
-                            // 1-Hour Multi-Tier Cache (0 API calls, 0 credits used on repeat clicks/downloads)
-                            const fsCacheKey = `yt4mp3_fs_${ytId}_${mode}_${q}`;
+                            // Shared cache key: all audio bitrates share 1 entry so 0 repeat credits are spent!
+                            const fsCacheKey = isAudio ? `yt4mp3_fs_${ytId}_audio` : `yt4mp3_fs_${ytId}_video_${q}`;
+                            const CACHE_TTL_MS = 240 * 1000; // 4 minutes safe TTL
+
                             window._fastsaverClientCache = window._fastsaverClientCache || {};
                             if (window._fastsaverClientCache[fsCacheKey]) {
                                 const cachedEntry = window._fastsaverClientCache[fsCacheKey];
-                                if (Date.now() - cachedEntry.ts < 3600000) {
+                                if (Date.now() - (cachedEntry.ts || 0) < CACHE_TTL_MS) {
                                     completeDownload(cachedEntry.url);
                                     return;
                                 }
                             }
                             try {
-                                const stored = localStorage.getItem(fsCacheKey);
+                                const stored = localStorage.getItem(fsCacheKey) || sessionStorage.getItem(fsCacheKey);
                                 if (stored) {
                                     const parsed = JSON.parse(stored);
-                                    if (parsed && parsed.url && (Date.now() - parsed.ts < 3600000)) {
+                                    if (parsed && parsed.url && (Date.now() - (parsed.ts || 0) < CACHE_TTL_MS)) {
                                         window._fastsaverClientCache[fsCacheKey] = parsed;
                                         completeDownload(parsed.url);
                                         return;
@@ -2912,24 +2951,53 @@
                                 }
                             } catch(e) {}
 
-                            let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}&format=${encodeURIComponent(safeFormat)}`, {}, 45000);
-                            if (!resp.ok && mode === 'video' && q !== '720') {
-                                resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=720&format=${encodeURIComponent(safeFormat)}`, {}, 30000);
+                            // In-flight deduplication: if download is already in progress, wait for it!
+                            window._fastsaverInFlight = window._fastsaverInFlight || {};
+                            if (window._fastsaverInFlight[fsCacheKey]) {
+                                try {
+                                    const inFlightUrl = await window._fastsaverInFlight[fsCacheKey];
+                                    if (inFlightUrl) {
+                                        completeDownload(inFlightUrl);
+                                        return;
+                                    }
+                                } catch(e) {}
                             }
-                            if (resp && resp.ok) {
-                                const data = await resp.json();
-                                if (data && data.success && data.download_url) {
-                                    const cacheObj = { url: data.download_url, ts: Date.now() };
-                                    window._fastsaverClientCache[fsCacheKey] = cacheObj;
-                                    try { localStorage.setItem(fsCacheKey, JSON.stringify(cacheObj)); } catch(e) {}
-                                    completeDownload(data.download_url);
-                                    return;
-                                }
-                                if (data && data.is_age_restricted) {
-                                    failDownload(getI18nMsg('age_restricted'));
-                                    return;
-                                }
+
+                            const fetchTask = (async () => {
+                                try {
+                                    let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}&format=${encodeURIComponent(safeFormat)}`, {}, 45000);
+                                    if (!resp.ok && mode === 'video' && q !== '720') {
+                                        resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=720&format=${encodeURIComponent(safeFormat)}`, {}, 30000);
+                                    }
+                                    if (resp && resp.ok) {
+                                        const data = await resp.json();
+                                        if (data && data.success && data.download_url) {
+                                            const cacheObj = { url: data.download_url, ts: Date.now() };
+                                            window._fastsaverClientCache[fsCacheKey] = cacheObj;
+                                            try {
+                                                localStorage.setItem(fsCacheKey, JSON.stringify(cacheObj));
+                                                sessionStorage.setItem(fsCacheKey, JSON.stringify(cacheObj));
+                                            } catch(e) {}
+                                            return data.download_url;
+                                        }
+                                        if (data && data.is_age_restricted) {
+                                            failDownload(getI18nMsg('age_restricted'));
+                                            return null;
+                                        }
+                                    }
+                                } catch(e) {}
+                                return null;
+                            })();
+
+                            window._fastsaverInFlight[fsCacheKey] = fetchTask;
+                            const finalDlUrl = await fetchTask;
+                            delete window._fastsaverInFlight[fsCacheKey];
+
+                            if (finalDlUrl) {
+                                completeDownload(finalDlUrl);
+                                return;
                             }
+
                             // Fallback to secondary engines if FastSaver fails
                             if (typeof onFailCallback === 'function') {
                                 onFailCallback();
