@@ -925,7 +925,7 @@ async def fastsaver_balance_check(test_alert: int = 0):
 _FASTSAVER_LINK_CACHE = {}
 
 @app.get("/api/fastsaver-video")
-async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
+async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", format: str = ""):
     if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
@@ -936,7 +936,10 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         vid = m.group(1)
 
     # Determine format string for FastSaver
-    if mode == "audio":
+    req_fmt = (format or "").strip().lower()
+    if req_fmt in ("m4a", "mp3"):
+        fmt = req_fmt
+    elif mode == "audio" or req_fmt in ("flac", "wav", "aac", "ogg", "opus"):
         fmt = "audio"
     else:
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
@@ -994,7 +997,8 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         except Exception:
             detail = f"HTTP {e.code}"
         _check_fastsaver_credits_and_alert(force_check=False)
-        return {"success": False, "error": str(detail)}
+        is_age = ("age" in str(detail).lower() or (e.code == 400 and "fail" in str(detail).lower()))
+        return {"success": False, "error": str(detail), "is_age_restricted": is_age}
     except Exception as e:
         return {"success": False, "error": str(e)}
 

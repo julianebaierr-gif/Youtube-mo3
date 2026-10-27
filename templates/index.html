@@ -2050,63 +2050,8 @@
             window._prewarmedReady = window._prewarmedReady || {};
 
             function prewarmStreams(ytId, extraFormats) {
-                if (!ytId) return;
-                window._prewarmedStreams = window._prewarmedStreams || {};
-                window._prewarmedReady = window._prewarmedReady || {};
-                
-                const targetUrl = `https://www.youtube.com/watch?v=${ytId}`;
-                const priorityFormats = extraFormats || ['mp3', '720', '1080'];
-
-                priorityFormats.forEach(f => {
-                    const key = f + '_' + ytId;
-                    if (window._prewarmedStreams[key]) return;
-
-                    const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac'].includes(f);
-                    const mode = isAudio ? 'audio' : 'video';
-                    const q = isAudio ? '320' : (f === '1080' ? '1080' : (f === '480' ? '480' : (f === '360' ? '360' : '720')));
-
-                    const streamEntry = {
-                        id: 'cobalt_' + key,
-                        engine: 'cobalt',
-                        progress: 500,
-                        download_url: null,
-                        completed: false,
-                        failed: false,
-                        errorText: '',
-                        foregroundActive: false,
-                        callbacks: []
-                    };
-                    window._prewarmedStreams[key] = streamEntry;
-
-                    // Pre-warm with clean, fast, free Cobalt engine
-                    fetchWithTimeout(`/api/free-convert?url=${encodeURIComponent(targetUrl)}&mode=${mode}&quality=${q}&format=${f}`, {}, 18000)
-                        .then(r => r.ok ? r.json() : null)
-                        .then(d => {
-                            if (d && d.success && d.download_url) {
-                                streamEntry.download_url = d.download_url;
-                                streamEntry.completed = true;
-                                streamEntry.progress = 1000;
-                                window._prewarmedReady[key] = d.download_url;
-                                streamEntry.callbacks.forEach(cb => { try { cb(d.download_url); } catch(e){} });
-                                return;
-                            }
-                            if (d && d.is_age_restricted) {
-                                window._videoFatalRestriction = window._videoFatalRestriction || {};
-                                window._videoFatalRestriction[ytId] = getI18nMsg('age_restricted');
-                                streamEntry.failed = true;
-                                return;
-                            }
-                            // Fallback to background initiateStream if cobalt fails
-                            return initiateStream(targetUrl, f).then(initData => {
-                                if (initData && isDownloadReady(initData)) {
-                                    streamEntry.download_url = initData.download_url;
-                                    streamEntry.completed = true;
-                                    window._prewarmedReady[key] = initData.download_url;
-                                    streamEntry.callbacks.forEach(cb => { try { cb(initData.download_url); } catch(e){} });
-                                }
-                            });
-                        }).catch(() => {});
-                });
+                // Background pre-warming disabled: all conversions route cleanly to FastSaver Pro API on user click.
+                return;
             }
 
             urlInput.addEventListener('input', (e) => {
@@ -2649,7 +2594,7 @@
                 modalProgressBar.className = "progress-shimmer-bar";
                 modalSpeedText.textContent = '⚡ Turbo Speed';
                 modalEtaText.textContent = '~2s';
-                modalStatusMsg.textContent = 'Preparing clean high-speed download (100% Free)...';
+                modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                 modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                 modalActionContainer.classList.add('hidden');
                 updateConversionVisuals(35);
@@ -2890,7 +2835,7 @@
                     async function tryCobaltEngine(onFailCallback) {
                         if (completed || cobaltTried || window._activeConversionToken !== conversionToken) return;
                         cobaltTried = true;
-                        modalStatusMsg.textContent = 'Preparing clean high-speed download (100% Free)...';
+                        modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
                         curPct = Math.max(curPct, 50);
@@ -2930,18 +2875,20 @@
                     }
                     const tryLongVideoEngine = tryCobaltEngine;
 
-                    // FastSaver engine: paid API with 4K, 2K, beIN Sports, and high-speed fallback
+                    // FastSaver engine: Primary Paid Pro API for ALL video/audio formats!
                     let fastSaverTried = false;
-                    async function tryFastSaverEngine() {
-                        if (completed || fastSaverTried) return;
+                    async function tryFastSaverEngine(onFailCallback) {
+                        if (completed || fastSaverTried || window._activeConversionToken !== conversionToken) return;
                         fastSaverTried = true;
-                        modalStatusMsg.textContent = 'Processing high-resolution stream (FastSaver Pro)...';
+                        modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
+                        curPct = Math.max(curPct, 50);
+                        updateConversionVisuals(curPct);
                         try {
                             const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
                             const mode = isAudio ? 'audio' : 'video';
-                            const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : '720')));
+                            const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : (fmtParam === '480' ? '480' : (fmtParam === '360' ? '360' : '720')))));
 
                             // 1-Hour Multi-Tier Cache (0 API calls, 0 credits used on repeat clicks/downloads)
                             const fsCacheKey = `yt4mp3_fs_${ytId}_${mode}_${q}`;
@@ -2965,9 +2912,9 @@
                                 }
                             } catch(e) {}
 
-                            let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 60000);
+                            let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}&format=${encodeURIComponent(safeFormat)}`, {}, 45000);
                             if (!resp.ok && mode === 'video' && q !== '720') {
-                                resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=720`, {}, 60000);
+                                resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=720&format=${encodeURIComponent(safeFormat)}`, {}, 30000);
                             }
                             if (resp && resp.ok) {
                                 const data = await resp.json();
@@ -2978,19 +2925,27 @@
                                     completeDownload(data.download_url);
                                     return;
                                 }
+                                if (data && data.is_age_restricted) {
+                                    failDownload(getI18nMsg('age_restricted'));
+                                    return;
+                                }
                             }
-                            // If FastSaver failed (e.g. video is strictly locked to France or Japan), try multi-proxy
-                            if (!geoProxyTried) {
-                                tryGeoProxyEngine();
-                                return;
+                            // Fallback to secondary engines if FastSaver fails
+                            if (typeof onFailCallback === 'function') {
+                                onFailCallback();
+                            } else if (!cobaltTried) {
+                                tryCobaltEngine(() => runEngine('savenow'));
+                            } else {
+                                runEngine('savenow');
                             }
-                            failDownload(getI18nMsg('region_restricted'));
                         } catch (e) {
-                            if (!geoProxyTried) {
-                                tryGeoProxyEngine();
-                                return;
+                            if (typeof onFailCallback === 'function') {
+                                onFailCallback();
+                            } else if (!cobaltTried) {
+                                tryCobaltEngine(() => runEngine('savenow'));
+                            } else {
+                                runEngine('savenow');
                             }
-                            failDownload(getI18nMsg('region_restricted'));
                         }
                     }
 
@@ -3098,25 +3053,27 @@
                             return;
                         }
 
-                        // 2. High-Speed Clean Free Cobalt Engine (0 Ads, 0 FastSaver Credits, 100% Free):
+                        // 2. FastSaver Pro Paid API (clean, fast, handles unblocking):
+                        if (!fastSaverTried) {
+                            tryFastSaverEngine(() => {
+                                if (!cobaltTried) tryCobaltEngine(() => runEngine('savenow'));
+                                else runEngine('savenow');
+                            });
+                            return;
+                        }
+
+                        // 3. High-Speed Clean Cobalt Engine:
                         if (!cobaltTried) {
                             tryCobaltEngine(() => {
                                 if (!geoProxyTried) tryGeoProxyEngine();
-                                else if (!fastSaverTried && (isHiResFormat || isLongVideo)) tryFastSaverEngine();
                                 else stepDownOrSwitchEngine(errText || "Conversion failed");
                             });
                             return;
                         }
 
-                        // 3. Authenticated Cookies & Multi-Proxy Fleet fallback (100% FREE, 0 API credits):
+                        // 4. Authenticated Cookies & Multi-Proxy Fleet fallback:
                         if (!geoProxyTried) {
                             tryGeoProxyEngine();
-                            return;
-                        }
-
-                        // 4. FastSaver premium engine: strictly reserved for 4K/2K or long videos
-                        if (!fastSaverTried && (isHiResFormat || isLongVideo)) {
-                            tryFastSaverEngine();
                             return;
                         }
 
@@ -3175,8 +3132,8 @@
                             return;
                         }
 
-                        // Ultimate fallback: FastSaver premium engine (strictly 4K/2K or long videos)
-                        if (!fastSaverTried && (isHiResFormat || isLongVideo)) {
+                        // Ultimate fallback: FastSaver Pro engine
+                        if (!fastSaverTried) {
                             tryFastSaverEngine();
                             return;
                         }
@@ -3210,18 +3167,23 @@
                                 if ((p.progress || 0) >= 1000) {
                                     finishedNoFile++;
                                     if (finishedNoFile >= 3) {
-                                        // Server says "Finished" but gave no usable download link (or ad link): try clean Cobalt first!
+                                        // Server gave no usable download link: try FastSaver Pro first!
                                         if (activePollTimer) clearTimeout(activePollTimer);
+                                        if (!fastSaverTried) {
+                                            tryFastSaverEngine(() => {
+                                                if (!cobaltTried) tryCobaltEngine(() => runEngine('savenow'));
+                                                else stepDownOrSwitchEngine(p.text || p.message || '');
+                                            });
+                                            return;
+                                        }
                                         if (!cobaltTried) {
                                             tryCobaltEngine(() => {
                                                 if (!geoProxyTried) tryGeoProxyEngine();
-                                                else if (!fastSaverTried && (isHiResFormat || isLongVideo)) tryFastSaverEngine();
                                                 else stepDownOrSwitchEngine(p.text || p.message || '');
                                             });
                                             return;
                                         }
                                         if (!geoProxyTried) { tryGeoProxyEngine(); return; }
-                                        if (!fastSaverTried && (isHiResFormat || isLongVideo)) { tryFastSaverEngine(); return; }
                                         stepDownOrSwitchEngine(p.text || p.message || ''); return;
                                     }
                                 } else if (p.progress !== undefined && p.progress !== null) {
@@ -3278,20 +3240,20 @@
                         pollConversion(initData.id);
                     }
 
-                    // Check if 4K / 2K format requested or video is long (>3 hours): route to FastSaver Pro
-                    const isLongVideo = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 10800);
-                    const isHiResFormat = (fmtParam === '4k' || fmtParam === '1440');
-
-                    if (isHiResFormat) {
-                        modalStatusMsg.textContent = 'Preparing high-resolution stream (FastSaver Pro)...';
-                        tryFastSaverEngine();
-                    } else if (forcedEngine === 'loader') {
+                    // PRIMARY ENGINE: FastSaver Paid Pro API for ALL video/audio formats!
+                    // Instant (~1.5s), 0 ads, clean direct download URLs
+                    if (forcedEngine === 'loader') {
                         runEngine('loader');
                     } else if (forcedEngine === 'savenow') {
                         runEngine('savenow');
-                    } else {
-                        // PRIMARY: 100% Free, Clean Cobalt Engine (0 ad redirects, 0 FastSaver credits, 1-2s speed)
+                    } else if (forcedEngine === 'cobalt') {
                         tryCobaltEngine(() => runEngine('savenow'));
+                    } else {
+                        // All formats route directly to FastSaver Pro API
+                        tryFastSaverEngine(() => {
+                            // Secondary fallback if FastSaver credits expire or fail: Cobalt -> Savenow
+                            tryCobaltEngine(() => runEngine('savenow'));
+                        });
                     }
 
                 } catch (err) {
@@ -3336,7 +3298,7 @@
                     const fmt = window._lastRequestedFormat || 'mp3';
                     const q = window._lastRequestedQuality || '320kbps';
                     const lbl = window._lastRequestedLabel || 'Download';
-                    triggerDirectDownload(fmt, q, lbl, 'loader');
+                    triggerDirectDownload(fmt, q, lbl, 'auto');
                 });
             }
 
