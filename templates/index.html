@@ -1019,12 +1019,12 @@
 
                 <!-- Progress Bar -->
                 <div class="progress-track-modern">
-                    <div id="modal-progress-bar" class="progress-shimmer-bar" style="width: 20%;"></div>
+                    <div id="modal-progress-bar" class="progress-shimmer-bar" style="width: 35%;"></div>
                 </div>
 
                 <!-- Progress Meta -->
                 <div class="flex items-center justify-between text-xs text-gray-500 font-mono mb-4 px-1">
-                    <span id="modal-pct-text" class="font-extrabold text-slate-800">25%</span>
+                    <span id="modal-pct-text" class="font-extrabold text-slate-800">35%</span>
                     <span id="modal-speed-text" class="text-emerald-600 font-semibold">⚡ Turbo Speed</span>
                     <span id="modal-eta-text">~1s</span>
                 </div>
@@ -2225,7 +2225,7 @@
                         })(),
                         (async () => {
                             try {
-                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 6000);
+                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 8000);
                                 if (resResp.ok) {
                                     const resData = await resResp.json();
                                     has4K = !!resData.has_4k;
@@ -2495,6 +2495,220 @@
                 window._lastRequestedQuality = safeQuality;
                 window._lastRequestedLabel = safeLabel;
 
+                // Hoisted state variables (prevent any TDZ ReferenceErrors)
+                let curPct = 35;
+                let completed = false;
+                let activePollTimer = null;
+                let animTimer = null;
+                let geoProxyTried = false;
+                const conversionToken = Date.now();
+                window._activeConversionToken = conversionToken;
+                window._origPageTitle = window._origPageTitle || document.title;
+
+                const stagePill1 = document.getElementById('stage-pill-1');
+                const stagePill2 = document.getElementById('stage-pill-2');
+                const stagePill3 = document.getElementById('stage-pill-3');
+                const audioPreviewWrap = document.getElementById('modal-audio-preview-wrap');
+                const audioPlayer = document.getElementById('modal-audio-player');
+                if (audioPreviewWrap) audioPreviewWrap.classList.add('hidden');
+                if (audioPlayer) {
+                    try { audioPlayer.pause(); audioPlayer.removeAttribute('src'); } catch(e){}
+                }
+
+                function updateConversionVisuals(pct) {
+                    const safePct = Math.max(curPct || 35, pct);
+                    curPct = safePct;
+                    if (modalProgressBar) modalProgressBar.style.width = `${safePct}%`;
+                    if (modalPctText) modalPctText.textContent = `${safePct}%`;
+                    document.title = `⏳ (${safePct}%) Converting... | YT4MP3`;
+                    if (stagePill1 && stagePill2 && stagePill3) {
+                        if (pct < 40) {
+                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
+                            stagePill1.textContent = "⚡ 1. Fetch";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
+                            stagePill2.textContent = "2. Encode";
+                        } else {
+                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
+                            stagePill1.textContent = "✓ 1. Fetch";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
+                            stagePill2.textContent = "⚡ 2. Encode";
+                        }
+                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
+                        stagePill3.textContent = "3. Ready";
+                    }
+                }
+
+                function completeDownload(finalDownloadUrl) {
+                    if (completed || window._activeConversionToken !== conversionToken) return;
+                    completed = true;
+                    if (activePollTimer) clearTimeout(activePollTimer);
+                    if (animTimer) clearInterval(animTimer);
+
+                    // Ensure HTTPS and clean URL
+                    if (typeof finalDownloadUrl === 'string' && finalDownloadUrl.startsWith('http://')) {
+                        finalDownloadUrl = finalDownloadUrl.replace('http://', 'https://');
+                    }
+
+                    if (modalProgressBar) {
+                        modalProgressBar.style.width = '100%';
+                        modalProgressBar.className = "progress-ready-bar";
+                    }
+                    if (modalPctText) modalPctText.textContent = '100%';
+                    document.title = '✅ Download Ready! | YT4MP3';
+                    if (stagePill1 && stagePill2 && stagePill3) {
+                        stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
+                        stagePill1.textContent = "✓ 1. Fetch";
+                        stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
+                        stagePill2.textContent = "✓ 2. Encode";
+                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-ready-final transition-all";
+                        stagePill3.textContent = "✓ 3. Ready!";
+                    }
+                    try {
+                        if (navigator.vibrate) navigator.vibrate([70, 40, 70]);
+                    } catch(e) {}
+
+                    if (modalIconContainer) modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
+                    if (modalIcon) modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
+                    if (modalStatusMsg) {
+                        modalStatusMsg.textContent = `File Ready! Downloading to your device...`;
+                        modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-4 bg-emerald-50 py-2.5 px-3 rounded-lg border border-emerald-200";
+                    }
+
+                    window._currentDownloadUrl = finalDownloadUrl;
+
+                    try {
+                        fetch('/api/analytics-ping', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ event: 'download', format: safeFormat }),
+                            keepalive: true
+                        }).catch(() => {});
+                    } catch (e) {}
+
+                    if (modalDownloadLink) {
+                        modalDownloadLink.href = finalDownloadUrl;
+                        modalDownloadLink.setAttribute('download', '');
+                        modalDownloadLink.setAttribute('rel', 'noopener noreferrer');
+                        modalDownloadLink.target = '_self';
+                    }
+                    if (modalBtnLabel) modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
+                    if (modalActionContainer) modalActionContainer.classList.remove('hidden');
+
+                    // Mini Audio Player for Audio formats (preload="none" so 0 bandwidth until user presses play)
+                    const isAudioFmt = ['mp3', 'm4a', 'flac', 'wav', 'aac'].includes(safeFormat);
+                    const isProxyStream = typeof finalDownloadUrl === 'string' && finalDownloadUrl.includes('/api/geo-stream');
+                    if (audioPreviewWrap && audioPlayer) {
+                        if (isAudioFmt && !isProxyStream) {
+                            audioPlayer.src = finalDownloadUrl;
+                            audioPreviewWrap.classList.remove('hidden');
+                        } else {
+                            audioPreviewWrap.classList.add('hidden');
+                        }
+                    }
+
+                    // Setup QR Code for PC-to-Mobile Instant Transfer (100% Lazy: loads ONLY when clicked)
+                    const qrToggleBtn = document.getElementById('modal-qr-toggle-btn');
+                    const qrBox = document.getElementById('modal-qr-box');
+                    const qrImg = document.getElementById('modal-qr-img');
+                    if (qrToggleBtn && qrBox && qrImg && ytId) {
+                        qrBox.classList.add('hidden');
+                        qrImg.removeAttribute('src');
+                        const mobileTargetUrl = `https://www.yt4mp3.com/watch?v=${encodeURIComponent(ytId)}&dl=${encodeURIComponent(safeFormat)}&qual=${encodeURIComponent(safeQuality)}`;
+                        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent(mobileTargetUrl)}`;
+                        qrToggleBtn.onclick = () => {
+                            if (!qrImg.getAttribute('src')) {
+                                qrImg.src = qrApiUrl;
+                            }
+                            qrBox.classList.toggle('hidden');
+                        };
+                    }
+
+                    const isInApp = /FBAN|FBAV|Instagram|TikTok|musical_ly|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
+                    const inAppNotice = document.getElementById('modal-inapp-notice');
+                    if (inAppNotice) {
+                        if (isInApp) inAppNotice.classList.remove('hidden');
+                        else inAppNotice.classList.add('hidden');
+                    }
+
+                    // Native Mobile & Desktop Download Trigger (Clean Single-Trigger, No Duplicate Navigations)
+                    try {
+                        const dlAnchor = document.createElement('a');
+                        dlAnchor.href = finalDownloadUrl;
+                        dlAnchor.setAttribute('download', '');
+                        dlAnchor.setAttribute('rel', 'noopener noreferrer');
+                        dlAnchor.setAttribute('target', '_self');
+                        dlAnchor.style.display = 'none';
+                        document.body.appendChild(dlAnchor);
+                        dlAnchor.click();
+                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 500);
+                    } catch(e) {}
+                }
+
+                function failDownload(msg) {
+                    if (completed || window._activeConversionToken !== conversionToken) return;
+                    completed = true;
+                    if (activePollTimer) clearTimeout(activePollTimer);
+                    if (animTimer) clearInterval(animTimer);
+                    if (window._origPageTitle) document.title = window._origPageTitle;
+
+                    if (modalProgressBar) {
+                        modalProgressBar.style.width = '100%';
+                        modalProgressBar.className = "progress-error-bar";
+                    }
+                    if (modalPctText) modalPctText.textContent = 'Notice';
+                    if (modalIconContainer) modalIconContainer.className = "w-14 h-14 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto mb-3 border border-rose-200";
+                    if (modalIcon) modalIcon.className = "fa-solid fa-triangle-exclamation text-rose-600";
+                    if (modalStatusMsg) {
+                        modalStatusMsg.textContent = msg || "Stream processing took longer than expected. Tap Retry below to reconnect with alternate mirror.";
+                        modalStatusMsg.className = "text-xs font-semibold text-rose-700 mb-4 bg-rose-50 py-2.5 px-3 rounded-lg border border-rose-200 text-left";
+                    }
+                    if (modalActionContainer) modalActionContainer.classList.add('hidden');
+
+                    const errActions = document.getElementById('modal-error-actions');
+                    const retryBtn = document.getElementById('modal-retry-btn');
+                    if (errActions) errActions.classList.remove('hidden');
+                    const isFatalRestr = msg && (msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long'));
+                    if (retryBtn) {
+                        if (isFatalRestr) {
+                            retryBtn.classList.add('hidden');
+                        } else {
+                            retryBtn.classList.remove('hidden');
+                        }
+                    }
+
+                    // Auto-report failure immediately to Admin Telegram in background (once per video ID per session)
+                    try {
+                        const failYtId = currentMediaData ? currentMediaData.id : extractYouTubeId(urlInput.value);
+                        window._reportedVideoIds = window._reportedVideoIds || {};
+                        if (!failYtId || !window._reportedVideoIds[failYtId]) {
+                            if (failYtId) window._reportedVideoIds[failYtId] = true;
+                            const failVidUrl = failYtId ? `https://www.youtube.com/watch?v=${failYtId}` : (urlInput.value || '');
+                            const failVidTitle = currentMediaData ? currentMediaData.title : 'Conversion Error';
+                            fetch('/api/report-issue', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    video_url: failVidUrl,
+                                    video_title: failVidTitle,
+                                    format: `${safeFormat} (${fmtParam})`,
+                                    error: msg || "Stream processing timeout"
+                                })
+                            }).catch(() => {});
+                        }
+                    } catch(e) {}
+
+                    try {
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'conversion_error', {
+                                'event_category': 'conversion',
+                                'event_label': currentMediaData ? currentMediaData.id : 'unknown',
+                                'format': safeFormat,
+                                'error_msg': msg
+                            });
+                        }
+                    } catch(e) {}
+                }
+
                 // Client-side instant cache check (0 credits used on repeat clicks!)
                 const isAudioReq = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
                 const clientCacheKey = isAudioReq ? `yt4mp3_fs_${ytId}_audio` : `yt4mp3_fs_${ytId}_video_${cleanQ}`;
@@ -2591,40 +2805,6 @@
                 }
                 let activeFmt = formatLadder[ladderIdx];
 
-                window._origPageTitle = window._origPageTitle || document.title;
-                const stagePill1 = document.getElementById('stage-pill-1');
-                const stagePill2 = document.getElementById('stage-pill-2');
-                const stagePill3 = document.getElementById('stage-pill-3');
-                const audioPreviewWrap = document.getElementById('modal-audio-preview-wrap');
-                const audioPlayer = document.getElementById('modal-audio-player');
-                if (audioPreviewWrap) audioPreviewWrap.classList.add('hidden');
-                if (audioPlayer) {
-                    try { audioPlayer.pause(); audioPlayer.removeAttribute('src'); } catch(e){}
-                }
-
-                function updateConversionVisuals(pct) {
-                    const safePct = Math.max(curPct || 20, pct);
-                    curPct = safePct;
-                    modalProgressBar.style.width = `${safePct}%`;
-                    modalPctText.textContent = `${safePct}%`;
-                    document.title = `⏳ (${safePct}%) Converting... | YT4MP3`;
-                    if (stagePill1 && stagePill2 && stagePill3) {
-                        if (pct < 40) {
-                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
-                            stagePill1.textContent = "⚡ 1. Fetch";
-                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
-                            stagePill2.textContent = "2. Encode";
-                        } else {
-                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
-                            stagePill1.textContent = "✓ 1. Fetch";
-                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
-                            stagePill2.textContent = "⚡ 2. Encode";
-                        }
-                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
-                        stagePill3.textContent = "3. Ready";
-                    }
-                }
-
                 progressModal.classList.remove('hidden');
                 modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
@@ -2642,183 +2822,13 @@
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
-                const conversionToken = Date.now();
-                window._activeConversionToken = conversionToken;
-
                 // Turbo Progress bar animation (Super-responsive visual feedback)
-                let curPct = 20;
-                const animTimer = setInterval(() => {
+                animTimer = setInterval(() => {
                     if (curPct < 93) {
                         curPct += curPct < 60 ? 3 : 1;
                         updateConversionVisuals(curPct);
                     }
                 }, 650);
-
-                let completed = false;
-                function completeDownload(finalDownloadUrl) {
-                    if (completed || window._activeConversionToken !== conversionToken) return;
-                    completed = true;
-                    if (activePollTimer) clearTimeout(activePollTimer);
-                    clearInterval(animTimer);
-
-                    // Ensure HTTPS and clean URL
-                    if (typeof finalDownloadUrl === 'string' && finalDownloadUrl.startsWith('http://')) {
-                        finalDownloadUrl = finalDownloadUrl.replace('http://', 'https://');
-                    }
-
-                    modalProgressBar.style.width = '100%';
-                    modalProgressBar.className = "progress-ready-bar";
-                    modalPctText.textContent = '100%';
-                    document.title = '✅ Download Ready! | YT4MP3';
-                    if (stagePill1 && stagePill2 && stagePill3) {
-                        stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
-                        stagePill1.textContent = "✓ 1. Fetch";
-                        stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
-                        stagePill2.textContent = "✓ 2. Encode";
-                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-ready-final transition-all";
-                        stagePill3.textContent = "✓ 3. Ready!";
-                    }
-                    try {
-                        if (navigator.vibrate) navigator.vibrate([70, 40, 70]);
-                    } catch(e) {}
-
-                    modalIconContainer.className = "w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto mb-3 border border-emerald-200";
-                    modalIcon.className = "fa-solid fa-circle-check text-emerald-600";
-                    modalStatusMsg.textContent = `File Ready! Downloading to your device...`;
-                    modalStatusMsg.className = "text-xs font-bold text-emerald-700 mb-4 bg-emerald-50 py-2.5 px-3 rounded-lg border border-emerald-200";
-
-                    window._currentDownloadUrl = finalDownloadUrl;
-
-                    try {
-                        fetch('/api/analytics-ping', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ event: 'download', format: safeFormat }),
-                            keepalive: true
-                        }).catch(() => {});
-                    } catch (e) {}
-
-                    modalDownloadLink.href = finalDownloadUrl;
-                    modalDownloadLink.setAttribute('download', '');
-                    modalDownloadLink.setAttribute('rel', 'noopener noreferrer');
-                    modalDownloadLink.target = '_self';
-                    modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
-                    modalActionContainer.classList.remove('hidden');
-
-                    // Mini Audio Player for Audio formats (preload="none" so 0 bandwidth until user presses play)
-                    const isAudioFmt = ['mp3', 'm4a', 'flac', 'wav', 'aac'].includes(safeFormat);
-                    const isProxyStream = typeof finalDownloadUrl === 'string' && finalDownloadUrl.includes('/api/geo-stream');
-                    if (audioPreviewWrap && audioPlayer) {
-                        if (isAudioFmt && !isProxyStream) {
-                            audioPlayer.src = finalDownloadUrl;
-                            audioPreviewWrap.classList.remove('hidden');
-                        } else {
-                            audioPreviewWrap.classList.add('hidden');
-                        }
-                    }
-
-                    // Setup QR Code for PC-to-Mobile Instant Transfer (100% Lazy: loads ONLY when clicked)
-                    const qrToggleBtn = document.getElementById('modal-qr-toggle-btn');
-                    const qrBox = document.getElementById('modal-qr-box');
-                    const qrImg = document.getElementById('modal-qr-img');
-                    if (qrToggleBtn && qrBox && qrImg && ytId) {
-                        qrBox.classList.add('hidden');
-                        qrImg.removeAttribute('src');
-                        const mobileTargetUrl = `https://www.yt4mp3.com/watch?v=${encodeURIComponent(ytId)}&dl=${encodeURIComponent(safeFormat)}&qual=${encodeURIComponent(safeQuality)}`;
-                        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=6&data=${encodeURIComponent(mobileTargetUrl)}`;
-                        qrToggleBtn.onclick = () => {
-                            if (!qrImg.getAttribute('src')) {
-                                qrImg.src = qrApiUrl;
-                            }
-                            qrBox.classList.toggle('hidden');
-                        };
-                    }
-
-                    const isInApp = /FBAN|FBAV|Instagram|TikTok|musical_ly|WhatsApp|Line|Snapchat/i.test(navigator.userAgent);
-                    const inAppNotice = document.getElementById('modal-inapp-notice');
-                    if (inAppNotice) {
-                        if (isInApp) inAppNotice.classList.remove('hidden');
-                        else inAppNotice.classList.add('hidden');
-                    }
-
-                    // Native Mobile & Desktop Download Trigger (Clean Single-Trigger, No Duplicate Navigations)
-                    try {
-                        const dlAnchor = document.createElement('a');
-                        dlAnchor.href = finalDownloadUrl;
-                        dlAnchor.setAttribute('download', '');
-                        dlAnchor.setAttribute('rel', 'noopener noreferrer');
-                        dlAnchor.setAttribute('target', '_self');
-                        dlAnchor.style.display = 'none';
-                        document.body.appendChild(dlAnchor);
-                        dlAnchor.click();
-                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 500);
-                    } catch(e) {}
-                }
-
-                function failDownload(msg) {
-                    if (completed || window._activeConversionToken !== conversionToken) return;
-                    completed = true;
-                    if (activePollTimer) clearTimeout(activePollTimer);
-                    clearInterval(animTimer);
-                    if (window._origPageTitle) document.title = window._origPageTitle;
-
-                    modalProgressBar.style.width = '100%';
-                    modalProgressBar.className = "progress-error-bar";
-                    modalPctText.textContent = 'Notice';
-                    modalIconContainer.className = "w-14 h-14 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto mb-3 border border-rose-200";
-                    modalIcon.className = "fa-solid fa-triangle-exclamation text-rose-600";
-                    modalStatusMsg.textContent = msg || "Stream processing took longer than expected. Tap Retry below to reconnect with alternate mirror.";
-                    modalStatusMsg.className = "text-xs font-semibold text-rose-700 mb-4 bg-rose-50 py-2.5 px-3 rounded-lg border border-rose-200 text-left";
-                    modalActionContainer.classList.add('hidden');
-
-                    const errActions = document.getElementById('modal-error-actions');
-                    const retryBtn = document.getElementById('modal-retry-btn');
-                    if (errActions) errActions.classList.remove('hidden');
-                    const isFatalRestr = msg && (msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long'));
-                    if (retryBtn) {
-                        if (isFatalRestr) {
-                            retryBtn.classList.add('hidden');
-                        } else {
-                            retryBtn.classList.remove('hidden');
-                        }
-                    }
-
-                    // Auto-report failure immediately to Admin Telegram in background (once per video ID per session)
-                    try {
-                        const failYtId = currentMediaData ? currentMediaData.id : extractYouTubeId(urlInput.value);
-                        window._reportedVideoIds = window._reportedVideoIds || {};
-                        if (!failYtId || !window._reportedVideoIds[failYtId]) {
-                            if (failYtId) window._reportedVideoIds[failYtId] = true;
-                            const failVidUrl = failYtId ? `https://www.youtube.com/watch?v=${failYtId}` : (urlInput.value || '');
-                            const failVidTitle = currentMediaData ? currentMediaData.title : 'Conversion Error';
-                            fetch('/api/report-issue', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    video_url: failVidUrl,
-                                    video_title: failVidTitle,
-                                    format: `${safeFormat} (${fmtParam})`,
-                                    error: msg || "Stream processing timeout"
-                                })
-                            }).catch(() => {});
-                        }
-                    } catch(e) {}
-
-                    try {
-                        if (typeof gtag === 'function') {
-                            gtag('event', 'conversion_error', {
-                                'event_category': 'conversion',
-                                'event_label': currentMediaData ? currentMediaData.id : 'unknown',
-                                'format': safeFormat,
-                                'error_msg': msg
-                            });
-                        }
-                    } catch(e) {}
-                }
-
-                let activePollTimer = null;
-                // Declared BEFORE the try-block: Priority-0 geo routing calls tryGeoProxyEngine() early (avoids TDZ ReferenceError that froze UI at 93%)
-                let geoProxyTried = false;
 
                 try {
                     // Priority 0: Fatal video-level restriction (Membership, Age-Restricted, Private, Live)
