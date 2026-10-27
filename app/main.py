@@ -976,7 +976,7 @@ def detect_video_allowed_countries(vid: str) -> list:
         print("Country detection error:", e)
     return []
 
-def get_yt_cookies_file() -> Optional[str]:
+def get_yt_cookies_file():
     """Resolves YouTube cookies from environment variable YOUTUBE_COOKIES or local cookies.txt."""
     raw_cookies = os.environ.get("YOUTUBE_COOKIES")
     if raw_cookies and len(raw_cookies.strip()) > 50:
