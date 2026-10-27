@@ -2599,21 +2599,21 @@
                     fmtParam = 'mp3';
                 }
 
-                // Smart Quality Step-Down Ladder for Long/Large Videos & Non-4K Uploads:
-                // When a long concert/movie exceeds the 4K muxing limit, automatically step down
-                // to the highest supported resolution (1440p 2K -> 1080p FHD -> 720p HD -> 480p -> 360p)
+                // Strict Quality Enforcement (Zero Silent Downgrading):
+                // If a user selects 1080p FHD, they must receive 1080p FHD. If 720p HD, they receive 720p HD.
+                // Never silently drop to 480p or 360p.
                 const ladderMap = {
-                    '4k':   ['4k', '1440', '1080', '720', '480', '360'],
-                    '1440': ['1440', '1080', '720', '480', '360'],
-                    '1080': ['1080', '720', '480', '360'],
-                    '720':  ['720', '480', '360', '1080'],
-                    '480':  ['480', '360', '720'],
-                    '360':  ['360', '480', '720'],
-                    'mp3':  ['mp3', 'm4a', 'aac'],
-                    'm4a':  ['m4a', 'mp3', 'aac'],
-                    'flac': ['flac', 'mp3', 'm4a'],
-                    'wav':  ['wav', 'flac', 'mp3', 'm4a'],
-                    'aac':  ['aac', 'mp3', 'm4a']
+                    '4k':   ['4k'],
+                    '1440': ['1440'],
+                    '1080': ['1080'],
+                    '720':  ['720'],
+                    '480':  ['480'],
+                    '360':  ['360'],
+                    'mp3':  ['mp3'],
+                    'm4a':  ['m4a'],
+                    'flac': ['flac'],
+                    'wav':  ['wav'],
+                    'aac':  ['aac']
                 };
                 const formatLadder = ladderMap[fmtParam] ? [...ladderMap[fmtParam]] : [fmtParam];
                 let ladderIdx = 0;

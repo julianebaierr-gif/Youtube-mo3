@@ -500,61 +500,65 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     captured_err = None
     is_geo = False
 
-    # 1. Primary Engine: savenow.to (authenticated with Proof-of-Work Bearer token & official API key)
-    if engine != "loader":
-        try:
-            token = get_savenow_pow_token()
-            api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222"
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Referer": "https://savenow.to/",
-                "Origin": "https://savenow.to",
-            }
-            if token:
-                headers["Authorization"] = f"Bearer {token}"
-            req = urllib.request.Request(api_url, headers=headers)
-            with urllib.request.urlopen(req, timeout=9) as r:
-                data = json.loads(r.read())
-                if data and data.get("id"):
-                    dl = data.get("download_url")
-                    if dl:
-                        if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
-                            dl = None
-                        elif dl.startswith("http://"):
-                            dl = dl.replace("http://", "https://")
-                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
-                elif data and (data.get("text") or data.get("error") or data.get("message")):
-                    captured_err = str(data.get("text") or data.get("error") or data.get("message"))
-                    if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
-                        is_geo = True
-        except Exception as e:
-            print(f"[SAVENOW_CONVERT_WARN] {e}")
+    is_video_fmt = fmt in ["1080", "720", "480", "360", "1440", "4k"]
+    # For video formats, prioritize p.lbserver.xyz which muxes full 1080p and 720p without ad gateways
+    engine_order = ["loader", "savenow"] if (engine == "loader" or is_video_fmt) else ["savenow", "loader"]
 
-    # 2. Secondary Engine: Loader cluster via official p.lbserver.xyz API
-    try:
-        lto_url = f"https://p.lbserver.xyz/api/v2/download?format={fmt}&url={encoded_url}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-            "Referer": "https://loader.to/",
-            "Origin": "https://loader.to",
-        }
-        req = urllib.request.Request(lto_url, headers=headers)
-        with urllib.request.urlopen(req, timeout=9) as r:
-            data = json.loads(r.read())
-            if data and data.get("id"):
-                dl = data.get("download_url")
-                if dl:
-                    if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
-                        dl = None
-                    elif dl.startswith("http://"):
-                        dl = dl.replace("http://", "https://")
-                return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
-            elif data and (data.get("text") or data.get("error") or data.get("message")):
-                captured_err = str(data.get("text") or data.get("error") or data.get("message"))
-                if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
-                    is_geo = True
-    except Exception as e:
-        print(f"[LOADER_LBSERVER_WARN] {e}")
+    for eng in engine_order:
+        if eng == "loader":
+            try:
+                lto_url = f"https://p.lbserver.xyz/api/v2/download?format={fmt}&url={encoded_url}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222"
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                    "Referer": "https://loader.to/",
+                    "Origin": "https://loader.to",
+                }
+                req = urllib.request.Request(lto_url, headers=headers)
+                with urllib.request.urlopen(req, timeout=9) as r:
+                    data = json.loads(r.read())
+                    if data and data.get("id"):
+                        dl = data.get("download_url")
+                        if dl:
+                            if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
+                                dl = None
+                            elif dl.startswith("http://"):
+                                dl = dl.replace("http://", "https://")
+                        return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
+                    elif data and (data.get("text") or data.get("error") or data.get("message")):
+                        captured_err = str(data.get("text") or data.get("error") or data.get("message"))
+                        if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
+                            is_geo = True
+            except Exception as e:
+                print(f"[LOADER_LBSERVER_WARN] {e}")
+
+        elif eng == "savenow":
+            try:
+                token = get_savenow_pow_token()
+                api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}&apikey=dfcb6d76f2f6a9894gjkege8a4ab232222"
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                    "Referer": "https://savenow.to/",
+                    "Origin": "https://savenow.to",
+                }
+                if token:
+                    headers["Authorization"] = f"Bearer {token}"
+                req = urllib.request.Request(api_url, headers=headers)
+                with urllib.request.urlopen(req, timeout=9) as r:
+                    data = json.loads(r.read())
+                    if data and data.get("id"):
+                        dl = data.get("download_url")
+                        if dl:
+                            if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
+                                dl = None
+                            elif dl.startswith("http://"):
+                                dl = dl.replace("http://", "https://")
+                        return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
+                    elif data and (data.get("text") or data.get("error") or data.get("message")):
+                        captured_err = str(data.get("text") or data.get("error") or data.get("message"))
+                        if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
+                            is_geo = True
+            except Exception as e:
+                print(f"[SAVENOW_CONVERT_WARN] {e}")
 
     if captured_err:
         return {"success": False, "error": captured_err, "is_geo_blocked": is_geo}
