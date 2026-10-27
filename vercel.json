@@ -9,7 +9,8 @@
       "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-        "includeFiles": ["app/**", "public/**", "templates/**", "static/**", "cookies.txt"]
+        "includeFiles": ["app/**", "public/**", "templates/**", "static/**", "cookies.txt"],
+        "maxDuration": 60
       }
     }
   ],

@@ -1027,41 +1027,53 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720", f
         "Accept": "application/json",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
     }
-    body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+    fmts_to_try = [fmt]
+    if fmt == "2160p":
+        fmts_to_try = ["2160p", "1440p", "1080p"]
+    elif fmt == "1440p":
+        fmts_to_try = ["1440p", "1080p"]
+
     resp_payload = None
     try:
-        req = urllib.request.Request(
-            "https://api.fastsaver.io/v1/youtube/download",
-            data=body,
-            headers=headers,
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=55) as res:
-            data = json.loads(res.read().decode("utf-8"))
-        _check_fastsaver_credits_and_alert(force_check=True)
-        if data.get("ok") and data.get("download_url"):
-            resp_payload = {
-                "success": True,
-                "download_url": data["download_url"],
-                "filename": data.get("filename", ""),
-                "engine": "fastsaver",
-                "cached": False,
-            }
-            if vid:
-                _set_fastsaver_cache(cache_key, {**resp_payload, "cached": True})
-        else:
-            resp_payload = {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
-    except urllib.error.HTTPError as e:
-        try:
-            err_body = json.loads(e.read().decode("utf-8", "ignore"))
-            detail = err_body.get("detail", f"HTTP {e.code}")
-        except Exception:
-            detail = f"HTTP {e.code}"
-        _check_fastsaver_credits_and_alert(force_check=False)
-        is_age = ("age" in str(detail).lower() or (e.code == 400 and "fail" in str(detail).lower()))
-        resp_payload = {"success": False, "error": str(detail), "is_age_restricted": is_age}
-    except Exception as e:
-        resp_payload = {"success": False, "error": str(e)}
+        for try_fmt in fmts_to_try:
+            body = json.dumps({"url": url, "format": try_fmt}).encode("utf-8")
+            try:
+                req = urllib.request.Request(
+                    "https://api.fastsaver.io/v1/youtube/download",
+                    data=body,
+                    headers=headers,
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=55) as res:
+                    data = json.loads(res.read().decode("utf-8"))
+                _check_fastsaver_credits_and_alert(force_check=True)
+                if data.get("ok") and data.get("download_url"):
+                    resp_payload = {
+                        "success": True,
+                        "download_url": data["download_url"],
+                        "filename": data.get("filename", ""),
+                        "engine": "fastsaver",
+                        "format_used": try_fmt,
+                        "cached": False,
+                    }
+                    if vid:
+                        _set_fastsaver_cache(cache_key, {**resp_payload, "cached": True})
+                    break
+                else:
+                    resp_payload = {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
+            except urllib.error.HTTPError as e:
+                try:
+                    err_body = json.loads(e.read().decode("utf-8", "ignore"))
+                    detail = err_body.get("detail", f"HTTP {e.code}")
+                except Exception:
+                    detail = f"HTTP {e.code}"
+                _check_fastsaver_credits_and_alert(force_check=False)
+                is_age = any(k in str(detail).lower() for k in ("age_restrict", "age-restrict", "confirm your age", "sign in to confirm"))
+                resp_payload = {"success": False, "error": str(detail), "is_age_restricted": is_age}
+                if is_age:
+                    break
+            except Exception as e:
+                resp_payload = {"success": False, "error": str(e)}
     finally:
         # Resolve all waiting in-flight coroutines
         async with _FASTSAVER_LOCK:
