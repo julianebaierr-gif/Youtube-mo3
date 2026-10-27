@@ -810,8 +810,7 @@ WEBSHARE_POOLS = {
 WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
 
 def build_proxy_candidates(allowed: list) -> list:
-    """Ordered list of (label, proxy_url, country_lower_or_None) to try for a geo-restricted video.
-    Webshare pool IPs first, then DataImpulse Rotating Residential as 100% bot-free fallback."""
+    """Ordered list of (label, proxy_url, country_lower) across all active multi-proxy pool IPs."""
     import random
     allowed_set = {str(c).upper() for c in (allowed or [])}
     candidates = []
@@ -823,26 +822,23 @@ def build_proxy_candidates(allowed: list) -> list:
             if cc in allowed_set:
                 pool_cc = cc
                 break
-    if pool_cc:
-        ips = list(WEBSHARE_POOLS.get(pool_cc, []))
-        random.shuffle(ips)
-        for ip in ips[:3]:
-            candidates.append((f"Webshare-{pool_cc}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", pool_cc.lower()))
+    if not pool_cc:
+        pool_cc = "US"
 
-    # DataImpulse Rotating Residential fallback (immune to bot challenges, zero IP replacements needed)
-    di_country = None
-    if allowed_set:
-        for pc in ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR", "CO"]:
-            if pc in allowed_set:
-                di_country = pc.lower()
-                break
-        if not di_country:
-            di_country = sorted(allowed_set)[0].lower()
-    for _ in range(2):
-        sess = uuid.uuid4().hex[:8]
-        di_user = f"{DATAIMPULSE_USER}__cr.{di_country};sessid.{sess};sessttl.10" if di_country else f"{DATAIMPULSE_USER}__sessid.{sess};sessttl.10"
-        candidates.append((f"DataImpulse-{(di_country or 'any').upper()}",
-                           f"http://{di_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}", di_country))
+    # Primary pool: try all available IPs in this country
+    ips = list(WEBSHARE_POOLS.get(pool_cc, []))
+    random.shuffle(ips)
+    for i, ip in enumerate(ips):
+        candidates.append((f"Webshare-{pool_cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", pool_cc.lower()))
+
+    # Secondary pool: add up to 2 IPs from other allowed countries
+    for alt_cc in ["US", "GB", "FR", "JP"]:
+        if alt_cc != pool_cc and (not allowed_set or alt_cc in allowed_set):
+            alt_ips = list(WEBSHARE_POOLS.get(alt_cc, []))
+            random.shuffle(alt_ips)
+            for i, ip in enumerate(alt_ips[:2]):
+                candidates.append((f"Webshare-{alt_cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", alt_cc.lower()))
+
     return candidates
 
 def detect_video_allowed_countries(vid: str) -> list:
@@ -861,6 +857,83 @@ def detect_video_allowed_countries(vid: str) -> list:
         print("Country detection error:", e)
     return []
 
+@app.get("/api/geo-stream-check")
+async def geo_stream_check(url: str = "", format: str = "mp3"):
+    clean_url = (url or "").strip()
+    vid = None
+    m = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", clean_url)
+    if m:
+        vid = m.group(1)
+    elif len(clean_url) == 11 and re.match(r"^[a-zA-Z0-9_-]{11}$", clean_url):
+        vid = clean_url
+
+    if not vid or len(vid) != 11:
+        return {"success": False, "error": "invalid_url"}
+
+    fmt_clean = (format or "mp3").lower().strip()
+    is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
+
+    # Check cache first
+    import tempfile
+    cache_type = "audio" if is_audio else "video"
+    cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.dat")
+    if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
+        return {"success": True, "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}", "cached": True}
+
+    allowed = detect_video_allowed_countries(vid)
+    proxy_candidates = build_proxy_candidates(allowed)
+    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
+
+    import yt_dlp
+    stream_url = None
+    last_err = None
+    target_country = proxy_candidates[0][2] if proxy_candidates else "us"
+
+    attempts = [(c, client) for c in proxy_candidates[:3] for client in (None, ["android_vr"])]
+    for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
+        ydl_opts = {
+            "proxy": proxy_url,
+            "quiet": True,
+            "no_warnings": True,
+            "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
+            "noplaylist": True,
+            "socket_timeout": 12,
+        }
+        if client:
+            ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
+            if info:
+                cand_url = info.get("url")
+                if not cand_url and info.get("requested_formats"):
+                    if is_audio:
+                        audio_fmts = [f for f in info["requested_formats"] if f.get("vcodec") == "none"]
+                        cand_url = audio_fmts[-1].get("url") if audio_fmts else info["requested_formats"][-1].get("url")
+                    else:
+                        cand_url = info["requested_formats"][0].get("url")
+                if cand_url:
+                    stream_url = cand_url
+                    target_country = cand_country
+                    break
+        except Exception as e:
+            last_err = e
+            continue
+
+    if stream_url:
+        return {
+            "success": True,
+            "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}",
+            "country": target_country
+        }
+    return {
+        "success": False,
+        "error": "all_proxies_exhausted",
+        "detail": str(last_err),
+        "country": target_country
+    }
+
+
 @app.get("/api/geo-stream")
 async def geo_stream(url: str = "", format: str = "mp3"):
     clean_url = (url or "").strip()
@@ -872,7 +945,13 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         vid = clean_url
 
     if not vid or len(vid) != 11:
-        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+        return HTMLResponse(content="""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Invalid Link | YT4MP3</title>
+<style>body{font-family:sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}
+.card{background:#fff;padding:32px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-width:440px;text-align:center;border:1px solid #e2e8f0;}
+h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a{display:inline-block;margin-top:16px;background:#2563eb;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;}
+</style></head>
+<body><div class="card"><h2>⚠️ Invalid YouTube Link</h2><p>Please enter a valid YouTube video URL.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=400)
 
     # Detect allowed country
     allowed = detect_video_allowed_countries(vid)
@@ -950,7 +1029,7 @@ async def geo_stream(url: str = "", format: str = "mp3"):
         # Check for cookies (from env var or file) to 100% unlock age-restricted/member videos
         cookie_file = None
         raw_cookies = os.environ.get("YOUTUBE_COOKIES")
-        if raw_cookies and len(raw_cookies.strip()) > 20:
+        if raw_cookies and len(raw_cookies.strip()) > 50:
             import tempfile
             import base64
             cleaned_cookies = raw_cookies.strip()
@@ -963,13 +1042,15 @@ async def geo_stream(url: str = "", format: str = "mp3"):
             if "\\n" in cleaned_cookies and "\n" not in cleaned_cookies:
                 cleaned_cookies = cleaned_cookies.replace("\\n", "\n")
 
-            env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
-            try:
-                with open(env_cookie_path, "w", encoding="utf-8") as cf:
-                    cf.write(cleaned_cookies)
-                cookie_file = env_cookie_path
-            except Exception:
-                pass
+            # CRITICAL: Only use if it actually has Netscape format and valid tabs
+            if cleaned_cookies.startswith("# Netscape HTTP Cookie File") and "\t" in cleaned_cookies and "LOGIN_INFO" in cleaned_cookies:
+                env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
+                try:
+                    with open(env_cookie_path, "w", encoding="utf-8") as cf:
+                        cf.write(cleaned_cookies)
+                    cookie_file = env_cookie_path
+                except Exception:
+                    pass
 
         if not cookie_file:
             candidates = [
@@ -1065,7 +1146,13 @@ async def geo_stream(url: str = "", format: str = "mp3"):
                 continue
 
         if not stream_url:
-            raise HTTPException(status_code=502, detail=f"Stream URL could not be extracted: {str(last_extract_err)}")
+            return HTMLResponse(content=f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Playback Restricted | YT4MP3</title>
+<style>body{{font-family:sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}}
+.card{{background:#fff;padding:32px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-width:440px;text-align:center;border:1px solid #e2e8f0;}}
+h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5;}}a{{display:inline-block;margin-top:16px;background:#2563eb;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;}}
+</style></head>
+<body><div class="card"><h2>🔒 Regional DRM Protection</h2><p>This video is protected by regional broadcaster DRM and cannot be converted directly.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=403)
 
         safe_title = re.sub(r'[\\/*?:"<>|]', "", raw_title).strip()
         safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
