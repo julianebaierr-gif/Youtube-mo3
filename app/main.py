@@ -976,6 +976,42 @@ def detect_video_allowed_countries(vid: str) -> list:
         print("Country detection error:", e)
     return []
 
+def get_yt_cookies_file() -> Optional[str]:
+    """Resolves YouTube cookies from environment variable YOUTUBE_COOKIES or local cookies.txt."""
+    raw_cookies = os.environ.get("YOUTUBE_COOKIES")
+    if raw_cookies and len(raw_cookies.strip()) > 50:
+        import tempfile
+        import base64
+        cleaned_cookies = raw_cookies.strip()
+        if not cleaned_cookies.startswith("#") and "\t" not in cleaned_cookies:
+            try:
+                cleaned_cookies = base64.b64decode(cleaned_cookies).decode("utf-8", errors="ignore")
+            except Exception:
+                pass
+        if "\\n" in cleaned_cookies and "\n" not in cleaned_cookies:
+            cleaned_cookies = cleaned_cookies.replace("\\n", "\n")
+
+        if cleaned_cookies.startswith("# Netscape HTTP Cookie File") and "\t" in cleaned_cookies and "LOGIN_INFO" in cleaned_cookies:
+            env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
+            try:
+                with open(env_cookie_path, "w", encoding="utf-8") as cf:
+                    cf.write(cleaned_cookies)
+                return env_cookie_path
+            except Exception:
+                pass
+
+    candidates = [
+        os.path.join(os.getcwd(), "cookies.txt"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "cookies.txt"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "cookies.txt"),
+        "/etc/secrets/cookies.txt",
+        r"C:\Users\Admin\Downloads\cookies.txt",
+    ]
+    for c_path in candidates:
+        if os.path.exists(c_path) and os.path.getsize(c_path) > 20:
+            return c_path
+    return None
+
 @app.get("/api/geo-stream-check")
 async def geo_stream_check(url: str = "", format: str = "mp3"):
     clean_url = (url or "").strip()
@@ -999,6 +1035,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
         return {"success": True, "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}", "cached": True}
 
+    cookie_file = get_yt_cookies_file()
     allowed = detect_video_allowed_countries(vid)
     proxy_candidates = build_proxy_candidates(allowed)
     fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
@@ -1009,6 +1046,8 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     target_country = proxy_candidates[0][2] if proxy_candidates else "us"
 
     attempts = [(c, client) for c in proxy_candidates[:3] for client in (None, ["android_vr"])]
+    # Always append direct server probe (clean unlock with cookies when datacenter proxies are flagged)
+    attempts.append((("Direct-Server", None, "us"), None))
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
@@ -1016,10 +1055,13 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "no_warnings": True,
             "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
             "noplaylist": True,
-            "socket_timeout": 12,
+            "socket_timeout": 15,
+            "js_runtimes": {"node": {}, "deno": {}},
         }
         if client:
             ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
+        if cookie_file:
+            ydl_opts["cookiefile"] = cookie_file
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
@@ -1145,43 +1187,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
     try:
         import yt_dlp
 
-        # Check for cookies (from env var or file) to 100% unlock age-restricted/member videos
-        cookie_file = None
-        raw_cookies = os.environ.get("YOUTUBE_COOKIES")
-        if raw_cookies and len(raw_cookies.strip()) > 50:
-            import tempfile
-            import base64
-            cleaned_cookies = raw_cookies.strip()
-            # Handle base64 encoded cookies or literal \n newlines
-            if not cleaned_cookies.startswith("#") and "\t" not in cleaned_cookies:
-                try:
-                    cleaned_cookies = base64.b64decode(cleaned_cookies).decode("utf-8", errors="ignore")
-                except Exception:
-                    pass
-            if "\\n" in cleaned_cookies and "\n" not in cleaned_cookies:
-                cleaned_cookies = cleaned_cookies.replace("\\n", "\n")
-
-            # CRITICAL: Only use if it actually has Netscape format and valid tabs
-            if cleaned_cookies.startswith("# Netscape HTTP Cookie File") and "\t" in cleaned_cookies and "LOGIN_INFO" in cleaned_cookies:
-                env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
-                try:
-                    with open(env_cookie_path, "w", encoding="utf-8") as cf:
-                        cf.write(cleaned_cookies)
-                    cookie_file = env_cookie_path
-                except Exception:
-                    pass
-
-        if not cookie_file:
-            candidates = [
-                os.path.join(os.getcwd(), "cookies.txt"),
-                "/etc/secrets/cookies.txt",
-                os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "cookies.txt"),
-            ]
-            for c_path in candidates:
-                if os.path.exists(c_path) and os.path.getsize(c_path) > 20:
-                    cookie_file = c_path
-                    break
-
+        cookie_file = get_yt_cookies_file()
         info = None
         stream_url = None
         raw_title = f"YT4MP3_{vid}"
@@ -1192,6 +1198,8 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         # Each proxy is tried with the default web client, then the android_vr client (works without a JS runtime).
         proxy_candidates = build_proxy_candidates(allowed)
         attempts = [(c, client) for c in proxy_candidates for client in (None, ["android_vr"])]
+        # Always append direct server probe (clean unlock with cookies when datacenter proxies are flagged)
+        attempts.append((("Direct-Server", None, "us"), None))
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
 
