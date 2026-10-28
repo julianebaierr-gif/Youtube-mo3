@@ -1337,7 +1337,7 @@ async def get_video_resolutions(id: str):
 
         # Detect unsupported video categories (18+ age restricted, members only, private, live streams, paid rentals)
         unsupported_reason = None
-        if re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age', html, re.I):
+        if re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|isRestricted":\s*true', html, re.I):
             unsupported_reason = "age_restricted"
         elif re.search(r'members-only|Join this channel to get access|"status":\s*"UNPLAYABLE".*?members', html, re.I):
             unsupported_reason = "channel_membership"
@@ -1347,6 +1347,8 @@ async def get_video_resolutions(id: str):
             unsupported_reason = "live_stream"
         elif re.search(r'Buy or rent|Rental duration|"offerId":', html, re.I):
             unsupported_reason = "paid_rental"
+        elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
+            unsupported_reason = "video_unavailable"
 
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         max_h = max(heights) if heights else 1080
