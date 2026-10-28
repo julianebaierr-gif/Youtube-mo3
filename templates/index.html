@@ -2245,7 +2245,7 @@
                     };
                 }
 
-                if (low.includes('membership') || low.includes('members only') || low.includes('members-only') || low.includes('멤버십') || low.includes('uplordmoviecollection')) {
+                if (low.includes('membership') || low.includes('members only') || low.includes('members-only') || low.includes('requires payment') || low.includes('payment to watch') || low.includes('paid content') || low.includes('purchase') || low.includes('멤버십') || low.includes('uplordmoviecollection')) {
                     return {
                         fatal: true,
                         message: getI18nMsg('channel_membership')
