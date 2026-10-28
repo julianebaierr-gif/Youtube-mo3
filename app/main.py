@@ -359,56 +359,12 @@ def get_all_sitemap_urls() -> list:
 
 @app.api_route("/api/indexnow", methods=["GET", "POST"])
 async def trigger_indexnow():
-    url_list = get_all_sitemap_urls()
-    payload = {
-        "host": "www.yt4mp3.com",
-        "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
-        "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
-        "urlList": url_list
-    }
-    data = json.dumps(payload).encode("utf-8")
-    # Official unified IndexNow endpoint (automatically shares with Bing, Yandex, Seznam, Naver, Yep without duplicate spam pings)
-    endpoints = [
-        "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow"
-    ]
-    results = {}
-    for ep in endpoints:
-        try:
-            req = urllib.request.Request(
-                ep,
-                data=data,
-                headers={
-                    "Content-Type": "application/json; charset=utf-8",
-                    "User-Agent": "Mozilla/5.0 (compatible; YT4MP3-SitemapNotifier/1.0; +https://www.yt4mp3.com)"
-                }
-            )
-            with urllib.request.urlopen(req, timeout=6) as res:
-                results[ep] = {"status": res.status, "msg": "ok"}
-        except urllib.error.HTTPError as he:
-            results[ep] = {"status": he.code, "msg": "accepted" if he.code in [200, 202] else str(he)}
-        except Exception as e:
-            results[ep] = {"status": "error", "detail": str(e)}
+    # Bing / IndexNow auto-indexing disabled
     return {
-        "submitted": True,
-        "url_count": len(url_list),
-        "results": results
+        "submitted": False,
+        "disabled": True,
+        "message": "Bing and IndexNow auto-indexing has been disabled."
     }
-
-@app.on_event("startup")
-async def start_auto_indexnow_scheduler():
-    import asyncio
-    async def _auto_index_loop():
-        # Wait 90 seconds after server startup before initial run
-        await asyncio.sleep(90)
-        while True:
-            try:
-                await trigger_indexnow()
-            except Exception as e:
-                print(f"[AUTO_INDEXNOW_WARN] {e}")
-            # Automatically push all URLs to Bing/IndexNow every 4 hours (14,400 seconds)
-            await asyncio.sleep(14400)
-    asyncio.create_task(_auto_index_loop())
 
 # ==============================================================================
 # UPSTREAM CONNECTION POOLS
