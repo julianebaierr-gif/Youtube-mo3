@@ -1295,7 +1295,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "no_warnings": True,
             "format": fmt_selector if client is None else ("140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"),
             "noplaylist": True,
-            "socket_timeout": 8,
+            "socket_timeout": 15,
             "js_runtimes": {"node": {}, "deno": {}},
         }
         if client:
@@ -1305,8 +1305,23 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
                     "Referer": f"https://www.youtube.com/embed/{vid}",
                     "Origin": "https://www.youtube.com",
                 }
-        if not proxy_url and cookie_file:
+        if cookie_file:
             ydl_opts["cookiefile"] = cookie_file
+
+        po_token = os.environ.get("YOUTUBE_PO_TOKEN")
+        visitor_data = os.environ.get("YOUTUBE_VISITOR_DATA")
+        if po_token or visitor_data:
+            yt_args = ydl_opts.setdefault("extractor_args", {}).setdefault("youtube", {})
+            if po_token:
+                yt_args["po_token"] = [
+                    f"web.gvs+{po_token}",
+                    f"web.player+{po_token}",
+                    f"mweb.gvs+{po_token}",
+                    f"mweb.player+{po_token}",
+                ]
+            if visitor_data:
+                yt_args["visitor_data"] = [visitor_data]
+
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
@@ -1324,6 +1339,8 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
                     break
         except Exception as e:
             last_err = e
+            clean_err = str(e).split('\n')[0]
+            print(f"[GeoCheck] {proxy_label}: {type(e).__name__}: {clean_err[:100]}")
             continue
 
     # Fallback to public Invidious / Piped cluster if yt-dlp was blocked by age-gate
@@ -1342,10 +1359,10 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}{country_param}",
             "country": target_country
         }
-    is_age = any(k in str(last_err).lower() for k in ("age", "sign in to confirm", "confirm your age", "inappropriate"))
+    is_age = any(k in str(last_err).lower() for k in ("age", "sign in to confirm", "confirm your age", "inappropriate", "age-restricted", "age restricted", "requires account sign-in", "viewer discretion"))
     return {
         "success": False,
-        "error": "all_proxies_exhausted",
+        "error": "age_restricted" if is_age else "all_proxies_exhausted",
         "is_age_restricted": is_age,
         "detail": str(last_err),
         "country": target_country
@@ -1473,7 +1490,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                         "Referer": f"https://www.youtube.com/embed/{vid}",
                         "Origin": "https://www.youtube.com",
                     }
-            if not proxy_url and cookie_file:
+            if cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
             # PO Token (Proof of Origin) & Visitor Data support to bypass bot challenges on datacenter IPs
@@ -1530,6 +1547,8 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                     break
             except Exception as e:
                 last_extract_err = e
+                clean_err = str(e).split('\n')[0]
+                print(f"[GeoStream] {proxy_label}: {type(e).__name__}: {clean_err[:100]}")
                 continue
 
         # Fallback to public Invidious / Piped cluster if yt-dlp failed

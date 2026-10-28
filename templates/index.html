@@ -2538,8 +2538,9 @@
                 window._lastRequestedLabel = safeLabel;
 
                 // Hoisted state variables (prevent any TDZ ReferenceErrors)
-                let curPct = 35;
+                let curPct = 25;
                 let completed = false;
+                let isEncodingStage = false;
                 let activePollTimer = null;
                 let animTimer = null;
                 let geoProxyTried = false;
@@ -2558,16 +2559,16 @@
                 }
 
                 function updateConversionVisuals(pct) {
-                    const safePct = Math.max(curPct || 35, pct);
+                    const safePct = Math.max(curPct || 25, pct);
                     curPct = safePct;
                     if (modalProgressBar) modalProgressBar.style.width = `${safePct}%`;
                     if (modalPctText) modalPctText.textContent = `${safePct}%`;
                     document.title = `⏳ (${safePct}%) Converting... | YT4MP3`;
                     if (stagePill1 && stagePill2 && stagePill3) {
-                        if (pct < 40) {
+                        if (!isEncodingStage) {
                             stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
                             stagePill1.textContent = "⚡ 1. Fetch";
-                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all opacity-60";
                             stagePill2.textContent = "2. Encode";
                         } else {
                             stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
@@ -2575,7 +2576,7 @@
                             stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-active transition-all";
                             stagePill2.textContent = "⚡ 2. Encode";
                         }
-                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all";
+                        stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all opacity-60";
                         stagePill3.textContent = "3. Ready";
                     }
                 }
@@ -2686,12 +2687,14 @@
                     } catch(e) {}
                 }
 
-                function failDownload(msg) {
+                function failDownload(msg, failedStage = null) {
                     if (completed || window._activeConversionToken !== conversionToken) return;
                     completed = true;
                     if (activePollTimer) clearTimeout(activePollTimer);
                     if (animTimer) clearInterval(animTimer);
                     if (window._origPageTitle) document.title = window._origPageTitle;
+
+                    const effectiveStage = failedStage || (isEncodingStage ? 'encode' : 'fetch');
 
                     if (modalProgressBar) {
                         modalProgressBar.style.width = '100%';
@@ -2705,6 +2708,24 @@
                         modalStatusMsg.className = "text-xs font-semibold text-rose-700 mb-4 bg-rose-50 py-2.5 px-3 rounded-lg border border-rose-200 text-left";
                     }
                     if (modalActionContainer) modalActionContainer.classList.add('hidden');
+
+                    if (stagePill1 && stagePill2 && stagePill3) {
+                        if (effectiveStage === 'fetch') {
+                            stagePill1.className = "px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold text-xs border border-rose-200";
+                            stagePill1.textContent = "❌ 1. Fetch Failed";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all opacity-50";
+                            stagePill2.textContent = "2. Encode";
+                            stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all opacity-50";
+                            stagePill3.textContent = "3. Ready";
+                        } else {
+                            stagePill1.className = "px-2.5 py-0.5 rounded-full stage-pill-done transition-all";
+                            stagePill1.textContent = "✓ 1. Fetch";
+                            stagePill2.className = "px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold text-xs border border-rose-200";
+                            stagePill2.textContent = "❌ 2. Encode Failed";
+                            stagePill3.className = "px-2.5 py-0.5 rounded-full stage-pill-idle transition-all opacity-50";
+                            stagePill3.textContent = "3. Ready";
+                        }
+                    }
 
                     const errActions = document.getElementById('modal-error-actions');
                     const retryBtn = document.getElementById('modal-retry-btn');
@@ -2856,7 +2877,7 @@
                 modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                 modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                 modalActionContainer.classList.add('hidden');
-                updateConversionVisuals(35);
+                updateConversionVisuals(25);
 
                 const errActions = document.getElementById('modal-error-actions');
                 if (errActions) errActions.classList.add('hidden');
@@ -2864,9 +2885,14 @@
                 modalIconContainer.className = "w-14 h-14 rounded-xl bg-gray-100 text-slate-800 flex items-center justify-center text-xl mx-auto mb-3";
                 modalIcon.className = "fa-solid fa-gear fa-spin text-rose-600";
 
-                // Turbo Progress bar animation (Super-responsive visual feedback)
+                // Responsive Progress bar animation
                 animTimer = setInterval(() => {
-                    if (curPct < 93) {
+                    if (!isEncodingStage) {
+                        if (curPct < 38) {
+                            curPct += 1;
+                            updateConversionVisuals(curPct);
+                        }
+                    } else if (curPct < 93) {
                         curPct += curPct < 60 ? 3 : 1;
                         updateConversionVisuals(curPct);
                     }
@@ -2927,7 +2953,7 @@
                         modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
-                        curPct = Math.max(curPct, 50);
+                        curPct = Math.max(curPct, 20);
                         updateConversionVisuals(curPct);
 
                         try {
@@ -2945,11 +2971,15 @@
                                     return;
                                 }
                                 if (data && data.is_age_restricted) {
-                                    failDownload(getI18nMsg('age_restricted'));
+                                    if (!geoProxyTried) {
+                                        tryGeoProxyEngine();
+                                        return;
+                                    }
+                                    failDownload(getI18nMsg('age_restricted'), 'fetch');
                                     return;
                                 }
                                 if (data && data.is_unavailable) {
-                                    failDownload("This video is unavailable or private on YouTube.");
+                                    failDownload("This video is unavailable or private on YouTube.", 'fetch');
                                     return;
                                 }
                             }
@@ -2972,7 +3002,7 @@
                         modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
-                        curPct = Math.max(curPct, 50);
+                        curPct = Math.max(curPct, 25);
                         updateConversionVisuals(curPct);
                         try {
                             const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
@@ -3087,7 +3117,7 @@
                         modalStatusMsg.textContent = 'Connecting to regional unlock server (multi-proxy)...';
                         modalStatusMsg.className = "text-xs font-semibold text-emerald-700 mb-4 bg-emerald-50 py-2.5 px-3 rounded-lg border border-emerald-200";
                         modalIcon.className = "fa-solid fa-earth-americas fa-spin text-emerald-600";
-                        curPct = Math.max(curPct, 80);
+                        curPct = Math.max(curPct, 32);
                         updateConversionVisuals(curPct);
 
                         const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
@@ -3105,7 +3135,7 @@
                                     return;
                                 }
                                 if (checkData && checkData.is_age_restricted) {
-                                    failDownload(getI18nMsg('age_restricted'));
+                                    failDownload(getI18nMsg('age_restricted'), 'fetch');
                                     return;
                                 }
                             }
@@ -3114,13 +3144,13 @@
                                 tryCobaltEngine(() => runEngine('savenow'));
                                 return;
                             }
-                            failDownload(getI18nMsg('region_restricted'));
+                            failDownload(getI18nMsg('region_restricted'), 'fetch');
                         } catch (e) {
                             if (!cobaltTried) {
                                 tryCobaltEngine(() => runEngine('savenow'));
                                 return;
                             }
-                            failDownload(getI18nMsg('region_restricted'));
+                            failDownload(getI18nMsg('region_restricted'), 'fetch');
                         }
                     }
 
@@ -3360,13 +3390,16 @@
                             const errTxt = (initData && initData.errorText) ? initData.errorText : "";
                             const fatalCheck = getSpecificVideoRestriction(errTxt);
                             if (fatalCheck && fatalCheck.fatal) {
-                                failDownload(fatalCheck.message);
+                                failDownload(fatalCheck.message, 'fetch');
                                 return;
                             }
                             stepDownOrSwitchEngine(errTxt || "Conversion servers are busy.");
                             return;
                         }
                         if (isDownloadReady(initData)) { completeDownload(initData.download_url); return; }
+                        isEncodingStage = true;
+                        curPct = Math.max(curPct, 45);
+                        updateConversionVisuals(curPct);
                         pollConversion(initData.id);
                     }
 
@@ -3676,7 +3709,7 @@
         // Service Worker Registration for PWA compliance
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=12', { scope: '/' })
                     .then(reg => {
                         console.log('YT4MP3 Service Worker active');
                     })
