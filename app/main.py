@@ -696,8 +696,12 @@ async def report_issue(request: Request):
                 safe_err = html_lib.escape(error_detail)
                 safe_ip = html_lib.escape(client_ip)
 
-                is_expected_restr = any(k in error_detail for k in ["Broadcaster Protection", "Live Stream", "Private Video", "Age-Restricted", "Video Too Long", "Membership Required"])
-                header_badge = "ℹ️ <b>[Broadcaster DRM / Restricted]</b>" if is_expected_restr else "🚨 <b>YT4MP3 Conversion Alert</b>"
+                err_low = error_detail.lower()
+                is_expected_restr = any(k in err_low for k in [
+                    "broadcaster", "live stream", "private", "age-restricted", "age restricted", 
+                    "video too long", "membership", "region", "droits", "copyright", "unavailable"
+                ])
+                header_badge = "ℹ️ <b>[Broadcaster DRM / Region Restricted]</b>" if is_expected_restr else "🚨 <b>YT4MP3 Conversion Alert</b>"
 
                 alert_text = (
                     f"{header_badge}\n\n"
