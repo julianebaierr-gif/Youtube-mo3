@@ -1077,6 +1077,12 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         actual_ext = default_ext
         last_extract_err = None
 
+        # For geo-restricted videos with country restrictions, enforce clean anonymous proxy IP.
+        # Passing foreign account cookies/tokens forces YouTube to evaluate the account's home region,
+        # which breaks regional broadcaster geo-unblocking (e.g. Sky Sports UK, beIN Sports).
+        if allowed:
+            cookie_file = None
+
         # Smart rotation: Webshare unlimited pool (3 IPs) first, DataImpulse only as last-resort fallback.
         # Each proxy is tried with android client first (direct progressive mp4/audio without JS runtime), then android_vr, then web.
         proxy_candidates = build_proxy_candidates(allowed)
@@ -1101,8 +1107,8 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 ydl_opts["cookiefile"] = cookie_file
 
             # PO Token (Proof of Origin) & Visitor Data support to bypass bot challenges on datacenter IPs
-            po_token = os.environ.get("YOUTUBE_PO_TOKEN")
-            visitor_data = os.environ.get("YOUTUBE_VISITOR_DATA")
+            po_token = None if allowed else os.environ.get("YOUTUBE_PO_TOKEN")
+            visitor_data = None if allowed else os.environ.get("YOUTUBE_VISITOR_DATA")
             if po_token or visitor_data:
                 yt_args = ydl_opts.setdefault("extractor_args", {}).setdefault("youtube", {})
                 if po_token:
