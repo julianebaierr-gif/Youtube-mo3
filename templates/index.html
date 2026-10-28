@@ -1687,8 +1687,8 @@
                 if (!progData) return false;
                 if (progData.download_url && typeof progData.download_url === 'string' && progData.download_url.length > 8) {
                     const dl = progData.download_url.toLowerCase();
-                    // Reject any rogue ad redirect networks (p.savenow.to and lto2.affadaffa.com are ad gateways; real files are on worker subdomains like *.savenow.to)
-                    if (dl.includes('://p.savenow.to/') || dl.includes('://lto2.affadaffa.com/') || dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
+                    // Reject any rogue ad redirect networks (savenow, ey43, b.php, ad gateways)
+                    if (dl.includes('savenow.to') || dl.includes('affadaffa.com') || dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('b.php') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
                         return false;
                     }
                     return true;
@@ -2492,7 +2492,13 @@
                 let downloadAutoTriggered = false;
                 function triggerSingleDeviceDownload(url) {
                     if (!url || url === '#' || url.startsWith('javascript:')) return;
-                    // Pure Universal Direct Download Trigger (Zero New Tabs, Zero Page Redirects, Bypasses X-Frame-Options)
+                    // Strictly block any rogue ad redirects (e.g. savenow / ey43 / b.php / google.com)
+                    const lowerUrl = url.toLowerCase();
+                    if (lowerUrl.includes('ey43.com') || lowerUrl.includes('b.php') || lowerUrl.includes('/ad/') || lowerUrl.includes('google.com') || lowerUrl.includes('savenow.to') || lowerUrl.includes('affadaffa.com')) {
+                        console.warn('Blocked rogue ad redirect URL:', url);
+                        return;
+                    }
+                    // Pure Universal Direct Download Trigger (Zero New Tabs, Zero Page Redirects, Direct Device Save)
                     try {
                         const a = document.createElement('a');
                         a.href = url;
@@ -2735,23 +2741,12 @@
                                     lastServerErrorText = String(data.error);
                                 }
                             }
-                            // If FastSaver did not return a link, try backup loader engine at the EXACT requested format
-                            if (!loaderFallbackTried) {
-                                loaderFallbackTried = true;
-                                runEngine('loader');
-                                return;
-                            }
                             if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryGeoProxyEngine();
                                 return;
                             }
                             failDownload(getI18nMsg('server_busy'));
                         } catch (e) {
-                            if (!loaderFallbackTried) {
-                                loaderFallbackTried = true;
-                                runEngine('loader');
-                                return;
-                            }
                             if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryGeoProxyEngine();
                                 return;
@@ -2948,24 +2943,10 @@
                         pollConversion(initData.id);
                     }
 
-                    // Multi-Engine Cascading Pipeline:
-                    // 1. 4K (2160p) & 2K (1440p) -> FastSaver Pro Paid API directly (genuine 4K/2K resolution)
-                    // 2. Standard Formats (1080p, 720p, 480p, 360p, MP3) -> Active Free Engines (SaveNow -> Loader) first!
-                    // 3. Guaranteed Backup -> FastSaver Pro Paid API if free engines are busy or take >15s!
-                    const isHiResFormat = (fmtParam === '4k' || fmtParam === '1440');
-                    const isLongVideo = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 9000);
-
-                    if (isHiResFormat) {
-                        modalStatusMsg.textContent = 'Preparing Ultra-HD stream (FastSaver Pro)...';
-                        tryFastSaverEngine();
-                    } else if (isLongVideo) {
-                        modalStatusMsg.textContent = 'Long video detected — preparing extended engine...';
-                        tryLongVideoEngine();
-                    } else {
-                        // Start with Free Engine 1 (SaveNow), auto-fails over to Loader, then FastSaver Paid API!
-                        modalStatusMsg.textContent = 'Converting your media (Free High-Speed Engine)...';
-                        runEngine('savenow');
-                    }
+                    // FastSaver Pro Paid API: 100% Direct Binary Stream (ZERO Ads, ZERO Redirects to Google)
+                    // Permanently bypasses rogue ad-redirect networks like savenow.to / ey43.com!
+                    modalStatusMsg.textContent = 'Preparing direct high-speed download...';
+                    tryFastSaverEngine();
 
                 } catch (err) {
                     console.error('Conversion error:', err);
