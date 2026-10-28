@@ -1335,6 +1335,19 @@ async def get_video_resolutions(id: str):
             (re.search(r'"status":\s*"UNPLAYABLE"', html) and not re.search(r'Private|deleted|removed|terminated', html, re.I))
         )
 
+        # Detect unsupported video categories (18+ age restricted, members only, private, live streams, paid rentals)
+        unsupported_reason = None
+        if re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age', html, re.I):
+            unsupported_reason = "age_restricted"
+        elif re.search(r'members-only|Join this channel to get access|"status":\s*"UNPLAYABLE".*?members', html, re.I):
+            unsupported_reason = "channel_membership"
+        elif re.search(r'Private video|This video is private|"status":\s*"UNPLAYABLE".*?Private', html, re.I):
+            unsupported_reason = "private_video"
+        elif re.search(r'"isLive":\s*true|"isLiveContent":\s*true', html, re.I):
+            unsupported_reason = "live_stream"
+        elif re.search(r'Buy or rent|Rental duration|"offerId":', html, re.I):
+            unsupported_reason = "paid_rental"
+
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         max_h = max(heights) if heights else 1080
         result = {
@@ -1343,6 +1356,8 @@ async def get_video_resolutions(id: str):
             "max_height": max_h,
             "duration_sec": duration_sec,
             "is_geo_blocked": is_geo_blocked,
+            "is_unsupported": bool(unsupported_reason),
+            "unsupported_reason": unsupported_reason,
             "source": "yt_watch",
         }
         _VIDEO_RES_CACHE[vid] = result

@@ -727,12 +727,12 @@
                 </a>
             </div>
 
-            <!-- System Status / Issue Resolved Note (All 14 Languages) -->
-            <div class="max-w-2xl mx-auto mb-3.5 px-3 py-2 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-900 text-xs flex items-center justify-center gap-2 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
+            <!-- System Status / Content Policy Note (All 15 Languages) -->
+            <div class="max-w-2xl mx-auto mb-3.5 px-3.5 py-2.5 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-950 text-xs flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-circle-exclamation text-amber-600 flex-shrink-0 text-sm"></i>
                 <p class="leading-snug text-center">
-                    <strong class="font-extrabold text-emerald-800"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>{{ t.system_update_badge | default('Fixed & Updated:') }}</strong>
-                    <span class="font-medium">{{ t.system_update_note | default('All MP3 & 4K MP4 download issues have been 100% resolved — enjoy fast, direct & error-free downloads!') }}</span>
+                    <strong class="font-extrabold text-amber-900">{{ t.system_update_badge | default('Notice:') }}</strong>
+                    <span class="font-medium text-amber-850">{{ t.system_update_note | default('Standard YouTube videos & Shorts supported. 18+ age-restricted, members-only, private, paid rentals, and live streams are not supported.') }}</span>
                 </p>
             </div>
 
@@ -931,6 +931,18 @@
                                 <span id="copy-title-text">Copy Title</span>
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Unsupported Category Warning Notice -->
+                <div id="unsupported-restriction-notice" class="hidden mt-4 p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs sm:text-sm flex items-start gap-3 shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg flex-shrink-0 mt-0.5"></i>
+                    <div class="flex-1">
+                        <strong class="font-extrabold text-amber-900 block mb-1 text-sm sm:text-base flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-amber-600"></i>
+                            <span>Notice: Unsupported Video Category</span>
+                        </strong>
+                        <p id="unsupported-restriction-text" class="text-amber-900 leading-relaxed font-medium"></p>
                     </div>
                 </div>
 
@@ -1725,7 +1737,8 @@
                     channel_membership: "🔒 Channel Membership Required: This video requires a paid YouTube Channel Membership and cannot be downloaded publicly.",
                     video_unavailable: "❌ Video Unavailable: This video has been removed, deleted, or made unavailable on YouTube.",
                     video_too_long: "⏱ Video Too Long: Online conversion supports videos up to 3 hours. Please try a shorter video.",
-                    region_restricted: "⚠️ Copyright / Region Restricted: This video is blocked by YouTube copyright or regional restrictions and cannot be downloaded."
+                    region_restricted: "⚠️ Copyright / Region Restricted: This video is blocked by YouTube copyright or regional restrictions and cannot be downloaded.",
+                    paid_rental: "💰 Paid Video / Rental: YouTube paid movies and rental videos cannot be downloaded. Please try any standard YouTube video or Short.",
                 },
                 es: {
                     invalid_url: "⚠️ Por favor, pega un enlace completo de YouTube (p. ej. https://www.youtube.com/watch?v=... o youtu.be/...)",
@@ -1736,7 +1749,8 @@
                     channel_membership: "🔒 Membresía Requerida: Este video requiere una membresía paga del canal de YouTube.",
                     video_unavailable: "❌ Video No Disponible: Este video ha sido eliminado o no está disponible en YouTube.",
                     video_too_long: "⏱ Video Demasiado Largo: La conversión admite videos de hasta 3 horas. Prueba con uno más corto.",
-                    region_restricted: "⚠️ Restricción de Región/Copyright: Este video está bloqueado por derechos de autor o región en YouTube."
+                    region_restricted: "⚠️ Restricción de Región/Copyright: Este video está bloqueado por derechos de autor o región en YouTube.",
+                    paid_rental: "💰 Video de Pago / Alquiler: Los videos de pago y alquiler de YouTube no se pueden descargar. Prueba con un video estándar o Short.",
                 },
                 fr: {
                     invalid_url: "⚠️ Veuillez coller un lien vidéo YouTube complet (ex. https://www.youtube.com/watch?v=... ou youtu.be/...)",
@@ -1747,7 +1761,8 @@
                     channel_membership: "🔒 Adhésion Requise : Cette vidéo nécessite une adhésion payante à la chaîne YouTube.",
                     video_unavailable: "❌ Vidéo Indisponible : Cette vidéo a été supprimée ou n'est plus disponible sur YouTube.",
                     video_too_long: "⏱ Vidéo Trop Longue : La conversion prend en charge les vidéos jusqu'à 3 heures. Veuillez essayer une vidéo plus courte.",
-                    region_restricted: "⚠️ Restriction Régionale/Droits : Cette vidéo est bloquée par des restrictions régionales ou de droits d'auteur."
+                    region_restricted: "⚠️ Restriction Régionale/Droits : Cette vidéo est bloquée par des restrictions régionales ou de droits d'auteur.",
+                    paid_rental: "💰 Vidéo Payante / Location : Les films et vidéos de location YouTube ne peuvent pas être téléchargés. Essayez une vidéo standard ou un Short.",
                 },
                 de: {
                     invalid_url: "⚠️ Bitte fügen Sie einen vollständigen YouTube-Link ein (z. B. https://www.youtube.com/watch?v=... oder youtu.be/...)",
@@ -1758,7 +1773,8 @@
                     channel_membership: "🔒 Kanalmitgliedschaft erforderlich: Dieses Video erfordert eine bezahlte YouTube-Kanalmitgliedschaft.",
                     video_unavailable: "❌ Video nicht verfügbar: Dieses Video wurde entfernt oder ist auf YouTube nicht verfügbar.",
                     video_too_long: "⏱ Video zu lang: Die Online-Konvertierung unterstützt Videos bis zu 3 Stunden. Bitte versuchen Sie ein kürzeres Video.",
-                    region_restricted: "⚠️ Regionale Einschränkung: Dieses Video ist durch Urheberrechte oder regionale Beschränkungen blockiert."
+                    region_restricted: "⚠️ Regionale Einschränkung: Dieses Video ist durch Urheberrechte oder regionale Beschränkungen blockiert.",
+                    paid_rental: "💰 Bezahlvideo / Leihe: Kostenpflichtige YouTube-Filme und Leihvideos können nicht heruntergeladen werden. Bitte versuchen Sie ein normales Video oder Short.",
                 },
                 ar: {
                     invalid_url: "⚠️ يُرجى لصق رابط فيديو يوتيوب كامل (مثل https://www.youtube.com/watch?v=... أو youtu.be/...)",
@@ -1769,7 +1785,8 @@
                     channel_membership: "🔒 مطلوب انتساب للقناة: يتطلب هذا الفيديو انتسابًا مدفوعًا للقناة ولا يمكن تنزيله.",
                     video_unavailable: "❌ الفيديو غير متاح: تم حذف هذا الفيديو أو لم يعد متوفرًا على يوتيوب.",
                     video_too_long: "⏱ الفيديو طويل جدًا: يدعم التحويل عبر الإنترنت مقاطع الفيديو التي تصل مدتها إلى 3 ساعات فقط.",
-                    region_restricted: "⚠️ محظور إقليميًا: هذا الفيديو محظور بسبب حقوق الطبع أو قيود إقليمية على يوتيوب."
+                    region_restricted: "⚠️ محظور إقليميًا: هذا الفيديو محظور بسبب حقوق الطبع أو قيود إقليمية على يوتيوب.",
+                    paid_rental: "💰 فيديو مدفوع / استئجار: لا يمكن تنزيل الأفلام ومقاطع الفيديو المدفوعة على YouTube. يُرجى تجربة أي فيديو عادي أو Shorts.",
                 },
                 hi: {
                     invalid_url: "⚠️ कृपया पूरा यूट्यूब वीडियो लिंक पेस्ट करें (जैसे https://www.youtube.com/watch?v=... या youtu.be/...)",
@@ -1780,7 +1797,8 @@
                     channel_membership: "🔒 चैनल सदस्यता आवश्यक: इस वीडियो के लिए सशुल्क चैनल सदस्यता आवश्यक है।",
                     video_unavailable: "❌ वीडियो अनुपलब्ध: यह वीडियो हटा दिया गया है या यूट्यूब पर उपलब्ध नहीं है।",
                     video_too_long: "⏱ वीडियो बहुत लंबा है: ऑनलाइन रूपांतरण 3 घंटे तक के वीडियो का समर्थन करता है। कृपया छोटा वीडियो आज़माएं।",
-                    region_restricted: "⚠️ कॉपीराइट / क्षेत्र प्रतिबंधित: यह वीडियो कॉपीराइट या क्षेत्रीय प्रतिबंधों के कारण अवरुद्ध है।"
+                    region_restricted: "⚠️ कॉपीराइट / क्षेत्र प्रतिबंधित: यह वीडियो कॉपीराइट या क्षेत्रीय प्रतिबंधों के कारण अवरुद्ध है।",
+                    paid_rental: "💰 सशुल्क वीडियो / रेंटल: यूट्यूब की सशुल्क फिल्में और रेंटल वीडियो डाउनलोड नहीं किए जा सकते। कृपया कोई सामान्य वीडियो या Short आज़माएं।",
                 },
                 id: {
                     invalid_url: "⚠️ Harap tempelkan tautan video YouTube yang lengkap (mis. https://www.youtube.com/watch?v=... atau youtu.be/...)",
@@ -1791,7 +1809,8 @@
                     channel_membership: "🔒 Keanggotaan Saluran Diperlukan: Video ini memerlukan langganan saluran berbayar.",
                     video_unavailable: "❌ Video Tidak Tersedia: Video ini telah dihapus atau tidak tersedia di YouTube.",
                     video_too_long: "⏱ Video Terlalu Panjang: Konversi online mendukung video hingga 3 jam. Silakan coba video yang lebih pendek.",
-                    region_restricted: "⚠️ Pembatasan Wilayah/Hak Cipta: Video ini diblokir oleh pembatasan hak cipta atau regional YouTube."
+                    region_restricted: "⚠️ Pembatasan Wilayah/Hak Cipta: Video ini diblokir oleh pembatasan hak cipta atau regional YouTube.",
+                    paid_rental: "💰 Video Berbayar / Rental: Film dan video sewa berbayar YouTube tidak dapat diunduh. Silakan coba video reguler atau Short.",
                 },
                 it: {
                     invalid_url: "⚠️ Incolla un link video YouTube completo (es. https://www.youtube.com/watch?v=... o youtu.be/...)",
@@ -1802,7 +1821,8 @@
                     channel_membership: "🔒 Abbonamento Canale Richiesto: Questo video richiede un abbonamento a pagamento al canale.",
                     video_unavailable: "❌ Video Non Disponibile: Questo video è stato rimosso o non è disponibile su YouTube.",
                     video_too_long: "⏱ Video Troppo Lungo: La conversione supporta video fino a 3 ore. Prova un video più breve.",
-                    region_restricted: "⚠️ Limitato per Regione/Copyright: Questo video è bloccato per copyright o restrizioni regionali su YouTube."
+                    region_restricted: "⚠️ Limitato per Regione/Copyright: Questo video è bloccato per copyright o restrizioni regionali su YouTube.",
+                    paid_rental: "💰 Video a Pagamento / Noleggio: I video a pagamento e a noleggio su YouTube non possono essere scaricati. Prova con un normale video o Short.",
                 },
                 ja: {
                     invalid_url: "⚠️ 完全なYouTube動画リンクを貼り付けてください（例：https://www.youtube.com/watch?v=... または youtu.be/...）",
@@ -1813,7 +1833,8 @@
                     channel_membership: "🔒 チャンネルメンバーシップ必須：この動画は有料チャンネルメンバーシップが必要です。",
                     video_unavailable: "❌ 利用不可：この動画は削除されたか、YouTubeで利用できません。",
                     video_too_long: "⏱ 動画が長すぎます：オンライン変換は最大3時間の動画に対応しています。短い動画をお試しください。",
-                    region_restricted: "⚠️ 地域/著作権制限：この動画はYouTubeの著作権または地域制限によりブロックされています。"
+                    region_restricted: "⚠️ 地域/著作権制限：この動画はYouTubeの著作権または地域制限によりブロックされています。",
+                    paid_rental: "💰 有料動画・レンタル: YouTubeの有料映画やレンタル動画はダウンロードできません。通常の動画またはShortsをお試しください。",
                 },
                 ko: {
                     invalid_url: "⚠️ 전체 YouTube 동영상 링크를 붙여넣으세요(예: https://www.youtube.com/watch?v=... 또는 youtu.be/...)",
@@ -1824,7 +1845,8 @@
                     channel_membership: "🔒 채널 멤버십 필요: 이 동영상은 유료 채널 멤버십 가입이 필요합니다.",
                     video_unavailable: "❌ 동영상 사용 불가: 이 동영상은 삭제되었거나 YouTube에서 사용할 수 없습니다.",
                     video_too_long: "⏱ 동영상이 너무 깁니다: 온라인 변환은 최대 3시간 분량의 동영상을 지원합니다. 더 짧은 동영상을 시도해 보세요.",
-                    region_restricted: "⚠️ 지역/저작권 제한: 이 동영상은 YouTube 저작권 또는 지역 제한으로 인해 차단되었습니다."
+                    region_restricted: "⚠️ 지역/저작권 제한: 이 동영상은 YouTube 저작권 또는 지역 제한으로 인해 차단되었습니다.",
+                    paid_rental: "💰 유료 동영상 / 대여: YouTube 유료 영화 및 대여 동영상은 다운로드할 수 없습니다. 일반 동영상이나 Shorts를 이용해 주세요。",
                 },
                 my: {
                     invalid_url: "⚠️ ကျေးဇူးပြု၍ တရားဝင် YouTube ဗီဒီယိုလင့်ခ် အပြည့်အစုံကို ထည့်ပါ (ဥပမာ- https://www.youtube.com/watch?v=... သို့မဟုတ် youtu.be/...)",
@@ -1835,7 +1857,8 @@
                     channel_membership: "🔒 Channel Membership လိုအပ်သည်- ဤဗီဒီယိုသည် အခပေး Channel Membership ရှိမှသာ ကြည့်ရှုနိုင်သော ဗီဒီယိုဖြစ်ပါသည်။",
                     video_unavailable: "❌ ဗီဒီယိုမရနိုင်ပါ- ဤဗီဒီယိုကို ဖျက်လိုက်ပြီ သို့မဟုတ် YouTube ပေါ်တွင် မရနိုင်တော့ပါ။",
                     video_too_long: "⏱ ဗီဒီယို အလွန်ရှည်လျားသည်- အွန်လိုင်းကူးပြောင်းမှုသည် ၃ နာရီအထိသာ အထောက်အပံ့ပေးသည်။ ကျေးဇူးပြု၍ ပိုတိုသောဗီဒီယိုကို စမ်းကြည့်ပါ။",
-                    region_restricted: "⚠️ ဒေသဆိုင်ရာ/မူပိုင်ခွင့် ကန့်သတ်ချက်- ဤဗီဒီယိုသည် YouTube မူပိုင်ခွင့် သို့မဟုတ် ဒေသဆိုင်ရာ ကန့်သတ်ချက်များကြောင့် ပိတ်ပင်ထားပါသည်။"
+                    region_restricted: "⚠️ ဒေသဆိုင်ရာ/မူပိုင်ခွင့် ကန့်သတ်ချက်- ဤဗီဒီယိုသည် YouTube မူပိုင်ခွင့် သို့မဟုတ် ဒေသဆိုင်ရာ ကန့်သတ်ချက်များကြောင့် ပိတ်ပင်ထားပါသည်။",
+                    paid_rental: "💰 အခပေး ဗီဒီယို / အငှား: YouTube ၏ အခပေး ရုပ်ရှင်များနှင့် အငှားဗီဒီယိုများကို ဒေါင်းလုဒ်လုပ်၍ မရပါ။ ပုံမှန် ဗီဒီယို သို့မဟုတ် Shorts ကို စမ်းကြည့်ပါ။",
                 },
                 pt: {
                     invalid_url: "⚠️ Cole um link completo de vídeo do YouTube (ex.: https://www.youtube.com/watch?v=... ou youtu.be/...)",
@@ -1846,7 +1869,8 @@
                     channel_membership: "🔒 Assinatura do Canal Necessária: Este vídeo requer uma assinatura paga do canal do YouTube.",
                     video_unavailable: "❌ Vídeo Indisponível: Este vídeo foi removido ou não está disponível no YouTube.",
                     video_too_long: "⏱ Vídeo Muito Longo: A conversão online suporta vídeos de até 3 horas. Tente um vídeo mais curto.",
-                    region_restricted: "⚠️ Restrição de Região/Direitos Autorais: Este vídeo está bloqueado por direitos autorais ou restrições regionais no YouTube."
+                    region_restricted: "⚠️ Restrição de Região/Direitos Autorais: Este vídeo está bloqueado por direitos autorais ou restrições regionais no YouTube.",
+                    paid_rental: "💰 Vídeo Pago / Aluguel: Filmes pagos e vídeos de aluguel do YouTube não podem ser baixados. Tente um vídeo padrão ou Short.",
                 },
                 ru: {
                     invalid_url: "⚠️ Пожалуйста, вставьте полную ссылку на видео YouTube (напр. https://www.youtube.com/watch?v=... или youtu.be/...)",
@@ -1857,7 +1881,8 @@
                     channel_membership: "🔒 Требуется подписка на канал: Для этого видео требуется платная подписка на канал YouTube.",
                     video_unavailable: "❌ Видео недоступно: Это видео было удалено или недоступно на YouTube.",
                     video_too_long: "⏱ Видео слишком длинное: Онлайн-конвертация поддерживает видео длительностью до 3 часов.",
-                    region_restricted: "⚠️ Ограничение по региону: Это видео заблокировано из-за региональных ограничений или авторских прав."
+                    region_restricted: "⚠️ Ограничение по региону: Это видео заблокировано из-за региональных ограничений или авторских прав.",
+                    paid_rental: "💰 Платное видео / Аренда: Платные фильмы и арендованные видео YouTube нельзя скачать. Попробуйте обычное видео или Shorts.",
                 },
                 tr: {
                     invalid_url: "⚠️ Lütfen tam bir YouTube video bağlantısı yapıştırın (ör. https://www.youtube.com/watch?v=... veya youtu.be/...)",
@@ -1868,7 +1893,8 @@
                     channel_membership: "🔒 Kanal Üyeliği Gereklidir: Bu video için ücretli YouTube kanal üyeliği gerekmektedir.",
                     video_unavailable: "❌ Video Kullanılamıyor: Bu video kaldırıldı veya YouTube'da mevcut değil.",
                     video_too_long: "⏱ Video Çok Uzun: Çevrimiçi dönüştürme en fazla 3 saatlik videoları destekler. Lütfen daha kısa bir video deneyin.",
-                    region_restricted: "⚠️ Bölge/Telif Hakkı Kısıtlaması: Bu video, YouTube telif hakkı veya bölgesel kısıtlamalar nedeniyle engellendi."
+                    region_restricted: "⚠️ Bölge/Telif Hakkı Kısıtlaması: Bu video, YouTube telif hakkı veya bölgesel kısıtlamalar nedeniyle engellendi.",
+                    paid_rental: "💰 Ücretli Video / Kiralama: YouTube ücretli filmleri ve kiralanan videolar indirilemez. Lütfen standart bir video veya Shorts deneyin.",
                 },
                 vi: {
                     invalid_url: "⚠️ Vui lòng dán liên kết video YouTube đầy đủ (ví dụ: https://www.youtube.com/watch?v=... hoặc youtu.be/...)",
@@ -1879,7 +1905,8 @@
                     channel_membership: "🔒 Yêu Cầu Hội Viên Kênh: Video này yêu cầu gói hội viên kênh YouTube trả phí.",
                     video_unavailable: "❌ Video Không Khả Dụng: Video này đã bị xóa hoặc không có sẵn trên YouTube.",
                     video_too_long: "⏱ Video Quá Dài: Công cụ chuyển đổi hỗ trợ video dài tối đa 3 giờ. Vui lòng thử video ngắn hơn.",
-                    region_restricted: "⚠️ Giới Hạn Bản Quyền / Khu Vực: Video này bị chặn do bản quyền hoặc giới hạn khu vực của YouTube."
+                    region_restricted: "⚠️ Giới Hạn Bản Quyền / Khu Vực: Video này bị chặn do bản quyền hoặc giới hạn khu vực của YouTube.",
+                    paid_rental: "💰 Video Trả Phí / Thuê: Không thể tải xuống phim trả phí và video thuê trên YouTube. Vui lòng thử video tiêu chuẩn hoặc Shorts.",
                 }
             };
 
@@ -1942,6 +1969,12 @@
                     return {
                         fatal: true,
                         message: getI18nMsg('live_stream')
+                    };
+                }
+                if (low.includes('rental') || low.includes('buy or rent') || low.includes('paid video') || low.includes('pay to watch')) {
+                    return {
+                        fatal: true,
+                        message: getI18nMsg('paid_rental')
                     };
                 }
                 if (low.includes('video unavailable') || low.includes('has been removed') || low.includes('deleted') || low.includes('does not exist')) {
@@ -2318,6 +2351,10 @@
                                         window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                                         window._isGeoBlockedVideo[ytId] = true;
                                     }
+                                    if (resData.is_unsupported && resData.unsupported_reason) {
+                                        window._videoFatalRestriction = window._videoFatalRestriction || {};
+                                        window._videoFatalRestriction[ytId] = getI18nMsg(resData.unsupported_reason) || getI18nMsg('age_restricted');
+                                    }
                                 }
                             } catch (e) {}
                         })()
@@ -2398,6 +2435,17 @@
                 resDuration.textContent = data.duration || '00:00';
                 resViews.textContent = data.views ? `${data.views} views` : '';
                 resPlatformTag.textContent = data.platform.name || 'YouTube';
+
+                // Check and display unsupported category warning notice upfront
+                const unsuppNotice = document.getElementById('unsupported-restriction-notice');
+                const unsuppText = document.getElementById('unsupported-restriction-text');
+                const fatalNoticeMsg = (window._videoFatalRestriction && window._videoFatalRestriction[data.id]) || null;
+                if (fatalNoticeMsg && unsuppNotice && unsuppText) {
+                    unsuppText.textContent = fatalNoticeMsg;
+                    unsuppNotice.classList.remove('hidden');
+                } else if (unsuppNotice) {
+                    unsuppNotice.classList.add('hidden');
+                }
 
                 // Reset inline Video Preview iframe on new conversion
                 const previewBox = document.getElementById('res-preview-box');
