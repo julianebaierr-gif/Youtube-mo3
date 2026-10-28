@@ -1440,7 +1440,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         def iter_cached_file():
             with open(cache_path, "rb") as cf:
                 while True:
-                    chunk = cf.read(128 * 1024)
+                    chunk = cf.read(1024 * 1024)
                     if not chunk:
                         break
                     yield chunk
@@ -1451,6 +1451,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
             "Content-Length": str(file_size),
             "Accept-Ranges": "bytes",
             "X-Proxy-Cached": "1",
+            "X-Accel-Buffering": "no",
         }
         return StreamingResponse(iter_cached_file(), media_type=content_type, headers=resp_headers)
 
@@ -1657,7 +1658,7 @@ h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5
 
             try:
                 while True:
-                    chunk = upstream_res.read(128 * 1024)
+                    chunk = upstream_res.read(1024 * 1024)
                     if not chunk:
                         fully_downloaded = True
                         break
@@ -1697,6 +1698,7 @@ h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5
             "Content-Disposition": f'attachment; filename="{filename}"',
             "Cache-Control": "no-cache, no-store, must-revalidate",
             "Accept-Ranges": "bytes",
+            "X-Accel-Buffering": "no",
         }
         if content_len:
             resp_headers["Content-Length"] = str(content_len)

@@ -1,5 +1,5 @@
 // YT4MP3 Lightweight Service Worker for PWA compliance
-const CACHE_NAME = 'yt4mp3-shell-v13';
+const CACHE_NAME = 'yt4mp3-shell-v14';
 const PRECACHE_ASSETS = [
   '/',
   '/static/favicon.svg',
