@@ -1306,9 +1306,11 @@ _VIDEO_RES_CACHE = {}
 async def get_video_resolutions(id: str):
     vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
     if len(vid) != 11:
-        return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0}
+        return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_geo_blocked": False, "source": "invalid_id"}
     if vid in _VIDEO_RES_CACHE:
-        return _VIDEO_RES_CACHE[vid]
+        cached = _VIDEO_RES_CACHE[vid]
+        if cached.get("duration_sec", 0) > 0 or cached.get("has_4k") or cached.get("has_2k"):
+            return cached
 
     yt_url = f"https://www.youtube.com/watch?v={vid}"
     duration_sec = 0
@@ -1336,41 +1338,24 @@ async def get_video_resolutions(id: str):
             re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
 
-        # Detect unsupported video categories (18+ age restricted, members only, private, live streams, paid rentals)
-        # Regional/geo-blocked videos are handled by our multi-proxy fleet, NOT blocked as unsupported
-        unsupported_reason = None
-        if not is_geo_blocked:
-            if re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|isRestricted":\s*true', html, re.I):
-                unsupported_reason = "age_restricted"
-            elif re.search(r'members-only|Join this channel to get access|"status":\s*"UNPLAYABLE".*?members', html, re.I):
-                unsupported_reason = "channel_membership"
-            elif re.search(r'"reason":\s*"(?:This video is private|Private video)"', html, re.I):
-                unsupported_reason = "private_video"
-            elif re.search(r'"isLive":\s*true|"isLiveContent":\s*true', html, re.I):
-                unsupported_reason = "live_stream"
-            elif re.search(r'Buy or rent|Rental duration|"offerId":', html, re.I):
-                unsupported_reason = "paid_rental"
-            elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
-                unsupported_reason = "video_unavailable"
-
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
-        max_h = max(heights) if heights else 1080
-        result = {
-            "has_4k": max_h >= 2160 or 2160 in heights,
-            "has_2k": max_h >= 1440 or 1440 in heights,
-            "max_height": max_h,
-            "duration_sec": duration_sec,
-            "is_geo_blocked": is_geo_blocked,
-            "is_unsupported": bool(unsupported_reason),
-            "unsupported_reason": unsupported_reason,
-            "source": "yt_watch",
-        }
-        _VIDEO_RES_CACHE[vid] = result
-        return result
+        # Only treat watch page as valid if we actually extracted duration or heights
+        if heights or duration_sec > 0:
+            max_h = max(heights) if heights else 1080
+            result = {
+                "has_4k": max_h >= 2160 or 2160 in heights,
+                "has_2k": max_h >= 1440 or 1440 in heights,
+                "max_height": max_h,
+                "duration_sec": duration_sec,
+                "is_geo_blocked": is_geo_blocked,
+                "source": "yt_watch",
+            }
+            _VIDEO_RES_CACHE[vid] = result
+            return result
     except Exception:
         pass
 
-    # 2. Fallback: FastSaver /v1/youtube/info (accurate format list when datacenter IP is blocked by YouTube)
+    # 2. Fallback: FastSaver /v1/youtube/info (accurate format list when datacenter IP is challenged by YouTube)
     try:
         info_url = f"https://api.fastsaver.io/v1/youtube/info?url={urllib.parse.quote(yt_url)}"
         req = urllib.request.Request(
@@ -1397,8 +1382,7 @@ async def get_video_resolutions(id: str):
                         duration_sec = parts[0] * 60 + parts[1]
                     elif len(parts) == 3:
                         duration_sec = parts[0] * 3600 + parts[1] * 60 + parts[2]
-        if data.get("ok") and isinstance(data.get("formats"), list):
-            fmt_names = [str(f.get("format", "")).lower() for f in data["formats"]]
+            fmt_names = [str(f.get("format", "")).lower() for f in data.get("formats", [])]
             has_4k = any("2160" in f or "4k" in f for f in fmt_names)
             has_2k = any("1440" in f or "2k" in f for f in fmt_names)
             result = {
@@ -1406,6 +1390,7 @@ async def get_video_resolutions(id: str):
                 "has_2k": has_2k,
                 "max_height": 2160 if has_4k else (1440 if has_2k else 1080),
                 "duration_sec": duration_sec,
+                "is_geo_blocked": False,
                 "source": "fastsaver_info",
             }
             _VIDEO_RES_CACHE[vid] = result
@@ -1413,7 +1398,7 @@ async def get_video_resolutions(id: str):
     except Exception:
         pass
 
-    return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": duration_sec, "source": "default"}
+    return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": duration_sec, "is_geo_blocked": False, "source": "default"}
 
 
 @app.get("/api/download-thumbnail")

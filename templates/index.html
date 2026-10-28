@@ -1945,7 +1945,7 @@
                         message: getI18nMsg('private_video')
                     };
                 }
-                if (/\bage[- ]?restrict|\bage[- ]?gate|confirm your age|sign in to confirm|inappropriate for some users/.test(low)) {
+                if (/\bage[- ]?restrict|\bage[- ]?gate|confirm your age|sign in to confirm your age|inappropriate for some users/.test(low)) {
                     return {
                         fatal: true,
                         message: getI18nMsg('age_restricted')
@@ -2143,11 +2143,6 @@
                                         const errTxt = prog.text || prog.message || '';
                                         streamEntry.failed = true;
                                         streamEntry.errorText = errTxt;
-                                        const restr = getSpecificVideoRestriction(errTxt);
-                                        if (restr && restr.fatal && !restr.isGeoBlock) {
-                                            window._videoFatalRestriction = window._videoFatalRestriction || {};
-                                            window._videoFatalRestriction[ytId] = restr.message;
-                                        }
                                         return;
                                     }
                                     if (prog.progress) streamEntry.progress = prog.progress;
@@ -2344,10 +2339,7 @@
                                         window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                                         window._isGeoBlockedVideo[ytId] = true;
                                     }
-                                    if (resData.is_unsupported && resData.unsupported_reason && !resData.is_geo_blocked) {
-                                        window._videoFatalRestriction = window._videoFatalRestriction || {};
-                                        window._videoFatalRestriction[ytId] = getI18nMsg(resData.unsupported_reason) || getI18nMsg('age_restricted');
-                                    }
+                                    // Video resolutions metadata loaded successfully
                                 }
                             } catch (e) {}
                         })()
@@ -2913,18 +2905,7 @@
                         return;
                     }
 
-                    // Priority 1: Fatal video-level restriction (Membership, Age-Restricted, Private, Live)
-                    if (window._videoFatalRestriction && window._videoFatalRestriction[ytId] && !window._isGeoBlockedVideo?.[ytId]) {
-                        failDownload(window._videoFatalRestriction[ytId]);
-                        return;
-                    }
-                    const prewarmCheckRestr = getSpecificVideoRestriction(initialPrewarmErrorText);
-                    if (prewarmCheckRestr && prewarmCheckRestr.fatal && !window._isGeoBlockedVideo?.[ytId]) {
-                        window._videoFatalRestriction = window._videoFatalRestriction || {};
-                        window._videoFatalRestriction[ytId] = prewarmCheckRestr.message;
-                        failDownload(prewarmCheckRestr.message);
-                        return;
-                    }
+                    // Always test real conversion engines before declaring any video failed or restricted!
 
                     const prewarmKey = activeFmt + '_' + ytId;
                     const prewarmed = window._prewarmedStreams && window._prewarmedStreams[prewarmKey];
@@ -2998,18 +2979,29 @@
                                     return;
                                 }
                             }
-                            // If FastSaver failed (e.g. video is strictly locked to France or Japan), try multi-proxy
-                            if (!geoProxyTried) {
+                            // If FastSaver failed, try multi-proxy if video might be regionally blocked
+                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryGeoProxyEngine();
                                 return;
                             }
-                            failDownload(getI18nMsg('region_restricted'));
+                            // Check if there is an explicit confirmed restriction on this video
+                            const fatalCheck = getSpecificVideoRestriction(lastServerErrorText);
+                            if (fatalCheck && fatalCheck.fatal) {
+                                failDownload(fatalCheck.message);
+                                return;
+                            }
+                            failDownload(getI18nMsg('server_busy'));
                         } catch (e) {
-                            if (!geoProxyTried) {
+                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryGeoProxyEngine();
                                 return;
                             }
-                            failDownload(getI18nMsg('region_restricted'));
+                            const fatalCheck = getSpecificVideoRestriction(lastServerErrorText);
+                            if (fatalCheck && fatalCheck.fatal) {
+                                failDownload(fatalCheck.message);
+                                return;
+                            }
+                            failDownload(getI18nMsg('server_busy'));
                         }
                     }
 
@@ -3039,9 +3031,17 @@
                                     return;
                                 }
                             }
-                            // If all proxies failed to extract stream, display localized restriction message — NEVER trigger a fake download!
+                            // If geo-proxy didn't unlock, try FastSaver before failing!
+                            if (!fastSaverTried) {
+                                tryFastSaverEngine();
+                                return;
+                            }
                             failDownload(getI18nMsg('region_restricted'));
                         } catch (e) {
+                            if (!fastSaverTried) {
+                                tryFastSaverEngine();
+                                return;
+                            }
                             failDownload(getI18nMsg('region_restricted'));
                         }
                     }
@@ -3101,19 +3101,18 @@
                             return;
                         }
 
-                        // 2. If this video has a fatal restriction (Paid Membership, Age-Restricted, Private, Live),
-                        // stop immediately and show the localized message to the user!
+                        // 2. High-speed FastSaver Pro API fallback: ALWAYS give FastSaver a chance before failing!
+                        if (!fastSaverTried) {
+                            tryFastSaverEngine();
+                            return;
+                        }
+
+                        // 3. Only if FastSaver already ran and failed, check if this video has a confirmed restriction:
                         const fatalRestr = getSpecificVideoRestriction(errText || lastServerErrorText);
                         if (fatalRestr && fatalRestr.fatal && !window._isGeoBlockedVideo?.[ytId]) {
                             window._videoFatalRestriction = window._videoFatalRestriction || {};
                             window._videoFatalRestriction[ytId] = fatalRestr.message;
                             failDownload(fatalRestr.message);
-                            return;
-                        }
-
-                        // 3. High-speed FastSaver Pro API fallback: handles 4K, 2K, beIN Sports, and all failed streams
-                        if (!fastSaverTried) {
-                            tryFastSaverEngine();
                             return;
                         }
 
