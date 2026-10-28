@@ -110,6 +110,23 @@
       ]
     },
     {
+      "source": "/yt-helper.js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
       "source": "/manifest.json",
       "headers": [
         {
@@ -147,6 +164,10 @@
     {
       "src": "/sw.js",
       "dest": "/public/sw.js"
+    },
+    {
+      "src": "/yt-helper.js",
+      "dest": "/public/yt-helper.js"
     },
     {
       "src": "/google7dfcf5b26cc1f483.html",
