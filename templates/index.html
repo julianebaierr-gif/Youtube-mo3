@@ -930,18 +930,6 @@
                     </div>
                 </div>
 
-                <!-- Unsupported Category Warning Notice -->
-                <div id="unsupported-restriction-notice" class="hidden mt-4 p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs sm:text-sm flex items-start gap-3 shadow-sm">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg flex-shrink-0 mt-0.5"></i>
-                    <div class="flex-1">
-                        <strong class="font-extrabold text-amber-900 block mb-1 text-sm sm:text-base flex items-center gap-1.5">
-                            <i class="fa-solid fa-shield-halved text-amber-600"></i>
-                            <span>Notice: Unsupported Video Category</span>
-                        </strong>
-                        <p id="unsupported-restriction-text" class="text-amber-900 leading-relaxed font-medium"></p>
-                    </div>
-                </div>
-
                 <!-- Format Selection Area -->
                 <div class="mt-6">
                     {% if seo.active_tab == 'yt-mp3' %}
@@ -1909,84 +1897,6 @@
                 return dict[key] || I18N_NOTICES.en[key] || "";
             }
 
-            function getSpecificVideoRestriction(rawErr) {
-                const low = (rawErr || '').toString().toLowerCase();
-                const uploaderLow = (window.currentMediaData && window.currentMediaData.uploader ? window.currentMediaData.uploader : (typeof currentMediaData !== 'undefined' && currentMediaData && currentMediaData.uploader ? currentMediaData.uploader : '')).toLowerCase();
-                const titleLow = (window.currentMediaData && window.currentMediaData.title ? window.currentMediaData.title : (typeof currentMediaData !== 'undefined' && currentMediaData && currentMediaData.title ? currentMediaData.title : '')).toLowerCase();
-                const durLow = (window.currentMediaData && window.currentMediaData.duration ? String(window.currentMediaData.duration) : (typeof currentMediaData !== 'undefined' && currentMediaData && currentMediaData.duration ? String(currentMediaData.duration) : '')).toLowerCase();
-
-                // 1. Official Sports Broadcaster DRM & Rights Protection (CANAL+, beIN SPORTS, UEFA, FIFA, etc.)
-                const sportsKeywords = ['canal+', 'bein sports', 'uefa', 'fifa', 'champions league', 'premier league', 'laliga', 'serie a', 'bundesliga', 'espn', 'sky sports', 'tnt sports', 'dazn', 'sony liv', 'star sports', 'formula 1', 'f1', 'motogp', 'wwe', 'ufc', 'nba', 'nfl'];
-                const isSportsBroadcaster = sportsKeywords.some(k => {
-                    // Whole-word match only (prevents false positives like "nfl" inside "influence", "f1" inside "f12")
-                    const esc = k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                    const re = new RegExp('(^|[^a-z0-9])' + esc + '($|[^a-z0-9])', 'i');
-                    return re.test(uploaderLow) || re.test(titleLow);
-                });
-                if (isSportsBroadcaster && (low.includes('fetch.error') || low.includes('unavailable') || low.includes('blocked') || low.includes('copyright') || low.includes('drm') || low.includes('not available') || low.includes('fail') || low === '')) {
-                    // NOT fatal: most sports clips/highlights download fine through backup engines (FastSaver/Cobalt/proxy).
-                    // The broadcaster message is shown only as the LAST resort after every engine has failed.
-                    return {
-                        fatal: false,
-                        isBroadcaster: true,
-                        message: getI18nMsg('broadcaster_drm')
-                    };
-                }
-
-                if (low.includes('membership') || low.includes('members only') || low.includes('members-only') || low.includes('멤버십') || low.includes('uplordmoviecollection')) {
-                    return {
-                        fatal: true,
-                        message: getI18nMsg('channel_membership')
-                    };
-                }
-                if (low.includes('private video') || low === 'private') {
-                    return {
-                        fatal: true,
-                        message: getI18nMsg('private_video')
-                    };
-                }
-                if (/\bage[- ]?restrict|\bage[- ]?gate|confirm your age|sign in to confirm your age|inappropriate for some users/.test(low)) {
-                    return {
-                        fatal: true,
-                        message: getI18nMsg('age_restricted')
-                    };
-                }
-                if (low.includes('copyright') || low.includes('drm') || low.includes('blocked in your country') || low.includes('not available in your country')) {
-                    return {
-                        fatal: false,
-                        isGeoBlock: true,
-                        message: getI18nMsg('region_restricted')
-                    };
-                }
-                if (durLow.includes('live') || low.includes('live stream') || low.includes('premiere') || low.includes('upcoming')) {
-                    return {
-                        fatal: true,
-                        message: getI18nMsg('live_stream')
-                    };
-                }
-                if (low.includes('rental') || low.includes('buy or rent') || low.includes('paid video') || low.includes('pay to watch')) {
-                    return {
-                        fatal: true,
-                        message: getI18nMsg('paid_rental')
-                    };
-                }
-                if (low.includes('video unavailable') || low.includes('has been removed') || low.includes('deleted') || low.includes('does not exist')) {
-                    return {
-                        fatal: false,
-                        isGeoBlock: true,
-                        message: getI18nMsg('video_unavailable')
-                    };
-                }
-                if (low.includes('3 hours') || low.includes('duration limit') || low.includes('exceeds the duration') || low.includes('too long')) {
-                    return {
-                        fatal: false,
-                        isDurationLimit: true,
-                        message: getI18nMsg('video_too_long')
-                    };
-                }
-                return null;
-            }
-
             // Multi-engine stream initiator with cloud proxy fallback (100% clean media, 0 ad redirects)
             async function initiateStream(ytUrl, fmt, preferredEngine = 'auto') {
                 // Robust format normalization
@@ -2001,44 +1911,16 @@
                 let capturedError = '';
                 let isGeo = false;
 
-                // 1. Direct savenow.to from user's browser (ACAO: * CORS enabled, direct worker link, 0 ads)
+                // 1. Server-side API proxy (sets authorized Referer/Origin headers for instant 200 OK)
                 try {
-                    const u = `https://p.savenow.to/api/v2/download?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
-                    const r = await fetchWithTimeout(u, {}, 4500);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: 'savenow', download_url: d.download_url || null };
-                        if (d && (d.text || d.error || d.message)) {
-                            capturedError = (d.text || d.error || d.message || '').toString();
-                            if (/country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
-                        }
-                    }
-                } catch(e) {}
-
-                // 2. Server-side API proxy
-                try {
-                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}`;
-                    const r = await fetchWithTimeout(u, {}, 6000);
+                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=${encodeURIComponent(preferredEngine)}`;
+                    const r = await fetchWithTimeout(u, {}, 8000);
                     if (r.ok) {
                         const d = await r.json();
                         if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
                         if (d && (d.error || d.text)) {
                             capturedError = (d.error || d.text || '').toString();
                             if (d.is_geo_blocked || /country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
-                        }
-                    }
-                } catch(e) {}
-
-                // 3. Secondary engine: loader.to direct
-                try {
-                    const u = `https://loader.to/ajax/download.php?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
-                    const r = await fetchWithTimeout(u, {}, 4500);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
-                        if (d && (d.text || d.error || d.message)) {
-                            capturedError = (d.text || d.error || d.message || '').toString();
-                            if (/country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
                         }
                     }
                 } catch(e) {}
@@ -2081,7 +1963,7 @@
                 window._prewarmedReady = window._prewarmedReady || {};
                 
                 const targetUrl = `https://www.youtube.com/watch?v=${ytId}`;
-                const priorityFormats = extraFormats || ['mp3', '720', '1080'];
+                const priorityFormats = extraFormats || ['mp3', '720'];
 
                 priorityFormats.forEach(f => {
                     const key = f + '_' + ytId;
@@ -2308,8 +2190,20 @@
                     let has4K = false;
                     let has2K = false;
                     let durationSec = 0;
+                    let fsFilesizes = {};
+                    let fsThumb = "";
 
-                    // Fetch metadata and real video resolutions + duration in parallel
+                    function formatExactOrEstSize(resKey, durSec, fallbackKbps) {
+                        const exactBytes = fsFilesizes && fsFilesizes[resKey] ? parseInt(fsFilesizes[resKey], 10) : 0;
+                        if (exactBytes > 0) {
+                            const mb = exactBytes / (1024 * 1024);
+                            if (mb >= 1024) return ` • ${(mb / 1024).toFixed(2)} GB`;
+                            return ` • ${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB`;
+                        }
+                        return calcEstSize(durSec, fallbackKbps);
+                    }
+
+                    // Fetch metadata and real video resolutions + duration from Paid API in parallel
                     await Promise.all([
                         (async () => {
                             try {
@@ -2318,10 +2212,6 @@
                                     const data = await oembedResp.json();
                                     if (data.title) title = data.title;
                                     if (data.author_name) author = data.author_name;
-                                    const authorLow = (data.author_name || '').toLowerCase();
-                                    const titleLow = (data.title || '').toLowerCase();
-                                    // Broadcaster channels (beIN Sports, UEFA, Canal+) are converted seamlessly
-                                    // via FastSaver Pro API if Free Engine encounters any restriction.
                                 }
                             } catch (e) {
                                 title = `YouTube Video (${ytId})`;
@@ -2329,48 +2219,38 @@
                         })(),
                         (async () => {
                             try {
-                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 6000);
+                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 10000);
                                 if (resResp.ok) {
                                     const resData = await resResp.json();
                                     has4K = !!resData.has_4k;
                                     has2K = !!resData.has_2k;
                                     durationSec = parseInt(resData.duration_sec || 0, 10) || 0;
+                                    fsFilesizes = resData.filesizes || {};
+                                    if (resData.title) title = resData.title;
+                                    if (resData.author) author = resData.author;
+                                    if (resData.thumbnail) fsThumb = resData.thumbnail;
                                     if (resData.is_geo_blocked) {
                                         window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                                         window._isGeoBlockedVideo[ytId] = true;
                                     }
-                                    // Video resolutions metadata loaded successfully
                                 }
                             } catch (e) {}
                         })()
                     ]);
 
-                    // Only start pre-warming if this is NOT a geo-blocked video.
-                    // Geo-blocked videos go straight to residential proxy — no Savenow needed.
-                    const isGeoBlocked = window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId];
-
-                    // Pre-warm 2K/4K only if this video genuinely has them AND is not geo-blocked
-                    const hiResToPrewarm = [];
-                    if (!isGeoBlocked) {
-                        if (has2K) hiResToPrewarm.push('1440');
-                        if (has4K) hiResToPrewarm.push('4k');
-                        if (hiResToPrewarm.length > 0) prewarmStreams(ytId, hiResToPrewarm);
-                    }
-
-                    const videoFormatsList = [
-                        { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD' + calcEstSize(durationSec, 1150), badge: '⚡ Instant' },
-                        { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p' + calcEstSize(durationSec, 2300), badge: 'Full HD' }
-                    ];
+                    const videoFormatsList = [];
                     if (has4K) {
-                        videoFormatsList.push({ format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p' + calcEstSize(durationSec, 10500), badge: '4K Ultra' });
+                        videoFormatsList.push({ format: 'mp4', quality: '4k', label: 'MP4 (4K UHD 2160p)', sub: 'Ultra HD • 2160p' + formatExactOrEstSize('2160', durationSec, 10500), badge: '4K Ultra' });
                     }
                     if (has2K) {
-                        videoFormatsList.push({ format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p' + calcEstSize(durationSec, 5000), badge: '2K QHD' });
+                        videoFormatsList.push({ format: 'mp4', quality: '1440', label: 'MP4 (2K QHD 1440p)', sub: 'Quad HD • 1440p' + formatExactOrEstSize('1440', durationSec, 5000), badge: '2K QHD' });
                     }
                     videoFormatsList.push(
-                        { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' + calcEstSize(durationSec, 620) },
-                        { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' + calcEstSize(durationSec, 360) },
-                        { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format' + calcEstSize(durationSec, 1750), badge: 'VP9' }
+                        { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p' + formatExactOrEstSize('1080', durationSec, 2300), badge: 'Full HD' },
+                        { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD' + formatExactOrEstSize('720', durationSec, 1150), badge: '⚡ Instant' },
+                        { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' + formatExactOrEstSize('480', durationSec, 620) },
+                        { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' + formatExactOrEstSize('360', durationSec, 360) },
+                        { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format' + formatExactOrEstSize('1080', durationSec, 1750), badge: 'VP9' }
                     );
 
                     const formattedClock = formatDurationClock(durationSec);
@@ -2420,18 +2300,6 @@
                 resDuration.textContent = data.duration || '00:00';
                 resViews.textContent = data.views ? `${data.views} views` : '';
                 resPlatformTag.textContent = data.platform.name || 'YouTube';
-
-                // Check and display unsupported category warning notice upfront
-                const unsuppNotice = document.getElementById('unsupported-restriction-notice');
-                const unsuppText = document.getElementById('unsupported-restriction-text');
-                const isGeo = window._isGeoBlockedVideo && window._isGeoBlockedVideo[data.id];
-                const fatalNoticeMsg = (!isGeo && window._videoFatalRestriction && window._videoFatalRestriction[data.id]) || null;
-                if (fatalNoticeMsg && unsuppNotice && unsuppText) {
-                    unsuppText.textContent = fatalNoticeMsg;
-                    unsuppNotice.classList.remove('hidden');
-                } else if (unsuppNotice) {
-                    unsuppNotice.classList.add('hidden');
-                }
 
                 // Reset inline Video Preview iframe on new conversion
                 const previewBox = document.getElementById('res-preview-box');
@@ -2633,43 +2501,10 @@
                     fmtParam = 'mp3';
                 }
 
-                // Smart Quality Step-Down Ladder for Long/Large Videos & Non-4K Uploads:
-                // When a long concert/movie exceeds the 4K muxing limit, automatically step down
-                // to the highest supported resolution (1440p 2K -> 1080p FHD -> 720p HD -> 480p -> 360p)
-                const ladderMap = {
-                    '4k':   ['4k', '1440', '1080', '720', '480', '360'],
-                    '1440': ['1440', '1080', '720', '480', '360'],
-                    '1080': ['1080', '720', '480', '360'],
-                    '720':  ['720', '480', '360', '1080'],
-                    '480':  ['480', '360', '720'],
-                    '360':  ['360', '480', '720'],
-                    'mp3':  ['mp3', 'm4a', 'aac'],
-                    'm4a':  ['m4a', 'mp3', 'aac'],
-                    'flac': ['flac', 'mp3', 'm4a'],
-                    'wav':  ['wav', 'flac', 'mp3', 'm4a'],
-                    'aac':  ['aac', 'mp3', 'm4a']
-                };
-                const formatLadder = ladderMap[fmtParam] ? [...ladderMap[fmtParam]] : [fmtParam];
+                // Strict 1:1 resolution adherence: NEVER downgrade 4K, 2K, 1080p, 720p, or any requested format!
+                let activeFmt = fmtParam;
                 let ladderIdx = 0;
                 let initialPrewarmErrorText = '';
-
-                // Skip any top resolutions that already failed in background pre-warming (e.g., 4K duration limit on long videos)
-                if (forcedEngine === 'auto' && window._prewarmedStreams) {
-                    while (
-                        ladderIdx < formatLadder.length - 1 &&
-                        window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId] &&
-                        window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId].failed
-                    ) {
-                        const failedEntry = window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId];
-                        if (failedEntry.errorText) initialPrewarmErrorText = failedEntry.errorText;
-                        ladderIdx++;
-                    }
-                    const curCand = window._prewarmedStreams[formatLadder[ladderIdx] + '_' + ytId];
-                    if (curCand && curCand.failed && curCand.errorText) {
-                        initialPrewarmErrorText = curCand.errorText;
-                    }
-                }
-                let activeFmt = formatLadder[ladderIdx];
 
                 window._origPageTitle = window._origPageTitle || document.title;
                 const stagePill1 = document.getElementById('stage-pill-1');
@@ -2956,7 +2791,7 @@
                         }
                     }
 
-                    // FastSaver engine: paid API with 4K, 2K, beIN Sports, and high-speed fallback
+                    // FastSaver Pro Paid API Engine: Delivers exact 4K (2160p), 2K (1440p), 1080p, 720p, 480p, 360p, and Audio without ever downgrading resolution!
                     let fastSaverTried = false;
                     async function tryFastSaverEngine() {
                         if (completed || fastSaverTried) return;
@@ -2967,38 +2802,38 @@
                         try {
                             const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
                             const mode = isAudio ? 'audio' : 'video';
-                            const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : '720')));
-                            let resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 60000);
-                            if (!resp.ok && mode === 'video' && q !== '720') {
-                                resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=720`, {}, 60000);
-                            }
+                            const qMap = { '4k': '2160', '2160': '2160', '1440': '1440', '2k': '1440', '1080': '1080', '720': '720', '480': '480', '360': '360', '240': '240', '144': '144' };
+                            const q = isAudio ? '320' : (qMap[fmtParam] || '1080');
+                            const resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 60000);
                             if (resp && resp.ok) {
                                 const data = await resp.json();
                                 if (data && data.success && data.download_url) {
                                     completeDownload(data.download_url);
                                     return;
                                 }
+                                if (data && data.error) {
+                                    lastServerErrorText = String(data.error);
+                                }
                             }
-                            // If FastSaver failed, try multi-proxy if video might be regionally blocked
-                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
-                                tryGeoProxyEngine();
+                            // If FastSaver did not return a link, try backup loader engine at the EXACT requested format
+                            if (!loaderFallbackTried) {
+                                loaderFallbackTried = true;
+                                runEngine('loader');
                                 return;
                             }
-                            // Check if there is an explicit confirmed restriction on this video
-                            const fatalCheck = getSpecificVideoRestriction(lastServerErrorText);
-                            if (fatalCheck && fatalCheck.fatal) {
-                                failDownload(fatalCheck.message);
+                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
+                                tryGeoProxyEngine();
                                 return;
                             }
                             failDownload(getI18nMsg('server_busy'));
                         } catch (e) {
-                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
-                                tryGeoProxyEngine();
+                            if (!loaderFallbackTried) {
+                                loaderFallbackTried = true;
+                                runEngine('loader');
                                 return;
                             }
-                            const fatalCheck = getSpecificVideoRestriction(lastServerErrorText);
-                            if (fatalCheck && fatalCheck.fatal) {
-                                failDownload(fatalCheck.message);
+                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
+                                tryGeoProxyEngine();
                                 return;
                             }
                             failDownload(getI18nMsg('server_busy'));
@@ -3006,7 +2841,6 @@
                     }
 
                     // Multi-Proxy Fleet Engine: Unlocks strictly country-restricted videos (France, Japan, UK)
-                    // ZERO FAKE DOWNLOADS: pre-validates multi-proxy stream before any download is triggered!
                     async function tryGeoProxyEngine() {
                         if (completed || geoProxyTried || window._activeConversionToken !== conversionToken) return;
                         geoProxyTried = true;
@@ -3031,7 +2865,6 @@
                                     return;
                                 }
                             }
-                            // If geo-proxy didn't unlock, try FastSaver before failing!
                             if (!fastSaverTried) {
                                 tryFastSaverEngine();
                                 return;
@@ -3061,19 +2894,11 @@
                         modalEtaText.textContent = `${sec}s`;
                         if (sec >= 45) modalStatusMsg.textContent = 'Long video detected, almost done. Please keep this page open...';
                         else if (sec >= 20) modalStatusMsg.textContent = 'Encoding your file... (larger videos take a bit longer)';
-                        else if (sec >= 6 && ladderIdx === 0) modalStatusMsg.textContent = 'Converting on our server... usually 10-20 seconds.';
+                        else if (sec >= 6) modalStatusMsg.textContent = 'Converting on our server... usually 10-20 seconds.';
                     }
 
                     async function initLoaderDirect(targetFmt) {
                         let cleanFmt = targetFmt || activeFmt;
-                        try {
-                            const u = `https://loader.to/ajax/download.php?format=${cleanFmt}&url=${encodeURIComponent(ytUrl)}`;
-                            const r = await fetchWithTimeout(u, {}, 8000);
-                            if (r.ok) {
-                                const d = await r.json();
-                                if (d && d.id) return { id: d.id, engine: 'loader', download_url: d.download_url || null };
-                            }
-                        } catch(e) {}
                         try {
                             const r = await fetchWithTimeout(`/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=loader`, {}, 10000);
                             if (r.ok) {
@@ -3089,7 +2914,6 @@
                         if (activePollTimer) clearTimeout(activePollTimer);
                         if (errText) lastServerErrorText = errText;
 
-                        // Mark current format as failed in cache so we don't retry it
                         if (window._prewarmedStreams && window._prewarmedStreams[activeFmt + '_' + ytId]) {
                             window._prewarmedStreams[activeFmt + '_' + ytId].failed = true;
                             if (errText) window._prewarmedStreams[activeFmt + '_' + ytId].errorText = errText;
@@ -3101,89 +2925,34 @@
                             return;
                         }
 
-                        // 2. High-speed FastSaver Pro API fallback: ALWAYS give FastSaver a chance before failing!
+                        // 2. High-speed FastSaver Pro Paid API at the EXACT requested resolution (never downgrades resolution!)
                         if (!fastSaverTried) {
                             tryFastSaverEngine();
                             return;
                         }
 
-                        // 3. Only if FastSaver already ran and failed, check if this video has a confirmed restriction:
-                        const fatalRestr = getSpecificVideoRestriction(errText || lastServerErrorText);
-                        if (fatalRestr && fatalRestr.fatal && !window._isGeoBlockedVideo?.[ytId]) {
-                            window._videoFatalRestriction = window._videoFatalRestriction || {};
-                            window._videoFatalRestriction[ytId] = fatalRestr.message;
-                            failDownload(fatalRestr.message);
-                            return;
-                        }
-
-                        // Advance to the next highest non-failed resolution/format in the ladder
-                        while (ladderIdx < formatLadder.length - 1) {
-                            ladderIdx++;
-                            const candidateFmt = formatLadder[ladderIdx];
-                            const candStream = window._prewarmedStreams && window._prewarmedStreams[candidateFmt + '_' + ytId];
-                            if (candStream && candStream.failed) {
-                                if (candStream.errorText && !lastServerErrorText) lastServerErrorText = candStream.errorText;
-                                continue;
-                            }
-                            activeFmt = candidateFmt;
-                            const resLabel = ['4k', '1440', '1080', '720', '480', '360'].includes(activeFmt) ? `${activeFmt}p HD` : activeFmt.toUpperCase();
-                            modalStatusMsg.textContent = `Large video detected — optimizing stream (${resLabel})...`;
-
-                            // 1. If this fallback format is ALREADY 100% ready in background pre-warmer, deliver immediately!
-                            if (window._prewarmedReady && window._prewarmedReady[activeFmt + '_' + ytId]) {
-                                completeDownload(window._prewarmedReady[activeFmt + '_' + ytId]);
-                                return;
-                            }
-
-                            // 2. If this fallback format is currently converting in background, attach to it!
-                            if (candStream && candStream.id && !candStream.completed && !candStream.failed) {
-                                candStream.foregroundActive = true;
-                                candStream.callbacks.push((finalUrl) => completeDownload(finalUrl));
-                                setRealProgress(candStream);
-                                pollConversion(candStream.id);
-                                return;
-                            }
-
-                            // 3. Otherwise initiate conversion for this fallback format
-                            runEngine('savenow');
-                            return;
-                        }
-
-                        // If all resolutions in ladder were tried on primary engine, try backup loader engine once
+                        // 3. Try backup loader engine at the EXACT requested resolution
                         if (!loaderFallbackTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
                             loaderFallbackTried = true;
                             modalStatusMsg.textContent = 'Optimizing conversion stream...';
                             modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
-                            activeFmt = formatLadder[Math.min(2, formatLadder.length - 1)]; // Use reliable 1080/720/mp3 on backup
                             runEngine('loader');
                             return;
                         }
 
-                        // Last resort: long-video engine (handles 3+ hour videos and other server refusals)
+                        // 4. Long-video engine
                         if (!longVideoTried) {
                             tryLongVideoEngine();
                             return;
                         }
 
-                        // Ultimate fallback: FastSaver premium engine
-                        if (!fastSaverTried) {
-                            tryFastSaverEngine();
-                            return;
-                        }
-
-                        // Residential proxy fallback for any remaining errors
+                        // 5. Multi-proxy fallback
                         if (!geoProxyTried) {
                             tryGeoProxyEngine();
                             return;
                         }
 
-                        // Final accurate error message
-                        const finalRestr = getSpecificVideoRestriction(lastServerErrorText);
-                        if (finalRestr) {
-                            failDownload(finalRestr.message);
-                        } else {
-                            failDownload("This video could not be converted right now. Please tap Retry below.");
-                        }
+                        failDownload("This video could not be converted right now. Please tap Retry below.");
                     }
 
                     function pollConversion(convId) {
@@ -3245,18 +3014,13 @@
 
                     async function runEngine(engine) {
                         if (completed || window._activeConversionToken !== conversionToken) return;
-                        if (ladderIdx === 0 && !loaderFallbackTried) {
+                        if (!loaderFallbackTried) {
                             modalStatusMsg.textContent = 'Starting conversion...';
                         }
                         const initData = engine === 'loader' ? await initLoaderDirect(activeFmt) : await initiateStream(ytUrl, activeFmt);
                         if (completed || window._activeConversionToken !== conversionToken) return;
                         if (!initData || !initData.id) {
                             const errTxt = (initData && initData.errorText) ? initData.errorText : "";
-                            const fatalCheck = getSpecificVideoRestriction(errTxt);
-                            if (fatalCheck && fatalCheck.fatal) {
-                                failDownload(fatalCheck.message);
-                                return;
-                            }
                             stepDownOrSwitchEngine(errTxt || "Conversion servers are busy.");
                             return;
                         }
@@ -3264,9 +3028,9 @@
                         pollConversion(initData.id);
                     }
 
-                    // Check if 4K / 2K format requested or video is long (>2.5 hours): route to FastSaver Pro
+                    // Route 4K (2160p), 2K (1440p), and 1080p FHD directly to Paid API (FastSaver Pro) so user ALWAYS gets 100% genuine resolution!
                     const isLongVideo = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 9000);
-                    const isHiResFormat = (fmtParam === '4k' || fmtParam === '1440');
+                    const isHiResFormat = (fmtParam === '4k' || fmtParam === '1440' || fmtParam === '1080');
 
                     if (isHiResFormat || isLongVideo) {
                         modalStatusMsg.textContent = isHiResFormat ? 'Preparing high-resolution stream (FastSaver Pro)...' : 'Long video detected — processing high-speed stream...';

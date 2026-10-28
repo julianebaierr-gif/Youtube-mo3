@@ -440,8 +440,9 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
         try:
             api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}"
             req = urllib.request.Request(api_url, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-                "Referer": "https://www.yt4mp3.com/"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Referer": "https://y2down.cc/",
+                "Origin": "https://y2down.cc"
             })
             with urllib.request.urlopen(req, timeout=9) as r:
                 data = json.loads(r.read())
@@ -464,8 +465,9 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     try:
         lto_url = f"https://loader.to/ajax/download.php?format={fmt}&url={encoded_url}"
         req = urllib.request.Request(lto_url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Referer": "https://loader.to/"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+            "Referer": "https://loader.to/",
+            "Origin": "https://loader.to"
         })
         with urllib.request.urlopen(req, timeout=9) as r:
             data = json.loads(r.read())
@@ -498,8 +500,9 @@ async def proxy_progress(id: str):
     for ep in endpoints:
         try:
             req = urllib.request.Request(ep, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-                "Referer": "https://www.yt4mp3.com/"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Referer": "https://y2down.cc/",
+                "Origin": "https://y2down.cc"
             })
             with urllib.request.urlopen(req, timeout=6) as r:
                 data = json.loads(r.read())
@@ -796,15 +799,8 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
 
 
 # ==============================================================================
-# DATAIMPULSE RESIDENTIAL PROXY STREAMING SYSTEM (GEO-BLOCKED / REGION-LOCKED)
+# MULTI-PROXY STREAMING SYSTEM (GEO-BLOCKED / REGION-LOCKED)
 # ==============================================================================
-DATAIMPULSE_USER = os.environ.get("DATAIMPULSE_USER") or "ec64aa02fac86dc58f59"
-DATAIMPULSE_PASS = os.environ.get("DATAIMPULSE_PASS") or "b0ec68a6ff8231c0"
-DATAIMPULSE_HOST = os.environ.get("DATAIMPULSE_HOST") or "gw.dataimpulse.com"
-DATAIMPULSE_PORT = os.environ.get("DATAIMPULSE_PORT") or "823"
-
-# Webshare static ISP proxies (unlimited bandwidth) - primary geo-unlock fleet.
-# DataImpulse (per-GB) is used only as a rare fallback for countries not in this fleet.
 WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
 WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
 WEBSHARE_POOLS = {
@@ -963,23 +959,6 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
 
     # Detect allowed country
     allowed = detect_video_allowed_countries(vid)
-    priority_fast_countries = ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR"]
-    target_country = None
-    if allowed:
-        for pc in priority_fast_countries:
-            if pc in allowed:
-                target_country = pc.lower()
-                break
-        if not target_country:
-            target_country = str(allowed[0]).lower()
-
-    sess_id = uuid.uuid4().hex[:8]
-    if target_country:
-        proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country};sessid.{sess_id};sessttl.10"
-    else:
-        proxy_user = f"{DATAIMPULSE_USER}__sessid.{sess_id};sessttl.10"
-
-    proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
 
     fmt_clean = (format or "mp3").lower().strip()
     is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
@@ -1083,7 +1062,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         if allowed:
             cookie_file = None
 
-        # Smart rotation: Webshare unlimited pool (3 IPs) first, DataImpulse only as last-resort fallback.
+        # Smart rotation: Webshare static ISP multi-proxy pool.
         # Each proxy is tried with android client first (direct progressive mp4/audio without JS runtime), then android_vr, then web.
         proxy_candidates = build_proxy_candidates(allowed)
         attempts = [(c, client) for c in proxy_candidates for client in (["android"], ["android_vr"], None)]
@@ -1309,53 +1288,13 @@ async def get_video_resolutions(id: str):
         return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_geo_blocked": False, "source": "invalid_id"}
     if vid in _VIDEO_RES_CACHE:
         cached = _VIDEO_RES_CACHE[vid]
-        if cached.get("duration_sec", 0) > 0 or cached.get("has_4k") or cached.get("has_2k"):
+        if cached.get("source") == "fastsaver_info" and cached.get("duration_sec", 0) > 0:
             return cached
 
     yt_url = f"https://www.youtube.com/watch?v={vid}"
     duration_sec = 0
-    # 1. Fast, zero-credit check via YouTube watch page player response
-    try:
-        req = urllib.request.Request(
-            yt_url,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Accept-Language": "en-US,en;q=0.9",
-            },
-        )
-        with urllib.request.urlopen(req, timeout=5) as res:
-            html = res.read().decode("utf-8", "ignore")
-        dur_match = re.search(r'"lengthSeconds":"(\d+)"', html)
-        if dur_match:
-            duration_sec = int(dur_match.group(1))
 
-        # Detect regional country restrictions
-        m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
-        allowed_countries = json.loads(m_c.group(1)) if m_c else []
-        is_geo_blocked = bool(
-            (len(allowed_countries) > 0 and len(allowed_countries) < 200) or
-            (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
-            re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
-        )
-
-        heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
-        # Only treat watch page as valid if we actually extracted duration or heights
-        if heights or duration_sec > 0:
-            max_h = max(heights) if heights else 1080
-            result = {
-                "has_4k": max_h >= 2160 or 2160 in heights,
-                "has_2k": max_h >= 1440 or 1440 in heights,
-                "max_height": max_h,
-                "duration_sec": duration_sec,
-                "is_geo_blocked": is_geo_blocked,
-                "source": "yt_watch",
-            }
-            _VIDEO_RES_CACHE[vid] = result
-            return result
-    except Exception:
-        pass
-
-    # 2. Fallback: FastSaver /v1/youtube/info (accurate format list when datacenter IP is challenged by YouTube)
+    # 1. Primary: FastSaver Paid API /v1/youtube/info (100% accurate 4K, 2K, 1080p, 720p, filesizes, title, author, duration)
     try:
         info_url = f"https://api.fastsaver.io/v1/youtube/info?url={urllib.parse.quote(yt_url)}"
         req = urllib.request.Request(
@@ -1366,7 +1305,7 @@ async def get_video_resolutions(id: str):
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
             },
         )
-        with urllib.request.urlopen(req, timeout=8) as res:
+        with urllib.request.urlopen(req, timeout=9) as res:
             data = json.loads(res.read().decode("utf-8"))
         _check_fastsaver_credits_and_alert(force_check=False)
         if data.get("ok"):
@@ -1382,19 +1321,89 @@ async def get_video_resolutions(id: str):
                         duration_sec = parts[0] * 60 + parts[1]
                     elif len(parts) == 3:
                         duration_sec = parts[0] * 3600 + parts[1] * 60 + parts[2]
-            fmt_names = [str(f.get("format", "")).lower() for f in data.get("formats", [])]
-            has_4k = any("2160" in f or "4k" in f for f in fmt_names)
-            has_2k = any("1440" in f or "2k" in f for f in fmt_names)
+            raw_formats = data.get("formats", [])
+            fmt_names = []
+            available_heights = []
+            filesizes = {}
+            for f in raw_formats:
+                fname = str(f.get("format", "")).lower().strip()
+                ftype = str(f.get("type", "")).lower().strip()
+                fsize = int(f.get("filesize") or 0)
+                fmt_names.append(fname)
+                if ftype == "audio" or fname == "audio":
+                    if fsize > 0:
+                        filesizes["audio"] = fsize
+                else:
+                    digits = re.sub(r"[^0-9]", "", fname)
+                    if digits:
+                        h_val = int(digits)
+                        if h_val not in available_heights:
+                            available_heights.append(h_val)
+                        if fsize > 0:
+                            filesizes[str(h_val)] = fsize
+            has_4k = (2160 in available_heights) or any("2160" in f or "4k" in f for f in fmt_names)
+            has_2k = (1440 in available_heights) or any("1440" in f or "2k" in f for f in fmt_names)
+            has_1080 = (1080 in available_heights) or any("1080" in f for f in fmt_names)
+            has_720 = (720 in available_heights) or any("720" in f for f in fmt_names)
+            max_h = max(available_heights) if available_heights else (2160 if has_4k else (1440 if has_2k else 1080))
             result = {
                 "has_4k": has_4k,
                 "has_2k": has_2k,
-                "max_height": 2160 if has_4k else (1440 if has_2k else 1080),
+                "has_1080": has_1080,
+                "has_720": has_720,
+                "max_height": max_h,
+                "available_heights": sorted(available_heights, reverse=True),
+                "filesizes": filesizes,
                 "duration_sec": duration_sec,
+                "title": str(data.get("title") or ""),
+                "author": str(data.get("author") or ""),
+                "thumbnail": str(data.get("thumbnail") or ""),
                 "is_geo_blocked": False,
                 "source": "fastsaver_info",
             }
             _VIDEO_RES_CACHE[vid] = result
             return result
+    except Exception:
+        pass
+
+    # 2. Fallback: Check YouTube watch page if FastSaver info was unreachable or video is strictly country-locked
+    try:
+        req = urllib.request.Request(
+            yt_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=5) as res:
+            html = res.read().decode("utf-8", "ignore")
+        dur_match = re.search(r'"lengthSeconds":"(\d+)"', html)
+        if dur_match:
+            duration_sec = int(dur_match.group(1))
+
+        m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
+        allowed_countries = json.loads(m_c.group(1)) if m_c else []
+        is_geo_blocked = bool(
+            (len(allowed_countries) > 0 and len(allowed_countries) < 200) or
+            (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
+            re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
+        )
+
+        heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
+        max_h = max(heights) if heights else 1080
+        result = {
+            "has_4k": max_h >= 2160 or 2160 in heights,
+            "has_2k": max_h >= 1440 or 1440 in heights,
+            "has_1080": max_h >= 1080 or 1080 in heights,
+            "has_720": max_h >= 720 or 720 in heights,
+            "max_height": max_h,
+            "available_heights": sorted(list(set(heights)), reverse=True),
+            "filesizes": {},
+            "duration_sec": duration_sec,
+            "is_geo_blocked": is_geo_blocked,
+            "source": "yt_watch",
+        }
+        return result
     except Exception:
         pass
 
