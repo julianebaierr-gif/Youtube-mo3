@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ lang | default('en') }}" dir="{{ lang_dir | default('ltr') }}" class="scroll-smooth">
 <head>
-    <!-- Google AdSense Verification (Auto-ad script paused to prevent click hijacking) -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2350272227833258"
-     crossorigin="anonymous"></script> -->
+    <!-- Google AdSense Verification -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2350272227833258"
+     crossorigin="anonymous"></script>
     <meta name="google-adsense-account" content="ca-pub-2350272227833258">
-    <meta name="monetag" content="1e33f8fb072a3154a0168bce139959c8">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSKBZTD4XJ"></script>
@@ -786,10 +785,7 @@
                 <span>{{ t.step1_title | default('Paste Link') }} ➔ {{ t.step2_title | default('Select Format') }} ➔ {{ t.step3_title | default('Download') }}</span>
             </div>
 
-            <!-- Responsive Adsterra Top Banner (728x90 Desktop / 320x50 Mobile - Human Visitors Only) -->
-            <div id="adsterra-top-wrap" class="mt-5 flex justify-center items-center overflow-hidden min-h-[50px]">
-                <div id="adsterra-top-banner" class="flex justify-center items-center mx-auto"></div>
-            </div>
+            
 
             <!-- Viral Shortcut Trick Card (like SSYouTube / 4YouTube) -->
             <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-50 via-slate-50 to-blue-50 border border-rose-200 text-left max-w-2xl mx-auto shadow-sm">
@@ -996,10 +992,7 @@
                 </div>
             </div>
 
-            <!-- Adsterra Native Banner (Human Visitors Only) -->
-            <div class="mt-6">
-                <div id="container-24fd8cec5921c16ccabed4a6fef2e394"></div>
-            </div>
+            
 
         </section>
 
@@ -3666,45 +3659,6 @@
             document.head.appendChild(fa);
         });
     </script>
-    <!-- Crawler-Safe Human Ad Loader (Protects Bingbot/Googlebot Indexing & PageSpeed 100/100) -->
-    <script>
-        (function() {
-            var ua = (navigator.userAgent || '').toLowerCase();
-            var isBot = navigator.webdriver || /bot|crawl|spider|bing|msn|adidx|duckduck|yandex|baidu|slurp|ahrefs|semrush|lighthouse|pagespeed|inspectiontool|headless|gptbot|claudebot|perplexity|applebot|facebookexternalhit/i.test(ua);
-            if (isBot) return;
-
-            // 1. Load static display banners for human browsers after load
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    var topHost = document.getElementById('adsterra-top-banner');
-                    if (topHost) {
-                        var isDesk = window.innerWidth >= 768;
-                        var key = isDesk ? 'e1886e8899030e780e40e0389c45c772' : 'e82ae77543615e4688bb815e6f17eeef';
-                        var w = isDesk ? 728 : 320;
-                        var h = isDesk ? 90 : 50;
-                        var ifr = document.createElement('iframe');
-                        ifr.width = String(w);
-                        ifr.height = String(h);
-                        ifr.frameBorder = '0';
-                        ifr.scrolling = 'no';
-                        ifr.style.border = 'none';
-                        ifr.style.overflow = 'hidden';
-                        topHost.appendChild(ifr);
-                        var doc = ifr.contentWindow && ifr.contentWindow.document;
-                        if (doc) {
-                            doc.open();
-                            doc.write('<!DOCTYPE html><html><body style="margin:0;padding:0;overflow:hidden;"><scr' + 'ipt>atOptions={"key":"' + key + '","format":"iframe","height":' + h + ',"width":' + w + ',"params":{}};</scr' + 'ipt><scr' + 'ipt src="https://bauval.org/22/' + key + '"></scr' + 'ipt></body></html>');
-                            doc.close();
-                        }
-                    }
-                    var nat = document.createElement('script');
-                    nat.async = true;
-                    nat.setAttribute('data-cfasync', 'false');
-                    nat.src = 'https://bauval.org/21/24fd8cec5921c16ccabed4a6fef2e394';
-                    document.body.appendChild(nat);
-                }, 400);
-            });
-        })();
-    </script>
+    
 </body>
 </html>
