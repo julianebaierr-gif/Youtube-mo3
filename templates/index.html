@@ -1695,6 +1695,7 @@
             const videoFormatsContainer = document.getElementById('video-formats');
 
             const progressModal = document.getElementById('progress-modal');
+            const modalStagePills = document.getElementById('modal-stage-pills');
             const modalCloseBtn = document.getElementById('modal-close-btn');
             const modalIconContainer = document.getElementById('modal-icon-container');
             const modalIcon = document.getElementById('modal-icon');
@@ -3899,6 +3900,12 @@
                 }
                 const ageCard = document.getElementById('modal-age-card');
                 if (ageCard) ageCard.classList.add('hidden');
+                if (modalStagePills) modalStagePills.classList.remove('hidden');
+                const pTrackEl = document.querySelector('.progress-track-modern');
+                if (pTrackEl) pTrackEl.classList.remove('hidden');
+                const pMetaEl = modalPctText ? modalPctText.parentElement : null;
+                if (pMetaEl) pMetaEl.classList.remove('hidden');
+                if (modalStatusMsg) modalStatusMsg.classList.remove('hidden');
                 window._isShowingAgeCard = false;
             }
 
