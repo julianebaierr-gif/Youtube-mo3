@@ -2872,7 +2872,7 @@
                 window._lastRequestedLabel = safeLabel;
 
                 // Hoisted state variables (prevent any TDZ ReferenceErrors)
-                let curPct = 25;
+                let curPct = 35;
                 let completed = false;
                 let isEncodingStage = false;
                 let activePollTimer = null;
@@ -3317,7 +3317,7 @@
                 modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                 modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                 modalActionContainer.classList.add('hidden');
-                updateConversionVisuals(25);
+                updateConversionVisuals(35);
 
                 const errActions = document.getElementById('modal-error-actions');
                 if (errActions) errActions.classList.add('hidden');
@@ -3397,7 +3397,7 @@
                         modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
-                        curPct = Math.max(curPct, 20);
+                        curPct = Math.max(curPct, 50);
                         updateConversionVisuals(curPct);
 
                         try {
@@ -3415,18 +3415,10 @@
                                     return;
                                 }
                                 if (data && data.is_age_restricted) {
-                                    if (!geoProxyTried) {
-                                        tryGeoProxyEngine();
-                                        return;
-                                    }
                                     showAgeRestrictedCard(ytUrl, currentMediaData);
                                     return;
                                 }
                                 if (data && data.is_unavailable) {
-                                    if (!geoProxyTried) {
-                                        tryGeoProxyEngine();
-                                        return;
-                                    }
                                     failDownload("This video is unavailable or private on YouTube.", 'fetch');
                                     return;
                                 }
@@ -3450,7 +3442,7 @@
                         modalStatusMsg.textContent = 'Connecting high-speed Pro stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
-                        curPct = Math.max(curPct, 25);
+                        curPct = Math.max(curPct, 50);
                         updateConversionVisuals(curPct);
                         try {
                             const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
@@ -3511,8 +3503,7 @@
                                             return data.download_url;
                                         }
                                         if (data && data.is_age_restricted) {
-                                            // Fall through to regional proxy & Invidious/Piped fallback engines
-                                            lastFsError = 'age_restricted';
+                                            showAgeRestrictedCard(ytUrl, currentMediaData);
                                             return null;
                                         }
                                     }
@@ -3529,12 +3520,7 @@
                                 return;
                             }
 
-                            // Fallback to secondary engines if FastSaver fails:
-                            // Try Multi-Country Geo Proxy unlock first (crucial for UK/FR/JP/US geo-blocked videos)!
-                            if (!geoProxyTried) {
-                                tryGeoProxyEngine();
-                                return;
-                            }
+                            // Fallback to secondary engines if FastSaver fails (Cobalt -> Savenow):
                             if (typeof onFailCallback === 'function') {
                                 onFailCallback();
                             } else if (!cobaltTried) {
@@ -3543,10 +3529,6 @@
                                 runEngine('savenow');
                             }
                         } catch (e) {
-                            if (!geoProxyTried) {
-                                tryGeoProxyEngine();
-                                return;
-                            }
                             if (typeof onFailCallback === 'function') {
                                 onFailCallback();
                             } else if (!cobaltTried) {
@@ -3676,16 +3658,7 @@
 
                         // 3. High-Speed Clean Cobalt Engine:
                         if (!cobaltTried) {
-                            tryCobaltEngine(() => {
-                                if (!geoProxyTried) tryGeoProxyEngine();
-                                else stepDownOrSwitchEngine(errText || "Conversion failed");
-                            });
-                            return;
-                        }
-
-                        // 4. Authenticated Cookies & Multi-Proxy Fleet fallback:
-                        if (!geoProxyTried) {
-                            tryGeoProxyEngine();
+                            tryCobaltEngine(() => runEngine('savenow'));
                             return;
                         }
 
@@ -3738,8 +3711,8 @@
                             return;
                         }
 
-                        // Residential proxy fallback for any remaining errors
-                        if (!geoProxyTried) {
+                        // Residential proxy fallback only if video is strictly confirmed country-blocked
+                        if (!geoProxyTried && window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) {
                             tryGeoProxyEngine();
                             return;
                         }
@@ -3794,12 +3767,10 @@
                                         }
                                         if (!cobaltTried) {
                                             tryCobaltEngine(() => {
-                                                if (!geoProxyTried) tryGeoProxyEngine();
-                                                else stepDownOrSwitchEngine(p.text || p.message || '');
+                                                stepDownOrSwitchEngine(p.text || p.message || '');
                                             });
                                             return;
                                         }
-                                        if (!geoProxyTried) { tryGeoProxyEngine(); return; }
                                         stepDownOrSwitchEngine(p.text || p.message || ''); return;
                                     }
                                 } else if (p.progress !== undefined && p.progress !== null) {
@@ -4185,7 +4156,7 @@
         // Service Worker Registration for PWA compliance
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js?v=14', { scope: '/' })
+                navigator.serviceWorker.register('/sw.js?v=17', { scope: '/' })
                     .then(reg => {
                         console.log('YT4MP3 Service Worker active');
                     })
