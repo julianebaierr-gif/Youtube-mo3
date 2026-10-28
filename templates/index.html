@@ -2344,7 +2344,7 @@
                                         window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
                                         window._isGeoBlockedVideo[ytId] = true;
                                     }
-                                    if (resData.is_unsupported && resData.unsupported_reason) {
+                                    if (resData.is_unsupported && resData.unsupported_reason && !resData.is_geo_blocked) {
                                         window._videoFatalRestriction = window._videoFatalRestriction || {};
                                         window._videoFatalRestriction[ytId] = getI18nMsg(resData.unsupported_reason) || getI18nMsg('age_restricted');
                                     }
@@ -2432,7 +2432,8 @@
                 // Check and display unsupported category warning notice upfront
                 const unsuppNotice = document.getElementById('unsupported-restriction-notice');
                 const unsuppText = document.getElementById('unsupported-restriction-text');
-                const fatalNoticeMsg = (window._videoFatalRestriction && window._videoFatalRestriction[data.id]) || null;
+                const isGeo = window._isGeoBlockedVideo && window._isGeoBlockedVideo[data.id];
+                const fatalNoticeMsg = (!isGeo && window._videoFatalRestriction && window._videoFatalRestriction[data.id]) || null;
                 if (fatalNoticeMsg && unsuppNotice && unsuppText) {
                     unsuppText.textContent = fatalNoticeMsg;
                     unsuppNotice.classList.remove('hidden');
@@ -2906,13 +2907,19 @@
                 let geoProxyTried = false;
 
                 try {
-                    // Priority 0: Fatal video-level restriction (Membership, Age-Restricted, Private, Live)
-                    if (window._videoFatalRestriction && window._videoFatalRestriction[ytId]) {
+                    // Priority 0: Geo-blocked videos directly routed to multi-proxy fleet!
+                    if (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) {
+                        tryGeoProxyEngine();
+                        return;
+                    }
+
+                    // Priority 1: Fatal video-level restriction (Membership, Age-Restricted, Private, Live)
+                    if (window._videoFatalRestriction && window._videoFatalRestriction[ytId] && !window._isGeoBlockedVideo?.[ytId]) {
                         failDownload(window._videoFatalRestriction[ytId]);
                         return;
                     }
                     const prewarmCheckRestr = getSpecificVideoRestriction(initialPrewarmErrorText);
-                    if (prewarmCheckRestr && prewarmCheckRestr.fatal) {
+                    if (prewarmCheckRestr && prewarmCheckRestr.fatal && !window._isGeoBlockedVideo?.[ytId]) {
                         window._videoFatalRestriction = window._videoFatalRestriction || {};
                         window._videoFatalRestriction[ytId] = prewarmCheckRestr.message;
                         failDownload(prewarmCheckRestr.message);
@@ -3088,25 +3095,25 @@
                             if (errText) window._prewarmedStreams[activeFmt + '_' + ytId].errorText = errText;
                         }
 
-                        // 1. If this video has a fatal restriction (Paid Membership, Age-Restricted, Private, Live),
+                        // 1. If this video is regionally restricted or blocked in country, TRY MULTI-PROXY FLEET FIRST!
+                        if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /not available in your country|blocked in your country|unavailable in your country|region|country/i.test(errText || lastServerErrorText || ''))) {
+                            tryGeoProxyEngine();
+                            return;
+                        }
+
+                        // 2. If this video has a fatal restriction (Paid Membership, Age-Restricted, Private, Live),
                         // stop immediately and show the localized message to the user!
                         const fatalRestr = getSpecificVideoRestriction(errText || lastServerErrorText);
-                        if (fatalRestr && fatalRestr.fatal) {
+                        if (fatalRestr && fatalRestr.fatal && !window._isGeoBlockedVideo?.[ytId]) {
                             window._videoFatalRestriction = window._videoFatalRestriction || {};
                             window._videoFatalRestriction[ytId] = fatalRestr.message;
                             failDownload(fatalRestr.message);
                             return;
                         }
 
-                        // 2. High-speed FastSaver Pro API fallback: handles 4K, 2K, beIN Sports, and all failed streams
+                        // 3. High-speed FastSaver Pro API fallback: handles 4K, 2K, beIN Sports, and all failed streams
                         if (!fastSaverTried) {
                             tryFastSaverEngine();
-                            return;
-                        }
-
-                        // 3. Multi-Proxy Fleet fallback for strictly regionally locked videos (e.g. France, Japan)
-                        if (!geoProxyTried && /not available in your country|blocked in your country|unavailable in your country|region/i.test(errText || lastServerErrorText || '')) {
-                            tryGeoProxyEngine();
                             return;
                         }
 

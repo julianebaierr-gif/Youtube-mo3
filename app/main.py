@@ -1331,24 +1331,27 @@ async def get_video_resolutions(id: str):
         m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
         allowed_countries = json.loads(m_c.group(1)) if m_c else []
         is_geo_blocked = bool(
-            (len(allowed_countries) > 0 and len(allowed_countries) < 150) or
-            (re.search(r'"status":\s*"UNPLAYABLE"', html) and not re.search(r'Private|deleted|removed|terminated', html, re.I))
+            (len(allowed_countries) > 0 and len(allowed_countries) < 200) or
+            (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
+            re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
 
         # Detect unsupported video categories (18+ age restricted, members only, private, live streams, paid rentals)
+        # Regional/geo-blocked videos are handled by our multi-proxy fleet, NOT blocked as unsupported
         unsupported_reason = None
-        if re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|isRestricted":\s*true', html, re.I):
-            unsupported_reason = "age_restricted"
-        elif re.search(r'members-only|Join this channel to get access|"status":\s*"UNPLAYABLE".*?members', html, re.I):
-            unsupported_reason = "channel_membership"
-        elif re.search(r'Private video|This video is private|"status":\s*"UNPLAYABLE".*?Private', html, re.I):
-            unsupported_reason = "private_video"
-        elif re.search(r'"isLive":\s*true|"isLiveContent":\s*true', html, re.I):
-            unsupported_reason = "live_stream"
-        elif re.search(r'Buy or rent|Rental duration|"offerId":', html, re.I):
-            unsupported_reason = "paid_rental"
-        elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
-            unsupported_reason = "video_unavailable"
+        if not is_geo_blocked:
+            if re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|isRestricted":\s*true', html, re.I):
+                unsupported_reason = "age_restricted"
+            elif re.search(r'members-only|Join this channel to get access|"status":\s*"UNPLAYABLE".*?members', html, re.I):
+                unsupported_reason = "channel_membership"
+            elif re.search(r'"reason":\s*"(?:This video is private|Private video)"', html, re.I):
+                unsupported_reason = "private_video"
+            elif re.search(r'"isLive":\s*true|"isLiveContent":\s*true', html, re.I):
+                unsupported_reason = "live_stream"
+            elif re.search(r'Buy or rent|Rental duration|"offerId":', html, re.I):
+                unsupported_reason = "paid_rental"
+            elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
+                unsupported_reason = "video_unavailable"
 
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         max_h = max(heights) if heights else 1080
