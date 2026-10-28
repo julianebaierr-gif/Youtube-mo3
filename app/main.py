@@ -1276,24 +1276,30 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     cookie_file = get_yt_cookies_file()
     allowed = detect_video_allowed_countries(vid)
     proxy_candidates = build_proxy_candidates(allowed)
-    fmt_selector = "140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"
+    fmt_selector = "140/ba[protocol^=http]/ba/18/b[protocol^=http]/best" if is_audio else "18/22/b[protocol^=http]/bv*[protocol^=http][ext=mp4]/bv*[ext=mp4]/best[protocol^=http]/best"
 
     import yt_dlp
     stream_url = None
     last_err = None
     target_country = proxy_candidates[0][2] if proxy_candidates else "gb"
 
-    attempts = [(c, None) for c in proxy_candidates[:2]]
-    # Innertube embedded clients for bypass of soft age-gates / embedding allowed
+    attempts = []
+    for c in proxy_candidates[:2]:
+        # Attempt 1: Anonymous proxy without cookies (Unlocks country-restricted broadcasters like Sky Sports, Star Sports)
+        attempts.append((c, None, False))
+        # Attempt 2: Authenticated proxy with cookies (Unlocks 18+ age restrictions)
+        if cookie_file:
+            attempts.append((c, None, True))
     if proxy_candidates:
-        attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["tv_embedded"]))
-    attempts.append((("Direct-Server", None, "us"), None))
-    for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
+        attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["tv_embedded"], False))
+    attempts.append((("Direct-Server", None, "us"), None, bool(cookie_file)))
+
+    for attempt, ((proxy_label, proxy_url, cand_country), client, use_cookie) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
             "quiet": True,
             "no_warnings": True,
-            "format": fmt_selector if client is None else ("140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"),
+            "format": fmt_selector if client is None else ("140/ba[protocol^=http]/ba/18/best" if is_audio else "18/22/b[protocol^=http]/bv*[ext=mp4]/best"),
             "noplaylist": True,
             "socket_timeout": 15,
             "js_runtimes": {"node": {}, "deno": {}},
@@ -1305,7 +1311,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
                     "Referer": f"https://www.youtube.com/embed/{vid}",
                     "Origin": "https://www.youtube.com",
                 }
-        if cookie_file:
+        if use_cookie and cookie_file:
             ydl_opts["cookiefile"] = cookie_file
 
         po_token = os.environ.get("YOUTUBE_PO_TOKEN")
@@ -1450,7 +1456,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
 
     # Audio format selector: prefer lightweight pure AAC audio (140/ba, ~20MB) to conserve proxy bandwidth;
     # Video format selector: progressive video stream (18/22/b, ~360p-720p).
-    fmt_selector = "140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"
+    fmt_selector = "140/ba[protocol^=http]/ba/18/b[protocol^=http]/best" if is_audio else "18/22/b[protocol^=http]/bv*[protocol^=http][ext=mp4]/bv*[ext=mp4]/best[protocol^=http]/best"
 
     try:
         import yt_dlp
@@ -1464,19 +1470,25 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
 
         # Smart rotation: Webshare country proxies first
         proxy_candidates = build_proxy_candidates(allowed)
-        attempts = [(c, None) for c in proxy_candidates[:2]]
-        # Innertube embedded clients for bypass of soft age-gates / embedding allowed
+        attempts = []
+        for c in proxy_candidates[:2]:
+            # Attempt 1: Anonymous proxy without cookies (Unlocks country-restricted broadcasters like Sky Sports, Star Sports)
+            attempts.append((c, None, False))
+            # Attempt 2: Authenticated proxy with cookies (Unlocks 18+ age restrictions)
+            if cookie_file:
+                attempts.append((c, None, True))
         if proxy_candidates:
-            attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["tv_embedded"]))
-        attempts.append((("Direct-Server", None, "us"), None))
-        for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
+            attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["tv_embedded"], False))
+        attempts.append((("Direct-Server", None, "us"), None, bool(cookie_file)))
+
+        for attempt, ((proxy_label, proxy_url, cand_country), client, use_cookie) in enumerate(attempts):
             target_country = cand_country
 
             ydl_opts = {
                 "proxy": proxy_url,
                 "quiet": True,
                 "no_warnings": True,
-                "format": fmt_selector if client is None else ("140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"),
+                "format": fmt_selector if client is None else ("140/ba[protocol^=http]/ba/18/best" if is_audio else "18/22/b[protocol^=http]/bv*[ext=mp4]/best"),
                 "noplaylist": True,
                 "extract_flat": False,
                 "socket_timeout": 15,
@@ -1490,7 +1502,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                         "Referer": f"https://www.youtube.com/embed/{vid}",
                         "Origin": "https://www.youtube.com",
                     }
-            if cookie_file:
+            if use_cookie and cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
             # PO Token (Proof of Origin) & Visitor Data support to bypass bot challenges on datacenter IPs
