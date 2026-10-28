@@ -423,7 +423,7 @@ WEBSHARE_POOLS = {
     "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
     "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
 }
-WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
+WEBSHARE_POOL_PRIORITY = ["GB", "US", "FR", "JP", "CO"]
 
 def fetch_converter_upstream(url: str, headers: dict = None, data: bytes = None, timeout: int = 9) -> bytes:
     """Robust upstream request helper: attempts direct connection, and automatically routes through
@@ -1092,30 +1092,37 @@ def build_proxy_candidates(allowed: list) -> list:
     import random
     allowed_set = {str(c).upper() for c in (allowed or [])}
     candidates = []
-    pool_cc = None
-    if not allowed_set:
-        pool_cc = "US"
-    else:
+
+    # 1. If specific allowed countries are identified, prioritize matching pool
+    matched_ccs = [cc for cc in WEBSHARE_POOL_PRIORITY if cc in allowed_set]
+    if matched_ccs:
+        for cc in matched_ccs:
+            ips = list(WEBSHARE_POOLS.get(cc, []))
+            random.shuffle(ips)
+            for i, ip in enumerate(ips):
+                candidates.append((f"Webshare-{cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", cc.lower()))
         for cc in WEBSHARE_POOL_PRIORITY:
-            if cc in allowed_set:
-                pool_cc = cc
-                break
-    if not pool_cc:
-        pool_cc = "US"
+            if cc not in matched_ccs:
+                ips = list(WEBSHARE_POOLS.get(cc, []))
+                random.shuffle(ips)
+                for i, ip in enumerate(ips[:2]):
+                    candidates.append((f"Webshare-{cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", cc.lower()))
+        return candidates
 
-    # Primary pool: try all available IPs in this country
-    ips = list(WEBSHARE_POOLS.get(pool_cc, []))
-    random.shuffle(ips)
-    for i, ip in enumerate(ips):
-        candidates.append((f"Webshare-{pool_cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", pool_cc.lower()))
+    # 2. If allowed countries are unknown (e.g. watch page scraping blocked by bot protection):
+    # Interleave pools so that GB (UK), US (USA), FR (France), JP (Japan), CO are tested round-robin!
+    pools_copy = {}
+    for cc in ["GB", "US", "FR", "JP", "CO"]:
+        ips = list(WEBSHARE_POOLS.get(cc, []))
+        random.shuffle(ips)
+        pools_copy[cc] = ips
 
-    # Secondary pool: add up to 2 IPs from other allowed countries
-    for alt_cc in ["US", "GB", "FR", "JP"]:
-        if alt_cc != pool_cc and (not allowed_set or alt_cc in allowed_set):
-            alt_ips = list(WEBSHARE_POOLS.get(alt_cc, []))
-            random.shuffle(alt_ips)
-            for i, ip in enumerate(alt_ips[:2]):
-                candidates.append((f"Webshare-{alt_cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", alt_cc.lower()))
+    max_len = max((len(v) for v in pools_copy.values()), default=0)
+    for idx in range(max_len):
+        for cc in ["GB", "US", "FR", "JP", "CO"]:
+            if idx < len(pools_copy[cc]):
+                ip = pools_copy[cc][idx]
+                candidates.append((f"Webshare-{cc}-{idx+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", cc.lower()))
 
     return candidates
 
@@ -1206,29 +1213,29 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     cookie_file = get_yt_cookies_file()
     allowed = detect_video_allowed_countries(vid)
     proxy_candidates = build_proxy_candidates(allowed)
-    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
+    fmt_selector = "140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"
 
     import yt_dlp
     stream_url = None
     last_err = None
-    target_country = proxy_candidates[0][2] if proxy_candidates else "us"
+    target_country = proxy_candidates[0][2] if proxy_candidates else "gb"
 
-    attempts = [(c, client) for c in proxy_candidates[:3] for client in (None, ["android_vr"])]
-    # Always append direct server probe (clean unlock with cookies when datacenter proxies are flagged)
+    attempts = [(c, None) for c in proxy_candidates[:4]]
+    attempts += [(c, ["android_vr"]) for c in proxy_candidates[:2]]
     attempts.append((("Direct-Server", None, "us"), None))
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
             "quiet": True,
             "no_warnings": True,
-            "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
+            "format": fmt_selector if client is None else ("140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"),
             "noplaylist": True,
-            "socket_timeout": 15,
+            "socket_timeout": 12,
             "js_runtimes": {"node": {}, "deno": {}},
         }
         if client:
             ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
-        if cookie_file:
+        if not proxy_url and cookie_file:
             ydl_opts["cookiefile"] = cookie_file
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -1250,9 +1257,10 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             continue
 
     if stream_url:
+        country_param = f"&country={target_country}" if target_country else ""
         return {
             "success": True,
-            "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}",
+            "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}{country_param}",
             "country": target_country
         }
     return {
@@ -1264,7 +1272,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
 
 
 @app.get("/api/geo-stream")
-async def geo_stream(url: str = "", format: str = "mp3"):
+async def geo_stream(url: str = "", format: str = "mp3", country: str = ""):
     clean_url = (url or "").strip()
     vid = None
     m = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", clean_url)
@@ -1283,14 +1291,16 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
 <body><div class="card"><h2>⚠️ Invalid YouTube Link</h2><p>Please enter a valid YouTube video URL.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=400)
 
     # Detect allowed country
-    allowed = detect_video_allowed_countries(vid)
-    priority_fast_countries = ["US", "GB", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR"]
-    target_country = None
-    if allowed:
+    target_country = (country or "").strip().lower()
+    allowed = [target_country.upper()] if target_country else detect_video_allowed_countries(vid)
+    if not target_country and allowed:
+        priority_fast_countries = ["GB", "US", "DE", "IN", "JP", "SG", "FR", "CA", "AU", "NL", "KR", "BR"]
         for pc in priority_fast_countries:
             if pc in allowed:
                 target_country = pc.lower()
                 break
+        if not target_country:
+            target_country = str(allowed[0]).lower()
         if not target_country:
             target_country = str(allowed[0]).lower()
 
@@ -1342,7 +1352,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
 
     # Audio format selector: prefer lightweight pure AAC audio (140/ba, ~20MB) to conserve proxy bandwidth;
     # Video format selector: progressive video stream (18/22/b, ~360p-720p).
-    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
+    fmt_selector = "140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"
 
     try:
         import yt_dlp
@@ -1354,11 +1364,10 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         actual_ext = default_ext
         last_extract_err = None
 
-        # Smart rotation: Webshare unlimited pool (3 IPs) first.
-        # Each proxy is tried with the default web client, then the android_vr client (works without a JS runtime).
+        # Smart rotation: Webshare country proxies first
         proxy_candidates = build_proxy_candidates(allowed)
-        attempts = [(c, client) for c in proxy_candidates for client in (None, ["android_vr"])]
-        # Always append direct server probe (clean unlock with cookies when datacenter proxies are flagged)
+        attempts = [(c, None) for c in proxy_candidates[:4]]
+        attempts += [(c, ["android_vr"]) for c in proxy_candidates[:2]]
         attempts.append((("Direct-Server", None, "us"), None))
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
@@ -1367,7 +1376,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 "proxy": proxy_url,
                 "quiet": True,
                 "no_warnings": True,
-                "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
+                "format": fmt_selector if client is None else ("140/ba[protocol^=http]/18/b[protocol^=http]/best[protocol^=http]" if is_audio else "18/22/b[protocol^=http]/bv[protocol^=http][ext=mp4]/best[protocol^=http]"),
                 "noplaylist": True,
                 "extract_flat": False,
                 "socket_timeout": 15,
@@ -1376,7 +1385,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
             }
             if client:
                 ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
-            if cookie_file:
+            if not proxy_url and cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
             # PO Token (Proof of Origin) & Visitor Data support to bypass bot challenges on datacenter IPs
@@ -1417,7 +1426,10 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                     # Use the exact headers yt-dlp resolved for this player client
                     if isinstance(info.get("http_headers"), dict):
                         upstream_headers.update({k: v for k, v in info["http_headers"].items() if k.lower() != "accept-encoding"})
-                    opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+                    if proxy_url:
+                        opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+                    else:
+                        opener = urllib.request.build_opener()
                     # Open the stream inside the attempt: an unsolved/blocked URL (403) falls through to the next client/proxy
                     upstream_res = opener.open(urllib.request.Request(cand_url, headers=upstream_headers), timeout=30)
                     stream_url = cand_url

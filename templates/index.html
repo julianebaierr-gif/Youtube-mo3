@@ -3008,7 +3008,12 @@
                                 return;
                             }
 
-                            // Fallback to secondary engines if FastSaver fails
+                            // Fallback to secondary engines if FastSaver fails:
+                            // Try Multi-Country Geo Proxy unlock first (crucial for UK/FR/JP/US geo-blocked videos)!
+                            if (!geoProxyTried) {
+                                tryGeoProxyEngine();
+                                return;
+                            }
                             if (typeof onFailCallback === 'function') {
                                 onFailCallback();
                             } else if (!cobaltTried) {
@@ -3017,6 +3022,10 @@
                                 runEngine('savenow');
                             }
                         } catch (e) {
+                            if (!geoProxyTried) {
+                                tryGeoProxyEngine();
+                                return;
+                            }
                             if (typeof onFailCallback === 'function') {
                                 onFailCallback();
                             } else if (!cobaltTried) {
@@ -3053,19 +3062,15 @@
                                     return;
                                 }
                             }
-                            // If cookies & proxy check failed: only use FastSaver if 4K/2K or long video
-                            const isLong = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 10800);
-                            const isHiRes = (fmtParam === '4k' || fmtParam === '1440');
-                            if (!fastSaverTried && (isHiRes || isLong)) {
-                                tryFastSaverEngine();
+                            // If multi-country proxy check failed: fall back to Cobalt / Savenow if not yet tried
+                            if (!cobaltTried) {
+                                tryCobaltEngine(() => runEngine('savenow'));
                                 return;
                             }
                             failDownload(getI18nMsg('region_restricted'));
                         } catch (e) {
-                            const isLong = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 10800);
-                            const isHiRes = (fmtParam === '4k' || fmtParam === '1440');
-                            if (!fastSaverTried && (isHiRes || isLong)) {
-                                tryFastSaverEngine();
+                            if (!cobaltTried) {
+                                tryCobaltEngine(() => runEngine('savenow'));
                                 return;
                             }
                             failDownload(getI18nMsg('region_restricted'));
