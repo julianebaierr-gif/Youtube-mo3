@@ -1081,6 +1081,60 @@
                         <span id="modal-report-text">Report Broken Video to Admin</span>
                     </button>
                 </div>
+
+                <!-- Age-Restricted (18+) Dedicated Interactive Card (Shown for 18+ Videos Only) -->
+                <div id="modal-age-card" class="hidden text-start space-y-3 mt-1">
+                    <div class="p-3 bg-amber-50/90 border border-amber-200/90 rounded-xl text-start">
+                        <p id="modal-age-desc" class="text-xs text-amber-900 leading-relaxed font-medium">
+                            YouTube requires your logged-in browser session to download this 18+ video. Follow these quick steps to download it directly in your browser:
+                        </p>
+                    </div>
+
+                    <div class="space-y-2.5 text-start">
+                        <!-- Step 1 -->
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                            <div class="flex items-center gap-2 mb-2 font-bold text-xs text-slate-800">
+                                <span class="w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">1</span>
+                                <span id="modal-age-step1-title">Open on YouTube</span>
+                            </div>
+                            <p id="modal-age-step1-desc" class="text-[11px] text-slate-500 mb-2 leading-tight">Open this video in your browser where your account is signed in:</p>
+                            <a id="modal-age-yt-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all no-underline shadow-sm cursor-pointer">
+                                <i class="fa-brands fa-youtube text-sm"></i>
+                                <span id="modal-age-yt-label">Open Video on YouTube</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-80"></i>
+                            </a>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                            <div class="flex items-center gap-2 mb-1.5 font-bold text-xs text-slate-800">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">2</span>
+                                <span id="modal-age-step2-title">Use 1-Click Helper</span>
+                            </div>
+                            <p id="modal-age-step2-desc" class="text-[11px] text-slate-500 mb-2 leading-tight">Drag button to Bookmarks Bar (PC) or Copy Code (Mobile):</p>
+                            <div class="space-y-2">
+                                <a id="modal-age-bookmarklet-btn" href="#" draggable="true" title="Drag to Bookmarks Bar" class="w-full py-2.5 px-3 rounded-lg bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all no-underline shadow-sm cursor-grab">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span id="modal-age-bookmarklet-label">⭐ YT4MP3 18+ Downloader</span>
+                                </a>
+                                <button id="modal-age-copy-btn" type="button" onclick="copyAgeHelperScript()" class="w-full py-1.5 px-3 rounded-lg bg-white hover:bg-gray-100 text-slate-700 font-bold text-xs border border-gray-300 flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                                    <i class="fa-regular fa-copy text-rose-500"></i>
+                                    <span id="modal-age-copy-label">Copy Helper Code</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 flex items-start gap-2.5 text-emerald-900 text-xs font-semibold">
+                            <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5">3</span>
+                            <span id="modal-age-step3-desc" class="leading-snug text-[11px]">Click the bookmark on the YouTube video page — download starts immediately using your session!</span>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="closeProgressModalClean()" class="w-full py-2.5 px-4 rounded-xl font-bold text-slate-600 text-xs bg-gray-100 hover:bg-gray-200 transition-all flex items-center justify-center gap-2 cursor-pointer mt-1 border border-gray-200">
+                        <span id="modal-age-close-label">Back to Converter</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1883,6 +1937,284 @@
                 }
             };
 
+            const I18N_AGE_HELPER = {
+                en: {
+                    badge: "Age-Restricted Video (18+)",
+                    title: "18+ Video Detected",
+                    subtitle: "YouTube requires account sign-in to download",
+                    desc: "YouTube protects this video with an age gate and requires your logged-in browser session. Follow these simple steps to download it directly in your browser:",
+                    step1_title: "1. Open on YouTube",
+                    step1_desc: "Open this video in your browser where your account is signed in:",
+                    btn_open_yt: "Open Video on YouTube",
+                    step2_title: "2. Use 1-Click Helper",
+                    step2_desc: "Drag button to Bookmarks Bar (PC) or Copy Code (Mobile):",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ Downloader",
+                    btn_copy: "Copy Helper Code",
+                    copied: "Copied to clipboard!",
+                    step3_desc: "Click the bookmark on the YouTube video page — download starts immediately using your session!",
+                    btn_close: "Back to Converter"
+                },
+                es: {
+                    badge: "Video con Restricción de Edad (18+)",
+                    title: "Video para Adultos (18+) Detectado",
+                    subtitle: "YouTube requiere iniciar sesión para descargar",
+                    desc: "YouTube protege este video con restricción de edad y requiere tu sesión iniciada. Sigue estos sencillos pasos para descargarlo directamente en tu navegador:",
+                    step1_title: "1. Abrir en YouTube",
+                    step1_desc: "Abre este video en tu navegador donde tengas tu cuenta de YouTube iniciada:",
+                    btn_open_yt: "Abrir Video en YouTube",
+                    step2_title: "2. Usar Ayudante en 1 Clic",
+                    step2_desc: "Arrastra a la barra de marcadores (PC) o copia el código (móvil):",
+                    btn_bookmarklet: "⭐ Descargador 18+ YT4MP3",
+                    btn_copy: "Copiar Código de Ayuda",
+                    copied: "¡Copiado al portapapeles!",
+                    step3_desc: "Haz clic en el marcador en la página de YouTube — ¡la descarga comenzará de inmediato!",
+                    btn_close: "Volver al Convertidor"
+                },
+                fr: {
+                    badge: "Vidéo avec Limite d'Âge (18+)",
+                    title: "Vidéo 18+ Détectée",
+                    subtitle: "YouTube nécessite une connexion pour télécharger",
+                    desc: "YouTube protège cette vidéo avec une limite d'âge et nécessite votre session connectée. Suivez ces étapes simples pour la télécharger directement :",
+                    step1_title: "1. Ouvrir sur YouTube",
+                    step1_desc: "Ouvrez cette vidéo sur YouTube dans le navigateur où votre compte est connecté :",
+                    btn_open_yt: "Ouvrir la Vidéo sur YouTube",
+                    step2_title: "2. Utiliser l'Assistant 1-Clic",
+                    step2_desc: "Glissez vers la barre des favoris (PC) ou copiez le code (mobile) :",
+                    btn_bookmarklet: "⭐ Téléchargeur 18+ YT4MP3",
+                    btn_copy: "Copier le Code d'Aide",
+                    copied: "Copié dans le presse-papiers !",
+                    step3_desc: "Cliquez sur le favori sur la page YouTube — le téléchargement commence immédiatement !",
+                    btn_close: "Retour au Convertisseur"
+                },
+                de: {
+                    badge: "Altersbeschränktes Video (18+)",
+                    title: "18+ Video Erkannt",
+                    subtitle: "YouTube erfordert Anmeldung zum Herunterladen",
+                    desc: "YouTube schützt dieses Video mit einer Altersbeschränkung und benötigt Ihre angemeldete Sitzung. Folgen Sie diesen Schritten zum direkten Download:",
+                    step1_title: "1. Auf YouTube Öffnen",
+                    step1_desc: "Öffnen Sie dieses Video in Ihrem angemeldeten Browser auf YouTube:",
+                    btn_open_yt: "Video auf YouTube öffnen",
+                    step2_title: "2. 1-Klick-Helfer Nutzen",
+                    step2_desc: "In Lesezeichenleiste ziehen (PC) oder Code kopieren (Smartphone):",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ Downloader",
+                    btn_copy: "Helfer-Code kopieren",
+                    copied: "In Zwischenablage kopiert!",
+                    step3_desc: "Klicken Sie auf das Lesezeichen auf der YouTube-Seite — der Download startet sofort!",
+                    btn_close: "Zurück zum Konverter"
+                },
+                ar: {
+                    badge: "فيديو مقيد بالفئة العمرية (18+)",
+                    title: "تم اكتشاف فيديو للبالغين (+18)",
+                    subtitle: "يتطلب يوتيوب تسجيل الدخول للتنزيل",
+                    desc: "يحمي يوتيوب هذا الفيديو بقيد عمري ويتطلب جلسة حسابك المسجلة. اتبع هذه الخطوات البسيطة لتنزيله مباشرة من متصفحك:",
+                    step1_title: "١. الفتح على يوتيوب",
+                    step1_desc: "افتح هذا الفيديو على يوتيوب في المتصفح الذي قمت بتسجيل الدخول فيه:",
+                    btn_open_yt: "فتح الفيديو على يوتيوب",
+                    step2_title: "٢. استخدام أداة النقرة الواحدة",
+                    step2_desc: "اسحب الزر لشريط الإشارات (كمبيوتر) أو انسخ الرمز (هاتف):",
+                    btn_bookmarklet: "⭐ أداة تنزيل 18+ YT4MP3",
+                    btn_copy: "نسخ رمز الأداة",
+                    copied: "تم النسخ إلى الحافظة!",
+                    step3_desc: "انقر فوق الإشارة المرجعية في صفحة فيديو يوتيوب — سيبدأ التنزيل فوراً باستخدام جلستك!",
+                    btn_close: "الرجوع للمحول"
+                },
+                hi: {
+                    badge: "आयु-प्रतिबंधित वीडियो (18+)",
+                    title: "18+ वयस्क वीडियो पहचाना गया",
+                    subtitle: "डाउनलोड करने के लिए यूट्यूब लॉगिन आवश्यक है",
+                    desc: "यूट्यूब इस 18+ वीडियो के लिए आपके लॉगिन खाते की मांग करता है। बिना किसी त्रुटि के सीधे अपने ब्राउज़र से डाउनलोड करने के लिए इन चरणों का पालन करें:",
+                    step1_title: "1. यूट्यूब पर खोलें",
+                    step1_desc: "इस वीडियो को अपने उस ब्राउज़र में यूट्यूब पर खोलें जहाँ आपका खाता लॉगिन है:",
+                    btn_open_yt: "यूट्यूब पर वीडियो खोलें",
+                    step2_title: "2. 1-क्लिक हेल्पर का उपयोग करें",
+                    step2_desc: "बटन को बुकमार्क बार में खींचें (PC) या कोड कॉपी करें (मोबाइल):",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ डाउनलोडर",
+                    btn_copy: "हेल्पर कोड कॉपी करें",
+                    copied: "क्लिपबोर्ड पर कॉपी हो गया!",
+                    step3_desc: "यूट्यूब वीडियो पेज पर बुकमार्क पर क्लिक करें — डाउनलोड तुरंत शुरू हो जाएगा!",
+                    btn_close: "कन्वर्टर पर वापस जाएं"
+                },
+                id: {
+                    badge: "Video Pembatasan Usia (18+)",
+                    title: "Video Dewasa (18+) Terdeteksi",
+                    subtitle: "YouTube memerlukan login akun untuk mengunduh",
+                    desc: "YouTube membatasi video ini dan memerlukan sesi login browser Anda. Ikuti langkah mudah ini untuk mengunduhnya langsung di browser Anda:",
+                    step1_title: "1. Buka di YouTube",
+                    step1_desc: "Buka video ini di YouTube pada browser tempat akun Anda sudah login:",
+                    btn_open_yt: "Buka Video di YouTube",
+                    step2_title: "2. Gunakan Bantuan 1-Klik",
+                    step2_desc: "Tarik tombol ke Bookmark Bar (PC) atau Salin Kode (Ponsel):",
+                    btn_bookmarklet: "⭐ Pengunduh 18+ YT4MP3",
+                    btn_copy: "Salin Kode Bantuan",
+                    copied: "Berhasil disalin ke papan klip!",
+                    step3_desc: "Klik bookmark di halaman video YouTube — unduhan langsung dimulai menggunakan sesi Anda!",
+                    btn_close: "Kembali ke Konverter"
+                },
+                it: {
+                    badge: "Video con Limiti di Età (18+)",
+                    title: "Rilevato Video per Adulti (18+)",
+                    subtitle: "YouTube richiede l'accesso per il download",
+                    desc: "YouTube protegge questo video con limiti di età e richiede la tua sessione di accesso. Segui questi passaggi per scaricarlo direttamente nel browser:",
+                    step1_title: "1. Apri su YouTube",
+                    step1_desc: "Apri questo video su YouTube nel browser in cui hai effettuato l'accesso:",
+                    btn_open_yt: "Apri Video su YouTube",
+                    step2_title: "2. Usa l'Assistente a 1 Clic",
+                    step2_desc: "Trascina nella barra dei Preferiti (PC) o copia il codice (Mobile):",
+                    btn_bookmarklet: "⭐ Downloader 18+ YT4MP3",
+                    btn_copy: "Copia Codice Assistente",
+                    copied: "Copiato negli appunti!",
+                    step3_desc: "Fai clic sul segnalibro nella pagina del video di YouTube — il download inizia subito!",
+                    btn_close: "Torna al Convertitore"
+                },
+                ja: {
+                    badge: "年齢制限動画（18+）",
+                    title: "18+ 成人向け動画を検出",
+                    subtitle: "ダウンロードにはYouTubeへのログインが必要です",
+                    desc: "YouTubeはこの動画に年齢制限を設けており、ログインセッションが必要です。次の手順でブラウザから直接ダウンロードできます：",
+                    step1_title: "1. YouTubeで開く",
+                    step1_desc: "アカウントがログインしているブラウザで、この動画をYouTubeで開きます：",
+                    btn_open_yt: "YouTubeで動画を開く",
+                    step2_title: "2. ワンクリックヘルパーを利用",
+                    step2_desc: "ブックマークバーにドラッグ（PC）またはコードをコピー（スマホ）：",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ ダウンローダー",
+                    btn_copy: "ヘルパーコードをコピー",
+                    copied: "クリップボードにコピーしました！",
+                    step3_desc: "YouTube動画ページでブックマークをクリックすると、すぐにダウンロードが始まります！",
+                    btn_close: "コンバーターに戻る"
+                },
+                ko: {
+                    badge: "연령 제한 동영상 (18+)",
+                    title: "18+ 성인 동영상 감지",
+                    subtitle: "다운로드하려면 YouTube 로그인이 필요합니다",
+                    desc: "YouTube는 연령 제한 동영상에 대해 로그인된 브라우저 세션을 요구합니다. 아래 단계를 따라 브라우저에서 직접 다운로드하세요:",
+                    step1_title: "1. YouTube에서 열기",
+                    step1_desc: "계정이 로그인된 브라우저의 YouTube에서 이 동영상을 엽니다:",
+                    btn_open_yt: "YouTube에서 동영상 열기",
+                    step2_title: "2. 원클릭 도우미 사용",
+                    step2_desc: "북마크 바로 드래그(PC) 또는 코드 복사(모바일):",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ 다운로더",
+                    btn_copy: "도우미 코드 복사",
+                    copied: "클립보드에 복사되었습니다!",
+                    step3_desc: "YouTube 동영상 페이지에서 북마크를 클릭하면 즉시 다운로드가 시작됩니다!",
+                    btn_close: "변환기로 돌아가기"
+                },
+                my: {
+                    badge: "အသက်ကန့်သတ်ထားသော ဗီဒီယို (၁၈+)",
+                    title: "၁၈+ ဗီဒီယိုဖြစ်ကြောင်း တွေ့ရှိရသည်",
+                    subtitle: "ဒေါင်းလုဒ်လုပ်ရန် YouTube အကောင့်ဝင်ထားရန် လိုအပ်သည်",
+                    desc: "ဤ ၁၈+ ဗီဒီယိုကို ဒေါင်းလုဒ်လုပ်ရန် သင်၏ အကောင့်ဝင်ထားသော ဘရောက်ဇာ လိုအပ်ပါသည်။ အောက်ပါ ရိုးရှင်းသော အဆင့်များအတိုင်း တိုက်ရိုက်ဒေါင်းလုဒ်လုပ်ပါ-",
+                    step1_title: "၁။ YouTube တွင် ဖွင့်ပါ",
+                    step1_desc: "သင်၏ အကောင့်ဝင်ထားသော ဘရောက်ဇာဖြင့် ဤဗီဒီယိုကို YouTube တွင် ဖွင့်ပါ-",
+                    btn_open_yt: "YouTube တွင် ဗီဒီယိုဖွင့်ပါ",
+                    step2_title: "၂။ 1-Click အကူအညီကို သုံးပါ",
+                    step2_desc: "ခလုတ်ကို Bookmarks သို့ ဆွဲယူပါ (PC) သို့မဟုတ် ကုဒ်ကို ကူးယူပါ (မိုဘိုင်း)-",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ Downloader",
+                    btn_copy: "Helper Code ကူးယူပါ",
+                    copied: "ကူးယူပြီးပါပြီ!",
+                    step3_desc: "YouTube ဗီဒီယို စာမျက်နှာတွင် Bookmark ကို နှိပ်လိုက်သည်နှင့် ဒေါင်းလုဒ် ချက်ချင်း စတင်ပါမည်။",
+                    btn_close: "ပင်မစာမျက်နှာသို့ ပြန်သွားမည်"
+                },
+                pt: {
+                    badge: "Vídeo com Restrição de Idade (18+)",
+                    title: "Vídeo Adulto (18+) Detectado",
+                    subtitle: "YouTube requer login na conta para baixar",
+                    desc: "O YouTube protege este vídeo com restrição de idade e requer sua sessão conectada. Siga estes passos simples para baixar diretamente no navegador:",
+                    step1_title: "1. Abrir no YouTube",
+                    step1_desc: "Abra este vídeo no YouTube no navegador onde sua conta está conectada:",
+                    btn_open_yt: "Abrir Vídeo no YouTube",
+                    step2_title: "2. Usar o Assistente em 1 Clique",
+                    step2_desc: "Arraste para a Barra de Favoritos (PC) ou Copie o Código (Celular):",
+                    btn_bookmarklet: "⭐ Baixador 18+ YT4MP3",
+                    btn_copy: "Copiar Código do Assistente",
+                    copied: "Copiado para a área de transferência!",
+                    step3_desc: "Clique no favorito na página do vídeo do YouTube — o download começará imediatamente!",
+                    btn_close: "Voltar ao Conversor"
+                },
+                ru: {
+                    badge: "Видео с возрастным ограничением (18+)",
+                    title: "Обнаружено видео 18+",
+                    subtitle: "Требуется вход в YouTube для скачивания",
+                    desc: "YouTube защищает это видео возрастным ограничением и требует вашу авторизованную сессию. Выполните эти простые шаги для прямого скачивания:",
+                    step1_title: "1. Открыть на YouTube",
+                    step1_desc: "Откройте это видео на YouTube в браузере, где выполнен вход в аккаунт:",
+                    btn_open_yt: "Открыть видео на YouTube",
+                    step2_title: "2. Использовать Помощник в 1 клик",
+                    step2_desc: "Перетащите на панель закладок (ПК) или скопируйте код (смартфон):",
+                    btn_bookmarklet: "⭐ Загрузчик 18+ YT4MP3",
+                    btn_copy: "Скопировать код",
+                    copied: "Скопировано в буфер обмена!",
+                    step3_desc: "Нажмите на закладку на странице видео YouTube — скачивание начнется немедленно!",
+                    btn_close: "Вернуться к конвертеру"
+                },
+                tr: {
+                    badge: "Yaş Kısıtlamalı Video (18+)",
+                    title: "18+ Yetişkin Videosu Tespit Edildi",
+                    subtitle: "İndirmek için YouTube oturumu açılmalıdır",
+                    desc: "YouTube bu videoyu yaş kısıtlamasıyla korur ve oturum açmış tarayıcınızı gerektirir. Doğrudan tarayıcınızdan indirmek için şu adımları izleyin:",
+                    step1_title: "1. YouTube'da Açın",
+                    step1_desc: "Bu videoyu hesabınızın açık olduğu tarayıcıda YouTube üzerinde açın:",
+                    btn_open_yt: "Videoyu YouTube'da Aç",
+                    step2_title: "2. 1 Tıkla Yardımcıyı Kullanın",
+                    step2_desc: "Butonu Yer İmleri Çubuğuna sürükleyin (PC) veya Kodu Kopyalayın (Mobil):",
+                    btn_bookmarklet: "⭐ YT4MP3 18+ İndirici",
+                    btn_copy: "Yardımcı Kodu Kopyala",
+                    copied: "Panoya kopyalandı!",
+                    step3_desc: "YouTube video sayfasında yer imine tıklayın — indirme işleminiz hemen başlayacaktır!",
+                    btn_close: "Dönüştürücüye Geri Dön"
+                },
+                vi: {
+                    badge: "Video Giới Hạn Độ Tuổi (18+)",
+                    title: "Phát Hiện Video Giới Hạn 18+",
+                    subtitle: "Cần đăng nhập YouTube để tải xuống",
+                    desc: "YouTube bảo vệ video này bằng giới hạn độ tuổi và yêu cầu phiên đăng nhập của bạn. Làm theo các bước đơn giản sau để tải trực tiếp trên trình duyệt:",
+                    step1_title: "1. Mở trên YouTube",
+                    step1_desc: "Mở video này trên YouTube bằng trình duyệt đã đăng nhập tài khoản của bạn:",
+                    btn_open_yt: "Mở Video trên YouTube",
+                    step2_title: "2. Sử Dụng Trợ Thủ 1 Cú Nhấp",
+                    step2_desc: "Kéo nút vào Thanh dấu trang (PC) hoặc Sao chép mã (Điện thoại):",
+                    btn_bookmarklet: "⭐ Trình Tải 18+ YT4MP3",
+                    btn_copy: "Sao Chép Mã Trợ Thủ",
+                    copied: "Đã sao chép vào bộ nhớ tạm!",
+                    step3_desc: "Nhấp vào dấu trang trên trang video YouTube — quá trình tải xuống sẽ bắt đầu ngay lập tức!",
+                    btn_close: "Quay lại Bộ chuyển đổi"
+                }
+            };
+
+            window._getAgeBookmarkletCode = function() {
+                return 'javascript:(function(){try{var p=window.ytInitialPlayerResponse;if(!p||!p.streamingData){var s=document.querySelectorAll("script");for(var i=0;i<s.length;i++){var t=s[i].textContent||"";if(t.indexOf("ytInitialPlayerResponse")!==-1){var m=t.match(/ytInitialPlayerResponse\\s*=\\s*(\\{.+?\\});/);if(m){p=JSON.parse(m[1]);break;}}}}}if(!p||!p.streamingData){alert("Please wait for YouTube video to finish loading, then click this bookmark again!");return;}var f=(p.streamingData.adaptiveFormats||[]).concat(p.streamingData.formats||[]);var a=f.filter(function(x){return x.mimeType&&x.mimeType.indexOf("audio/mp4")!==-1&&x.url;}).pop()||f.filter(function(x){return x.mimeType&&x.mimeType.indexOf("audio")!==-1&&x.url;}).pop();var v=f.filter(function(x){return x.mimeType&&x.mimeType.indexOf("video/mp4")!==-1&&x.url;}).pop();var u=(a&&a.url)?a.url:(v&&v.url?v.url:null);if(u){var el=document.createElement("a");el.href=u;el.target="_blank";el.download=(p.videoDetails&&p.videoDetails.title?p.videoDetails.title.replace(/[^\\w\\s-]/g,""):"youtube_download")+".mp3";document.body.appendChild(el);el.click();setTimeout(function(){el.remove();},1000);}else{window.open("https://www.yt4mp3.com/?url="+encodeURIComponent(window.location.href),"_blank");}}catch(e){alert("YT4MP3: "+e.message);}})();';
+            };
+
+            window.copyAgeHelperScript = async function() {
+                const code = window._getAgeBookmarkletCode();
+                const btn = document.getElementById('modal-age-copy-btn');
+                const label = document.getElementById('modal-age-copy-label');
+                const lang = (document.documentElement.lang || 'en').toLowerCase().split('-')[0];
+                const dict = (typeof I18N_AGE_HELPER !== 'undefined' && I18N_AGE_HELPER[lang]) ? I18N_AGE_HELPER[lang] : (I18N_AGE_HELPER ? I18N_AGE_HELPER.en : {});
+
+                try {
+                    await navigator.clipboard.writeText(code);
+                    if (label) label.textContent = '✓ ' + (dict.copied || 'Copied to clipboard!');
+                    if (btn) btn.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-300');
+                    setTimeout(() => {
+                        if (label) label.textContent = dict.btn_copy || 'Copy Helper Code';
+                        if (btn) btn.classList.remove('bg-emerald-50', 'text-emerald-700', 'border-emerald-300');
+                    }, 2500);
+                } catch (err) {
+                    const ta = document.createElement('textarea');
+                    ta.value = code;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    ta.remove();
+                    if (label) label.textContent = '✓ ' + (dict.copied || 'Copied to clipboard!');
+                    setTimeout(() => {
+                        if (label) label.textContent = dict.btn_copy || 'Copy Helper Code';
+                    }, 2500);
+                }
+            };
+
             function getI18nMsg(key) {
                 const lang = (document.documentElement.lang || 'en').toLowerCase().split('-')[0];
                 const dict = I18N_NOTICES[lang] || I18N_NOTICES.en;
@@ -1928,6 +2260,7 @@
                 if (/\bage[- ]?restrict|\bage[- ]?gate|confirm your age|sign in to confirm|inappropriate for some users|video\.age|age_restricted/i.test(low)) {
                     return {
                         fatal: true,
+                        isAgeRestricted: true,
                         message: getI18nMsg('age_restricted')
                     };
                 }
@@ -2687,8 +3020,104 @@
                     } catch(e) {}
                 }
 
+                function showAgeRestrictedCard(targetYtUrl, mediaData) {
+                    if (completed && window._isShowingAgeCard) return;
+                    completed = true;
+                    window._isShowingAgeCard = true;
+                    if (activePollTimer) clearTimeout(activePollTimer);
+                    if (animTimer) clearInterval(animTimer);
+                    if (window._origPageTitle) document.title = window._origPageTitle;
+
+                    const lang = (document.documentElement.lang || 'en').toLowerCase().split('-')[0];
+                    const dict = (typeof I18N_AGE_HELPER !== 'undefined' && I18N_AGE_HELPER[lang]) ? I18N_AGE_HELPER[lang] : (typeof I18N_AGE_HELPER !== 'undefined' ? I18N_AGE_HELPER.en : {});
+
+                    // Hide standard progress / error elements
+                    if (modalStagePills) modalStagePills.classList.add('hidden');
+                    const track = document.querySelector('.progress-track-modern');
+                    if (track) track.classList.add('hidden');
+                    const metaWrap = modalPctText ? modalPctText.parentElement : null;
+                    if (metaWrap) metaWrap.classList.add('hidden');
+                    if (modalStatusMsg) modalStatusMsg.classList.add('hidden');
+                    if (modalActionContainer) modalActionContainer.classList.add('hidden');
+                    const errActions = document.getElementById('modal-error-actions');
+                    if (errActions) errActions.classList.add('hidden');
+
+                    // Set Friendly 18+ Adult Header (Never red error!)
+                    if (modalIconContainer) {
+                        modalIconContainer.className = "w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl mx-auto mb-2 border border-amber-200 shadow-sm";
+                    }
+                    if (modalIcon) {
+                        modalIcon.className = "fa-solid fa-user-shield text-amber-600";
+                    }
+                    if (modalTitle) {
+                        modalTitle.textContent = dict.title || "18+ Video Detected";
+                        modalTitle.className = "font-extrabold text-slate-900 text-base sm:text-lg mb-0.5";
+                    }
+                    if (modalSubtitle) {
+                        modalSubtitle.textContent = dict.subtitle || "Requires account sign-in on YouTube";
+                        modalSubtitle.className = "text-xs font-semibold text-amber-700 mb-3";
+                    }
+
+                    // Populate Card Elements
+                    const ageCard = document.getElementById('modal-age-card');
+                    if (ageCard) {
+                        ageCard.classList.remove('hidden');
+
+                        const resolvedUrl = targetYtUrl || (mediaData && mediaData.id ? `https://www.youtube.com/watch?v=${mediaData.id}` : (urlInput ? urlInput.value : '')) || 'https://www.youtube.com/';
+                        const ytLink = document.getElementById('modal-age-yt-link');
+                        if (ytLink) ytLink.href = resolvedUrl;
+
+                        const descEl = document.getElementById('modal-age-desc');
+                        if (descEl && dict.desc) descEl.textContent = dict.desc;
+
+                        const step1Title = document.getElementById('modal-age-step1-title');
+                        if (step1Title && dict.step1_title) step1Title.textContent = dict.step1_title;
+
+                        const step1Desc = document.getElementById('modal-age-step1-desc');
+                        if (step1Desc && dict.step1_desc) step1Desc.textContent = dict.step1_desc;
+
+                        const ytLabel = document.getElementById('modal-age-yt-label');
+                        if (ytLabel && dict.btn_open_yt) ytLabel.textContent = dict.btn_open_yt;
+
+                        const step2Title = document.getElementById('modal-age-step2-title');
+                        if (step2Title && dict.step2_title) step2Title.textContent = dict.step2_title;
+
+                        const step2Desc = document.getElementById('modal-age-step2-desc');
+                        if (step2Desc && dict.step2_desc) step2Desc.textContent = dict.step2_desc;
+
+                        const bmLabel = document.getElementById('modal-age-bookmarklet-label');
+                        if (bmLabel && dict.btn_bookmarklet) bmLabel.textContent = dict.btn_bookmarklet;
+
+                        const copyLabel = document.getElementById('modal-age-copy-label');
+                        if (copyLabel && dict.btn_copy) copyLabel.textContent = dict.btn_copy;
+
+                        const step3Desc = document.getElementById('modal-age-step3-desc');
+                        if (step3Desc && dict.step3_desc) step3Desc.textContent = dict.step3_desc;
+
+                        const closeLabel = document.getElementById('modal-age-close-label');
+                        if (closeLabel && dict.btn_close) closeLabel.textContent = dict.btn_close;
+
+                        const bmBtn = document.getElementById('modal-age-bookmarklet-btn');
+                        if (bmBtn && typeof window._getAgeBookmarkletCode === 'function') {
+                            bmBtn.href = window._getAgeBookmarkletCode();
+                        }
+                    }
+                }
+                window.showAgeRestrictedCard = showAgeRestrictedCard;
+
                 function failDownload(msg, failedStage = null) {
                     if (completed || window._activeConversionToken !== conversionToken) return;
+
+                    // Route 18+ Age Restricted videos directly to the dedicated Helper Card (NO error UI!)
+                    const lowMsg = (msg || '').toString().toLowerCase();
+                    const isAgeMsg = /\bage[- ]?restrict|\bage[- ]?gate|confirm your age|sign in to confirm|inappropriate for some users|video\.age|age_restricted/i.test(lowMsg)
+                        || (msg && (msg.includes('Age-Restricted') || msg.includes('Restricción de Edad') || msg.includes('Limite d\'Âge') || msg.includes('Altersbeschränkt') || msg.includes('مقيد بالفئة العمرية') || msg.includes('आयु-प्रतिबंधित') || msg.includes('Pembatasan Usia') || msg.includes('Limiti Di Età') || msg.includes('年齢制限') || msg.includes('연령 제한') || msg.includes('အသက်ကန့်သတ်') || msg.includes('Restrição de Idade') || msg.includes('возрастным ограничением') || msg.includes('Yaş Kısıtlamalı') || msg.includes('Giới Hạn Độ Tuổi')));
+
+                    if (isAgeMsg) {
+                        showAgeRestrictedCard(currentMediaData ? currentMediaData.url : (urlInput ? urlInput.value : ''), currentMediaData);
+                        return;
+                    }
+
                     completed = true;
                     if (activePollTimer) clearTimeout(activePollTimer);
                     if (animTimer) clearInterval(animTimer);
@@ -2869,6 +3298,16 @@
                 let activeFmt = formatLadder[ladderIdx];
 
                 progressModal.classList.remove('hidden');
+                const ageCardEl = document.getElementById('modal-age-card');
+                if (ageCardEl) ageCardEl.classList.add('hidden');
+                if (modalStagePills) modalStagePills.classList.remove('hidden');
+                const pTrackEl = document.querySelector('.progress-track-modern');
+                if (pTrackEl) pTrackEl.classList.remove('hidden');
+                const pMetaEl = modalPctText ? modalPctText.parentElement : null;
+                if (pMetaEl) pMetaEl.classList.remove('hidden');
+                if (modalStatusMsg) modalStatusMsg.classList.remove('hidden');
+                window._isShowingAgeCard = false;
+
                 modalTitle.textContent = safeLabel;
                 modalSubtitle.textContent = currentMediaData.title || "Preparing Media File";
                 modalProgressBar.className = "progress-shimmer-bar";
@@ -2906,6 +3345,10 @@
                     }
                     const prewarmCheckRestr = getSpecificVideoRestriction(initialPrewarmErrorText);
                     if (prewarmCheckRestr && prewarmCheckRestr.fatal) {
+                        if (prewarmCheckRestr.isAgeRestricted) {
+                            showAgeRestrictedCard(ytUrl, currentMediaData);
+                            return;
+                        }
                         window._videoFatalRestriction = window._videoFatalRestriction || {};
                         window._videoFatalRestriction[ytId] = prewarmCheckRestr.message;
                         failDownload(prewarmCheckRestr.message);
@@ -2975,7 +3418,7 @@
                                         tryGeoProxyEngine();
                                         return;
                                     }
-                                    failDownload(getI18nMsg('age_restricted'), 'fetch');
+                                    showAgeRestrictedCard(ytUrl, currentMediaData);
                                     return;
                                 }
                                 if (data && data.is_unavailable) {
@@ -3139,7 +3582,7 @@
                                     return;
                                 }
                                 if (checkData && checkData.is_age_restricted) {
-                                    failDownload(getI18nMsg('age_restricted'), 'fetch');
+                                    showAgeRestrictedCard(ytUrl, currentMediaData);
                                     return;
                                 }
                             }
@@ -3211,6 +3654,10 @@
                         // stop immediately and show the localized message to the user!
                         const fatalRestr = getSpecificVideoRestriction(errText || lastServerErrorText);
                         if (fatalRestr && fatalRestr.fatal) {
+                            if (fatalRestr.isAgeRestricted) {
+                                showAgeRestrictedCard(ytUrl, currentMediaData);
+                                return;
+                            }
                             window._videoFatalRestriction = window._videoFatalRestriction || {};
                             window._videoFatalRestriction[ytId] = fatalRestr.message;
                             failDownload(fatalRestr.message);
@@ -3305,6 +3752,10 @@
                         // Final accurate error message
                         const finalRestr = getSpecificVideoRestriction(lastServerErrorText);
                         if (finalRestr) {
+                            if (finalRestr.isAgeRestricted) {
+                                showAgeRestrictedCard(ytUrl, currentMediaData);
+                                return;
+                            }
                             failDownload(finalRestr.message);
                         } else {
                             failDownload("This video could not be converted right now. Please tap Retry below.");
@@ -3446,6 +3897,9 @@
                 if (audioPlayer) {
                     try { audioPlayer.pause(); } catch(e){}
                 }
+                const ageCard = document.getElementById('modal-age-card');
+                if (ageCard) ageCard.classList.add('hidden');
+                window._isShowingAgeCard = false;
             }
 
             modalCloseBtn.addEventListener('click', () => {
@@ -3457,6 +3911,17 @@
                     closeProgressModalClean();
                 }
             });
+
+            // 18+ Bookmarklet Direct-Click Handler (Copies helper code if clicked rather than dragged)
+            const ageBmBtn = document.getElementById('modal-age-bookmarklet-btn');
+            if (ageBmBtn) {
+                ageBmBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (typeof window.copyAgeHelperScript === 'function') {
+                        window.copyAgeHelperScript();
+                    }
+                });
+            }
 
             // Modal Retry Button Listener
             const modalRetryBtn = document.getElementById('modal-retry-btn');
