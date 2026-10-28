@@ -1029,7 +1029,7 @@
 
                 <!-- Action Button -->
                 <div id="modal-action-container" class="hidden space-y-2.5">
-                    <a id="modal-download-link" href="#" target="_self" class="btn-ready-pulse w-full py-3.5 px-6 rounded-xl font-extrabold text-white text-base bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 cursor-pointer no-underline">
+                    <a id="modal-download-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" class="btn-ready-pulse w-full py-3.5 px-6 rounded-xl font-extrabold text-white text-base bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 cursor-pointer no-underline">
                         <i class="fa-solid fa-circle-down text-lg"></i>
                         <span id="modal-btn-label">Download File</span>
                     </a>
@@ -1958,86 +1958,8 @@
             window._prewarmedReady = window._prewarmedReady || {};
 
             function prewarmStreams(ytId, extraFormats) {
-                if (!ytId) return;
-                window._prewarmedStreams = window._prewarmedStreams || {};
-                window._prewarmedReady = window._prewarmedReady || {};
-                
-                const targetUrl = `https://www.youtube.com/watch?v=${ytId}`;
-                const priorityFormats = extraFormats || ['mp3', '720'];
-
-                priorityFormats.forEach(f => {
-                    const key = f + '_' + ytId;
-                    if (window._prewarmedStreams[key]) return;
-
-                    const streamEntry = {
-                        id: null,
-                        engine: 'savenow',
-                        progress: 250,
-                        download_url: null,
-                        completed: false,
-                        failed: false,
-                        errorText: '',
-                        foregroundActive: false,
-                        callbacks: []
-                    };
-                    window._prewarmedStreams[key] = streamEntry;
-
-                    initiateStream(targetUrl, f).then(initData => {
-                        if (!initData || !initData.id) {
-                            if (initData && initData.isGeoBlock) {
-                                window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
-                                window._isGeoBlockedVideo[ytId] = true;
-                            }
-                            if (initData && initData.errorText) {
-                                streamEntry.failed = true;
-                                streamEntry.errorText = initData.errorText;
-                            }
-                            return;
-                        }
-                        streamEntry.id = initData.id;
-                        streamEntry.engine = initData.engine || 'savenow';
-
-                        if (isDownloadReady(initData)) {
-                            streamEntry.download_url = initData.download_url;
-                            streamEntry.completed = true;
-                            window._prewarmedReady[key] = initData.download_url;
-                            streamEntry.callbacks.forEach(cb => { try { cb(initData.download_url); } catch(e){} });
-                            return;
-                        }
-
-                        // Background poller
-                        let attempts = 0;
-                        const maxPoll = 150; // ~150 seconds window for large videos
-                        const pollBg = async () => {
-                            if (streamEntry.completed || streamEntry.foregroundActive || streamEntry.failed || attempts >= maxPoll) return;
-                            attempts++;
-                            try {
-                                const prog = await pollProgressEndpoint(streamEntry.id, streamEntry.engine);
-                                if (prog) {
-                                    if (isDownloadReady(prog)) {
-                                        streamEntry.download_url = prog.download_url;
-                                        streamEntry.completed = true;
-                                        window._prewarmedReady[key] = prog.download_url;
-                                        streamEntry.callbacks.forEach(cb => { try { cb(prog.download_url); } catch(e){} });
-                                        return;
-                                    }
-                                    if (isConversionError(prog)) {
-                                        const errTxt = prog.text || prog.message || '';
-                                        streamEntry.failed = true;
-                                        streamEntry.errorText = errTxt;
-                                        return;
-                                    }
-                                    if (prog.progress) streamEntry.progress = prog.progress;
-                                }
-                            } catch(e) {}
-
-                            if (!streamEntry.completed && !streamEntry.foregroundActive && !streamEntry.failed && attempts < maxPoll) {
-                                setTimeout(pollBg, 1000);
-                            }
-                        };
-                        setTimeout(pollBg, 150);
-                    }).catch(() => {});
-                });
+                // Permanently disabled free-engine background prewarming to eliminate all rogue redirect/ad links
+                return;
             }
 
             urlInput.addEventListener('input', (e) => {
@@ -2614,7 +2536,8 @@
                     modalDownloadLink.href = finalDownloadUrl;
                     modalDownloadLink.setAttribute('download', '');
                     modalDownloadLink.setAttribute('rel', 'noopener noreferrer');
-                    modalDownloadLink.target = '_self';
+                    modalDownloadLink.setAttribute('referrerpolicy', 'no-referrer');
+                    modalDownloadLink.target = '_blank';
                     modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
                     modalActionContainer.classList.remove('hidden');
 
@@ -2654,13 +2577,23 @@
                         else inAppNotice.classList.add('hidden');
                     }
 
-                    // Native Mobile & Desktop Download Trigger (Clean Single-Trigger, No Duplicate Navigations)
+                    // 100% Direct Device Download Trigger (Zero Tab Hijack, Zero Redirects, Zero Cross-Origin Referrer Error)
                     try {
+                        let dlFrame = document.getElementById('direct-dl-frame');
+                        if (!dlFrame) {
+                            dlFrame = document.createElement('iframe');
+                            dlFrame.id = 'direct-dl-frame';
+                            dlFrame.style.display = 'none';
+                            document.body.appendChild(dlFrame);
+                        }
+                        dlFrame.src = finalDownloadUrl;
+
                         const dlAnchor = document.createElement('a');
                         dlAnchor.href = finalDownloadUrl;
                         dlAnchor.setAttribute('download', '');
                         dlAnchor.setAttribute('rel', 'noopener noreferrer');
-                        dlAnchor.setAttribute('target', '_self');
+                        dlAnchor.setAttribute('referrerpolicy', 'no-referrer');
+                        dlAnchor.setAttribute('target', '_blank');
                         dlAnchor.style.display = 'none';
                         document.body.appendChild(dlAnchor);
                         dlAnchor.click();
@@ -2743,21 +2676,7 @@
                     // Always test real conversion engines before declaring any video failed or restricted!
 
                     const prewarmKey = activeFmt + '_' + ytId;
-                    const prewarmed = window._prewarmedStreams && window._prewarmedStreams[prewarmKey];
-
-                    // Priority 1: File (or best fallback resolution) is ALREADY 100% prepared in background! (Sub-0.1s Ultra Instant)
-                    if (forcedEngine === 'auto' && window._prewarmedReady && window._prewarmedReady[prewarmKey]) {
-                        const readyUrl = window._prewarmedReady[prewarmKey];
-                        modalProgressBar.style.width = '100%';
-                        modalPctText.textContent = '100%';
-                        modalEtaText.textContent = 'Instant';
-                        modalSpeedText.textContent = 'Ultra Fast';
-                        modalStatusMsg.textContent = 'File Ready! Saving to device...';
-                        setTimeout(() => {
-                            completeDownload(readyUrl);
-                        }, 60);
-                        return;
-                    }
+                    const prewarmed = null;
 
                     // Robust single-conversion pipeline with automatic quality step-down for long/large videos:
                     const MAX_WAIT_MS = 180000; // 3 minutes window for large/long videos
@@ -3028,22 +2947,10 @@
                         pollConversion(initData.id);
                     }
 
-                    // Route 4K (2160p), 2K (1440p), and 1080p FHD directly to Paid API (FastSaver Pro) so user ALWAYS gets 100% genuine resolution!
-                    const isLongVideo = (window.currentMediaData && window.currentMediaData.duration_sec && window.currentMediaData.duration_sec > 9000);
-                    const isHiResFormat = (fmtParam === '4k' || fmtParam === '1440' || fmtParam === '1080');
-
-                    if (isHiResFormat || isLongVideo) {
-                        modalStatusMsg.textContent = isHiResFormat ? 'Preparing high-resolution stream (FastSaver Pro)...' : 'Long video detected — processing high-speed stream...';
-                        tryFastSaverEngine();
-                    } else if (forcedEngine === 'auto' && prewarmed && prewarmed.id && !prewarmed.completed && !prewarmed.failed) {
-                        prewarmed.foregroundActive = true;
-                        prewarmed.callbacks.push((finalUrl) => completeDownload(finalUrl));
-                        setRealProgress(prewarmed);
-                        modalStatusMsg.textContent = 'Finalizing your file...';
-                        pollConversion(prewarmed.id);
-                    } else {
-                        runEngine(forcedEngine === 'loader' ? 'loader' : 'savenow');
-                    }
+                    // Route ALL formats (4K, 2K, 1080p, 720p, 480p, 360p, MP3) directly to FastSaver Pro Paid API!
+                    // 100% direct binary downloads: ZERO ads, ZERO redirects, ZERO hotlink referrer errors!
+                    modalStatusMsg.textContent = 'Preparing direct high-speed download...';
+                    tryFastSaverEngine();
 
                 } catch (err) {
                     console.error('Conversion error:', err);
