@@ -411,13 +411,8 @@ async def start_auto_indexnow_scheduler():
     asyncio.create_task(_auto_index_loop())
 
 # ==============================================================================
-# PROXY & UPSTREAM CONNECTION POOLS
+# UPSTREAM CONNECTION POOLS
 # ==============================================================================
-DATAIMPULSE_USER = os.environ.get("DATAIMPULSE_USER") or "ec64aa02fac86dc58f59"
-DATAIMPULSE_PASS = os.environ.get("DATAIMPULSE_PASS") or "b0ec68a6ff8231c0"
-DATAIMPULSE_HOST = os.environ.get("DATAIMPULSE_HOST") or "gw.dataimpulse.com"
-DATAIMPULSE_PORT = os.environ.get("DATAIMPULSE_PORT") or "823"
-
 WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
 WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
 WEBSHARE_POOLS = {
@@ -1299,14 +1294,6 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         if not target_country:
             target_country = str(allowed[0]).lower()
 
-    sess_id = uuid.uuid4().hex[:8]
-    if target_country:
-        proxy_user = f"{DATAIMPULSE_USER}__cr.{target_country};sessid.{sess_id};sessttl.10"
-    else:
-        proxy_user = f"{DATAIMPULSE_USER}__sessid.{sess_id};sessttl.10"
-
-    proxy_url = f"http://{proxy_user}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
-
     fmt_clean = (format or "mp3").lower().strip()
     is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
     default_ext = "m4a" if fmt_clean in ["m4a", "aac"] else ("mp3" if is_audio else "mp4")
@@ -1367,7 +1354,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         actual_ext = default_ext
         last_extract_err = None
 
-        # Smart rotation: Webshare unlimited pool (3 IPs) first, DataImpulse only as last-resort fallback.
+        # Smart rotation: Webshare unlimited pool (3 IPs) first.
         # Each proxy is tried with the default web client, then the android_vr client (works without a JS runtime).
         proxy_candidates = build_proxy_candidates(allowed)
         attempts = [(c, client) for c in proxy_candidates for client in (None, ["android_vr"])]
