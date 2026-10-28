@@ -2203,35 +2203,26 @@
                     const title = meta.title;
                     const author = meta.author;
 
-                    // Instant heuristic: If title explicitly mentions 4K/2K, enable them on first paint
-                    const titleHas4k = /4k|2160p|uhd/i.test(title);
-                    const titleHas2k = /1440p|2k|qhd/i.test(title);
-
+                    // Instant high-resolution formats list: 4K (2160p) and 2K (1440p) are ALWAYS included on first paint
                     const videoFormatsList = [
                         { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD', badge: '⚡ Instant' },
-                        { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p', badge: 'Full HD' }
-                    ];
-                    if (titleHas4k) {
-                        videoFormatsList.push({ format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p', badge: '4K Ultra' });
-                    }
-                    if (titleHas2k) {
-                        videoFormatsList.push({ format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p', badge: '2K QHD' });
-                    }
-                    videoFormatsList.push(
+                        { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p', badge: 'Full HD' },
+                        { format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p', badge: '4K Ultra' },
+                        { format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p', badge: '2K QHD' },
                         { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' },
                         { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' },
                         { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format', badge: 'VP9' }
-                    );
+                    ];
 
                     currentMediaData = {
                         id: ytId,
                         url: url,
                         title: title,
                         uploader: author,
-                        duration: titleHas4k ? "4K UHD Video" : (titleHas2k ? "2K QHD Video" : "HD Video"),
+                        duration: "HD / 4K Video",
                         duration_sec: 0,
-                        has4K: titleHas4k,
-                        has2K: titleHas2k,
+                        has4K: true,
+                        has2K: true,
                         views: "",
                         thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
                         platform: { name: 'YouTube' },
@@ -2300,7 +2291,7 @@
 
             // Background async specs & resolution resolver (never blocks user interaction)
             function resolveVideoSpecsAsync(ytId) {
-                fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 6000)
+                fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 8000)
                     .then(async (resResp) => {
                         if (!resResp.ok) return;
                         const resData = await resResp.json();
@@ -2321,43 +2312,27 @@
                             window._isGeoBlockedVideo[ytId] = true;
                         }
 
-                        // Seamlessly insert 4K row if video supports it and not yet listed
-                        if (resData.has_4k && !currentMediaData.has4K) {
+                        // If video definitely does NOT support 4K/2K (confirmed max_height < 1440 and not geo-blocked), hide 4K/2K rows
+                        if (resData.max_height && resData.max_height < 1440 && !resData.has_4k && !resData.has_2k && !resData.is_geo_blocked) {
+                            const btn4k = videoFormatsContainer.querySelector('[data-quality="4k"]');
+                            if (btn4k) {
+                                const row = btn4k.closest('.format-row');
+                                if (row) row.style.display = 'none';
+                            }
+                            const btn2k = videoFormatsContainer.querySelector('[data-quality="1440"]');
+                            if (btn2k) {
+                                const row = btn2k.closest('.format-row');
+                                if (row) row.style.display = 'none';
+                            }
+                            currentMediaData.has4K = false;
+                            currentMediaData.has2K = false;
+                        } else {
                             currentMediaData.has4K = true;
-                            const fmt4k = { format: 'mp4', quality: '4k', label: 'MP4 (4K UHD)', sub: 'Maximum Detail • 2160p' + calcEstSize(durationSec, 10500), badge: '4K Ultra' };
-                            currentMediaData.video_formats.splice(2, 0, fmt4k);
-                            const row4k = createFormatRow(fmt4k, true);
-                            const rows = Array.from(videoFormatsContainer.children);
-                            const idx1080 = rows.findIndex(r => r.querySelector('[data-quality="1080"]'));
-                            if (idx1080 !== -1 && idx1080 + 1 < rows.length) {
-                                videoFormatsContainer.insertBefore(row4k, rows[idx1080 + 1]);
-                            } else {
-                                videoFormatsContainer.appendChild(row4k);
-                            }
-                        }
-
-                        // Seamlessly insert 2K row if video supports it and not yet listed
-                        if (resData.has_2k && !currentMediaData.has2K) {
                             currentMediaData.has2K = true;
-                            const fmt2k = { format: 'mp4', quality: '1440', label: 'MP4 (1440p 2K)', sub: 'Quad HD • 1440p' + calcEstSize(durationSec, 5000), badge: '2K QHD' };
-                            const insertIdx = currentMediaData.has4K ? 3 : 2;
-                            currentMediaData.video_formats.splice(insertIdx, 0, fmt2k);
-                            const row2k = createFormatRow(fmt2k, true);
-                            const rows = Array.from(videoFormatsContainer.children);
-                            const refIdx = rows.findIndex(r => r.querySelector('[data-quality="4k"]') || r.querySelector('[data-quality="1080"]'));
-                            if (refIdx !== -1 && refIdx + 1 < rows.length) {
-                                videoFormatsContainer.insertBefore(row2k, rows[refIdx + 1]);
-                            } else {
-                                videoFormatsContainer.appendChild(row2k);
+                            const isGeoBlocked = window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId];
+                            if (!isGeoBlocked) {
+                                prewarmStreams(ytId, ['1440', '4k']);
                             }
-                        }
-
-                        const isGeoBlocked = window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId];
-                        const hiResToPrewarm = [];
-                        if (!isGeoBlocked) {
-                            if (resData.has_2k) hiResToPrewarm.push('1440');
-                            if (resData.has_4k) hiResToPrewarm.push('4k');
-                            if (hiResToPrewarm.length > 0) prewarmStreams(ytId, hiResToPrewarm);
                         }
                     })
                     .catch(() => {});
