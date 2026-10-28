@@ -897,13 +897,13 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     last_err = None
     target_country = proxy_candidates[0][2] if proxy_candidates else "us"
 
-    attempts = [(c, client) for c in proxy_candidates[:3] for client in (None, ["android_vr"])]
+    attempts = [(c, client) for c in proxy_candidates[:3] for client in (["android"], ["android_vr"], None)]
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
             "quiet": True,
             "no_warnings": True,
-            "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
+            "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
             "noplaylist": True,
             "socket_timeout": 12,
         }
@@ -1078,9 +1078,9 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         last_extract_err = None
 
         # Smart rotation: Webshare unlimited pool (3 IPs) first, DataImpulse only as last-resort fallback.
-        # Each proxy is tried with the default web client, then the android_vr client (works without a JS runtime).
+        # Each proxy is tried with android client first (direct progressive mp4/audio without JS runtime), then android_vr, then web.
         proxy_candidates = build_proxy_candidates(allowed)
-        attempts = [(c, client) for c in proxy_candidates for client in (None, ["android_vr"])]
+        attempts = [(c, client) for c in proxy_candidates for client in (["android"], ["android_vr"], None)]
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
 
@@ -1088,7 +1088,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 "proxy": proxy_url,
                 "quiet": True,
                 "no_warnings": True,
-                "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "18/22/b/bv/best"),
+                "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
                 "noplaylist": True,
                 "extract_flat": False,
                 "socket_timeout": 15,
@@ -1111,6 +1111,8 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                         f"web.player+{po_token}",
                         f"mweb.gvs+{po_token}",
                         f"mweb.player+{po_token}",
+                        f"android.gvs+{po_token}",
+                        f"android_vr.gvs+{po_token}",
                     ]
                 if visitor_data:
                     yt_args["visitor_data"] = [visitor_data]
@@ -1140,7 +1142,15 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                         upstream_headers.update({k: v for k, v in info["http_headers"].items() if k.lower() != "accept-encoding"})
                     opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
                     # Open the stream inside the attempt: an unsolved/blocked URL (403) falls through to the next client/proxy
-                    upstream_res = opener.open(urllib.request.Request(cand_url, headers=upstream_headers), timeout=30)
+                    res = opener.open(urllib.request.Request(cand_url, headers=upstream_headers), timeout=30)
+                    ct = (res.headers.get("Content-Type") or "").lower()
+                    if ("mpegurl" in ct or "m3u8" in cand_url) and attempt < len(attempts) - 1:
+                        try:
+                            res.close()
+                        except Exception:
+                            pass
+                        continue
+                    upstream_res = res
                     stream_url = cand_url
                     raw_title = info.get("title") or raw_title
                     extracted_ext = info.get("ext") or ""
