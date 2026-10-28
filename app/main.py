@@ -1680,17 +1680,10 @@ h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5
 
 _VIDEO_RES_CACHE = {}
 
-@app.get("/api/video-resolutions")
-async def get_video_resolutions(id: str):
-    vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
-    if len(vid) != 11:
-        return Response(content=json.dumps({"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0}), media_type="application/json")
-    if vid in _VIDEO_RES_CACHE:
-        return Response(content=json.dumps(_VIDEO_RES_CACHE[vid]), media_type="application/json", headers={"Cache-Control": "public, s-maxage=86400, max-age=86400"})
-
+def _fetch_video_specs(vid: str):
     yt_url = f"https://www.youtube.com/watch?v={vid}"
     duration_sec = 0
-    # 1. Fast check via YouTube watch page (zero credits)
+    # 1. Fast check via YouTube watch page (zero credits, 1.5s timeout)
     try:
         req = urllib.request.Request(
             yt_url,
@@ -1699,7 +1692,7 @@ async def get_video_resolutions(id: str):
                 "Accept-Language": "en-US,en;q=0.9",
             },
         )
-        with urllib.request.urlopen(req, timeout=3) as res:
+        with urllib.request.urlopen(req, timeout=1.5) as res:
             html = res.read().decode("utf-8", "ignore")
         dur_match = re.search(r'"lengthSeconds":"(\d+)"', html)
         if dur_match:
@@ -1716,7 +1709,7 @@ async def get_video_resolutions(id: str):
         heights = [int(h) for h in re.findall(r'qualityLabel[^\d]+(\d+)p', html)]
         if heights and duration_sec > 0:
             max_h = max(heights)
-            result = {
+            return {
                 "has_4k": max_h >= 2160 or 2160 in heights,
                 "has_2k": max_h >= 1440 or 1440 in heights,
                 "max_height": max_h,
@@ -1724,12 +1717,10 @@ async def get_video_resolutions(id: str):
                 "is_geo_blocked": is_geo_blocked,
                 "source": "yt_watch",
             }
-            _VIDEO_RES_CACHE[vid] = result
-            return Response(content=json.dumps(result), media_type="application/json", headers={"Cache-Control": "public, s-maxage=86400, max-age=86400"})
     except Exception:
         pass
 
-    # 2. FastSaver /v1/youtube/info (0.4s fast, 100% accurate 4K/2K detection when YouTube blocks datacenter IP)
+    # 2. FastSaver /v1/youtube/info (accurate 4K/2K detection when YouTube blocks datacenter IP)
     try:
         info_url = f"https://api.fastsaver.io/v1/youtube/info?url={urllib.parse.quote(yt_url)}"
         req = urllib.request.Request(
@@ -1740,7 +1731,7 @@ async def get_video_resolutions(id: str):
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
             },
         )
-        with urllib.request.urlopen(req, timeout=4) as res:
+        with urllib.request.urlopen(req, timeout=2.5) as res:
             data = json.loads(res.read().decode("utf-8"))
         if data.get("ok"):
             raw_dur = data.get("duration") or data.get("lengthSeconds") or 0
@@ -1752,7 +1743,7 @@ async def get_video_resolutions(id: str):
             fmt_names = [str(f.get("format", "")).lower() for f in (data.get("formats") or [])]
             has_4k = any("2160" in f or "4k" in f for f in fmt_names)
             has_2k = any("1440" in f or "2k" in f for f in fmt_names)
-            result = {
+            return {
                 "has_4k": has_4k,
                 "has_2k": has_2k,
                 "max_height": 2160 if has_4k else (1440 if has_2k else 1080),
@@ -1760,13 +1751,38 @@ async def get_video_resolutions(id: str):
                 "is_geo_blocked": False,
                 "source": "fastsaver_info",
             }
-            _VIDEO_RES_CACHE[vid] = result
-            return Response(content=json.dumps(result), media_type="application/json", headers={"Cache-Control": "public, s-maxage=86400, max-age=86400"})
     except Exception:
         pass
 
-    default_result = {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": duration_sec, "source": "default"}
-    return Response(content=json.dumps(default_result), media_type="application/json")
+    return {
+        "has_4k": False,
+        "has_2k": False,
+        "max_height": 1080,
+        "duration_sec": duration_sec,
+        "is_geo_blocked": False,
+        "source": "default",
+    }
+
+
+@app.get("/api/video-resolutions")
+async def get_video_resolutions(id: str):
+    vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
+    if len(vid) != 11:
+        return Response(content=json.dumps({"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0}), media_type="application/json")
+    if vid in _VIDEO_RES_CACHE:
+        return Response(
+            content=json.dumps(_VIDEO_RES_CACHE[vid]),
+            media_type="application/json",
+            headers={"Cache-Control": "public, s-maxage=86400, max-age=86400, stale-while-revalidate=86400"}
+        )
+
+    result = await asyncio.to_thread(_fetch_video_specs, vid)
+    _VIDEO_RES_CACHE[vid] = result
+    return Response(
+        content=json.dumps(result),
+        media_type="application/json",
+        headers={"Cache-Control": "public, s-maxage=86400, max-age=86400, stale-while-revalidate=86400"}
+    )
 
 
 @app.get("/api/download-thumbnail")
