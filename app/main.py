@@ -408,6 +408,55 @@ async def start_auto_indexnow_scheduler():
             await asyncio.sleep(14400)
     asyncio.create_task(_auto_index_loop())
 
+# ==============================================================================
+# WEBSHARE PROXY POOLS & HTTP HELPERS
+# ==============================================================================
+WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
+WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
+WEBSHARE_POOLS = {
+    "US": ["9.142.218.167:6831", "192.46.201.131:6645", "64.52.28.38:7725", "9.142.198.67:5734",
+           "45.56.180.203:8437", "9.142.11.217:5373", "64.52.31.9:6196"],
+    "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "87.86.24.81:5732"],
+    "FR": ["31.98.7.105:6283", "179.61.172.206:6757", "82.140.180.187:7147", "31.98.8.82:5760", "82.23.62.125:7878"],
+    "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
+    "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
+}
+WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
+
+def _fetch_converter_json(target_url: str, headers: dict = None, timeout: float = 8.0) -> dict:
+    req_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Referer": "https://y2down.cc/",
+        "Origin": "https://y2down.cc"
+    }
+    if headers:
+        req_headers.update(headers)
+    req = urllib.request.Request(target_url, headers=req_headers)
+    
+    # 1. Direct request
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read())
+    except Exception:
+        pass
+
+    # 2. Proxy fallback using Webshare static ISP IPs (bypasses Cloudflare datacenter IP block on Vercel/AWS)
+    us_ips = list(WEBSHARE_POOLS.get("US", []))
+    if us_ips:
+        import random
+        random.shuffle(us_ips)
+        for ip in us_ips[:3]:
+            try:
+                proxy_url = f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}"
+                proxy_handler = urllib.request.ProxyHandler({'http': proxy_url, 'https': proxy_url})
+                opener = urllib.request.build_opener(proxy_handler)
+                with opener.open(req, timeout=timeout) as r:
+                    return json.loads(r.read())
+            except Exception:
+                continue
+
+    raise Exception(f"Failed to fetch converter endpoint: {target_url}")
+
 @app.get("/api/convert")
 async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     encoded_url = urllib.parse.quote(url)
@@ -439,38 +488,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     if engine != "loader":
         try:
             api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}"
-            req = urllib.request.Request(api_url, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Referer": "https://y2down.cc/",
-                "Origin": "https://y2down.cc"
-            })
-            with urllib.request.urlopen(req, timeout=9) as r:
-                data = json.loads(r.read())
-                if data and data.get("id"):
-                    dl = data.get("download_url")
-                    if dl:
-                        if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
-                            dl = None
-                        elif dl.startswith("http://"):
-                            dl = dl.replace("http://", "https://")
-                    return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
-                elif data and (data.get("text") or data.get("error") or data.get("message")):
-                    captured_err = str(data.get("text") or data.get("error") or data.get("message"))
-                    if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
-                        is_geo = True
-        except Exception:
-            pass
-
-    # 2. Secondary Engine: loader.to
-    try:
-        lto_url = f"https://loader.to/ajax/download.php?format={fmt}&url={encoded_url}"
-        req = urllib.request.Request(lto_url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-            "Referer": "https://loader.to/",
-            "Origin": "https://loader.to"
-        })
-        with urllib.request.urlopen(req, timeout=9) as r:
-            data = json.loads(r.read())
+            data = _fetch_converter_json(api_url, timeout=8.0)
             if data and data.get("id"):
                 dl = data.get("download_url")
                 if dl:
@@ -478,11 +496,30 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
                         dl = None
                     elif dl.startswith("http://"):
                         dl = dl.replace("http://", "https://")
-                return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
+                return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
             elif data and (data.get("text") or data.get("error") or data.get("message")):
                 captured_err = str(data.get("text") or data.get("error") or data.get("message"))
                 if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
                     is_geo = True
+        except Exception:
+            pass
+
+    # 2. Secondary Engine: loader.to
+    try:
+        lto_url = f"https://loader.to/ajax/download.php?format={fmt}&url={encoded_url}"
+        data = _fetch_converter_json(lto_url, headers={"Referer": "https://loader.to/", "Origin": "https://loader.to"}, timeout=8.0)
+        if data and data.get("id"):
+            dl = data.get("download_url")
+            if dl:
+                if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
+                    dl = None
+                elif dl.startswith("http://"):
+                    dl = dl.replace("http://", "https://")
+            return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
+        elif data and (data.get("text") or data.get("error") or data.get("message")):
+            captured_err = str(data.get("text") or data.get("error") or data.get("message"))
+            if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
+                is_geo = True
     except Exception:
         pass
 
@@ -499,23 +536,17 @@ async def proxy_progress(id: str):
     ]
     for ep in endpoints:
         try:
-            req = urllib.request.Request(ep, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Referer": "https://y2down.cc/",
-                "Origin": "https://y2down.cc"
-            })
-            with urllib.request.urlopen(req, timeout=6) as r:
-                data = json.loads(r.read())
-                if data:
-                    # Sanitize download_url if present
-                    if data.get("download_url"):
-                        dl = str(data["download_url"]).strip()
-                        # Reject ad gateway URLs (p.savenow.to and lto2.affadaffa.com are ad gateways; real files are on worker nodes like *.savenow.to)
-                        if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
-                            data["download_url"] = None
-                        elif dl.startswith("http://"):
-                            data["download_url"] = dl.replace("http://", "https://")
-                    return data
+            data = _fetch_converter_json(ep, timeout=6.0)
+            if data:
+                # Sanitize download_url if present
+                if data.get("download_url"):
+                    dl = str(data["download_url"]).strip()
+                    # Reject ad gateway URLs (p.savenow.to and lto2.affadaffa.com are ad gateways; real files are on worker nodes like *.savenow.to)
+                    if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "hoofsduke", "converttr.org", "google.com"]):
+                        data["download_url"] = None
+                    elif dl.startswith("http://"):
+                        data["download_url"] = dl.replace("http://", "https://")
+                return data
         except Exception:
             continue
     raise HTTPException(status_code=502, detail="Progress check failed")
@@ -801,18 +832,6 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
 # ==============================================================================
 # MULTI-PROXY STREAMING SYSTEM (GEO-BLOCKED / REGION-LOCKED)
 # ==============================================================================
-WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
-WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
-WEBSHARE_POOLS = {
-    "US": ["9.142.218.167:6831", "192.46.201.131:6645", "64.52.28.38:7725", "9.142.198.67:5734",
-           "45.56.180.203:8437", "9.142.11.217:5373", "64.52.31.9:6196"],
-    "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "87.86.24.81:5732"],
-    "FR": ["31.98.7.105:6283", "179.61.172.206:6757", "82.140.180.187:7147", "31.98.8.82:5760", "82.23.62.125:7878"],
-    "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
-    "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
-}
-WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
-
 def build_proxy_candidates(allowed: list) -> list:
     """Ordered list of (label, proxy_url, country_lower) across all active multi-proxy pool IPs."""
     import random
