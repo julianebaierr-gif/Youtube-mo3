@@ -1029,7 +1029,7 @@
 
                 <!-- Action Button -->
                 <div id="modal-action-container" class="hidden space-y-2.5">
-                    <a id="modal-download-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" class="btn-ready-pulse w-full py-3.5 px-6 rounded-xl font-extrabold text-white text-base bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 cursor-pointer no-underline">
+                    <a id="modal-download-link" href="#" rel="noopener noreferrer" class="btn-ready-pulse w-full py-3.5 px-6 rounded-xl font-extrabold text-white text-base bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 cursor-pointer no-underline">
                         <i class="fa-solid fa-circle-down text-lg"></i>
                         <span id="modal-btn-label">Download File</span>
                     </a>
@@ -2489,6 +2489,31 @@
                     }
                 }, 650);
 
+                let downloadAutoTriggered = false;
+                function triggerSingleDeviceDownload(url) {
+                    if (!url || url === '#') return;
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                    if (isIOS) {
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.setAttribute('download', '');
+                        a.setAttribute('rel', 'noopener noreferrer');
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => { try { a.remove(); } catch(e){} }, 600);
+                    } else {
+                        let dlFrame = document.getElementById('direct-dl-frame');
+                        if (!dlFrame) {
+                            dlFrame = document.createElement('iframe');
+                            dlFrame.id = 'direct-dl-frame';
+                            dlFrame.style.display = 'none';
+                            document.body.appendChild(dlFrame);
+                        }
+                        dlFrame.src = url;
+                    }
+                }
+
                 let completed = false;
                 function completeDownload(finalDownloadUrl) {
                     if (completed || window._activeConversionToken !== conversionToken) return;
@@ -2536,8 +2561,7 @@
                     modalDownloadLink.href = finalDownloadUrl;
                     modalDownloadLink.setAttribute('download', '');
                     modalDownloadLink.setAttribute('rel', 'noopener noreferrer');
-                    modalDownloadLink.setAttribute('referrerpolicy', 'no-referrer');
-                    modalDownloadLink.target = '_blank';
+                    modalDownloadLink.removeAttribute('target');
                     modalBtnLabel.textContent = `Download ${safeFormat.toUpperCase()}`;
                     modalActionContainer.classList.remove('hidden');
 
@@ -2577,27 +2601,12 @@
                         else inAppNotice.classList.add('hidden');
                     }
 
-                    // 100% Direct Device Download Trigger (Zero Tab Hijack, Zero Redirects, Zero Cross-Origin Referrer Error)
+                    // Clean Single Device Download Trigger (Strictly 1 Download, Zero New Tabs, Zero Redirects)
                     try {
-                        let dlFrame = document.getElementById('direct-dl-frame');
-                        if (!dlFrame) {
-                            dlFrame = document.createElement('iframe');
-                            dlFrame.id = 'direct-dl-frame';
-                            dlFrame.style.display = 'none';
-                            document.body.appendChild(dlFrame);
+                        if (!downloadAutoTriggered) {
+                            downloadAutoTriggered = true;
+                            triggerSingleDeviceDownload(finalDownloadUrl);
                         }
-                        dlFrame.src = finalDownloadUrl;
-
-                        const dlAnchor = document.createElement('a');
-                        dlAnchor.href = finalDownloadUrl;
-                        dlAnchor.setAttribute('download', '');
-                        dlAnchor.setAttribute('rel', 'noopener noreferrer');
-                        dlAnchor.setAttribute('referrerpolicy', 'no-referrer');
-                        dlAnchor.setAttribute('target', '_blank');
-                        dlAnchor.style.display = 'none';
-                        document.body.appendChild(dlAnchor);
-                        dlAnchor.click();
-                        setTimeout(() => { try { dlAnchor.remove(); } catch(e){} }, 500);
                     } catch(e) {}
                 }
 
@@ -2959,11 +2968,20 @@
             }
 
             modalDownloadLink.addEventListener('click', (e) => {
-                // Let native anchor download execute cleanly without competing programmatic navigations
-                if (!modalDownloadLink.href || modalDownloadLink.getAttribute('href') === '#') {
-                    e.preventDefault();
-                    if (window._currentDownloadUrl) {
-                        modalDownloadLink.href = window._currentDownloadUrl;
+                e.preventDefault();
+                const targetUrl = window._currentDownloadUrl || modalDownloadLink.getAttribute('href');
+                if (targetUrl && targetUrl !== '#') {
+                    if (typeof triggerSingleDeviceDownload === 'function') {
+                        triggerSingleDeviceDownload(targetUrl);
+                    } else {
+                        let dlFrame = document.getElementById('direct-dl-frame');
+                        if (!dlFrame) {
+                            dlFrame = document.createElement('iframe');
+                            dlFrame.id = 'direct-dl-frame';
+                            dlFrame.style.display = 'none';
+                            document.body.appendChild(dlFrame);
+                        }
+                        dlFrame.src = targetUrl;
                     }
                 }
             });
