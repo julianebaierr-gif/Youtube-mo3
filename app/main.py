@@ -1187,6 +1187,63 @@ def get_yt_cookies_file():
                 return c_path
     return None
 
+INVIDIOUS_PIPED_INSTANCES = [
+    # Live Invidious Nodes
+    {"type": "invidious", "url": "https://yt.chocolatemoo53.com"},
+    {"type": "invidious", "url": "https://inv.nadeko.net"},
+    {"type": "invidious", "url": "https://invidious.nerdvpn.de"},
+    {"type": "invidious", "url": "https://invidious.tiekoetter.com"},
+    {"type": "invidious", "url": "https://inv.tux.pizza"},
+    {"type": "invidious", "url": "https://yewtu.be"},
+    # Live Piped API Nodes
+    {"type": "piped", "url": "https://pipedapi.adminforge.de"},
+    {"type": "piped", "url": "https://pipedapi.reallyaweso.me"},
+    {"type": "piped", "url": "https://pipedapi.leptons.xyz"},
+    {"type": "piped", "url": "https://pipedapi.ducks.party"},
+    {"type": "piped", "url": "https://pipedapi.drgns.space"},
+    {"type": "piped", "url": "https://piped-api.codespace.cz"},
+    {"type": "piped", "url": "https://pipedapi.owo.si"},
+]
+
+def fetch_invidious_piped_stream(vid: str, is_audio: bool = False) -> str | None:
+    """Fallback cluster query across public Invidious and Piped instances for age-gated/bypass streams."""
+    import ssl
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    for inst in INVIDIOUS_PIPED_INSTANCES:
+        base = inst["url"]
+        itype = inst["type"]
+        try:
+            if itype == "invidious":
+                endpoint = f"{base}/api/v1/videos/{vid}"
+                req = urllib.request.Request(endpoint, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+                with urllib.request.urlopen(req, timeout=3.5, context=ctx) as r:
+                    data = json.loads(r.read().decode("utf-8"))
+                if is_audio:
+                    for fmt in data.get("adaptiveFormats", []):
+                        if (fmt.get("type") or "").startswith("audio/") and fmt.get("url"):
+                            return fmt["url"]
+                for fmt in data.get("formatStreams", []):
+                    if fmt.get("url"):
+                        return fmt["url"]
+            elif itype == "piped":
+                endpoint = f"{base}/streams/{vid}"
+                req = urllib.request.Request(endpoint, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+                with urllib.request.urlopen(req, timeout=3.5, context=ctx) as r:
+                    data = json.loads(r.read().decode("utf-8"))
+                if is_audio:
+                    streams = data.get("audioStreams", [])
+                    if streams and streams[0].get("url"):
+                        return streams[0]["url"]
+                streams = [s for s in data.get("videoStreams", []) if not s.get("videoOnly")]
+                if streams and streams[0].get("url"):
+                    return streams[0]["url"]
+        except Exception:
+            continue
+    return None
+
 @app.get("/api/geo-stream-check")
 async def geo_stream_check(url: str = "", format: str = "mp3"):
     clean_url = (url or "").strip()
@@ -1222,6 +1279,10 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
 
     attempts = [(c, None) for c in proxy_candidates[:4]]
     attempts += [(c, ["android_vr"]) for c in proxy_candidates[:2]]
+    # Innertube embedded clients for bypass of soft age-gates / embedding allowed
+    if proxy_candidates:
+        attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["tv_embedded"]))
+        attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["web_embedded"]))
     attempts.append((("Direct-Server", None, "us"), None))
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
@@ -1235,6 +1296,11 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
         }
         if client:
             ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
+            if client in (["tv_embedded"], ["web_embedded"]):
+                ydl_opts["http_headers"] = {
+                    "Referer": f"https://www.youtube.com/embed/{vid}",
+                    "Origin": "https://www.youtube.com",
+                }
         if not proxy_url and cookie_file:
             ydl_opts["cookiefile"] = cookie_file
         try:
@@ -1256,6 +1322,15 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             last_err = e
             continue
 
+    # Fallback to public Invidious / Piped cluster if yt-dlp was blocked by age-gate
+    if not stream_url:
+        try:
+            inv_stream = fetch_invidious_piped_stream(vid, is_audio)
+            if inv_stream:
+                stream_url = inv_stream
+        except Exception:
+            pass
+
     if stream_url:
         country_param = f"&country={target_country}" if target_country else ""
         return {
@@ -1263,9 +1338,11 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}{country_param}",
             "country": target_country
         }
+    is_age = any(k in str(last_err).lower() for k in ("age", "sign in to confirm", "confirm your age", "inappropriate"))
     return {
         "success": False,
         "error": "all_proxies_exhausted",
+        "is_age_restricted": is_age,
         "detail": str(last_err),
         "country": target_country
     }
@@ -1368,6 +1445,10 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         proxy_candidates = build_proxy_candidates(allowed)
         attempts = [(c, None) for c in proxy_candidates[:4]]
         attempts += [(c, ["android_vr"]) for c in proxy_candidates[:2]]
+        # Innertube embedded clients for bypass of soft age-gates / embedding allowed
+        if proxy_candidates:
+            attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["tv_embedded"]))
+            attempts.append(((proxy_candidates[0][0], proxy_candidates[0][1], proxy_candidates[0][2]), ["web_embedded"]))
         attempts.append((("Direct-Server", None, "us"), None))
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
@@ -1385,6 +1466,11 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
             }
             if client:
                 ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
+                if client in (["tv_embedded"], ["web_embedded"]):
+                    ydl_opts["http_headers"] = {
+                        "Referer": f"https://www.youtube.com/embed/{vid}",
+                        "Origin": "https://www.youtube.com",
+                    }
             if not proxy_url and cookie_file:
                 ydl_opts["cookiefile"] = cookie_file
 
@@ -1443,6 +1529,21 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
             except Exception as e:
                 last_extract_err = e
                 continue
+
+        # Fallback to public Invidious / Piped cluster if yt-dlp failed
+        if not stream_url:
+            try:
+                inv_stream = fetch_invidious_piped_stream(vid, is_audio)
+                if inv_stream:
+                    inv_headers = {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                        "Accept": "*/*",
+                        "Connection": "keep-alive",
+                    }
+                    upstream_res = urllib.request.urlopen(urllib.request.Request(inv_stream, headers=inv_headers), timeout=30)
+                    stream_url = inv_stream
+            except Exception:
+                pass
 
         if not stream_url:
             # Telegram notification of DRM / proxy exhaust failure

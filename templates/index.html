@@ -2991,7 +2991,8 @@
                                             return data.download_url;
                                         }
                                         if (data && data.is_age_restricted) {
-                                            failDownload(getI18nMsg('age_restricted'));
+                                            // Fall through to regional proxy & Invidious/Piped fallback engines
+                                            lastFsError = 'age_restricted';
                                             return null;
                                         }
                                     }
@@ -3059,6 +3060,10 @@
                                     modalPctText.textContent = '100%';
                                     modalStatusMsg.textContent = 'Stream unlocked! Downloading to your device...';
                                     completeDownload(checkData.download_url);
+                                    return;
+                                }
+                                if (checkData && checkData.is_age_restricted) {
+                                    failDownload(getI18nMsg('age_restricted'));
                                     return;
                                 }
                             }
