@@ -237,6 +237,7 @@ Disallow: /*?*s=
 Disallow: /*?*q=
 Disallow: /*?*ref=
 Sitemap: https://www.yt4mp3.com/sitemap.xml
+Sitemap: https://www.yt4mp3.com/feed.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 

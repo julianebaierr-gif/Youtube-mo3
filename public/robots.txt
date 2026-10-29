@@ -30,3 +30,4 @@ User-agent: AhrefsBot
 Allow: /
 
 Sitemap: https://www.yt4mp3.com/sitemap.xml
+Sitemap: https://www.yt4mp3.com/feed.xml
