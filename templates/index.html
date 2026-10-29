@@ -1495,6 +1495,68 @@
             </div>
         </section>
 
+
+        <!-- CONTEXTUAL INTERNAL LINKING & CONVERTER TOOLS HUB -->
+        <section class="py-12 bg-gray-50 border-t border-gray-200">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">More Tools</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">{{ t.related_tools_title | default('Explore YouTube Converters & Tools') }}</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">High-speed media extraction tools for audio, video, and Shorts.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Tool 1: YouTube to MP3 -->
+                    <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp3" class="human-card p-5 flex flex-col justify-between hover:border-rose-400 hover:shadow-md transition-all group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-music"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-sm group-hover:text-rose-600 transition-colors mb-1.5">{{ t.nav_mp3 | default('YouTube to MP3') }}</h3>
+                            <p class="text-xs text-gray-500 leading-relaxed">Extract studio-grade 320kbps MP3 audio from any YouTube video, music, or podcast.</p>
+                        </div>
+                        <span class="mt-4 text-xs font-bold text-rose-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Convert MP3 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- Tool 2: YouTube to MP4 -->
+                    <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-to-mp4" class="human-card p-5 flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors mb-1.5">{{ t.nav_mp4 | default('YouTube to MP4') }}</h3>
+                            <p class="text-xs text-gray-500 leading-relaxed">Download high-definition 1080p Full HD, 720p, and 4K MP4 video files directly.</p>
+                        </div>
+                        <span class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Download MP4 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- Tool 3: YouTube Shorts Downloader -->
+                    <a href="{% if lang and lang != 'en' %}/{{ lang }}{% endif %}/youtube-shorts-downloader" class="human-card p-5 flex flex-col justify-between hover:border-emerald-400 hover:shadow-md transition-all group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-mobile-screen"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-sm group-hover:text-emerald-600 transition-colors mb-1.5">{{ t.nav_shorts | default('Shorts Downloader') }}</h3>
+                            <p class="text-xs text-gray-500 leading-relaxed">Save viral YouTube Shorts in pristine vertical MP4 video or sound-only MP3 format.</p>
+                        </div>
+                        <span class="mt-4 text-xs font-bold text-emerald-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Get Shorts <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                    </a>
+
+                    <!-- Tool 4: Universal Converter Home -->
+                    <a href="{% if lang and lang != 'en' %}/{{ lang }}/{% else %}/{% endif %}" class="human-card p-5 flex flex-col justify-between hover:border-purple-400 hover:shadow-md transition-all group">
+                        <div>
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-sm group-hover:text-purple-600 transition-colors mb-1.5">{{ t.nav_home | default('All-in-One Converter') }}</h3>
+                            <p class="text-xs text-gray-500 leading-relaxed">Universal converter supporting all YouTube links, bitrates, resolutions, and formats.</p>
+                        </div>
+                        <span class="mt-4 text-xs font-bold text-purple-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Open Tool <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Clean Handcrafted Footer -->

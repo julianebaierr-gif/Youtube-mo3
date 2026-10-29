@@ -2202,9 +2202,7 @@ SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter | 320kbp
                                                'phone storage.</p>\n'
                                                '<p>Content creators and mobile viewers often want to turn vertical '
                                                'video stories into standard video clips. With our web tool, you can '
-                                               'easily save <strong>youtube shorts to mp4</strong> in 1080p without '
-                                               'any watermarks or cropped frames, making clips ready for offline '
-                                               'storage or editing.</p>',
+                                               'easily save <a href="/youtube-to-mp4" class="text-rose-600 font-bold hover:underline">YouTube Shorts to MP4</a> in 1080p without any watermarks or cropped frames. For sound extraction, use our dedicated <a href="/youtube-to-mp3" class="text-rose-600 font-bold hover:underline">YouTube to MP3 Converter</a> for 320kbps audio.</p>',
                                'faq': [{'q': 'How do I download a YouTube Shorts video to my phone?',
                                         'a': 'Tap the Share button inside the YouTube app while watching a short, '
                                              'choose Copy Link, paste the URL into our search bar, and tap Convert. '
