@@ -959,6 +959,19 @@
                     </div>
                     {% endif %}
 
+                                        <!-- Long Video Pre-Flight Warning Notice -->
+                    <div id="long-video-notice" class="hidden mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs sm:text-sm flex items-start gap-3 shadow-sm transition-all text-left">
+                        <div class="w-7 h-7 rounded-lg bg-amber-200 text-amber-800 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div class="flex-1 leading-relaxed">
+                            <p class="font-bold text-amber-950 mb-0.5">ℹ️ Video Duration Notice</p>
+                            <p class="text-amber-900 font-medium">
+                                This video is <span id="long-video-dur-val" class="font-bold font-mono"></span> long. Online servers only support videos up to 3 hours. Please try <strong>1080p</strong>, <strong>720p</strong> or <strong>MP3</strong> audio for best results.
+                            </p>
+                        </div>
+                    </div>
+
                     <!-- Audio Formats List -->
                     <div id="audio-formats" class="space-y-2.5 {% if seo.active_tab == 'yt-mp4' %}hidden{% endif %}">
                         <!-- Filled dynamically -->
@@ -2284,7 +2297,31 @@
                 resUploader.textContent = data.uploader || 'Creator';
                 resDuration.textContent = data.duration || '00:00';
                 resViews.textContent = data.views ? `${data.views} views` : '';
-                resPlatformTag.textContent = data.platform.name || 'YouTube';
+                                resPlatformTag.textContent = data.platform.name || 'YouTube';
+
+                // Pre-flight Long Video Duration Check (> 2 or 3 hours)
+                const noticeBox = document.getElementById('long-video-notice');
+                const noticeDurVal = document.getElementById('long-video-dur-val');
+                if (noticeBox) {
+                    let isLong = false;
+                    let durDisplay = data.duration || '';
+                    if (durDisplay) {
+                        const parts = durDisplay.split(':').map(p => parseInt(p, 10) || 0);
+                        if (parts.length === 3 && parts[0] >= 3) {
+                            isLong = true;
+                            durDisplay = `${parts[0]}h ${parts[1]}m`;
+                        } else if (parts.length === 3 && parts[0] >= 2) {
+                            isLong = true;
+                            durDisplay = `${parts[0]}h ${parts[1]}m`;
+                        }
+                    }
+                    if (isLong) {
+                        if (noticeDurVal) noticeDurVal.textContent = durDisplay;
+                        noticeBox.classList.remove('hidden');
+                    } else {
+                        noticeBox.classList.add('hidden');
+                    }
+                }
 
                 // Reset inline Video Preview iframe on new conversion
                 const previewBox = document.getElementById('res-preview-box');
@@ -2690,7 +2727,7 @@
                     const errActions = document.getElementById('modal-error-actions');
                     const retryBtn = document.getElementById('modal-retry-btn');
                     if (errActions) errActions.classList.remove('hidden');
-                    const isFatalRestr = msg && (msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long'));
+                    const isFatalRestr = msg && (msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long') || msg.includes('duration limits') || msg.includes('exceeds'));
                     if (retryBtn) {
                         if (isFatalRestr) {
                             retryBtn.classList.add('hidden');
@@ -2891,6 +2928,12 @@
                         if (completed || window._activeConversionToken !== conversionToken) return;
                         if (activePollTimer) clearTimeout(activePollTimer);
                         if (errText) lastServerErrorText = errText;
+
+                        // Immediate Duration Limit Exit (No 60-second useless waiting)
+                        if (/duration limit|up to 3 hours|video too long|exceeds the duration/i.test(errText || lastServerErrorText || '')) {
+                            failDownload("⚠️ This video exceeds server duration limits (up to 3 hours). Please try 1080p, 720p or MP3 format.");
+                            return;
+                        }
 
                         if (window._prewarmedStreams && window._prewarmedStreams[activeFmt + '_' + ytId]) {
                             window._prewarmedStreams[activeFmt + '_' + ytId].failed = true;
