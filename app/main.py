@@ -316,6 +316,43 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 """
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
+
+@app.api_route("/feed.xml", methods=["GET", "HEAD"])
+@app.api_route("/rss.xml", methods=["GET", "HEAD"])
+@app.api_route("/feed", methods=["GET", "HEAD"])
+async def rss_feed():
+    from datetime import datetime, timezone
+    now_rfc822 = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    urls = [
+        ("https://www.yt4mp3.com/", "YT4MP3 - Online YouTube to MP3 & MP4 Converter", "Convert YouTube videos to MP3 audio and MP4 video in high quality up to 320kbps and 1080p Full HD."),
+        ("https://www.yt4mp3.com/youtube-to-mp3", "YouTube to MP3 Converter (320kbps High Quality)", "Extract high fidelity MP3 audio from any YouTube video, Music stream, or Shorts clip."),
+        ("https://www.yt4mp3.com/youtube-to-mp4", "YouTube to MP4 Downloader (1080p Full HD & 4K)", "Download YouTube video streams in crisp 1080p, 720p, or 4K resolution directly to your device."),
+        ("https://www.yt4mp3.com/youtube-shorts-downloader", "YouTube Shorts Downloader", "Download YouTube Shorts in high quality MP4 video or MP3 audio format.")
+    ]
+    items_xml = "".join([
+        f"""    <item>
+      <title>{title}</title>
+      <link>{link}</link>
+      <guid isPermaLink="true">{link}</guid>
+      <description>{desc}</description>
+      <pubDate>{now_rfc822}</pubDate>
+    </item>\n""" for link, title, desc in urls
+    ])
+    feed_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>YT4MP3 - YouTube Media Converter Tools &amp; Updates</title>
+    <link>https://www.yt4mp3.com/</link>
+    <description>Latest tools and updates for converting YouTube videos to MP3 and MP4.</description>
+    <language>en-us</language>
+    <lastBuildDate>{now_rfc822}</lastBuildDate>
+    <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
+{items_xml}  </channel>
+</rss>"""
+    headers = dict(EDGE_HTML_HEADERS)
+    headers["Content-Type"] = "application/xml; charset=utf-8"
+    return Response(content=feed_xml, media_type="application/xml; charset=utf-8", headers=headers)
+
 @app.get("/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt")
 async def indexnow_key():
     return Response(content="8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b", media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
