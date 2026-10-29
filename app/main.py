@@ -329,12 +329,13 @@ async def rss_feed():
         ("https://www.yt4mp3.com/youtube-to-mp4", "YouTube to MP4 Downloader (1080p Full HD & 4K)", "Download YouTube video streams in crisp 1080p, 720p, or 4K resolution directly to your device."),
         ("https://www.yt4mp3.com/youtube-shorts-downloader", "YouTube Shorts Downloader", "Download YouTube Shorts in high quality MP4 video or MP3 audio format.")
     ]
+    import html
     items_xml = "".join([
         f"""    <item>
-      <title>{title}</title>
+      <title>{html.escape(title)}</title>
       <link>{link}</link>
       <guid isPermaLink="true">{link}</guid>
-      <description>{desc}</description>
+      <description>{html.escape(desc)}</description>
       <pubDate>{now_rfc822}</pubDate>
     </item>\n""" for link, title, desc in urls
     ])
