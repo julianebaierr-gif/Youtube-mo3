@@ -1456,6 +1456,29 @@ async def get_video_resolutions(id: str):
         )
 
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
+        if not heights:
+            # For age-restricted (18+) or restricted videos where YouTube hides streamingData,
+            # probe YouTube's official image CDN (maxresdefault = HD 720p/1080p+, sddefault = 480p, hqdefault = 360p)
+            has_maxres = False
+            has_sd = False
+            try:
+                t_req = urllib.request.Request(f"https://i.ytimg.com/vi/{vid}/maxresdefault.jpg", method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(t_req, timeout=3) as t_res:
+                    if t_res.status == 200:
+                        has_maxres = True
+            except Exception:
+                pass
+            if has_maxres:
+                heights = [1080, 720, 480, 360]
+            else:
+                try:
+                    t_req2 = urllib.request.Request(f"https://i.ytimg.com/vi/{vid}/sddefault.jpg", method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
+                    with urllib.request.urlopen(t_req2, timeout=3) as t_res2:
+                        if t_res2.status == 200:
+                            has_sd = True
+                except Exception:
+                    pass
+                heights = [480, 360] if has_sd else [360]
         max_h = max(heights) if heights else 1080
         result = {
             "has_4k": max_h >= 2160 or 2160 in heights,
