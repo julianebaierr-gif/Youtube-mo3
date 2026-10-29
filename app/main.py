@@ -322,14 +322,22 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 @app.api_route("/feed", methods=["GET", "HEAD"])
 async def rss_feed():
     from datetime import datetime, timezone
-    now_rfc822 = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
-    urls = [
-        ("https://www.yt4mp3.com/", "YT4MP3 - Online YouTube to MP3 & MP4 Converter", "Convert YouTube videos to MP3 audio and MP4 video in high quality up to 320kbps and 1080p Full HD."),
-        ("https://www.yt4mp3.com/youtube-to-mp3", "YouTube to MP3 Converter (320kbps High Quality)", "Extract high fidelity MP3 audio from any YouTube video, Music stream, or Shorts clip."),
-        ("https://www.yt4mp3.com/youtube-to-mp4", "YouTube to MP4 Downloader (1080p Full HD & 4K)", "Download YouTube video streams in crisp 1080p, 720p, or 4K resolution directly to your device."),
-        ("https://www.yt4mp3.com/youtube-shorts-downloader", "YouTube Shorts Downloader", "Download YouTube Shorts in high quality MP4 video or MP3 audio format.")
-    ]
     import html
+    now_rfc822 = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    
+    pages = ["home", "youtube-to-mp3", "youtube-to-mp4", "youtube-shorts-downloader"]
+    urls = []
+    for lang in SUPPORTED_LANGUAGES:
+        for p in pages:
+            data = get_page_content(lang, p)
+            if lang == "en":
+                link = "https://www.yt4mp3.com/" if p == "home" else f"https://www.yt4mp3.com/{p}"
+            else:
+                link = f"https://www.yt4mp3.com/{lang}/" if p == "home" else f"https://www.yt4mp3.com/{lang}/{p}"
+            title = data.get("title") or "YT4MP3"
+            desc = data.get("meta_desc") or "YouTube converter tool"
+            urls.append((link, title, desc))
+            
     items_xml = "".join([
         f"""    <item>
       <title>{html.escape(title)}</title>
@@ -344,7 +352,7 @@ async def rss_feed():
   <channel>
     <title>YT4MP3 - YouTube Media Converter Tools &amp; Updates</title>
     <link>https://www.yt4mp3.com/</link>
-    <description>Latest tools and updates for converting YouTube videos to MP3 and MP4.</description>
+    <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
     <lastBuildDate>{now_rfc822}</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
