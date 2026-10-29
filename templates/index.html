@@ -2187,6 +2187,7 @@
                     let author = "YouTube Creator";
                     let has4K = false;
                     let has2K = false;
+                    let maxHeight = 1080;
                     let durationSec = 0;
                     let fsFilesizes = {};
                     let fsThumb = "";
@@ -2222,6 +2223,9 @@
                                     const resData = await resResp.json();
                                     has4K = !!resData.has_4k;
                                     has2K = !!resData.has_2k;
+                                    if (resData.max_height && typeof resData.max_height === 'number') {
+                                        maxHeight = resData.max_height;
+                                    }
                                     durationSec = parseInt(resData.duration_sec || 0, 10) || 0;
                                     fsFilesizes = resData.filesizes || {};
                                     if (resData.title) title = resData.title;
@@ -2237,19 +2241,25 @@
                     ]);
 
                     const videoFormatsList = [];
-                    if (has4K) {
+                    if (has4K || maxHeight >= 2160) {
                         videoFormatsList.push({ format: 'mp4', quality: '4k', label: 'MP4 (4K UHD 2160p)', sub: 'Ultra HD • 2160p' + formatExactOrEstSize('2160', durationSec, 10500), badge: '4K Ultra' });
                     }
-                    if (has2K) {
+                    if (has2K || maxHeight >= 1440) {
                         videoFormatsList.push({ format: 'mp4', quality: '1440', label: 'MP4 (2K QHD 1440p)', sub: 'Quad HD • 1440p' + formatExactOrEstSize('1440', durationSec, 5000), badge: '2K QHD' });
                     }
-                    videoFormatsList.push(
-                        { format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p' + formatExactOrEstSize('1080', durationSec, 2300), badge: 'Full HD' },
-                        { format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD' + formatExactOrEstSize('720', durationSec, 1150), badge: '⚡ Instant' },
-                        { format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' + formatExactOrEstSize('480', durationSec, 620) },
-                        { format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' + formatExactOrEstSize('360', durationSec, 360) },
-                        { format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format' + formatExactOrEstSize('1080', durationSec, 1750), badge: 'VP9' }
-                    );
+                    if (maxHeight >= 1080) {
+                        videoFormatsList.push({ format: 'mp4', quality: '1080', label: 'MP4 (1080p FHD)', sub: 'Crisp Full HD • 1080p' + formatExactOrEstSize('1080', durationSec, 2300), badge: 'Full HD' });
+                    }
+                    if (maxHeight >= 720) {
+                        videoFormatsList.push({ format: 'mp4', quality: '720', label: 'MP4 (720p HD)', sub: 'Fast Stream • 720p HD' + formatExactOrEstSize('720', durationSec, 1150), badge: '⚡ Instant' });
+                    }
+                    if (maxHeight >= 480) {
+                        videoFormatsList.push({ format: 'mp4', quality: '480', label: 'MP4 (480p SD)', sub: 'Standard Definition • 480p' + formatExactOrEstSize('480', durationSec, 620), badge: (maxHeight < 720 ? 'Max Quality' : '') });
+                    }
+                    videoFormatsList.push({ format: 'mp4', quality: '360', label: 'MP4 (360p)', sub: 'Data Saver • 360p' + formatExactOrEstSize('360', durationSec, 360), badge: (maxHeight <= 360 ? 'Max Quality' : '') });
+                    if (maxHeight >= 720) {
+                        videoFormatsList.push({ format: 'webm', quality: 'webm', label: 'WebM (VP9)', sub: 'Open Web Video Format' + formatExactOrEstSize('1080', durationSec, 1750), badge: 'VP9' });
+                    }
 
                     const formattedClock = formatDurationClock(durationSec);
                     const badgeDuration = formattedClock ? formattedClock : (has4K ? "4K UHD Video" : (has2K ? "2K QHD Video" : "HD Video"));
