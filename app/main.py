@@ -146,12 +146,25 @@ def render_legal_page(request: Request, page_key: str):
 async def home_page(request: Request):
     return render_converter_page(request, "home", "en")
 
+@app.get("/index.html", response_class=HTMLResponse)
+@app.get("/index.php", response_class=HTMLResponse)
+@app.get("/home", response_class=HTMLResponse)
+@app.get("/home/", response_class=HTMLResponse)
+async def home_alias_redirect():
+    return RedirectResponse(url="/", status_code=301)
+
 @app.get("/youtube-to-mp3", response_class=HTMLResponse)
+@app.get("/youtube-to-mp3/", response_class=HTMLResponse)
 async def youtube_mp3_page(request: Request):
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url="/youtube-to-mp3", status_code=301)
     return render_converter_page(request, "youtube-to-mp3", "en")
 
 @app.get("/youtube-to-mp4", response_class=HTMLResponse)
+@app.get("/youtube-to-mp4/", response_class=HTMLResponse)
 async def youtube_mp4_page(request: Request):
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url="/youtube-to-mp4", status_code=301)
     return render_converter_page(request, "youtube-to-mp4", "en")
 
 @app.get("/youtube-shorts-downloader", response_class=HTMLResponse)
@@ -163,19 +176,29 @@ async def youtube_shorts_page(request: Request):
 
 # Static Legal Pages (Universal English)
 @app.get("/contact-us", response_class=HTMLResponse)
+@app.get("/contact-us/", response_class=HTMLResponse)
 async def contact_us_page(request: Request):
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url="/contact-us", status_code=301)
     return render_legal_page(request, "contact-us")
 
 @app.get("/terms-of-service", response_class=HTMLResponse)
+@app.get("/terms-of-service/", response_class=HTMLResponse)
 async def terms_page(request: Request):
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url="/terms-of-service", status_code=301)
     return render_legal_page(request, "terms-of-service")
 
 @app.get("/privacy-policy", response_class=HTMLResponse)
+@app.get("/privacy-policy/", response_class=HTMLResponse)
 async def privacy_page(request: Request):
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url="/privacy-policy", status_code=301)
     return render_legal_page(request, "privacy-policy")
 
 # /dmca redirects to contact-us which contains the full DMCA section
 @app.get("/dmca", response_class=HTMLResponse)
+@app.get("/dmca/", response_class=HTMLResponse)
 async def dmca_page(request: Request):
     return RedirectResponse(url="/contact-us#dmca", status_code=301)
 
@@ -272,7 +295,7 @@ def get_authoritative_sitemap_xml() -> str:
         priority = "1.0" if u == "https://www.yt4mp3.com/" or u.endswith("/") else "0.8"
         items.append(f"""  <url>
     <loc>{u}</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>{priority}</priority>
   </url>""")
@@ -1797,21 +1820,43 @@ async def favicon():
     return HTMLResponse(content=FAVICON_SVG_CONTENT, media_type="image/svg+xml")
 
 @app.get("/youtube-to-mp3-320kbps")
+@app.get("/youtube-to-mp3-320kbps/")
 async def youtube_320k_redirect():
     return RedirectResponse(url="/youtube-to-mp3", status_code=301)
 
 @app.get("/tiktok-downloader")
+@app.get("/tiktok-downloader/")
 @app.get("/instagram-downloader")
+@app.get("/instagram-downloader/")
 @app.get("/facebook-downloader")
+@app.get("/facebook-downloader/")
 async def legacy_redirect():
     return RedirectResponse(url="/", status_code=301)
 
 # Localized Routes (14 international languages)
+@app.get("/{lang}/contact-us", response_class=HTMLResponse)
+@app.get("/{lang}/contact-us/", response_class=HTMLResponse)
+async def localized_contact_redirect():
+    return RedirectResponse(url="/contact-us", status_code=301)
+
+@app.get("/{lang}/terms-of-service", response_class=HTMLResponse)
+@app.get("/{lang}/terms-of-service/", response_class=HTMLResponse)
+async def localized_terms_redirect():
+    return RedirectResponse(url="/terms-of-service", status_code=301)
+
+@app.get("/{lang}/privacy-policy", response_class=HTMLResponse)
+@app.get("/{lang}/privacy-policy/", response_class=HTMLResponse)
+async def localized_privacy_redirect():
+    return RedirectResponse(url="/privacy-policy", status_code=301)
+
 @app.get("/{lang}", response_class=HTMLResponse)
 @app.get("/{lang}/", response_class=HTMLResponse)
 async def localized_home_page(request: Request, lang: str):
-    if lang == "en":
+    lower_lang = lang.lower()
+    if lower_lang == "en":
         return RedirectResponse(url="/", status_code=301)
+    if lower_lang in SUPPORTED_LANGUAGES and lang != lower_lang:
+        return RedirectResponse(url=f"/{lower_lang}/", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         clean_id = lang.strip("/")
         if len(clean_id) == 11 and re.match(r'^[a-zA-Z0-9_-]{11}$', clean_id):
@@ -1826,8 +1871,11 @@ async def localized_home_page(request: Request, lang: str):
 @app.get("/{lang}/youtube-to-mp3", response_class=HTMLResponse)
 @app.get("/{lang}/youtube-to-mp3/", response_class=HTMLResponse)
 async def localized_youtube_mp3_page(request: Request, lang: str):
-    if lang == "en":
+    lower_lang = lang.lower()
+    if lower_lang == "en":
         return RedirectResponse(url="/youtube-to-mp3", status_code=301)
+    if lower_lang in SUPPORTED_LANGUAGES and lang != lower_lang:
+        return RedirectResponse(url=f"/{lower_lang}/youtube-to-mp3", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
     if request.url.path.endswith("/"):
@@ -1837,8 +1885,11 @@ async def localized_youtube_mp3_page(request: Request, lang: str):
 @app.get("/{lang}/youtube-to-mp4", response_class=HTMLResponse)
 @app.get("/{lang}/youtube-to-mp4/", response_class=HTMLResponse)
 async def localized_youtube_mp4_page(request: Request, lang: str):
-    if lang == "en":
+    lower_lang = lang.lower()
+    if lower_lang == "en":
         return RedirectResponse(url="/youtube-to-mp4", status_code=301)
+    if lower_lang in SUPPORTED_LANGUAGES and lang != lower_lang:
+        return RedirectResponse(url=f"/{lower_lang}/youtube-to-mp4", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
     if request.url.path.endswith("/"):
@@ -1848,8 +1899,11 @@ async def localized_youtube_mp4_page(request: Request, lang: str):
 @app.get("/{lang}/youtube-shorts-downloader", response_class=HTMLResponse)
 @app.get("/{lang}/youtube-shorts-downloader/", response_class=HTMLResponse)
 async def localized_youtube_shorts_page(request: Request, lang: str):
-    if lang == "en":
+    lower_lang = lang.lower()
+    if lower_lang == "en":
         return RedirectResponse(url="/youtube-shorts-downloader", status_code=301)
+    if lower_lang in SUPPORTED_LANGUAGES and lang != lower_lang:
+        return RedirectResponse(url=f"/{lower_lang}/youtube-shorts-downloader", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
     if request.url.path.endswith("/"):

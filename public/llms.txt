@@ -8,7 +8,7 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
 - YouTube to MP4 video downloader supporting 1080p, 720p, 1440p (2K), and 2160p (4K) resolutions.
 - Dedicated YouTube Shorts Downloader for saving vertical Shorts in HD MP4 or MP3 audio.
 - Direct browser downloads with zero software installation and no user registration required.
-- Fully compatible with desktop and mobile devices including Android, iOS, Windows, macOS, and Linux in 22 languages.
+- Fully compatible with desktop and mobile devices including Android, iOS, Windows, macOS, and Linux in 15 languages.
 
 ## Available Pages
 - [Home](https://www.yt4mp3.com/): Free Online YouTube to MP3 and MP4 Converter.
