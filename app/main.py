@@ -157,6 +157,8 @@ async def youtube_mp4_page(request: Request):
 @app.get("/youtube-shorts-downloader", response_class=HTMLResponse)
 @app.get("/youtube-shorts-downloader/", response_class=HTMLResponse)
 async def youtube_shorts_page(request: Request):
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url="/youtube-shorts-downloader", status_code=301)
     return render_converter_page(request, "youtube-shorts-downloader", "en")
 
 # Static Legal Pages (Universal English)
@@ -177,23 +179,29 @@ async def privacy_page(request: Request):
 async def dmca_page(request: Request):
     return RedirectResponse(url="/contact-us#dmca", status_code=301)
 
-# Viral URL Shortcut Routes (e.g. yt4mp3.com/watch?v=..., yt4mp3.com/shorts/..., yt4mp3.com/4youtube/...)
+def render_shortcut_page(request: Request):
+    resp = render_converter_page(request, "home", "en")
+    resp.headers["X-Robots-Tag"] = "noindex, nofollow"
+    resp.headers["Cache-Control"] = "private, no-store"
+    return resp
+
+# Direct URL Shortcut Routes (e.g. yt4mp3.com/watch?v=..., yt4mp3.com/shorts/..., yt4mp3.com/4youtube/...)
 @app.get("/watch", response_class=HTMLResponse)
 async def watch_shortcut_page(request: Request):
-    return render_converter_page(request, "home", "en")
+    return render_shortcut_page(request)
 
 @app.get("/shorts/{short_id:path}", response_class=HTMLResponse)
 async def shorts_shortcut_page(request: Request, short_id: str):
-    return render_converter_page(request, "home", "en")
+    return render_shortcut_page(request)
 
 @app.get("/4youtube", response_class=HTMLResponse)
 @app.get("/4youtube/{path:path}", response_class=HTMLResponse)
 async def four_youtube_shortcut_page(request: Request, path: str = ""):
-    return render_converter_page(request, "home", "en")
+    return render_shortcut_page(request)
 
 @app.get("/4/{path:path}", response_class=HTMLResponse)
 async def four_shortcut_page(request: Request, path: str = ""):
-    return render_converter_page(request, "home", "en")
+    return render_shortcut_page(request)
 
 # PWA Endpoints
 @app.get("/manifest.json")
@@ -1798,7 +1806,7 @@ async def youtube_320k_redirect():
 async def legacy_redirect():
     return RedirectResponse(url="/", status_code=301)
 
-# Localized Routes (13 international languages)
+# Localized Routes (14 international languages)
 @app.get("/{lang}", response_class=HTMLResponse)
 @app.get("/{lang}/", response_class=HTMLResponse)
 async def localized_home_page(request: Request, lang: str):
@@ -1807,10 +1815,12 @@ async def localized_home_page(request: Request, lang: str):
     if lang not in SUPPORTED_LANGUAGES:
         clean_id = lang.strip("/")
         if len(clean_id) == 11 and re.match(r'^[a-zA-Z0-9_-]{11}$', clean_id):
-            return render_converter_page(request, "home", "en")
+            return render_shortcut_page(request)
         if clean_id.startswith("4youtube") or clean_id.startswith("watch"):
-            return render_converter_page(request, "home", "en")
+            return render_shortcut_page(request)
         raise HTTPException(status_code=404, detail="Page not found")
+    if not request.url.path.endswith("/"):
+        return RedirectResponse(url=f"/{lang}/", status_code=301)
     return render_converter_page(request, "home", lang)
 
 @app.get("/{lang}/youtube-to-mp3", response_class=HTMLResponse)
@@ -1820,6 +1830,8 @@ async def localized_youtube_mp3_page(request: Request, lang: str):
         return RedirectResponse(url="/youtube-to-mp3", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url=f"/{lang}/youtube-to-mp3", status_code=301)
     return render_converter_page(request, "youtube-to-mp3", lang)
 
 @app.get("/{lang}/youtube-to-mp4", response_class=HTMLResponse)
@@ -1829,6 +1841,8 @@ async def localized_youtube_mp4_page(request: Request, lang: str):
         return RedirectResponse(url="/youtube-to-mp4", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url=f"/{lang}/youtube-to-mp4", status_code=301)
     return render_converter_page(request, "youtube-to-mp4", lang)
 
 @app.get("/{lang}/youtube-shorts-downloader", response_class=HTMLResponse)
@@ -1838,5 +1852,7 @@ async def localized_youtube_shorts_page(request: Request, lang: str):
         return RedirectResponse(url="/youtube-shorts-downloader", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url=f"/{lang}/youtube-shorts-downloader", status_code=301)
     return render_converter_page(request, "youtube-shorts-downloader", lang)
 
