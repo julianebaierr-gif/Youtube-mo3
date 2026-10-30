@@ -2242,6 +2242,10 @@
                                         window._isRegionalVideo = window._isRegionalVideo || {};
                                         window._isRegionalVideo[ytId] = true;
                                     }
+                                    if (resData.is_unsupported && resData.unsupported_reason) {
+                                        window._unsupportedVideoReason = window._unsupportedVideoReason || {};
+                                        window._unsupportedVideoReason[ytId] = resData.unsupported_reason;
+                                    }
                                 }
                             } catch (e) {}
                         })()
@@ -2755,7 +2759,7 @@
                     const errActions = document.getElementById('modal-error-actions');
                     const retryBtn = document.getElementById('modal-retry-btn');
                     if (errActions) errActions.classList.remove('hidden');
-                    const isFatalRestr = msg && (msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long') || msg.includes('duration limits') || msg.includes('exceeds'));
+                    const isFatalRestr = msg && (['🔞', '🔒', '📡', '💰', '❌', '⏱'].some(e => msg.includes(e)) || msg.includes('Broadcaster Protection') || msg.includes('Private Video') || msg.includes('Membership Required') || msg.includes('Live Stream') || msg.includes('Age-Restricted') || msg.includes('Video Too Long') || msg.includes('duration limits') || msg.includes('exceeds'));
                     if (retryBtn) {
                         if (isFatalRestr) {
                             retryBtn.classList.add('hidden');
@@ -2802,11 +2806,7 @@
                 let cloudStreamTried = false;
 
                 try {
-                    // Priority 0: Regional media routing
-                    if (window._isRegionalVideo && window._isRegionalVideo[ytId]) {
-                        tryCloudStreamEngine();
-                        return;
-                    }
+                    // Every video is 100% checked by our primary conversion engine first
 
                     // Always test real conversion engines before declaring any video failed or restricted!
 
@@ -2846,7 +2846,7 @@
                         }
                     }
 
-                    // FastSaver Pro Paid API Engine: Delivers exact 4K (2160p), 2K (1440p), 1080p, 720p, 480p, 360p, and Audio!
+                    // FastSaver Pro Paid API Engine: 100% checks video first, then evaluates category restrictions if failed
                     let fastSaverTried = false;
                     async function tryFastSaverEngine() {
                         if (completed || fastSaverTried) return;
@@ -2869,28 +2869,56 @@
                                 if (data && data.error) {
                                     lastServerErrorText = String(data.error);
                                 }
+                                if (data && data.unsupported_reason) {
+                                    window._unsupportedVideoReason = window._unsupportedVideoReason || {};
+                                    window._unsupportedVideoReason[ytId] = data.unsupported_reason;
+                                }
+                                if (data && data.is_regional) {
+                                    window._isRegionalVideo = window._isRegionalVideo || {};
+                                    window._isRegionalVideo[ytId] = true;
+                                }
                             }
                             if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryCloudStreamEngine();
                                 return;
                             }
-                            if (!savenowTried) {
-                                savenowTried = true;
-                                runEngine('savenow');
-                                return;
+                            const restrReason = window._unsupportedVideoReason && window._unsupportedVideoReason[ytId];
+                            if (restrReason) {
+                                const restrMsg = getI18nMsg(restrReason);
+                                if (restrMsg) {
+                                    failDownload(restrMsg);
+                                    return;
+                                }
                             }
-                            stepDownOrSwitchEngine(lastServerErrorText);
+                            if (currentMediaData && currentMediaData.duration_sec > 10800) {
+                                const longMsg = getI18nMsg('video_too_long');
+                                if (longMsg) {
+                                    failDownload(longMsg);
+                                    return;
+                                }
+                            }
+                            failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         } catch (e) {
                             if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryCloudStreamEngine();
                                 return;
                             }
-                            if (!savenowTried) {
-                                savenowTried = true;
-                                runEngine('savenow');
-                                return;
+                            const restrReason = window._unsupportedVideoReason && window._unsupportedVideoReason[ytId];
+                            if (restrReason) {
+                                const restrMsg = getI18nMsg(restrReason);
+                                if (restrMsg) {
+                                    failDownload(restrMsg);
+                                    return;
+                                }
                             }
-                            stepDownOrSwitchEngine(lastServerErrorText);
+                            if (currentMediaData && currentMediaData.duration_sec > 10800) {
+                                const longMsg = getI18nMsg('video_too_long');
+                                if (longMsg) {
+                                    failDownload(longMsg);
+                                    return;
+                                }
+                            }
+                            failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         }
                     }
 

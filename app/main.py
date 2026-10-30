@@ -668,7 +668,7 @@ async def report_issue(request: Request):
                 safe_err = html_lib.escape(error_detail)
                 safe_ip = html_lib.escape(client_ip)
 
-                is_expected_restr = any(k in error_detail for k in ["Broadcaster Protection", "Live Stream", "Private Video", "Age-Restricted", "Video Too Long", "Membership Required", "duration limits", "up to 3 hours", "exceeds"])
+                is_expected_restr = any(k in error_detail for k in ["Broadcaster Protection", "Live Stream", "Private Video", "Age-Restricted", "Video Too Long", "Membership Required", "Paid Video", "Video Unavailable", "Region Restricted", "duration limits", "up to 3 hours", "exceeds", "🔞", "🔒", "📡", "💰", "❌", "⏱"])
                 header_badge = "ℹ️ <b>[Expected Restriction / Video Notice]</b>" if is_expected_restr else "🚨 <b>YT4MP3 Conversion Alert</b>"
 
                 alert_text = (
@@ -894,17 +894,31 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
                 "filename": data.get("filename", ""),
                 "engine": "fastsaver",
             }
-        return {"success": False, "error": data.get("detail", "fastsaver_unknown_error")}
+        detail_err = str(data.get("detail", "fastsaver_unknown_error"))
     except urllib.error.HTTPError as e:
         try:
             err_body = json.loads(e.read().decode("utf-8", "ignore"))
-            detail = err_body.get("detail", f"HTTP {e.code}")
+            detail_err = str(err_body.get("detail", f"HTTP {e.code}"))
         except Exception:
-            detail = f"HTTP {e.code}"
+            detail_err = f"HTTP {e.code}"
         _check_fastsaver_credits_and_alert(force_check=False)
-        return {"success": False, "error": str(detail)}
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        detail_err = str(e)
+
+    m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
+    res_meta = {}
+    if m_vid:
+        try:
+            res_meta = await get_video_resolutions(m_vid.group(1))
+        except Exception:
+            res_meta = {}
+    return {
+        "success": False,
+        "error": detail_err,
+        "is_unsupported": bool(res_meta.get("is_unsupported")),
+        "unsupported_reason": res_meta.get("unsupported_reason"),
+        "is_regional": bool(res_meta.get("is_regional")),
+    }
 
 
 # ==============================================================================
@@ -1385,7 +1399,7 @@ async def get_video_resolutions(id: str):
         return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_regional": False, "is_geo_blocked": False, "source": "invalid_id"}
     if vid in _VIDEO_RES_CACHE:
         cached = _VIDEO_RES_CACHE[vid]
-        if cached.get("duration_sec", 0) > 0:
+        if cached.get("duration_sec", 0) > 0 or cached.get("is_unsupported"):
             return cached
 
     yt_url = f"https://www.youtube.com/watch?v={vid}"
@@ -1464,10 +1478,10 @@ async def get_video_resolutions(id: str):
     except Exception:
         pass
 
-    # 2. Fallback: Check YouTube watch page if FastSaver info was unreachable or video is strictly country-locked
+    # 2. Fallback: Check YouTube watch page if FastSaver info was unreachable or video is restricted
     try:
         req = urllib.request.Request(
-            yt_url,
+            f"{yt_url}&hl=en&gl=US",
             headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
                 "Accept-Language": "en-US,en;q=0.9",
@@ -1486,6 +1500,22 @@ async def get_video_resolutions(id: str):
             (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
             re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
+
+        # Detect unsupported video categories (18+ age-restricted, members-only, private, live streams, paid rentals, unavailable)
+        unsupported_reason = None
+        if not is_geo_blocked:
+            if re.search(r'"reason":\s*"(?:This video is private|Private video)"|"status":\s*"LOGIN_REQUIRED".{0,200}private', html, re.I):
+                unsupported_reason = "private_video"
+            elif re.search(r'members-only|Join this channel to get access|available to this channel\'s members|"membersOnly"|UNPLAYABLE.{0,250}members', html, re.I):
+                unsupported_reason = "channel_membership"
+            elif re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|"isRestricted":\s*true|playerInterstitialRenderer', html, re.I):
+                unsupported_reason = "age_restricted"
+            elif re.search(r'"isLive":\s*true|"isLiveNow":\s*true', html, re.I):
+                unsupported_reason = "live_stream"
+            elif re.search(r'Buy or rent|Rental duration|"offerId":|requiresPurchase', html, re.I):
+                unsupported_reason = "paid_rental"
+            elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
+                unsupported_reason = "video_unavailable" 
 
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         if not heights:
@@ -1530,9 +1560,11 @@ async def get_video_resolutions(id: str):
             "duration_sec": duration_sec,
             "is_regional": is_geo_blocked,
             "is_geo_blocked": is_geo_blocked,
+            "is_unsupported": bool(unsupported_reason),
+            "unsupported_reason": unsupported_reason,
             "source": "yt_watch",
         }
-        if duration_sec > 0:
+        if duration_sec > 0 or unsupported_reason:
             _VIDEO_RES_CACHE[vid] = result
         return result
     except Exception:
