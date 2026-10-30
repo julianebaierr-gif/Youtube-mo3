@@ -35,7 +35,7 @@ KEYWORDS_RESEARCH = {
         "audiolibri da youtube", "video con sottotitoli", "video per capcut", "esportare in premiere pro",
         "clip per tiktok", "musica senza copyright youtube", "fair use archiviazione", "backup personale video",
         "riproduzione in background", "ascoltare a schermo spento", "interfaccia scura", "video per smart tv",
-        "caricare musica su pendrive", "miglior convertitore youtube", "sito sicuro mp3", "convertitore senza virus",
+        "caricare musica su pendrive", "miglior convertitore youtube", "sito sicuro mp3", "convertitore veloce online",
         "estrazione audio senza perdite", "da link youtube a mp3", "scarica video con url", "tasto download diretto",
         "conversioni illimitate gratis", "convertitore hd mp4", "scaricare clip youtube", "salvare dirette streaming",
         "convertitore italiano youtube", "download ad alta velocita"
@@ -92,7 +92,7 @@ UI = {
     "comp_row3_others": "Limitato a 128 kbps compresso o risoluzione bassa 360p",
     "comp_row4_title": "Pubblicità Fastidiose & Pop-up",
     "comp_row4_yt4mp3": "Pulito e sicuro: Zero pop-under, nessun falso pulsante di download",
-    "comp_row4_others": "Reindirizzamenti ingannevoli, banner invasivi e rischio malware",
+    "comp_row4_others": "Reindirizzamenti fastidiosi, banner invasivi e code lente",
     "comp_row5_title": "Supporto Smartphone & Dispositivi",
     "comp_row5_yt4mp3": "Perfetto su iPhone Safari, Android Chrome, Mac e Windows",
     "comp_row5_others": "Spesso non funziona su iOS Safari o richiede l'installazione di APK",
@@ -145,7 +145,7 @@ PAGES = {
             },
             {
                 "icon": "fa-solid fa-shield-halved",
-                "title": "Nessun Annuncio Invasivo o Malware",
+                "title": "Nessun Annuncio Invasivo o Pop-up",
                 "desc": "Niente pop-up ingannevoli, notifiche push fastidiose o estensioni obbligatorie. Esperienza pulita e trasparente."
             },
             {
@@ -177,7 +177,7 @@ PAGES = {
             },
             {
                 "q": "Posso trasferire la musica scaricata su una chiavetta USB per l'auto?",
-                "a": "Certamente. I file MP3 generati non hanno alcun blocco DRM. Puoi copiarli su qualsiasi chiavetta USB o scheda microSD e collegarla all'autoradio o a una cassa portatile."
+                "a": "Certamente. I file MP3 generati sono in formato standard universale. Puoi copiarli su qualsiasi chiavetta USB o scheda microSD e collegarla all'autoradio o a una cassa portatile."
             },
             {
                 "q": "È possibile scaricare anche i video brevi di YouTube Shorts?",
@@ -284,7 +284,7 @@ PAGES = {
                 "desc": "Funziona perfettamente con impianti Hi-Fi, vecchi lettori MP3, autoradio e smartphone."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Nessun Software Richiesto",
                 "desc": "Tutto avviene sui nostri server web. Non serve installare estensioni o programmi rischiosi."
             },
@@ -339,7 +339,7 @@ PAGES = {
   <li><a href="#perche-320kbps" class="hover:text-rose-600 transition-colors">1. Perché scegliere il bitrate 320 kbps?</a></li>
   <li><a href="#tabella-bitrate" class="hover:text-rose-600 transition-colors">2. Tabella comparativa della qualità audio</a></li>
   <li><a href="#musica-offline-auto" class="hover:text-rose-600 transition-colors">3. Musica offline per autoradio e allenamenti</a></li>
-  <li><a href="#sicurezza-conversione" class="hover:text-rose-600 transition-colors">4. Estrazione audio priva di malware</a></li>
+  <li><a href="#sicurezza-conversione" class="hover:text-rose-600 transition-colors">4. Estrazione audio sicura nel cloud</a></li>
 </ul>
 </div>
 
@@ -390,8 +390,8 @@ PAGES = {
 <h2 id="musica-offline-auto">Musica offline per autoradio e allenamenti</h2>
 <p>Quando corri al parco o guidi in autostrada, non dover fare affidamento sulla copertura cellulare significa zero interruzioni e nessun consumo di giga. I file MP3 sono liberi da protezioni e pronti per qualsiasi lettore.</p>
 
-<h2 id="sicurezza-conversione">Estrazione audio priva di malware</h2>
-<p>L'elaborazione si svolge interamente nel cloud. Non dovrai scaricare pericolosi file .exe o estensioni per il browser che potrebbero contenere adware o traccianti pubblicitari.</p>"""
+<h2 id="sicurezza-conversione">Estrazione audio sicura nel cloud</h2>
+<p>L'elaborazione si svolge interamente nel cloud. Non dovrai scaricare programmi pesanti sul computer o estensioni aggiuntive per il browser.</p>"""
     },
     "youtube-to-mp4": {
         "title": "Convertitore YouTube in MP4 (1080p & 4K) Gratis | YT4MP3",
@@ -610,7 +610,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['scaricare youtube shorts',
  'download diretto nel browser',
  'server veloci senza code di attesa',
  'senza limiti giornalieri di download',
- 'convertitore sicuro senza virus',
+ 'convertitore veloce e sicuro',
  'salvataggio galleria foto',
  'moov atom fast start',
  'spazio colore rec 709',
@@ -628,7 +628,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['scaricare youtube shorts',
  'come salvare i video shorts nella galleria android',
  'come convertire un video shorts in mp3',
  'come scaricare shorts da youtube senza app',
- 'qual e il miglior downloader per youtube shorts senza virus',
+ 'qual e il miglior downloader gratuito per youtube shorts',
  'come scaricare shorts a 1080p 60fps',
  'come estrarre la musica da un video youtube shorts',
  'perche il video shorts si scarica senza audio su altri siti',
@@ -671,7 +671,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Scaricare YouTube Shorts - Video
                        'in audio MP3 cristallino.'},
               {'icon': 'fa-solid fa-shield-halved',
                'title': 'Zero Pubblicità Invasiva',
-               'desc': 'Navigazione piacevole e sicura senza fastidiose finestre pop-up, falsi avvisi malware o '
+               'desc': 'Navigazione piacevole e sicura senza fastidiose finestre pop-up, banner invadenti o '
                        'richieste di installazione app.'},
               {'icon': 'fa-solid fa-apple-whole',
                'title': 'Compatibile con iPhone e Android',
@@ -724,7 +724,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Scaricare YouTube Shorts - Video
          {'q': 'Quanto spazio di memoria occupa in media un video Shorts?',
           'a': "Un filmato di 60 secondi a 1080p occupa indicativamente tra 15 MB e 35 MB. L'estrazione audio in "
                'formato MP3 richiede circa 2,5 MB - 4 MB.'},
-         {'q': 'YT4MP3 è sicuro da virus, malware e annunci ingannevoli?',
+         {'q': 'YT4MP3 è sicuro e privo di finestre pop-up?',
           'a': 'Assolutamente sì. Adottiamo una politica rigorosa senza pop-up fastidiosi, senza falsi pulsanti di '
                'download e senza richieste di autorizzazioni sospette.'},
          {'q': 'È legale scaricare i video YouTube Shorts per uso personale?',

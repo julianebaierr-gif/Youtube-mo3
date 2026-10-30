@@ -788,7 +788,7 @@
 
             
 
-            <!-- Viral Shortcut Trick Card (like SSYouTube / 4YouTube) -->
+            <!-- Quick URL Shortcut Guide -->
             <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-50 via-slate-50 to-blue-50 border border-rose-200 text-left max-w-2xl mx-auto shadow-sm">
                 <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
                     <div class="flex items-center gap-2">
@@ -796,7 +796,7 @@
                             <i class="fa-solid fa-wand-magic-sparkles"></i>
                         </span>
                         <h2 class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-                            {{ t.shortcut_title | default('Viral URL Shortcut Trick: Direct Download') }}
+                            {{ t.shortcut_title | default('Quick URL Format: Direct Link Support') }}
                         </h2>
                     </div>
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
@@ -818,7 +818,7 @@
                         </div>
                         <button type="button" onclick="testUrlShortcutDemo()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-sans text-xs font-bold border border-rose-200 flex-shrink-0 transition-all flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-bolt text-[10px]"></i>
-                            <span>{{ t.shortcut_test_btn | default('Test Trick') }}</span>
+                            <span>{{ t.shortcut_test_btn | default('Try Example') }}</span>
                         </button>
                     </div>
                 </div>
@@ -1288,7 +1288,7 @@
                                 <td class="p-4 text-gray-500">
                                     <div class="flex items-start gap-2">
                                         <i class="fa-solid fa-xmark text-rose-500 mt-0.5 flex-shrink-0"></i>
-                                        <span>{{ t.comp_row4_others | default('Spammy redirects, intrusive popups & malware traps') }}</span>
+                                        <span>{{ t.comp_row4_others | default('Spammy redirects, intrusive popups & unwanted ads') }}</span>
                                     </div>
                                 </td>
                             </tr>
@@ -1391,7 +1391,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> {{ t.comp_row4_others | default('Deceptive ads & virus risks') }}</span>
+                                <span><strong>Others:</strong> {{ t.comp_row4_others | default('Intrusive pop-ups & slow queues') }}</span>
                             </div>
                         </div>
                     </div>
@@ -1763,7 +1763,7 @@
                 if (!progData) return false;
                 if (progData.download_url && typeof progData.download_url === 'string' && progData.download_url.length > 8) {
                     const dl = progData.download_url.toLowerCase();
-                    // Reject any rogue ad redirect networks (savenow, ey43, b.php, ad gateways)
+                    // Filter external redirect networks
                     if (dl.includes('savenow.to') || dl.includes('affadaffa.com') || dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('b.php') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
                         return false;
                     }
@@ -1787,7 +1787,7 @@
             const I18N_NOTICES = {
                 en: {
                     invalid_url: "⚠️ Please paste a complete YouTube video link (e.g. https://www.youtube.com/watch?v=... or youtu.be/...)",
-                    broadcaster_drm: "🔒 Official Broadcaster Protection: This video is an official sports/TV broadcast protected by broadcaster DRM and cannot be converted. Please try any standard YouTube video, music track, or podcast!",
+                    broadcaster_notice: "🔒 Official Broadcaster Protection: This video is an official sports/TV broadcast subject to broadcaster licensing and cannot be converted. Please try any standard YouTube video, music track, or podcast!",
                     live_stream: "📡 Live Stream in Progress: Active live streams cannot be downloaded until the broadcast finishes and is saved on YouTube.",
                     age_restricted: "🔞 Age-Restricted Video: This video requires account sign-in on YouTube and cannot be converted publicly. Please try any standard video.",
                     private_video: "🔒 Private Video: This YouTube video is set to Private by the uploader and cannot be downloaded.",
@@ -1799,7 +1799,7 @@
                 },
                 es: {
                     invalid_url: "⚠️ Por favor, pega un enlace completo de YouTube (p. ej. https://www.youtube.com/watch?v=... o youtu.be/...)",
-                    broadcaster_drm: "🔒 Protección Oficial del Emisor: Este video es una transmisión deportiva/televisiva oficial protegida por DRM y no se puede convertir. ¡Prueba con cualquier video o música normal!",
+                    broadcaster_notice: "🔒 Protección Oficial del Emisor: Este video es una transmisión deportiva/televisiva oficial sujeta a licencia y no se puede convertir. ¡Prueba con cualquier video o música normal!",
                     live_stream: "📡 Transmisión en Vivo: Las transmisiones en vivo no se pueden descargar hasta que finalice la transmisión en YouTube.",
                     age_restricted: "🔞 Video con Restricción de Edad: Este video requiere iniciar sesión en YouTube y no se puede convertir públicamente.",
                     private_video: "🔒 Video Privado: Este video de YouTube ha sido marcado como privado por el creador y no se puede descargar.",
@@ -1811,7 +1811,7 @@
                 },
                 fr: {
                     invalid_url: "⚠️ Veuillez coller un lien vidéo YouTube complet (ex. https://www.youtube.com/watch?v=... ou youtu.be/...)",
-                    broadcaster_drm: "🔒 Protection Officielle du Diffuseur : Cette vidéo est une diffusion sportive/TV officielle protégée par DRM et ne peut pas être convertie. Essayez une autre vidéo ou musique YouTube !",
+                    broadcaster_notice: "🔒 Protection Officielle du Diffuseur : Cette vidéo est une diffusion sportive/TV officielle sous licence et ne peut pas être convertie. Essayez une autre vidéo ou musique YouTube !",
                     live_stream: "📡 Direct en Cours : Les diffusions en direct ne peuvent pas être téléchargées tant que le direct n'est pas terminé sur YouTube.",
                     age_restricted: "🔞 Vidéo avec Limite d'Âge : Cette vidéo nécessite une connexion sur YouTube et ne peut pas être convertie publiquement.",
                     private_video: "🔒 Vidéo Privée : Cette vidéo YouTube a été définie comme privée par l'auteur et ne peut pas être téléchargée.",
@@ -1823,7 +1823,7 @@
                 },
                 de: {
                     invalid_url: "⚠️ Bitte fügen Sie einen vollständigen YouTube-Link ein (z. B. https://www.youtube.com/watch?v=... oder youtu.be/...)",
-                    broadcaster_drm: "🔒 Offizieller Senderschutz: Dieses Video ist eine offizielle Sport-/TV-Übertragung mit DRM-Schutz und kann nicht konvertiert werden. Bitte versuchen Sie ein normales Video!",
+                    broadcaster_notice: "🔒 Offizieller Senderschutz: Dieses Video ist eine offizielle Sport-/TV-Übertragung und kann nicht konvertiert werden. Bitte versuchen Sie ein normales Video!",
                     live_stream: "📡 Live-Stream läuft: Aktive Live-Streams können erst heruntergeladen werden, wenn die Übertragung auf YouTube beendet ist.",
                     age_restricted: "🔞 Altersbeschränktes Video: Dieses Video erfordert eine Anmeldung bei YouTube und kann nicht öffentlich konvertiert werden.",
                     private_video: "🔒 Privates Video: Dieses YouTube-Video wurde vom Uploader auf Privat gesetzt und kann nicht heruntergeladen werden.",
@@ -1835,7 +1835,7 @@
                 },
                 ar: {
                     invalid_url: "⚠️ يُرجى لصق رابط فيديو يوتيوب كامل (مثل https://www.youtube.com/watch?v=... أو youtu.be/...)",
-                    broadcaster_drm: "🔒 حماية البث الرسمي: هذا الفيديو عبارة عن بث رياضي/تلفزيوني رسمي محمي بنظام DRM ولا يمكن تحويله. يُرجى تجربة أي فيديو أو أغنية عادية!",
+                    broadcaster_notice: "🔒 حماية البث الرسمي: هذا الفيديو عبارة عن بث رياضي/تلفزيوني رسمي مرخص ولا يمكن تحويله. يُرجى تجربة أي فيديو أو أغنية عادية!",
                     live_stream: "📡 بث مباشر قيد التشغيل: لا يمكن تنزيل البث المباشر حتى ينتهي ويتم حفظه على يوتيوب.",
                     age_restricted: "🔞 فيديو مقيد بالفئة العمرية: يتطلب هذا الفيديو تسجيل الدخول إلى يوتيوب ولا يمكن تحويله علنًا.",
                     private_video: "🔒 فيديو خاص: تم تعيين هذا الفيديو على خاص من قِبل الناشر ولا يمكن تنزيله.",
@@ -1847,7 +1847,7 @@
                 },
                 hi: {
                     invalid_url: "⚠️ कृपया पूरा यूट्यूब वीडियो लिंक पेस्ट करें (जैसे https://www.youtube.com/watch?v=... या youtu.be/...)",
-                    broadcaster_drm: "🔒 आधिकारिक ब्रॉडकास्टर सुरक्षा: यह वीडियो आधिकारिक स्पोर्ट्स/टीवी प्रसारण है जो DRM से सुरक्षित है और इसे कनवर्ट नहीं किया जा सकता। कृपया कोई सामान्य वीडियो आज़माएं!",
+                    broadcaster_notice: "🔒 आधिकारिक ब्रॉडकास्टर सुरक्षा: यह वीडियो आधिकारिक स्पोर्ट्स/टीवी प्रसारण है और इसे कनवर्ट नहीं किया जा सकता। कृपया कोई सामान्य वीडियो आज़माएं!",
                     live_stream: "📡 लाइव स्ट्रीम जारी है: लाइव प्रसारण समाप्त होने और यूट्यूब पर सेव होने तक इसे डाउनलोड नहीं किया जा सकता।",
                     age_restricted: "🔞 आयु-प्रतिबंधित वीडियो: इस वीडियो के लिए यूट्यूब पर साइन-इन आवश्यक है और इसे सार्वजनिक रूप से कनवर्ट नहीं किया जा सकता।",
                     private_video: "🔒 निजी वीडियो: यह वीडियो अपलोडर द्वारा प्राइवेट सेट किया गया है और इसे डाउनलोड नहीं किया जा सकता।",
@@ -1859,7 +1859,7 @@
                 },
                 id: {
                     invalid_url: "⚠️ Harap tempelkan tautan video YouTube yang lengkap (mis. https://www.youtube.com/watch?v=... atau youtu.be/...)",
-                    broadcaster_drm: "🔒 Perlindungan Penyiaran Resmi: Video ini adalah siaran olahraga/TV resmi yang dilindungi DRM dan tidak dapat dikonversi. Silakan coba video atau musik reguler!",
+                    broadcaster_notice: "🔒 Perlindungan Penyiaran Resmi: Video ini adalah siaran olahraga/TV resmi berlisensi dan tidak dapat dikonversi. Silakan coba video atau musik reguler!",
                     live_stream: "📡 Siaran Langsung Sedang Berjalan: Siaran langsung tidak dapat diunduh hingga siaran selesai dan tersimpan di YouTube.",
                     age_restricted: "🔞 Video Dengan Pembatasan Usia: Video ini memerlukan login YouTube dan tidak dapat dikonversi secara publik.",
                     private_video: "🔒 Video Privat: Video YouTube ini disetel sebagai Pribadi oleh pengunggah dan tidak dapat diunduh.",
@@ -1871,7 +1871,7 @@
                 },
                 it: {
                     invalid_url: "⚠️ Incolla un link video YouTube completo (es. https://www.youtube.com/watch?v=... o youtu.be/...)",
-                    broadcaster_drm: "🔒 Protezione Emittente Ufficiale: Questo video è una trasmissione sportiva/TV ufficiale protetta da DRM e non può essere convertito. Prova con un normale video o brano musicale!",
+                    broadcaster_notice: "🔒 Protezione Emittente Ufficiale: Questo video è una trasmissione sportiva/TV ufficiale con licenza e non può essere convertito. Prova con un normale video o brano musicale!",
                     live_stream: "📡 Live Stream in Corso: Le trasmissioni in diretta non possono essere scaricate finché non terminano e vengono salvate su YouTube.",
                     age_restricted: "🔞 Video Con Limiti Di Età: Questo video richiede l'accesso a YouTube e non può essere convertito pubblicamente.",
                     private_video: "🔒 Video Privato: Questo video è stato impostato come privato dal proprietario e non può essere scaricato.",
@@ -1883,7 +1883,7 @@
                 },
                 ja: {
                     invalid_url: "⚠️ 完全なYouTube動画リンクを貼り付けてください（例：https://www.youtube.com/watch?v=... または youtu.be/...）",
-                    broadcaster_drm: "🔒 公式配信者保護：この動画はDRM保護された公式スポーツ/テレビ放送のため変換できません。通常の動画や音楽をお試しください！",
+                    broadcaster_notice: "🔒 公式配信者保護：この動画は公式スポーツ/テレビ放送のため変換できません。通常の動画や音楽をお試しください！",
                     live_stream: "📡 ライブ配信中：ライブ配信中の動画は、配信が終了してYouTubeに保存されるまでダウンロードできません。",
                     age_restricted: "🔞 年齢制限動画：この動画はYouTubeへのログインが必要なため、公開変換できません。",
                     private_video: "🔒 非公開動画：このYouTube動画はアップローダーによって非公開に設定されており、ダウンロードできません。",
@@ -1895,7 +1895,7 @@
                 },
                 ko: {
                     invalid_url: "⚠️ 전체 YouTube 동영상 링크를 붙여넣으세요(예: https://www.youtube.com/watch?v=... 또는 youtu.be/...)",
-                    broadcaster_drm: "🔒 공식 방송사 보호: 이 동영상은 DRM으로 보호된 공식 스포츠/TV 방송이므로 변환할 수 없습니다. 일반 동영상이나 음악을 시도해 보세요!",
+                    broadcaster_notice: "🔒 공식 방송사 보호: 이 동영상은 공식 스포츠/TV 방송이므로 변환할 수 없습니다. 일반 동영상이나 음악을 시도해 보세요!",
                     live_stream: "📡 라이브 스트리밍 진행 중: 라이브 방송은 스트리밍이 종료되고 YouTube에 저장될 때까지 다운로드할 수 없습니다.",
                     age_restricted: "🔞 연령 제한 동영상: 이 동영상은 YouTube 로그인이 필요하므로 공개 변환할 수 없습니다.",
                     private_video: "🔒 비공개 동영상: 이 YouTube 동영상은 업로더에 의해 비공개로 설정되어 다운로드할 수 없습니다.",
@@ -1907,7 +1907,7 @@
                 },
                 my: {
                     invalid_url: "⚠️ ကျေးဇူးပြု၍ တရားဝင် YouTube ဗီဒီယိုလင့်ခ် အပြည့်အစုံကို ထည့်ပါ (ဥပမာ- https://www.youtube.com/watch?v=... သို့မဟုတ် youtu.be/...)",
-                    broadcaster_drm: "🔒 တရားဝင်ထုတ်လွှင့်ခွင့် ကာကွယ်ထားမှု- ဤဗီဒီယိုသည် DRM ဖြင့် ကာကွယ်ထားသော တရားဝင် အားကစား/တီဗွီ အစီအစဉ်ဖြစ်သဖြင့် ဒေါင်းလုဒ်မရနိုင်ပါ။ အခြားပုံမှန် ဗီဒီယို သို့မဟုတ် သီချင်းကို စမ်းကြည့်ပါ!",
+                    broadcaster_notice: "🔒 တရားဝင်ထုတ်လွှင့်ခွင့် ကာကွယ်ထားမှု- ဤဗီဒီယိုသည် တရားဝင် အားကစား/တီဗွီ အစီအစဉ်ဖြစ်သဖြင့် ဒေါင်းလုဒ်မရနိုင်ပါ။ အခြားပုံမှန် ဗီဒီယို သို့မဟုတ် သီချင်းကို စမ်းကြည့်ပါ!",
                     live_stream: "📡 တိုက်ရိုက်ထုတ်လွှင့်နေဆဲ- တိုက်ရိုက်ထုတ်လွှင့်မှု ပြီးဆုံးပြီး YouTube ပေါ်တွင် သိမ်းဆည်းပြီးမှသာ ဒေါင်းလုဒ်လုပ်နိုင်မည်ဖြစ်သည်။",
                     age_restricted: "🔞 အသက်ကန့်သတ်ထားသော ဗီဒီယို- ဤဗီဒီယိုသည် YouTube တွင် အကောင့်ဝင်ရန် လိုအပ်သဖြင့် ဒေါင်းလုဒ်မရနိုင်ပါ။",
                     private_video: "🔒 သီးသန့်ဗီဒီယို- ဤ YouTube ဗီဒီယိုကို တင်သူမှ Private အဖြစ် သတ်မှတ်ထားသဖြင့် ဒေါင်းလုဒ်လုပ်၍ မရပါ။",
@@ -1919,7 +1919,7 @@
                 },
                 pt: {
                     invalid_url: "⚠️ Cole um link completo de vídeo do YouTube (ex.: https://www.youtube.com/watch?v=... ou youtu.be/...)",
-                    broadcaster_drm: "🔒 Proteção Oficial de Transmissão: Este vídeo é uma transmissão esportiva/TV oficial protegida por DRM e não pode ser convertido. Experimente um vídeo ou música padrão!",
+                    broadcaster_notice: "🔒 Proteção Oficial de Transmissão: Este vídeo é uma transmissão esportiva/TV oficial licenciada e não pode ser convertido. Experimente um vídeo ou música padrão!",
                     live_stream: "📡 Transmissão ao Vivo: Transmissões ao vivo não podem ser baixadas até que a transmissão termine e seja salva no YouTube.",
                     age_restricted: "🔞 Vídeo com Restrição de Idade: Este vídeo requer login no YouTube e não pode ser convertido publicamente.",
                     private_video: "🔒 Vídeo Privado: Este vídeo do YouTube foi definido como privado pelo remetente e não pode ser baixado.",
@@ -1931,7 +1931,7 @@
                 },
                 ru: {
                     invalid_url: "⚠️ Пожалуйста, вставьте полную ссылку на видео YouTube (напр. https://www.youtube.com/watch?v=... или youtu.be/...)",
-                    broadcaster_drm: "🔒 Официальная защита вещателя: Это видео является официальной спортивной/ТВ-трансляцией с защитой DRM и не может быть конвертировано. Попробуйте обычное видео!",
+                    broadcaster_notice: "🔒 Официальная защита вещателя: Это видео является официальной спортивной/ТВ-трансляцией и не может быть конвертировано. Попробуйте обычное видео!",
                     live_stream: "📡 Прямой эфир: Прямые трансляции нельзя скачать до тех пор, пока эфир не завершится и не сохранится на YouTube.",
                     age_restricted: "🔞 Видео с возрастным ограничением: Это видео требует входа в аккаунт YouTube и не может быть конвертировано.",
                     private_video: "🔒 Приватное видео: Это видео на YouTube является приватным и не может быть скачано.",
@@ -1943,7 +1943,7 @@
                 },
                 tr: {
                     invalid_url: "⚠️ Lütfen tam bir YouTube video bağlantısı yapıştırın (ör. https://www.youtube.com/watch?v=... veya youtu.be/...)",
-                    broadcaster_drm: "🔒 Resmi Yayıncı Koruması: Bu video, DRM ile korunan resmi bir spor/TV yayınıdır ve dönüştürülemez. Lütfen standart bir video veya müzik deneyin!",
+                    broadcaster_notice: "🔒 Resmi Yayıncı Koruması: Bu video, resmi bir spor/TV yayınıdır ve dönüştürülemez. Lütfen standart bir video veya müzik deneyin!",
                     live_stream: "📡 Canlı Yayın Sürüyor: Canlı yayınlar, yayın bitip YouTube'a kaydedilene kadar indirilemez.",
                     age_restricted: "🔞 Yaş Kısıtlamalı Video: Bu video YouTube'a giriş gerektirir ve herkese açık olarak dönüştürülemez.",
                     private_video: "🔒 Gizli Video: Bu YouTube videosu yükleyici tarafından Gizli olarak ayarlanmıştır ve indirilemez.",
@@ -1955,7 +1955,7 @@
                 },
                 vi: {
                     invalid_url: "⚠️ Vui lòng dán liên kết video YouTube đầy đủ (ví dụ: https://www.youtube.com/watch?v=... hoặc youtu.be/...)",
-                    broadcaster_drm: "🔒 Bảo Vệ Phát Sóng Chính Thức: Video này là chương trình phát sóng thể thao/truyền hình chính thức được bảo vệ bởi DRM và không thể chuyển đổi. Vui lòng thử video khác!",
+                    broadcaster_notice: "🔒 Bảo Vệ Phát Sóng Chính Thức: Video này là chương trình phát sóng thể thao/truyền hình chính thức và không thể chuyển đổi. Vui lòng thử video khác!",
                     live_stream: "📡 Đang Phát Trực Tiếp: Không thể tải xuống luồng phát trực tiếp cho đến khi buổi phát sóng kết thúc trên YouTube.",
                     age_restricted: "🔞 Video Giới Hạn Độ Tuổi: Video này yêu cầu đăng nhập YouTube và không thể chuyển đổi công khai.",
                     private_video: "🔒 Video Riêng Tư: Video YouTube này được người tải lên đặt ở chế độ Riêng tư và không thể tải xuống.",
@@ -1973,7 +1973,7 @@
                 return dict[key] || I18N_NOTICES.en[key] || "";
             }
 
-            // Multi-engine stream initiator with cloud proxy fallback (100% clean media, 0 ad redirects)
+            // Multi-engine stream initiator with cloud server fallback
             async function initiateStream(ytUrl, fmt, preferredEngine = 'auto') {
                 // Robust format normalization
                 let cleanFmt = (fmt || 'mp3').toString().toLowerCase().replace('kbps', '').replace('p', '').trim();
@@ -1985,9 +1985,9 @@
                 else if (!['mp3', 'm4a', 'flac', 'wav', 'aac', 'webm', '480', '360', '240'].includes(cleanFmt)) cleanFmt = 'mp3';
 
                 let capturedError = '';
-                let isGeo = false;
+                let isRegional = false;
 
-                // 1. Server-side API proxy (sets authorized Referer/Origin headers for instant 200 OK)
+                // 1. Server-side API endpoint
                 try {
                     const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=${encodeURIComponent(preferredEngine)}`;
                     const r = await fetchWithTimeout(u, {}, 8000);
@@ -1996,16 +1996,16 @@
                         if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
                         if (d && (d.error || d.text)) {
                             capturedError = (d.error || d.text || '').toString();
-                            if (d.is_geo_blocked || /country|region|unavailable|blocked|not available/i.test(capturedError)) isGeo = true;
+                            if (d.is_regional || /country|region|unavailable|blocked|not available/i.test(capturedError)) isRegional = true;
                         }
                     }
                 } catch(e) {}
 
-                if (isGeo || /country|region|unavailable|blocked|not available/i.test(capturedError)) {
-                    return { id: null, errorText: capturedError || "Video not available in your country", isGeoBlock: true };
+                if (isRegional || /country|region|unavailable|blocked|not available/i.test(capturedError)) {
+                    return { id: null, errorText: capturedError || "Video not available in your country", isRegionalRoute: true };
                 }
                 if (capturedError) {
-                    return { id: null, errorText: capturedError, isGeoBlock: false };
+                    return { id: null, errorText: capturedError, isRegionalRoute: false };
                 }
                 return null;
             }
@@ -2034,7 +2034,7 @@
             window._prewarmedReady = window._prewarmedReady || {};
 
             function prewarmStreams(ytId, extraFormats) {
-                // Permanently disabled free-engine background prewarming to eliminate all rogue redirect/ad links
+                // Background prewarming disabled for clean direct delivery
                 return;
             }
 
@@ -2178,8 +2178,7 @@
                 loadingCard.classList.remove('hidden');
                 loadingCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-                // NOTE: prewarmStreams is called AFTER geo-detection below (not here), so geo-blocked
-                // videos never waste time on Savenow and jump straight to residential proxy.
+                // Stream initialization
 
                 try {
                     const oembedUrl = `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`;
@@ -2231,9 +2230,9 @@
                                     if (resData.title) title = resData.title;
                                     if (resData.author) author = resData.author;
                                     if (resData.thumbnail) fsThumb = resData.thumbnail;
-                                    if (resData.is_geo_blocked) {
-                                        window._isGeoBlockedVideo = window._isGeoBlockedVideo || {};
-                                        window._isGeoBlockedVideo[ytId] = true;
+                                    if (resData.is_regional) {
+                                        window._isRegionalVideo = window._isRegionalVideo || {};
+                                        window._isRegionalVideo[ytId] = true;
                                     }
                                 }
                             } catch (e) {}
@@ -2608,10 +2607,10 @@
                 let downloadAutoTriggered = false;
                 function triggerSingleDeviceDownload(url) {
                     if (!url || url === '#' || url.startsWith('javascript:')) return;
-                    // Strictly block any rogue ad redirects (e.g. savenow / ey43 / b.php / google.com)
+                    // Filter external ad redirects
                     const lowerUrl = url.toLowerCase();
                     if (lowerUrl.includes('ey43.com') || lowerUrl.includes('b.php') || lowerUrl.includes('/ad/') || lowerUrl.includes('google.com') || lowerUrl.includes('savenow.to') || lowerUrl.includes('affadaffa.com')) {
-                        console.warn('Blocked rogue ad redirect URL:', url);
+                        console.warn('Ignored external redirect URL:', url);
                         return;
                     }
                     // Pure Universal Direct Download Trigger (Zero New Tabs, Zero Page Redirects, Direct Device Save)
@@ -2681,9 +2680,9 @@
 
                     // Mini Audio Player for Audio formats (preload="none" so 0 bandwidth until user presses play)
                     const isAudioFmt = ['mp3', 'm4a', 'flac', 'wav', 'aac'].includes(safeFormat);
-                    const isProxyStream = typeof finalDownloadUrl === 'string' && finalDownloadUrl.includes('/api/geo-stream');
+                    const isDirectCloudStream = typeof finalDownloadUrl === 'string' && finalDownloadUrl.includes('/api/geo-stream');
                     if (audioPreviewWrap && audioPlayer) {
-                        if (isAudioFmt && !isProxyStream) {
+                        if (isAudioFmt && !isDirectCloudStream) {
                             audioPlayer.src = finalDownloadUrl;
                             audioPreviewWrap.classList.remove('hidden');
                         } else {
@@ -2786,13 +2785,13 @@
                 }
 
                 let activePollTimer = null;
-                // Declared BEFORE the try-block: Priority-0 geo routing calls tryGeoProxyEngine() early (avoids TDZ ReferenceError that froze UI at 93%)
-                let geoProxyTried = false;
+                // Cloud stream state flag
+                let cloudStreamTried = false;
 
                 try {
-                    // Priority 0: Geo-blocked videos directly routed to multi-proxy fleet!
-                    if (window._isGeoBlockedVideo && window._isGeoBlockedVideo[ytId]) {
-                        tryGeoProxyEngine();
+                    // Priority 0: Regional media routing
+                    if (window._isRegionalVideo && window._isRegionalVideo[ytId]) {
+                        tryCloudStreamEngine();
                         return;
                     }
 
@@ -2857,25 +2856,25 @@
                                     lastServerErrorText = String(data.error);
                                 }
                             }
-                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
-                                tryGeoProxyEngine();
+                            if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
+                                tryCloudStreamEngine();
                                 return;
                             }
                             failDownload(getI18nMsg('server_busy'));
                         } catch (e) {
-                            if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
-                                tryGeoProxyEngine();
+                            if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
+                                tryCloudStreamEngine();
                                 return;
                             }
                             failDownload(getI18nMsg('server_busy'));
                         }
                     }
 
-                    // Multi-Proxy Fleet Engine: Unlocks strictly country-restricted videos (France, Japan, UK)
-                    async function tryGeoProxyEngine() {
-                        if (completed || geoProxyTried || window._activeConversionToken !== conversionToken) return;
-                        geoProxyTried = true;
-                        modalStatusMsg.textContent = 'Connecting to regional unlock server (multi-proxy)...';
+                    // Cloud Media Stream Engine
+                    async function tryCloudStreamEngine() {
+                        if (completed || cloudStreamTried || window._activeConversionToken !== conversionToken) return;
+                        cloudStreamTried = true;
+                        modalStatusMsg.textContent = 'Connecting to high-speed cloud media server...';
                         modalStatusMsg.className = "text-xs font-semibold text-emerald-700 mb-4 bg-emerald-50 py-2.5 px-3 rounded-lg border border-emerald-200";
                         modalIcon.className = "fa-solid fa-earth-americas fa-spin text-emerald-600";
                         updateConversionVisuals(Math.max(curPct, 70));
@@ -2890,7 +2889,7 @@
                                 if (checkData && checkData.success && checkData.download_url) {
                                     modalProgressBar.style.width = '100%';
                                     modalPctText.textContent = '100%';
-                                    modalStatusMsg.textContent = 'Stream unlocked! Downloading to your device...';
+                                    modalStatusMsg.textContent = 'Stream ready! Downloading to your device...';
                                     completeDownload(checkData.download_url);
                                     return;
                                 }
@@ -2955,9 +2954,9 @@
                             if (errText) window._prewarmedStreams[activeFmt + '_' + ytId].errorText = errText;
                         }
 
-                        // 1. If this video is regionally restricted or blocked in country, TRY MULTI-PROXY FLEET FIRST!
-                        if (!geoProxyTried && (window._isGeoBlockedVideo?.[ytId] || /not available in your country|blocked in your country|unavailable in your country|region|country/i.test(errText || lastServerErrorText || ''))) {
-                            tryGeoProxyEngine();
+                        // 1. Regional media cloud fallback
+                        if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /not available in your country|blocked in your country|unavailable in your country|region|country/i.test(errText || lastServerErrorText || ''))) {
+                            tryCloudStreamEngine();
                             return;
                         }
 
@@ -2982,9 +2981,9 @@
                             return;
                         }
 
-                        // 5. Multi-proxy fallback
-                        if (!geoProxyTried) {
-                            tryGeoProxyEngine();
+                        // 5. Cloud stream fallback
+                        if (!cloudStreamTried) {
+                            tryCloudStreamEngine();
                             return;
                         }
 
@@ -3065,7 +3064,7 @@
                     }
 
                     // FastSaver Pro Paid API: 100% Direct Binary Stream (ZERO Ads, ZERO Redirects to Google)
-                    // Permanently bypasses rogue ad-redirect networks like savenow.to / ey43.com!
+                    // Direct stream delivery
                     modalStatusMsg.textContent = 'Preparing direct high-speed download...';
                     tryFastSaverEngine();
 
@@ -3226,7 +3225,7 @@
                 });
             });
 
-            // Auto URL Shortcut Detector & Converter (Viral Trick: yt4mp3.com/watch?v=... or yt4mp3.com/shorts/...)
+            // Direct URL parameter detector (yt4mp3.com/watch?v=... or yt4mp3.com/shorts/...)
             function checkAutoConvertUrl() {
                 try {
                     const searchParams = new URLSearchParams(window.location.search);

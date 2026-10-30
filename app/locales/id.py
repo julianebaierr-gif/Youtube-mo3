@@ -34,7 +34,7 @@ KEYWORDS_RESEARCH = {
         "nada dering hp whatsapp ringtone", "android apk alternatif aman", "pengguna iphone safari files",
         "browser chrome cepat", "format mp4 h264", "audio aac stereo",
         "tata cara download cepat", "bitrate audio musik", "resolusi layar hp",
-        "convert video jadi suara", "unduh video youtube online", "aman tanpa virus dan malware",
+        "convert video jadi suara", "unduh video youtube online", "cepat dan mudah digunakan",
         "legalitas hak cipta dan fair use", "backup pribadi arsip", "flashdisk untuk musik mobil",
         "smart tv tab dan laptop", "penyimpanan google drive", "format m4a vs mp3",
         "kompresi audio", "kualitas suara hd", "download lagu pop indonesia",
@@ -97,7 +97,7 @@ UI = {
     "comp_row3_others": "Dibatasi 128 kbps terkompresi atau resolusi rendah 360p",
     "comp_row4_title": "Iklan Mengganggu & Pop-up",
     "comp_row4_yt4mp3": "Bersih & aman: Bebas pop-under, tanpa tombol unduh palsu",
-    "comp_row4_others": "Pengalihan spam, pop-up berbahaya & jebakan malware",
+    "comp_row4_others": "Pengalihan spam, pop-up mengganggu & antrean lambat",
     "comp_row5_title": "Dukungan HP & Perangkat",
     "comp_row5_yt4mp3": "Lancar di iPhone Safari, Android Chrome, Mac & Windows",
     "comp_row5_others": "Sering gagal di Safari iOS atau meminta instal file APK",
@@ -120,7 +120,7 @@ UI = {
 PAGES = {
     "home": {
         "title": "Download Video YouTube ke MP3 & MP4 Gratis | YT4MP3",
-        "meta_desc": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, aman tanpa virus, tanpa aplikasi, dan bisa untuk HP Android serta iPhone.",
+        "meta_desc": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, cepat, tanpa aplikasi, dan bisa untuk HP Android serta iPhone.",
         "h1": "Konverter YouTube ke MP3 dan MP4 Online Gratis",
         "subtitle": "Download lagu MP3 suara jernih hingga 320 kbps dan simpan video MP4 kualitas Full HD 1080p tanpa perlu instal aplikasi tambahan.",
         "badge": "Pengunduh Media Tercepat",
@@ -151,7 +151,7 @@ PAGES = {
             {
                 "icon": "fa-solid fa-shield-halved",
                 "title": "Bebas Iklan Jebakan & Aman",
-                "desc": "Kami tidak memasang pop-up penipuan, malware, atau link berbahaya. Anda mengunduh file asli secara langsung dan aman."
+                "desc": "Kami tidak memasang pop-up mengganggu atau tautan pengalihan. Anda mengunduh file media secara langsung dan nyaman."
             },
             {
                 "icon": "fa-solid fa-infinity",
@@ -166,7 +166,7 @@ PAGES = {
             },
             {
                 "q": "Apakah saya harus menginstal aplikasi atau software tertentu?",
-                "a": "Tidak perlu. YT4MP3 berbasis situs web online murni. Anda tidak perlu mengunduh file APK yang berisiko membawa virus atau memasang ekstensi peramban yang memperlambat kinerja HP dan komputer."
+                "a": "Tidak perlu. YT4MP3 berbasis situs web online murni. Anda tidak perlu mengunduh aplikasi tambahan atau memasang ekstensi peramban yang memperlambat kinerja HP dan komputer."
             },
             {
                 "q": "Bagaimana cara menyimpan lagu MP3 langsung di iPhone atau iPad?",
@@ -185,12 +185,12 @@ PAGES = {
                 "a": "Tentu saja bisa. Cukup klik tombol 'Bagikan' pada video Shorts di aplikasi YouTube, pilih 'Salin Tautan', lalu tempel di kotak konverter kami. Anda bisa mengunduhnya sebagai video MP4 vertikal atau mengambil audionya saja sebagai MP3."
             },
             {
-                "q": "Apakah situs ini aman dari virus dan malware?",
+                "q": "Apakah situs ini aman dan bebas pop-up?",
                 "a": "Ya, 100% aman. YT4MP3 tidak pernah meminta Anda menginstal aplikasi pembersih palsu, tidak ada iklan pop-up berlapis, dan file yang diunduh langsung dari server media resmi tanpa disusupi script berbahaya."
             },
             {
                 "q": "Bisakah lagu hasil unduhan dipindahkan ke flashdisk untuk didengarkan di mobil?",
-                "a": "Sangat bisa. File MP3 yang dihasilkan bersifat standar dan universal tanpa proteksi DRM. Anda cukup mencolokkan flashdisk ke laptop atau menggunakan kabel OTG di HP, lalu salin lagu-lagu tersebut ke flashdisk untuk diputar di audio tape mobil Anda."
+                "a": "Sangat bisa. File MP3 yang dihasilkan bersifat standar dan universal dengan format standar universal. Anda cukup mencolokkan flashdisk ke laptop atau menggunakan kabel OTG di HP, lalu salin lagu-lagu tersebut ke flashdisk untuk diputar di audio tape mobil Anda."
             },
             {
                 "q": "Apakah ada batasan panjang durasi video yang bisa dikonversi?",
@@ -263,7 +263,7 @@ PAGES = {
 <li><strong>Hemat Daya Baterai dan Memori RAM:</strong> Seluruh proses kompresi, pemisahan audio, dan penggabungan stream video resolusi tinggi dilakukan pada server cloud kami. Smartphone Anda tidak akan menjadi panas atau lambat saat proses berlangsung.</li>
 <li><strong>Suara Stereo Alami Tanpa Bising:</strong> Kami menjaga frekuensi asli 44.1 kHz dan 48 kHz sehingga suara vokal, petikan gitar, dan dentuman bass terdengar bulat seperti pada rilisan aslinya.</li>
 <li><strong>Dukungan Lintas Platform Tanpa Syarat:</strong> Anda dapat mengakses situs ini dari ponsel pintar Android merek apa pun (Samsung, Xiaomi, Oppo, Vivo, Realme, Infinix), iPhone dengan iOS Safari, tablet, iPad, hingga komputer berbasis Windows, macOS, dan Linux.</li>
-<li><strong>Bebas Iklan Menyesatkan:</strong> Keamanan pengguna adalah komitmen utama kami. Kami tidak menyediakan tautan download jebakan yang sering kali berisi adware atau file berbahaya.</li>
+<li><strong>Bebas Iklan Menyesatkan:</strong> Keamanan pengguna adalah komitmen utama kami. Kami tidak menyediakan tautan download jebakan yang sering kali berisi iklan pop-up yang mengganggu.</li>
 </ul>
 
 <h3>Panduan Praktis Menyimpan File di Smartphone</h3>
@@ -335,7 +335,7 @@ PAGES = {
                 "desc": "Format MP3 standar dapat diputar di semua pemutar musik, tape mobil, speaker portable, dan sound system tanpa aplikasi tambahan."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Aman Tanpa Aplikasi Tambahan",
                 "desc": "Tidak perlu repot mengunduh aplikasi asing yang rawan membawa iklan menjengkelkan. Cukup konversi langsung dari peramban Anda."
             },
@@ -513,7 +513,7 @@ PAGES = {
                 "a": "Resolusi 4K memiliki jumlah piksel 4 kali lipat lebih banyak dibandingkan 1080p sehingga ukuran filenya jauh lebih besar. Server kami memerlukan waktu beberapa saat untuk mengunduh stream masif tersebut dan menggabungkannya dengan audio resolusi tinggi."
             },
             {
-                "q": "Apakah aman mendownload video YouTube di situs ini tanpa kena virus?",
+                "q": "Apakah nyaman mendownload video YouTube di situs ini tanpa aplikasi?",
                 "a": "Sangat aman. Kami tidak menyediakan tombol download palsu yang menjebak pengguna ke situs mencurigakan. File yang Anda unduh adalah file video murni."
             }
         ],
@@ -653,7 +653,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['download youtube shorts',
  'unduhan langsung di browser',
  'server cepat tanpa antre',
  'tanpa batas unduhan harian',
- 'konverter aman tanpa virus',
+ 'konverter online cepat dan praktis',
  'simpan di galeri foto hp',
  'moov atom mulai cepat',
  'ruang warna rec 709',
@@ -671,7 +671,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['download youtube shorts',
  'cara menyimpan video shorts youtube di galeri android',
  'apakah bisa mengubah video shorts youtube menjadi mp3',
  'cara download video shorts youtube tanpa aplikasi',
- 'apa situs download shorts youtube terbaik tanpa virus',
+ 'apa situs download shorts youtube terbaik dan tercepat',
  'cara download shorts kualitas 1080p 60fps',
  'cara mengambil lagu atau musik dari youtube shorts',
  'kenapa video shorts di situs lain tidak ada suaranya',
@@ -715,7 +715,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Download YouTube Shorts - Simpan
               {'icon': 'fa-solid fa-shield-halved',
                'title': 'Bebas Iklan Menjengkelkan',
                'desc': 'Pengalaman bersih tanpa pop-up menyesatkan, tanpa jebakan tombol palsu, dan tanpa resiko '
-                       'malware.'},
+                       'iklan mengganggu.'},
               {'icon': 'fa-solid fa-apple-whole',
                'title': 'Cocok untuk iPhone & Android',
                'desc': 'Simpan langsung ke galeri Foto di Safari iOS serta ke folder Unduhan di Android Chrome dan '
@@ -766,7 +766,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Download YouTube Shorts - Simpan
          {'q': 'Berapa kapasitas memori yang dibutuhkan untuk satu video Shorts?',
           'a': 'Video 1080p berdurasi 60 detik rata-rata berukuran antara 15 MB hingga 35 MB. File audio MP3-nya '
                'sendiri hanya berukuran sekitar 2,5 MB hingga 4 MB.'},
-         {'q': 'Apakah YT4MP3 aman dari virus dan program berbahaya?',
+         {'q': 'Apakah YT4MP3 aman dan bebas iklan pop-up?',
           'a': 'Sangat aman. Kami tidak menggunakan iklan pop-up yang menjebak, tombol download palsu, atau instruksi '
                'mencurigakan.'},
          {'q': 'Apakah legal mendownload YouTube Shorts untuk konsumsi pribadi?',

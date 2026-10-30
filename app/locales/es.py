@@ -35,7 +35,7 @@ KEYWORDS_RESEARCH = {
         "320 kbps alta calidad", "128 kbps bitrate estandar", "256 kbps audio profesional",
         "mp3 gratis sin registro", "mp4 1080p full hd", "videos 4k ultra hd 60fps",
         "youtube shorts a mp3", "youtube music descargar canciones", "sin instalar programas ni extensiones",
-        "convertidor seguro sin virus ni malware", "para celular android samsung xiaomi",
+        "convertidor rápido y seguro en línea", "para celular android samsung xiaomi",
         "para iphone ios carpeta archivos", "pc windows 10 y windows 11", "mac safari",
         "google chrome y mozilla firefox", "contenedor mp4 h264", "audio aac estereo",
         "tasa de bits de audio", "resolucion de pantalla", "reproduccion offline sin internet ni wifi",
@@ -102,7 +102,7 @@ UI = {
     "comp_row3_others": "Limitado a 128 kbps comprimido o resolución 360p",
     "comp_row4_title": "Anuncios y Ventanas Emergentes",
     "comp_row4_yt4mp3": "Limpio y seguro: Cero pop-unders, sin botones falsos de descarga",
-    "comp_row4_others": "Redirecciones engañosas, anuncios invasivos y riesgo de malware",
+    "comp_row4_others": "Redirecciones molestas, anuncios invasivos y colas lentas",
     "comp_row5_title": "Soporte Móvil y Dispositivos",
     "comp_row5_yt4mp3": "Funciona perfecto en iPhone Safari, Android Chrome, Mac y Windows",
     "comp_row5_others": "Falla en Safari iOS o exige instalar aplicaciones APK sospechosas",
@@ -186,7 +186,7 @@ PAGES = {
                 "a": "Si buscas la máxima fidelidad auditiva para escuchar en auriculares de calidad o sistemas de sonido para automóviles, recomendamos seleccionar 320 kbps. Si deseas ahorrar espacio en tu memoria interna o plan de datos, 128 kbps o 192 kbps ofrecen un equilibrio excelente entre tamaño ligero y nitidez musical."
             },
             {
-                "q": "¿Es seguro utilizar YT4MP3? ¿Contiene virus o malware?",
+                "q": "¿Es seguro y limpio utilizar YT4MP3?",
                 "a": "YT4MP3 es totalmente seguro. A diferencia de otros portales convencionales que bombardean al usuario con ventanas emergentes, redirecciones a sitios de apuestas o descargas de instaladores fraudulentos, nuestra plataforma realiza el procesamiento en servidores aislados y entrega enlaces limpios directos al archivo solicitado."
             },
             {
@@ -203,7 +203,7 @@ PAGES = {
             },
             {
                 "q": "¿Puedo pasar la música descargada a una memoria USB o pendrive para el auto?",
-                "a": "Sí. Dado que los archivos MP3 entregados por YT4MP3 son universales y no cuentan con bloqueos DRM, puedes copiarlos directamente a cualquier memoria USB, tarjeta SD o reproductor portátil para escucharlos en la radio de tu coche o en altavoces inalámbricos."
+                "a": "Sí. Dado que los archivos MP3 entregados por YT4MP3 son universales y son de formato estándar abierto, puedes copiarlos directamente a cualquier memoria USB, tarjeta SD o reproductor portátil para escucharlos en la radio de tu coche o en altavoces inalámbricos."
             },
             {
                 "q": "¿Por qué a veces un video tarda unos segundos más en procesarse?",
@@ -355,7 +355,7 @@ PAGES = {
                 "desc": "Los archivos generados se reproducen en el 100% de reproductores portátiles, radios de vehículos, equipos Hi-Fi y teléfonos inteligentes."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Sin Software Sospechoso",
                 "desc": "Olvídate de instalar programas de dudosa procedencia. Convierte tus temas favoritos de forma limpia directamente desde el navegador."
             },
@@ -705,7 +705,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['descargar youtube shorts',
  'descarga directa en navegador',
  'servidores de alta velocidad',
  'sin limite diario de descargas',
- 'conversor seguro sin virus',
+ 'conversor seguro y rápido',
  'almacenamiento en galeria de fotos',
  'moov atom fast start',
  'espacio de color rec 709',
@@ -723,7 +723,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['descargar youtube shorts',
  'como guardar youtube shorts en la galeria de fotos',
  'se puede convertir un short de youtube a mp3',
  'como descargar shorts de youtube sin aplicaciones',
- 'cual es el mejor descargador de youtube shorts sin virus',
+ 'cual es el mejor descargador de youtube shorts gratis',
  'como descargar shorts a 1080p 60fps',
  'como extraer la musica de un short de youtube',
  'por que no se descarga el audio de youtube shorts',
@@ -823,9 +823,9 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Descargar YouTube Shorts - Bajar
          {'q': '¿Cuánto espacio ocupa un video de YouTube Short en la memoria?',
           'a': 'Un video vertical típico de 60 segundos en calidad 1080p pesa aproximadamente entre 15 MB y 35 MB. La '
                'versión en solo audio MP3 ronda entre 2 MB y 4 MB.'},
-         {'q': '¿Es seguro usar YT4MP3 frente a virus o páginas falsas?',
+         {'q': '¿Es seguro usar YT4MP3 sin ventanas emergentes?',
           'a': 'Totalmente seguro. No mostramos ventanas emergentes invasivas, no requerimos permisos especiales en tu '
-               'navegador ni redirigimos a sitios de descargas fraudulentas.'},
+               'navegador ni redirigimos a sitios de páginas externas.'},
          {'q': '¿Es legal descargar Shorts para uso personal?',
           'a': 'Guardar videos para visualización personal fuera de línea, consulta educativa o archivo propio se '
                'ampara en el uso legítimo. Recuerda siempre respetar los derechos de propiedad de los creadores '
@@ -1067,7 +1067,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Descargar YouTube Shorts - Bajar
                  '</div>\n'
                  '\n'
                  '<p>Servicios como <strong>Savefrom</strong> o <strong>ShortsNoob</strong> obligan en ocasiones a '
-                 'sortear avisos fraudulentos de supuestos virus o notificaciones no deseadas. Por otro lado, '
+                 'evitar ventanas emergentes molestas o notificaciones no deseadas. Por otro lado, '
                  'aplicaciones corporativas como Publer imponen registros obligatorios. YT4MP3 se enfoca en la máxima '
                  'simplicidad: pegas tu enlace, guardas el archivo y continúas con tus actividades.</p>\n'
                  '\n'

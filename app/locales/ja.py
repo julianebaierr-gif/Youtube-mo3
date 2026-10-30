@@ -36,7 +36,7 @@ KEYWORDS_RESEARCH = {
         "オーディオブック 保存", "字幕付き 動画保存", "capcut 素材 動画", "premiere pro 読み込み",
         "tiktok 音源 保存", "著作権フリー 音楽", "フェアユース 活用", "個人バックアップ",
         "バックグラウンド再生", "画面オフ 再生", "ダークモード 対応", "スマートテレビ 再生",
-        "usbメモリ 音楽保存", "おすすめ youtube 変換サイト", "安全な mp3 サイト", "ウイルスなし 変換",
+        "usbメモリ 音楽保存", "おすすめ youtube 変換サイト", "安全な mp3 サイト", "高速オンライン変換",
         "音質劣化なし 抽出", "url コピー 変換", "リンク貼り付け 保存", "ダイレクト保存 ボタン",
         "無制限 無料変換", "hd mp4 保存", "mv クリップ 保存", "ライブ配信 アーカイブ",
         "日本語対応 変換ツール", "超高速 ダウンロード"
@@ -146,7 +146,7 @@ PAGES = {
             },
             {
                 "icon": "fa-solid fa-shield-halved",
-                "title": "危険な広告やマルウェアなし",
+                "title": "ポップアップ広告なしの快適設計",
                 "desc": "偽の警告画面や不審なアプリのダウンロード誘導は一切ありません。安心してご利用いただけます。"
             },
             {
@@ -285,7 +285,7 @@ PAGES = {
                 "desc": "ポータブルオーディオプレーヤー、車載ステレオ、スマートスピーカーなどあらゆる機器に対応。"
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "アプリ不要でブラウザ完結",
                 "desc": "デバイスに怪しいアプリやプラグインを導入することなく安全に音楽を抽出できます。"
             },
@@ -599,7 +599,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
  'H.264 MP4ファイル形式',
  '個別DASHストリーム',
  'クラウド高速デマルチプレクス',
- 'URL裏技 4youtube',
+ 'URLショートカット 4youtube',
  'PWA ホーム画面追加',
  'オフライン再生 通信量節約',
  'ギガ節約',
@@ -611,14 +611,14 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
  'ブラウザから直接ダウンロード',
  '待ち時間なし 高速サーバー',
  '1日のダウンロード制限なし',
- 'ウイルスなし 安全な変換ツール',
+ '安全で高速なオンライン変換ツール',
  'フォトライブラリ保存',
  'moov atom 高速再生',
  'Rec.709 色空間',
  'セリフ 切り抜き 音声',
  '面白いミーム 面白動画',
  '料理レシピ ショート',
- '裏技 テクノロジー ショート',
+ 'ショートカット テクノロジー ショート',
  '軽量 720p HD',
  'AAC ステレオ音声',
  '短い教育動画',
@@ -629,7 +629,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
  'Androidスマホでアプリを使わずにYouTubeショートを保存する方法',
  'YouTubeショート動画をMP3音楽に変換できますか',
  '怪しいアプリを入れずにYouTubeショートを保存する方法',
- '広告やウイルスのない一番安全なYouTubeショート保存サイトはどこ',
+ '一番使いやすくて安全なYouTubeショート保存サイトはどこ',
  'YouTubeショートを1080p 60fpsの高画質で保存する方法',
  'YouTubeショートからBGMや流行りの曲だけを抽出する方法',
  '他のサイトでダウンロードしたショート動画の音が出ない理由',
@@ -638,7 +638,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
  'iPhoneのSafariからショート動画を写真に保存する手順',
  '音ズレせずにYouTubeショートを綺麗に保存する方法',
  'YouTubeショートの音源を最高音質320kbps MP3で保存する方法',
- 'ショート動画保存の4youtube裏技の使い方',
+ 'ショート動画保存の4youtubeショートカットの使い方',
  '透かしやロゴが入らないYouTubeショート保存方法',
  'パソコンPCでYouTubeショートをダウンロードできますか',
  'オンラインのYouTubeショート保存サイトは安全ですか',
@@ -667,12 +667,12 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
                'desc': '話題のバズ音源や流行りのBGM、印象的なセリフを320kbpsのクリアな高音質MP3音楽として直接抽出。'},
               {'icon': 'fa-solid fa-shield-halved',
                'title': '邪魔な広告・ポップアップなし',
-               'desc': '怪しい偽警告やウイルス通知、強制的なアプリインストールの誘導が一切ない安心のクリーン環境。'},
+               'desc': '迷惑なポップアップ広告や不要なアプリインストールの誘導が一切ない安心のクリーン環境。'},
               {'icon': 'fa-solid fa-apple-whole',
                'title': 'iPhone＆Android 完全対応',
                'desc': 'iOS Safariから写真アプリ（カメラロール）へ直接保存可能。AndroidやPCのダウンロードにも対応。'},
               {'icon': 'fa-solid fa-bolt',
-               'title': 'URL短縮裏技＆PWAアプリ',
+               'title': 'URL短縮ショートカット＆PWAアプリ',
                'desc': 'アドレスバーで4youtubeと入力するだけで即時保存画面へ。ホーム画面へのアプリ追加にも対応。'}],
  'faq': [{'q': 'スマホでYouTubeショート動画を保存するにはどうすればいいですか？',
           'a': 'YouTubeアプリで動画を開き、「共有」をタップして「リンクをコピー」を選択します。次にYT4MP3の検索枠に貼り付け、MP4を選択して「ダウンロード」をタップするだけで保存できます。'},
@@ -689,7 +689,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
          {'q': '1日にダウンロードできる本数に制限はありますか？', 'a': '制限はありません。YT4MP3は個人利用、勉強、オフライン再生のために何度でも完全無料で無制限にご利用いただけます。'},
          {'q': 'アプリのインストールや会員登録は必要ですか？',
           'a': '一切不要です。ブラウザ上で完結するため、Android、iPhone、Mac、Windowsのどの端末でもソフトウェアを導入することなく即座に使えます。'},
-         {'q': '一瞬で保存できるURLの裏技とは何ですか？',
+         {'q': '一瞬で保存できるURLのショートカットとは何ですか？',
           'a': 'アドレスバーのyoutube.comの前に数字の「4」を付けるか（例: '
                '4youtube.com/shorts/id）、ドメインをyt4mp3.comに変えてEnterを押すだけで直接変換画面が開きます。'},
          {'q': 'なぜ保存した動画は縦長なのですか？',
@@ -700,7 +700,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
           'a': 'はい。標準的なH.264 MP4形式およびAAC音声で保存されるため、CapCut、Adobe Premiere Pro、DaVinci Resolveなどでエラーなく読み込めます。'},
          {'q': '非公開動画や年齢制限動画も保存できますか？', 'a': '当ツールはYouTube上で一般公開されているショート動画のみに対応しています。ログインが必要なプライベート動画は保存できません。'},
          {'q': '1本のショート動画でどれくらいのデータ容量を消費しますか？', 'a': '60秒の1080p縦型動画でおよそ15MB〜35MB程度です。MP3の音声のみであれば約2.5MB〜4MBと非常に軽量です。'},
-         {'q': 'ウイルスや不正なプログラムの心配はありませんか？', 'a': '安心してお使いいただけます。不要なポップアップや不審なファイルのダウンロード誘導は徹底して排除しており、安全なクラウド上で処理されます。'},
+         {'q': '迷惑なポップアップ広告なしで安全に使えますか？', 'a': '安心してお使いいただけます。不要なポップアップや不審なファイルのダウンロード誘導は徹底して排除しており、安全なクラウド上で処理されます。'},
          {'q': 'YouTubeショートを個人でダウンロードして見るのは合法ですか？',
           'a': '私的使用のためのオフライン視聴や個人的なバックアップ目的での保存は私的複製の範囲内です。クリエイターの著作権を尊重してご活用ください。'}],
  'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
@@ -719,8 +719,8 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
                  'ロゴや透かしの一切ない純正動画クオリティの保証</a></li>\n'
                  '  <li><a href="#creator-repurpose-ja" class="hover:text-rose-600 transition-colors">6. '
                  'クリエイター向け：TikTokやリールへの再投稿ワークフロー</a></li>\n'
-                 '  <li><a href="#url-urawaza-pwa-ja" class="hover:text-rose-600 transition-colors">7. '
-                 'アドレスバーのURL裏技とPWAホーム画面アプリ</a></li>\n'
+                 '  <li><a href="#url-shortcut-pwa-ja" class="hover:text-rose-600 transition-colors">7. '
+                 'アドレスバーのURLショートカットとPWAホーム画面アプリ</a></li>\n'
                  '  <li><a href="#dash-otozure-kaishou-ja" class="hover:text-rose-600 transition-colors">8. '
                  '音ズレを防ぐDASH個別ストリームの高精度同期技術</a></li>\n'
                  '</ul>\n'
@@ -875,7 +875,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
                  '<td>×（メール登録が必須）</td>\n'
                  '</tr>\n'
                  '<tr>\n'
-                 '<td><strong>ブラウザURL裏技</strong></td>\n'
+                 '<td><strong>ブラウザURLショートカット</strong></td>\n'
                  '<td>〇（4youtube または yt4mp3）</td>\n'
                  '<td>×（ショートカット機能なし）</td>\n'
                  '<td>△（ss入力・広告過多）</td>\n'
@@ -899,7 +899,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
                  '</table>\n'
                  '</div>\n'
                  '\n'
-                 '<p><strong>Savefrom</strong>や<strong>ShortsNoob</strong>では、「ウイルスに感染しました」といった偽の警告広告や、不要な通知の許可を迫られるトラブルが後を絶ちません。またPublerはメールアドレス登録が必要です。YT4MP3は徹底したシンプル設計で、リンクを貼ればすぐに目的のファイルが手に入ります。</p>\n'
+                 '<p><strong>Savefrom</strong>や<strong>ShortsNoob</strong>では、迷惑なポップアップバナー広告や、不要な通知の許可を迫られるトラブルが後を絶ちません。またPublerはメールアドレス登録が必要です。YT4MP3は徹底したシンプル設計で、リンクを貼ればすぐに目的のファイルが手に入ります。</p>\n'
                  '\n'
                  '<h2 id="sukashinashi-gensun-ja">5. ロゴや透かしの一切ない純正動画クオリティの保証</h2>\n'
                  '<p>保存した動画を編集に使う際、誰もが気にするのが「動画に余計なロゴが入らないか」という点です。TikTokアプリなどで動画を直接保存すると、投稿者のアカウント名が動くウォーターマークとして焼き付けられます。</p>\n'
@@ -928,10 +928,10 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - Shor
                  'Resolve、CapCutなどへ読み込んだ際にタイムラインでの同期エラーが起きません。</li>\n'
                  '</ul>\n'
                  '\n'
-                 '<h2 id="url-urawaza-pwa-ja">7. アドレスバーのURL裏技とPWAホーム画面アプリ</h2>\n'
-                 '<p>何本も続けて動画を保存したい場合、毎回アプリを切り替えてリンクをコピー＆ペーストするのは少し手間に感じられます。YT4MP3では時間を劇的に短縮する2つの裏技をご用意しています：</p>\n'
+                 '<h2 id="url-shortcut-pwa-ja">7. アドレスバーのURLショートカットとPWAホーム画面アプリ</h2>\n'
+                 '<p>何本も続けて動画を保存したい場合、毎回アプリを切り替えてリンクをコピー＆ペーストするのは少し手間に感じられます。YT4MP3では時間を劇的に短縮する2つのショートカットをご用意しています：</p>\n'
                  '\n'
-                 '<h3>アドレスバーで直接書き換えるURL裏技</h3>\n'
+                 '<h3>アドレスバーで直接書き換えるURLショートカット</h3>\n'
                  '<p>パソコンやスマホのブラウザでYouTubeショートを再生している最中なら、わざわざ当サイトのトップページを開く必要はありません：</p>\n'
                  '<ul>\n'
                  '  <li>URLの <code>youtube.com/shorts/○○</code> を <code>yt4mp3.com/shorts/○○</code> に書き換える</li>\n'

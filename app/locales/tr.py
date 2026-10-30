@@ -34,7 +34,7 @@ KEYWORDS_RESEARCH = {
         "premiere pro mp4 aktarma", "tiktok için klip kesme", "telifsiz youtube müzikleri", "adil kullanım indirici",
         "kişisel arşivleme", "kesintisiz arka planda dinleme", "ekran kapalı müzik", "gece modu arayüzü",
         "akıllı tv için video indir", "flash bellek müzik yükleme", "en iyi youtube dönüştürücü", "güvenilir mp3 sitesi",
-        "virüssüz video dönüştürücü", "kayıpsız ses aktarımı", "youtube linkinden mp3", "url ile video indir",
+        "hızlı video dönüştürücü", "kayıpsız ses aktarımı", "youtube linkinden mp3", "url ile video indir",
         "hızlı indirme butonu", "ücretsiz sınırsız indirme", "hd mp4 dönüştürücü", "youtube klip indir",
         "canlı yayın kaydetme", "türkçe mp3 dönüştürücü"
     ],
@@ -90,7 +90,7 @@ UI = {
     "comp_row3_others": "128 kbps sıkıştırma veya bulanık 360p çözünürlükle sınırlı",
     "comp_row4_title": "Rahatsız Edici Reklamlar & Pop-up",
     "comp_row4_yt4mp3": "Temiz ve güvenli: Sıfır açılır pencere, sahte indirme butonu yok",
-    "comp_row4_others": "Spam yönlendirmeler, zararlı reklamlar ve virüs riski",
+    "comp_row4_others": "Spam yönlendirmeler, açılır pencereler ve yavaş kuyruklar",
     "comp_row5_title": "Mobil ve Cihaz Uyumluluğu",
     "comp_row5_yt4mp3": "iPhone Safari, Android Chrome, Mac ve Windows'ta sorunsuz",
     "comp_row5_others": "iOS Safari'de hata verir veya şüpheli APK yüklemesi ister",
@@ -113,7 +113,7 @@ UI = {
 PAGES = {
     "home": {
         "title": "YouTube Video İndir & MP3 Dönüştürücü Ücretsiz | YT4MP3",
-        "meta_desc": "YouTube videolarını MP3 (320kbps) ve MP4 (1080p/4K) formatında ücretsiz indirin. Programsız, virüssüz, reklamsız, Android ve iPhone uyumlu hızlı dönüştürücü.",
+        "meta_desc": "YouTube videolarını MP3 (320kbps) ve MP4 (1080p/4K) formatında ücretsiz indirin. Programsız, hızlı, reklamsız, Android ve iPhone uyumlu hızlı dönüştürücü.",
         "h1": "YouTube MP3 ve MP4 Dönüştürücü Online",
         "subtitle": "320 kbps'ye kadar kristal netliğinde MP3 ses ve 1080p Full HD video dosyalarını hiçbir program yüklemeden doğrudan tarayıcınızdan indirin.",
         "badge": "Hızlı & Güvenli Medya İndirici",
@@ -143,8 +143,8 @@ PAGES = {
             },
             {
                 "icon": "fa-solid fa-shield-halved",
-                "title": "Zararlı Reklamlar Olmadan",
-                "desc": "Kandırmaca yok. Sahte indirme butonları, virüslü bildirimler veya zorunlu kayıt formları ile uğraşmazsınız."
+                "title": "Açılır Pencere Olmadan",
+                "desc": "Kandırmaca yok. Sahte indirme butonları, rahatsız edici bildirimler veya zorunlu kayıt formları ile uğraşmazsınız."
             },
             {
                 "icon": "fa-solid fa-infinity",
@@ -285,7 +285,7 @@ PAGES = {
                 "desc": "Eski model araba teypleri, taşınabilir hoparlörler ve akıllı telefonlarla %100 uyumludur."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Program Yüklemeden Güvenli",
                 "desc": "Bilinmeyen yazılımlardan uzak durun. Dönüştürme işlemini tarayıcınızdan güvenle tamamlayın."
             },
@@ -389,10 +389,10 @@ PAGES = {
 </div>
 
 <h2 id="araba-ve-spor">Çevrimdışı Müzik: Araba, Spor ve Seyahat</h2>
-<p>İnternet bağlantısının kesildiği tünellerde veya kırsal yolculuklarda müziğinizin kesilmesini istemiyorsanız, parçaları USB belleğe aktarmak en pratik yoldur. İndirdiğiniz dosyalar DRM korumasız standart MP3 olduğu için tüm oto teypleriyle anında uyum sağlar.</p>
+<p>İnternet bağlantısının kesildiği tünellerde veya kırsal yolculuklarda müziğinizin kesilmesini istemiyorsanız, parçaları USB belleğe aktarmak en pratik yoldur. İndirdiğiniz dosyalar evrensel standart MP3 olduğu için tüm oto teypleriyle anında uyum sağlar.</p>
 
 <h2 id="guvenli-ses-donusumu">Güvenli ve Temiz Ses Ayrıştırma Süreci</h2>
-<p>Sunucularımız dönüşüm işlemini bulutta tamamlar. Bilgisayarınıza virüslü codec paketleri ya da casus yazılımlar kurmanız gerekmez. Güvenilir ve şeffaf bir indirme deneyimi sunuyoruz.</p>"""
+<p>Sunucularımız dönüşüm işlemini bulutta tamamlar. Bilgisayarınıza ekstra masaüstü programları veya eklentiler kurmanız gerekmez. Güvenilir ve şeffaf bir indirme deneyimi sunuyoruz.</p>"""
     },
     "youtube-to-mp4": {
         "title": "YouTube MP4 Video İndirici (1080p & 4K) | YT4MP3",
@@ -587,7 +587,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts indir',
  'filigransız',
  '320 kbps mp3 ses çıkarma',
  'shorts sesini mp3 yapma',
- 'reklamsız ve virüssüz',
+ 'hızlı ve pratik',
  'açılır pencereler olmadan',
  'iphone safari galeriye kaydetme',
  'android chrome indirilenler klasörü',
@@ -611,7 +611,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts indir',
  'tarayıcıdan doğrudan indirme',
  'hızlı sunucular bekleme yok',
  'günlük indirme sınırı yok',
- 'güvenli dönüştürücü virüssüz',
+ 'güvenli ve hızlı dönüştürücü',
  'fotoğraf galerisine kaydetme',
  'moov atom hızlı başlatma',
  'rec 709 renk uzayı',
@@ -629,7 +629,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts indir',
  'youtube shorts videosu galeriye nasıl kaydedilir',
  'youtube shorts videosunu mp3 yapma nasıl olur',
  'programsız youtube shorts nasıl indirilir',
- 'en güvenli ve virüssüz shorts indirme sitesi hangisi',
+ 'en hızlı ve pratik shorts indirme sitesi hangisi',
  '1080p 60fps shorts nasıl indirilir',
  'youtube shorts videosundan müzik nasıl alınır',
  'indirilen shorts videoları neden sessiz iniyor',
@@ -638,7 +638,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts indir',
  'youtube shorts iphone da fotoğraflar uygulamasına nasıl kaydedilir',
  'ses kayması olmadan shorts nasıl indirilir',
  'youtube shorts şarkıları mp3 320kbps olarak nasıl indirilir',
- 'shorts için 4youtube hilesi nasıl kullanılır',
+ 'shorts için 4youtube kısayolu nasıl kullanılır',
  'filigransız youtube shorts nasıl indirilir',
  'bilgisayara youtube shorts videosu indirilir mi',
  'online shorts dönüştürücü kullanmak güvenli mi',
@@ -672,7 +672,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts İndir - Shorts M
                        'kaliteli MP3 olarak kaydedin.'},
               {'icon': 'fa-solid fa-shield-halved',
                'title': 'Sıfır İstilacı Reklam',
-               'desc': 'Yanıltıcı pencereler, sahte virüs uyarıları ve zorla açılan yönlendirmeler olmadan güvenle '
+               'desc': 'Yanıltıcı pencereler, rahatsız edici bildirimler ve zorla açılan yönlendirmeler olmadan güvenle '
                        'işlem yapın.'},
               {'icon': 'fa-solid fa-apple-whole',
                'title': 'iPhone ve Android Uyumlu',
@@ -725,7 +725,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts İndir - Shorts M
          {'q': 'Bir Shorts videosu cihazımda ne kadar yer kaplar?',
           'a': '1080p kalitesinde 60 saniyelik bir dikey video genellikle 15 MB ile 35 MB arasındadır. Yalnızca MP3 '
                'ses dosyası ise yaklaşık 2,5 MB - 4 MB yer kaplar.'},
-         {'q': 'YT4MP3 virüs ve zararlı yazılımlara karşı güvenli midir?',
+         {'q': 'YT4MP3 kullanımı güvenli ve pratik midir?',
           'a': 'Kesinlikle güvenlidir. İstilacı açılır pencereler, aldatıcı indirme butonları ya da gereksiz izin '
                'talepleri bulunmaz.'},
          {'q': 'YouTube Shorts videolarını kişisel kullanım için indirmek yasal mı?',

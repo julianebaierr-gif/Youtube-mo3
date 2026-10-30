@@ -34,7 +34,7 @@ KEYWORDS_RESEARCH = {
         "macbook et pc windows 11", "youtube shorts en mp3", "musique hors ligne sans connexion internet",
         "trajets train tgv avion", "podcasts francais complets", "sonnerie telephone personnalisee",
         "conteneur mp4 standard", "codec video h264", "flux audio aac stereo",
-        "copie privee et usage personnel", "droit dauteur et fair use", "outil securise sans virus ni publicite intrusive",
+        "copie privee et usage personnel", "droit dauteur et fair use", "outil rapide sans publicite intrusive",
         "cle usb pour autoradio de voiture", "lecture sur smart tv samsung lg", "sauvegarde google drive dropbox",
         "telecharger playlists youtube", "musique de sport et fitness", "vitesse de conversion eclair dans le cloud",
         "sans filigrane ni logo ajoute", "frequence echantillonnage 44.1 khz", "logiciel vlc media player",
@@ -152,7 +152,7 @@ PAGES = {
             {
                 "icon": "fa-solid fa-shield-halved",
                 "title": "Sans Publicité Trompeuse",
-                "desc": "Profitez d'un outil propre. Pas de faux boutons de téléchargement, pas de virus, ni de pop-ups intrusifs."
+                "desc": "Profitez d'un outil propre. Pas de faux boutons de téléchargement ni de pop-ups intrusifs."
             },
             {
                 "icon": "fa-solid fa-infinity",
@@ -186,7 +186,7 @@ PAGES = {
                 "a": "Oui, absolument. Cliquez sur 'Partager' sur la vidéo Shorts, copiez le lien et collez-le sur YT4MP3. Vous obtiendrez la bande sonore au format MP3 en quelques instants."
             },
             {
-                "q": "Le service est-il sûr et sans virus ?",
+                "q": "Le service est-il fiable et sans pop-ups ?",
                 "a": "Oui, sécurité absolue. Nous ne proposons aucun installateur douteux et n'affichons pas de fenêtres pop-ups piégées. Le traitement est effectué sur nos serveurs distants et le lien de téléchargement fourni est totalement sain."
             },
             {
@@ -336,7 +336,7 @@ PAGES = {
                 "desc": "Vos fichiers se lisent sur 100% des systèmes audio, casques bluetooth, autoradios et enceintes nomades."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Sans Logiciel Tiers",
                 "desc": "Ne téléchargez aucun programme suspect. Toute la conversion s'effectue en direct dans votre navigateur web."
             },
@@ -647,7 +647,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['télécharger short youtube',
  'téléchargement direct navigateur',
  'serveurs ultra rapides sans file d attente',
  'sans limite quotidienne de téléchargement',
- 'convertisseur sécurisé sans virus',
+ 'convertisseur sécurisé et rapide',
  'enregistrement galerie de photos',
  'moov atom fast start',
  'espace colorimétrique rec 709',
@@ -665,7 +665,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['télécharger short youtube',
  'comment enregistrer un short youtube dans la galerie de photos',
  'peut on convertir un short youtube en mp3',
  'comment télécharger des shorts youtube sans installer d application',
- 'quel est le meilleur téléchargeur youtube shorts gratuit et sans virus',
+ 'quel est le meilleur téléchargeur youtube shorts gratuit en ligne',
  'comment télécharger des shorts en 1080p 60fps',
  'comment extraire la musique d un short youtube',
  'pourquoi la vidéo du short se télécharge sans son sur d autres sites',
@@ -708,7 +708,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Télécharger YouTube Shorts en 
                        'audio MP3 de haute fidélité.'},
               {'icon': 'fa-solid fa-shield-halved',
                'title': 'Zéro Publicité Intrusive',
-               'desc': 'Navigation sereine sans fenêtres pop-up trompeuses, fausses alertes virus ni téléchargements '
+               'desc': 'Navigation sereine sans fenêtres pop-up trompeuses, bannières intrusives ni téléchargements '
                        "d'applications douteuses."},
               {'icon': 'fa-solid fa-apple-whole',
                'title': 'Compatible iPhone et Android',
@@ -762,7 +762,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Télécharger YouTube Shorts en 
          {'q': 'Quelle quantité de mémoire prend un short téléchargé en moyenne ?',
           'a': "Un short de 60 secondes en 1080p pèse généralement entre 15 Mo et 35 Mo. L'extraction audio MP3 seule "
                'prend environ 2,5 Mo à 4 Mo.'},
-         {'q': 'Le site YT4MP3 est-il sûr et sans virus ?',
+         {'q': 'Le site YT4MP3 est-il fiable et sans pop-ups ?',
           'a': 'Absolument. Nous appliquons une politique sans pop-ups trompeurs ni redirections suspectes. Le '
                'traitement se fait sur nos serveurs sécurisés sans risque pour votre appareil.'},
          {'q': 'Est-il légal de télécharger des YouTube Shorts pour un usage personnel ?',

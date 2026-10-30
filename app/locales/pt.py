@@ -34,7 +34,7 @@ KEYWORDS_RESEARCH = {
         "toque de celular ringtone whatsapp", "pendrive para som automotivo e som de carro", "smart tv samsung e lg reproducao usb",
         "iphone salvar no app arquivos files", "android salvar na pasta downloads", "navegador chrome safari edge opera",
         "formato mp4 h264 compativel", "audio aac estereo potente", "taxa de bits bitrate",
-        "resolucao de tela", "seguro sem virus e sem malware", "backup pessoal e copia de seguranca",
+        "resolucao de tela", "seguro e rapido no navegador", "backup pessoal e copia de seguranca",
         "uso justo fair use e creative commons", "video aulas e cursos online", "baixar audio de conferencias",
         "musica para academia e treino", "conversao rapida na nuvem", "sem marcas dagua no video",
         "equalizacao sonora perfeita", "extrair trilha sonora", "salvar clips musicais",
@@ -97,7 +97,7 @@ UI = {
     "comp_row3_others": "Limitado a 128 kbps comprimido ou resolução baixa 360p",
     "comp_row4_title": "Anúncios Invasivos e Pop-ups",
     "comp_row4_yt4mp3": "Limpo e seguro: Zero pop-unders, sem botões falsos de download",
-    "comp_row4_others": "Redirecionamentos perigosos, pop-ups insistentes e risco de malware",
+    "comp_row4_others": "Redirecionamentos irritantes, pop-ups insistentes e filas lentas",
     "comp_row5_title": "Suporte para Celular e Computador",
     "comp_row5_yt4mp3": "Funciona com perfeição no iPhone Safari, Android Chrome, Mac e Windows",
     "comp_row5_others": "Geralmente falha no Safari iOS ou exige instalar apps APK suspeitos",
@@ -185,7 +185,7 @@ PAGES = {
                 "a": "Sim! Basta clicar em 'Compartilhar' no vídeo Shorts do YouTube, copiar o link e colar na nossa ferramenta. Você pode salvar o vídeo completo em formato vertical ou apenas o áudio."
             },
             {
-                "q": "O site é seguro contra vírus e malwares?",
+                "q": "O site é seguro e livre de pop-ups?",
                 "a": "Sim, total segurança. Não utilizamos botões falsos de download, não instalamos arquivos suspeitos em segundo plano e todo o processamento de mídia é feito de forma isolada nos nossos servidores."
             },
             {
@@ -335,7 +335,7 @@ PAGES = {
                 "desc": "Toca sem erros em caixas JBL, rádios automotivos por USB, mini systems e fones bluetooth."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Seguro e Sem Instaladores",
                 "desc": "Livre de programas suspeitos. Toda a conversão ocorre no navegador com total sigilo e proteção dos seus dados."
             },
@@ -646,7 +646,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['baixar shorts youtube',
  'download direto no navegador',
  'servidores de alta velocidade',
  'sem limite diario de downloads',
- 'conversor seguro sem virus',
+ 'conversor seguro e rapido',
  'armazenamento na galeria de fotos',
  'moov atom fast start',
  'espaco de cores rec 709',
@@ -664,7 +664,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['baixar shorts youtube',
  'como salvar shorts do youtube na galeria de fotos',
  'e possivel converter shorts do youtube em mp3',
  'como baixar shorts do youtube sem instalar aplicativos',
- 'qual o melhor site para baixar shorts do youtube sem virus',
+ 'qual o melhor site para baixar shorts do youtube gratis',
  'como baixar shorts em 1080p 60fps',
  'como tirar a musica de um short do youtube',
  'por que o video do shorts baixa sem som em outros sites',

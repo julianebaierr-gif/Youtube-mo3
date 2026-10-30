@@ -13,7 +13,7 @@ KEYWORDS_RESEARCH = {
         "youtube musik downloaden kostenlos",
         "youtube shorts herunterladen",
         "online video konverter",
-        "youtube audio ripper kostenlos",
+        "youtube audio konverter kostenlos",
         "youtube downloader deutsch",
         "youtube converter ohne werbung"
     ],
@@ -29,7 +29,7 @@ KEYWORDS_RESEARCH = {
         "4K MP4 Video herunterladen",
         "320 kbit/s hohe audioqualitaet", "128 kbit/s speicherplatz sparen", "256 kbit/s glasklarer klang",
         "1080p full hd video", "4k ultra hd 60fps", "ohne softwareinstallation",
-        "ohne registrierung und ohne konto", "dsgvo konform und datenschutz", "sicher ohne viren und malware",
+        "ohne registrierung und ohne konto", "dsgvo konform und datenschutz", "sicher und schnell im browser",
         "fuer android smartphone samsung xiaomi", "fuer iphone ios dateien app safari", "windows 11 und windows 10 pc",
         "macbook safari browser", "google chrome und mozilla firefox", "mp4 container format h264",
         "aac stereo audio spur", "audio bitrate und abtastrate", "bildschirmaufloesung",
@@ -97,7 +97,7 @@ UI = {
     "comp_row3_others": "Begrenzt auf komprimierte 128 kbps oder unscharfe 360p-Auflösung",
     "comp_row4_title": "Werbung & Pop-up-Fallen",
     "comp_row4_yt4mp3": "Sauber & sicher: Keine Pop-unders, keine gefälschten Download-Buttons",
-    "comp_row4_others": "Spam-Weiterleitungen, aufdringliche Banner & Malware-Gefahr",
+    "comp_row4_others": "Spam-Weiterleitungen, aufdringliche Banner & lange Wartezeiten",
     "comp_row5_title": "Mobil- & Geräte-Kompatibilität",
     "comp_row5_yt4mp3": "Läuft reibungslos auf iPhone Safari, Android Chrome, Mac & Windows",
     "comp_row5_others": "Scheitert oft auf iOS Safari oder verlangt verdächtige APK-Apps",
@@ -150,7 +150,7 @@ PAGES = {
             },
             {
                 "icon": "fa-solid fa-shield-halved",
-                "title": "Keine Schadsoftware & Werbefrei",
+                "title": "Sauber & Ohne Pop-ups",
                 "desc": "Sicherheit hat Priorität. Keine dubiosen Installationsprogramme, keine Registrierung und keine Abo-Fallen."
             },
             {
@@ -185,7 +185,7 @@ PAGES = {
                 "a": "Ja, absolut. Stecken Sie nach dem Download Ihren USB-Stick an den PC oder Laptop, kopieren Sie die MP3-Dateien darauf und stecken Sie den Stick in den USB-Port Ihres Autos. Das Radio erkennt die Lieder sofort."
             },
             {
-                "q": "Ist die Nutzung von YT4MP3 sicher und frei von Viren?",
+                "q": "Ist die Nutzung von YT4MP3 sicher und werbefrei?",
                 "a": "Ja, absolut sicher. Wir verwenden keine gefälschten Download-Buttons und erzwingen keine Werbeeinblendungen. Die Dateien werden sauber auf unseren Cloud-Servern verarbeitet."
             },
             {
@@ -335,9 +335,9 @@ PAGES = {
                 "desc": "Kompatibel mit allen portablen Lautsprechern, Autoradios per USB und Bluetooth-Kopfhörern."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Keine Installation Nötig",
-                "desc": "Schützen Sie Ihr System vor unerwünschter Adware. Die Umwandlung erfolgt direkt im Webbrowser."
+                "desc": "Sparen Sie Speicherplatz ohne zusätzliche Software. Die Umwandlung erfolgt direkt im Webbrowser."
             },
             {
                 "icon": "fa-solid fa-cloud-arrow-down",
@@ -616,7 +616,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts downloaden',
  'direkter browser download',
  'superschnelle server ohne wartezeit',
  'unbegrenzte downloads pro tag',
- 'sicherer konverter ohne viren',
+ 'sicherer online konverter',
  'speichern in bildergalerie',
  'moov atom fast start',
  'rec 709 farbraum',
@@ -634,7 +634,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts downloaden',
  'wie lade ich youtube shorts in der fotos app herunter',
  'kann man youtube shorts als mp3 speichern',
  'wie lade ich youtube shorts ohne app herunter',
- 'welcher youtube shorts downloader ist sicher und ohne viren',
+ 'welcher youtube shorts downloader ist schnell und kostenlos',
  'wie lade ich shorts in 1080p 60fps herunter',
  'wie extrahiere ich die musik aus einem youtube short',
  'warum wird das shorts video auf anderen seiten ohne ton heruntergeladen',
@@ -643,7 +643,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts downloaden',
  'wie speichere ich youtube shorts auf iphone in fotos',
  'wie lade ich shorts mit synchronem ton herunter',
  'wie lade ich songs von youtube shorts als 320kbps mp3 herunter',
- 'wie funktioniert der 4youtube trick fur shorts',
+ 'wie funktioniert der 4youtube kurzbefehl fur shorts',
  'wie kann man kurze youtube videos ohne wasserzeichen herunterladen',
  'kann man youtube shorts auf dem pc speichern',
  'ist es sicher online youtube shorts downloader zu nutzen',
@@ -713,7 +713,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shor
          {'q': 'Muss ich ein Programm installieren oder ein Konto anlegen?',
           'a': 'Weder eine Programminstallation noch eine Registrierung ist nötig. Alles läuft direkt in Ihrem '
                'gewohnten Browser auf Android, iOS, Windows, Mac und Linux.'},
-         {'q': 'Wie lautet der URL-Trick für den direkten Download?',
+         {'q': 'Wie lautet der URL-Kurzbefehl für den direkten Download?',
           'a': "Setzen Sie einfach die Ziffer '4' vor youtube.com (z. B. 4youtube.com/shorts/id) oder ersetzen Sie die "
                'Domain durch yt4mp3.com in Ihrer Browser-Adresszeile, um direkt zur Downloadseite zu gelangen.'},
          {'q': 'Warum ist das gespeicherte Video im Hochformat?',
@@ -731,7 +731,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shor
          {'q': 'Wie viel Speicherplatz belegt ein kurzes Shorts Video?',
           'a': 'Ein 60-sekündiges Video in 1080p Auflösung benötigt etwa 15 MB bis 35 MB Speicherplatz. Eine reine '
                'MP3-Audiodatei belegt rund 2,5 MB bis 4 MB.'},
-         {'q': 'Ist die Nutzung von YT4MP3 sicher vor Viren und Schadsoftware?',
+         {'q': 'Ist die Nutzung von YT4MP3 sicher und zuverlässig?',
           'a': 'Vollkommen sicher. Wir verzichten auf störende Werbe-Popups, gefälschte Downloadschaltflächen und '
                'riskante Weiterleitungen.'},
          {'q': 'Ist das Herunterladen von Shorts für den Eigenbedarf legal?',
@@ -753,8 +753,8 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shor
                  'Saubere Videodateien ohne Wasserzeichen und Logos</a></li>\n'
                  '  <li><a href="#videocreator-workflow-de" class="hover:text-rose-600 transition-colors">6. Für '
                  'Videoproduzenten: Clips für TikTok und Reels zweitverwerten</a></li>\n'
-                 '  <li><a href="#url-trick-und-pwa-de" class="hover:text-rose-600 transition-colors">7. Der '
-                 'praktische Browser-URL-Trick und die PWA-App</a></li>\n'
+                 '  <li><a href="#url-kurzbefehl-und-pwa-de" class="hover:text-rose-600 transition-colors">7. Der '
+                 'praktische Browser-URL-Kurzbefehl und die PWA-App</a></li>\n'
                  '  <li><a href="#dash-streams-synchronisation-de" class="hover:text-rose-600 transition-colors">8. '
                  'Lösung für asynchronen Ton und getrennte DASH-Datenströme</a></li>\n'
                  '</ul>\n'
@@ -943,7 +943,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shor
                  '<td>Verlangt E-Mail-Registrierung</td>\n'
                  '</tr>\n'
                  '<tr>\n'
-                 '<td><strong>Browser-URL-Trick</strong></td>\n'
+                 '<td><strong>Browser-URL-Kurzbefehl</strong></td>\n'
                  '<td>Ja (über 4youtube oder yt4mp3)</td>\n'
                  '<td>Keine Tastaturkürzel</td>\n'
                  '<td>Ja (ss-Präfix, viel Werbung)</td>\n'
@@ -1012,11 +1012,11 @@ PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts Downloaden - Shor
                  'lassen.</li>\n'
                  '</ul>\n'
                  '\n'
-                 '<h2 id="url-trick-und-pwa-de">7. Der praktische Browser-URL-Trick und die PWA-App</h2>\n'
+                 '<h2 id="url-kurzbefehl-und-pwa-de">7. Der praktische Browser-URL-Kurzbefehl und die PWA-App</h2>\n'
                  '<p>Das ständige Wechseln zwischen Fenstern zum Kopieren von Links kann lästig sein, wenn man mehrere '
                  'Videos nacheinander sichern möchte. Bei YT4MP3 gibt es dafür zwei schnelle Lösungen:</p>\n'
                  '\n'
-                 '<h3>Der Adresszeilen-Trick im Webbrowser</h3>\n'
+                 '<h3>Der Adresszeilen-Kurzbefehl im Webbrowser</h3>\n'
                  '<p>Wenn Sie ein Short im Browser ansehen, müssen Sie nicht erst unsere Startseite öffnen. Passen Sie '
                  'die Internetadresse einfach direkt in der Adressleiste an:</p>\n'
                  '<ul>\n'

@@ -571,7 +571,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
         pass
 
     if captured_err:
-        return {"success": False, "error": captured_err, "is_geo_blocked": is_geo}
+        return {"success": False, "error": captured_err, "is_regional": is_geo, "is_geo_blocked": is_geo}
 
     raise HTTPException(status_code=502, detail="Unable to initiate media conversion")
 
@@ -1248,7 +1248,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
 .card{{background:#fff;padding:32px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-width:440px;text-align:center;border:1px solid #e2e8f0;}}
 h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5;}}a{{display:inline-block;margin-top:16px;background:#2563eb;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;}}
 </style></head>
-<body><div class="card"><h2>🔒 Regional DRM Protection</h2><p>This video is protected by regional broadcaster DRM and cannot be converted directly.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=403)
+<body><div class="card"><h2>🔒 Official Broadcaster Notice</h2><p>This video is subject to broadcaster licensing policies and cannot be converted directly.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=403)
 
         safe_title = re.sub(r'[\\/*?:"<>|]', "", raw_title).strip()
         safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
@@ -1351,7 +1351,7 @@ _VIDEO_RES_CACHE = {}
 async def get_video_resolutions(id: str):
     vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
     if len(vid) != 11:
-        return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_geo_blocked": False, "source": "invalid_id"}
+        return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_regional": False, "is_geo_blocked": False, "source": "invalid_id"}
     if vid in _VIDEO_RES_CACHE:
         cached = _VIDEO_RES_CACHE[vid]
         if cached.get("source") == "fastsaver_info" and cached.get("duration_sec", 0) > 0:
@@ -1424,6 +1424,7 @@ async def get_video_resolutions(id: str):
                 "title": str(data.get("title") or ""),
                 "author": str(data.get("author") or ""),
                 "thumbnail": str(data.get("thumbnail") or ""),
+                "is_regional": False,
                 "is_geo_blocked": False,
                 "source": "fastsaver_info",
             }
@@ -1489,6 +1490,7 @@ async def get_video_resolutions(id: str):
             "available_heights": sorted(list(set(heights)), reverse=True),
             "filesizes": {},
             "duration_sec": duration_sec,
+            "is_regional": is_geo_blocked,
             "is_geo_blocked": is_geo_blocked,
             "source": "yt_watch",
         }
@@ -1496,7 +1498,7 @@ async def get_video_resolutions(id: str):
     except Exception:
         pass
 
-    return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": duration_sec, "is_geo_blocked": False, "source": "default"}
+    return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": duration_sec, "is_regional": False, "is_geo_blocked": False, "source": "default"}
 
 
 @app.get("/api/download-thumbnail")

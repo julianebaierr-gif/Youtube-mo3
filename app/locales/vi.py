@@ -36,13 +36,13 @@ KEYWORDS_RESEARCH = {
         "tải sách nói youtube", "tải video có phụ đề", "video mẫu cho capcut", "xuất file sang premiere pro",
         "video ngắn cho tiktok", "nhạc bản quyền miễn phí", "sử dụng hợp lý", "sao lưu cá nhân",
         "phát nhạc trong nền", "nghe nhạc tắt màn hình", "giao diện tối dễ nhìn", "tải video xem trên tivi",
-        "chép video vào thẻ nhớ", "web tải youtube tốt nhất", "trang web tải mp3 an toàn", "chuyển đổi không virus",
+        "chép video vào thẻ nhớ", "web tải youtube tốt nhất", "trang web tải mp3 an toàn", "chuyển đổi nhanh trực tuyến",
         "tách âm thanh không giảm chất lượng", "dán link youtube sang mp3", "tải video bằng url", "nút tải trực tiếp",
         "tải miễn phí không giới hạn", "công cụ chuyển hd mp4", "tải clip ca nhạc youtube", "lưu livestream youtube",
         "chuyển đổi tiếng việt", "tải siêu tốc cho điện thoại"
     ],
     "content_gap": [
-        "Loại bỏ hoàn toàn các cửa sổ nhảy thông báo lừa đảo và nút tải giả mạo thường thấy trên Y2Mate hay SaveFrom",
+        "Loại bỏ hoàn toàn các cửa sổ quảng cáo bật lên và thời gian chờ đợi lâu",
         "Chuẩn âm thanh 320 kbps chuẩn xác, không bị bóp nghẹt âm trầm hay méo tiếng trên loa ô tô và dàn âm thanh",
         "Hướng dẫn chi tiết cách lưu trực tiếp vào ứng dụng Tệp trên iPhone và thư mục Tải về trên Android",
         "Định dạng MP4 tương thích 100% với các ứng dụng dựng video phổ biến tại Việt Nam như CapCut và Premiere"
@@ -93,7 +93,7 @@ UI = {
     "comp_row3_others": "Bị giới hạn ở 128 kbps nén hoặc video mờ 360p",
     "comp_row4_title": "Quảng cáo & Cửa sổ bật lên",
     "comp_row4_yt4mp3": "Sạch & an toàn: Không pop-under, không nút tải giả mạo",
-    "comp_row4_others": "Chuyển hướng độc hại, quảng cáo rác & nguy cơ mã độc",
+    "comp_row4_others": "Chuyển hướng phiền phức, quảng cáo bật lên & hàng đợi chậm",
     "comp_row5_title": "Hỗ trợ Điện thoại & Thiết bị",
     "comp_row5_yt4mp3": "Mượt mà trên iPhone Safari, Android Chrome, Mac & Windows",
     "comp_row5_others": "Thường lỗi trên iOS Safari hoặc bắt cài file APK lạ",
@@ -146,7 +146,7 @@ PAGES = {
             },
             {
                 "icon": "fa-solid fa-shield-halved",
-                "title": "An toàn không mã độc hay quảng cáo rác",
+                "title": "Giao diện sạch sẽ không quảng cáo bật lên",
                 "desc": "Không có thông báo nhảy phiền toái, không yêu cầu cài ứng dụng lạ hay tiện ích mở rộng gây hại máy."
             },
             {
@@ -178,7 +178,7 @@ PAGES = {
             },
             {
                 "q": "Tôi có thể chép nhạc tải về vào USB để cắm trên xe ô tô không?",
-                "a": "Được chứ. Các tệp MP3 tải về hoàn toàn không bị mã hóa DRM, bạn chỉ cần sao chép sang thẻ nhớ hoặc USB để nghe nhạc trên xe mà không cần mạng."
+                "a": "Được chứ. Các tệp MP3 tải về thuộc định dạng chuẩn quốc tế, bạn chỉ cần sao chép sang thẻ nhớ hoặc USB để nghe nhạc trên xe mà không cần mạng."
             },
             {
                 "q": "Công cụ có hỗ trợ tải video ngắn YouTube Shorts không?",
@@ -285,7 +285,7 @@ PAGES = {
                 "desc": "Phát mượt mà trên loa nghe nhạc Bluetooth, dàn âm thanh gia đình và máy nghe nhạc cá nhân."
             },
             {
-                "icon": "fa-solid fa-shield-virus",
+                "icon": "fa-solid fa-shield-halved",
                 "title": "Không cần cài đặt phần mềm độc hại",
                 "desc": "Bảo vệ thiết bị của bạn bằng việc xử lý hoàn toàn trên nền tảng đám mây an toàn."
             },
@@ -392,7 +392,7 @@ PAGES = {
 <p>Khi chạy bộ ở công viên hoặc lái xe trên các cung đường đèo không có sóng di động, việc lưu sẵn danh sách bài hát trong máy giúp bạn tận hưởng âm nhạc liền mạch mà không lo tốn pin cho việc dò mạng liên tục.</p>
 
 <h2 id="quy-trinh-tach-am">Quy trình tách âm thanh an toàn</h2>
-<p>Toàn bộ quá trình diễn ra trên máy chủ đám mây. Bạn không cần tải về các công cụ chuyển đổi tiềm ẩn nguy cơ chứa mã độc hay virus quảng cáo vào máy.</p>"""
+<p>Toàn bộ quá trình diễn ra trên máy chủ đám mây. Bạn không cần tải về các công cụ chuyển đổi cồng kềnh làm tốn dung lượng bộ nhớ thiết bị.</p>"""
     },
     "youtube-to-mp4": {
         "title": "Tải Video YouTube MP4 (1080p & 4K) Miễn Phí | YT4MP3",
@@ -611,7 +611,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['tải youtube shorts',
  'tải trực tiếp trên trình duyệt',
  'máy chủ nhanh không chờ đợi',
  'không giới hạn lượt tải mỗi ngày',
- 'công cụ an toàn không virus',
+ 'công cụ chuyển đổi nhanh và an toàn',
  'lưu trữ vào bộ sưu tập ảnh',
  'tiêu đề moov atom khởi động nhanh',
  'không gian màu rec 709',
@@ -629,7 +629,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['tải youtube shorts',
  'cách lưu youtube shorts về điện thoại android không cần app',
  'có thể chuyển video shorts youtube sang mp3 không',
  'cách tải video shorts trên youtube không cần cài ứng dụng',
- 'trang web tải shorts youtube nào an toàn không dính virus',
+ 'trang web tải shorts youtube nào nhanh và tốt nhất',
  'cách tải shorts độ phân giải 1080p 60fps',
  'cách tách nhạc lấy âm thanh từ youtube shorts',
  'tại sao tải video shorts ở trang khác lại bị mất tiếng',
@@ -672,8 +672,8 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Tải YouTube Shorts - Tải Vid
                        'thành file MP3 chất lượng.'},
               {'icon': 'fa-solid fa-shield-halved',
                'title': 'Không Quảng Cáo Phiền Phức',
-               'desc': 'Trải nghiệm mượt mà không có cửa sổ pop-up lừa đảo, không nút tải giả mạo và không lo dính mã '
-                       'độc.'},
+               'desc': 'Trải nghiệm mượt mà không có cửa sổ pop-up làm phiền, không nút tải giả mạo và hoàn toàn '
+                       'miễn phí.'},
               {'icon': 'fa-solid fa-apple-whole',
                'title': 'Tương Thích iPhone & Android',
                'desc': 'Lưu trực tiếp vào album Ảnh trên Safari iOS và thư mục Tệp tải về trên Chrome Android cũng như '
@@ -724,7 +724,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Tải YouTube Shorts - Tải Vid
          {'q': 'Một video Shorts thường chiếm bao nhiêu dung lượng bộ nhớ?',
           'a': 'Một video dọc 60 giây chất lượng 1080p thường có dung lượng từ 15 MB đến 35 MB. Tệp âm thanh MP3 riêng '
                'chỉ tốn khoảng 2,5 MB đến 4 MB.'},
-         {'q': 'Sử dụng YT4MP3 có an toàn trước virus và mã độc không?',
+         {'q': 'Sử dụng YT4MP3 trên điện thoại và máy tính có an toàn không?',
           'a': 'Rất an toàn. Chúng tôi không sử dụng các cửa sổ nhảy quảng cáo phiền toái, nút tải giả mạo hay yêu cầu '
                'cấp quyền đáng ngờ.'},
          {'q': 'Tải video YouTube Shorts về máy cho mục đích cá nhân có hợp pháp không?',
@@ -961,7 +961,7 @@ PAGES["youtube-shorts-downloader"] = {'title': 'Tải YouTube Shorts - Tải Vid
                  '</div>\n'
                  '\n'
                  '<p>Các trang như <strong>Savefrom</strong> hay <strong>ShortsNoob</strong> thường khiến người dùng '
-                 'bối rối trước những cảnh báo virus giả mạo. Trong khi đó Publer lại đòi hỏi khai báo tài khoản cá '
+                 'phiền lòng bởi những cửa sổ quảng cáo bật lên. Trong khi đó Publer lại đòi hỏi khai báo tài khoản cá '
                  'nhân. YT4MP3 đề cao sự thuận tiện: dán liên kết, tải tệp về và sử dụng ngay.</p>\n'
                  '\n'
                  '<h2 id="khong-dinh-hinh-mo-vi">5. Cam Kết Tệp Sạch Không Logo Hình Mờ (Watermark)</h2>\n'
