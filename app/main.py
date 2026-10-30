@@ -1385,7 +1385,7 @@ async def get_video_resolutions(id: str):
         return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_regional": False, "is_geo_blocked": False, "source": "invalid_id"}
     if vid in _VIDEO_RES_CACHE:
         cached = _VIDEO_RES_CACHE[vid]
-        if cached.get("source") == "fastsaver_info" and cached.get("duration_sec", 0) > 0:
+        if cached.get("duration_sec", 0) > 0:
             return cached
 
     yt_url = f"https://www.youtube.com/watch?v={vid}"
@@ -1402,7 +1402,7 @@ async def get_video_resolutions(id: str):
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
             },
         )
-        with urllib.request.urlopen(req, timeout=9) as res:
+        with urllib.request.urlopen(req, timeout=4.5) as res:
             data = json.loads(res.read().decode("utf-8"))
         _check_fastsaver_credits_and_alert(force_check=False)
         if data.get("ok"):
@@ -1489,28 +1489,35 @@ async def get_video_resolutions(id: str):
 
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         if not heights:
-            # For age-restricted (18+) or restricted videos where YouTube hides streamingData,
-            # probe YouTube's official image CDN (maxresdefault = HD 720p/1080p+, sddefault = 480p, hqdefault = 360p)
+            # Check og:video:width and og:video:height on watch page first (e.g., 4:3 SD videos have width=960/640/480, aspect <= 1.45)
+            m_og_w = re.search(r'<meta\s+property=["\']og:video:width["\']\s+content=["\'](\d+)["\']', html, re.I)
+            m_og_h = re.search(r'<meta\s+property=["\']og:video:height["\']\s+content=["\'](\d+)["\']', html, re.I)
+            og_w = int(m_og_w.group(1)) if m_og_w else 0
+            og_h = int(m_og_h.group(1)) if m_og_h else 0
+            is_sd_4x3 = bool(og_w > 0 and og_h > 0 and ((og_w / og_h) <= 1.45 or og_w < 1280))
+
+            # Probe YouTube's official image CDN (maxresdefault = HD 720p/1080p+, sddefault = 480p, hqdefault = 360p)
             has_maxres = False
             has_sd = False
-            try:
-                t_req = urllib.request.Request(f"https://i.ytimg.com/vi/{vid}/maxresdefault.jpg", method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
-                with urllib.request.urlopen(t_req, timeout=3) as t_res:
-                    if t_res.status == 200:
-                        has_maxres = True
-            except Exception:
-                pass
-            if has_maxres:
+            if not is_sd_4x3:
+                try:
+                    t_req = urllib.request.Request(f"https://i.ytimg.com/vi/{vid}/maxresdefault.jpg", method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
+                    with urllib.request.urlopen(t_req, timeout=2.5) as t_res:
+                        if t_res.status == 200:
+                            has_maxres = True
+                except Exception:
+                    pass
+            if has_maxres and not is_sd_4x3:
                 heights = [1080, 720, 480, 360]
             else:
                 try:
                     t_req2 = urllib.request.Request(f"https://i.ytimg.com/vi/{vid}/sddefault.jpg", method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
-                    with urllib.request.urlopen(t_req2, timeout=3) as t_res2:
+                    with urllib.request.urlopen(t_req2, timeout=2.5) as t_res2:
                         if t_res2.status == 200:
                             has_sd = True
                 except Exception:
                     pass
-                heights = [480, 360] if has_sd else [360]
+                heights = [480, 360] if (has_sd or (og_h >= 480)) else [360]
         max_h = max(heights) if heights else 1080
         result = {
             "has_4k": max_h >= 2160 or 2160 in heights,
@@ -1525,6 +1532,8 @@ async def get_video_resolutions(id: str):
             "is_geo_blocked": is_geo_blocked,
             "source": "yt_watch",
         }
+        if duration_sec > 0:
+            _VIDEO_RES_CACHE[vid] = result
         return result
     except Exception:
         pass

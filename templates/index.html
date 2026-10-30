@@ -2202,6 +2202,8 @@
                     }
 
                     // Fetch metadata and real video resolutions + duration from Paid API in parallel
+                    let oembedIs4x3SD = false;
+                    let resSource = "";
                     await Promise.all([
                         (async () => {
                             try {
@@ -2210,6 +2212,11 @@
                                     const data = await oembedResp.json();
                                     if (data.title) title = data.title;
                                     if (data.author_name) author = data.author_name;
+                                    const ow = parseInt(data.width || 0, 10);
+                                    const oh = parseInt(data.height || 0, 10);
+                                    if (ow > 0 && oh > 0 && (ow / oh) <= 1.45 && ow >= oh) {
+                                        oembedIs4x3SD = true;
+                                    }
                                 }
                             } catch (e) {
                                 title = `YouTube Video (${ytId})`;
@@ -2217,11 +2224,12 @@
                         })(),
                         (async () => {
                             try {
-                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 10000);
+                                const resResp = await fetchWithTimeout(`/api/video-resolutions?id=${encodeURIComponent(ytId)}`, {}, 15000);
                                 if (resResp.ok) {
                                     const resData = await resResp.json();
                                     has4K = !!resData.has_4k;
                                     has2K = !!resData.has_2k;
+                                    resSource = resData.source || "";
                                     if (resData.max_height && typeof resData.max_height === 'number') {
                                         maxHeight = resData.max_height;
                                     }
@@ -2238,6 +2246,11 @@
                             } catch (e) {}
                         })()
                     ]);
+                    if (oembedIs4x3SD && resSource !== 'fastsaver_info') {
+                        maxHeight = Math.min(maxHeight, 480);
+                        has4K = false;
+                        has2K = false;
+                    }
 
                     const videoFormatsList = [];
                     if (has4K || maxHeight >= 2160) {
@@ -2800,10 +2813,12 @@
                     const prewarmKey = activeFmt + '_' + ytId;
                     const prewarmed = null;
 
-                    // Robust single-conversion pipeline with automatic quality step-down for long/large videos:
+                    // Robust single-conversion pipeline with automatic fallback for restricted/long/large videos:
                     const MAX_WAIT_MS = 180000; // 3 minutes window for large/long videos
                     const pipelineStart = Date.now();
+                    let savenowTried = false;
                     let loaderFallbackTried = false;
+                    let stepDownTried = false;
                     let longVideoTried = false;
                     let lastServerErrorText = initialPrewarmErrorText || '';
 
@@ -2819,20 +2834,19 @@
                             const mode = isAudio ? 'audio' : 'video';
                             const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : '720')));
                             const resp = await fetchWithTimeout(`/api/long-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 30000);
-                            if (!resp.ok) { tryFastSaverEngine(); return; }
+                            if (!resp.ok) { stepDownOrSwitchEngine(lastServerErrorText); return; }
                             const data = await resp.json();
                             if (data.success && data.download_url) {
                                 completeDownload(data.download_url);
                                 return;
                             }
-                            // Cobalt failed — try FastSaver as 4th engine
-                            tryFastSaverEngine();
+                            stepDownOrSwitchEngine(lastServerErrorText);
                         } catch (e) {
-                            tryFastSaverEngine();
+                            stepDownOrSwitchEngine(lastServerErrorText);
                         }
                     }
 
-                    // FastSaver Pro Paid API Engine: Delivers exact 4K (2160p), 2K (1440p), 1080p, 720p, 480p, 360p, and Audio without ever downgrading resolution!
+                    // FastSaver Pro Paid API Engine: Delivers exact 4K (2160p), 2K (1440p), 1080p, 720p, 480p, 360p, and Audio!
                     let fastSaverTried = false;
                     async function tryFastSaverEngine() {
                         if (completed || fastSaverTried) return;
@@ -2844,8 +2858,8 @@
                             const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
                             const mode = isAudio ? 'audio' : 'video';
                             const qMap = { '4k': '2160', '2160': '2160', '1440': '1440', '2k': '1440', '1080': '1080', '720': '720', '480': '480', '360': '360', '240': '240', '144': '144' };
-                            const q = isAudio ? '320' : (qMap[fmtParam] || '1080');
-                            const resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 60000);
+                            const q = isAudio ? '320' : (qMap[activeFmt] || qMap[fmtParam] || '1080');
+                            const resp = await fetchWithTimeout(`/api/fastsaver-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 45000);
                             if (resp && resp.ok) {
                                 const data = await resp.json();
                                 if (data && data.success && data.download_url) {
@@ -2860,13 +2874,23 @@
                                 tryCloudStreamEngine();
                                 return;
                             }
-                            failDownload(getI18nMsg('server_busy'));
+                            if (!savenowTried) {
+                                savenowTried = true;
+                                runEngine('savenow');
+                                return;
+                            }
+                            stepDownOrSwitchEngine(lastServerErrorText);
                         } catch (e) {
                             if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryCloudStreamEngine();
                                 return;
                             }
-                            failDownload(getI18nMsg('server_busy'));
+                            if (!savenowTried) {
+                                savenowTried = true;
+                                runEngine('savenow');
+                                return;
+                            }
+                            stepDownOrSwitchEngine(lastServerErrorText);
                         }
                     }
 
@@ -2960,7 +2984,16 @@
                             return;
                         }
 
-                        // 2. Alternate Free Mirror: Loader.to
+                        // 2. Primary Free Mirror: SaveNow
+                        if (!savenowTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
+                            savenowTried = true;
+                            modalStatusMsg.textContent = 'Connecting to secondary conversion mirror...';
+                            modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
+                            runEngine('savenow');
+                            return;
+                        }
+
+                        // 3. Alternate Free Mirror: Loader.to
                         if (!loaderFallbackTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
                             loaderFallbackTried = true;
                             modalStatusMsg.textContent = 'Connecting to alternate free mirror (Loader)...';
@@ -2969,7 +3002,16 @@
                             return;
                         }
 
-                        // 3. High-speed FastSaver Pro Paid API (guaranteed delivery at exact requested format)
+                        // 4. Smart Resolution Step-Down (if 1080/4k was requested on an SD/720p video)
+                        if (!stepDownTried && ['4k', '2160', '1440', '2k', '1080', '720'].includes(activeFmt) && (Date.now() - pipelineStart < MAX_WAIT_MS - 20000)) {
+                            stepDownTried = true;
+                            activeFmt = (activeFmt === '720') ? '480' : '720';
+                            modalStatusMsg.textContent = `Adapting to highest available stream (${activeFmt}p)...`;
+                            runEngine('savenow');
+                            return;
+                        }
+
+                        // 5. High-speed FastSaver Pro Paid API
                         if (!fastSaverTried) {
                             tryFastSaverEngine();
                             return;
