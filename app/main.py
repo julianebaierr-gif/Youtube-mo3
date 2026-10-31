@@ -1103,10 +1103,14 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     last_err = None
     target_country = proxy_candidates[0][2] if proxy_candidates else "us"
 
-    # Fast attempts: 2 proxies with android client, then 1 with android_vr (max 8s timeout each)
-    attempts = [(c, ["android"]) for c in proxy_candidates[:2]]
-    if proxy_candidates:
-        attempts.append((proxy_candidates[0], ["android_vr"]))
+    # Automated Bot-Bypass Client Order: android_vr (bypasses bot challenges on datacenter IPs without cookies) -> tv_embedded -> android
+    attempts = []
+    for c in proxy_candidates[:3]:
+        attempts.append((c, ["android_vr"]))
+    for c in proxy_candidates[:2]:
+        attempts.append((c, ["tv_embedded"]))
+    for c in proxy_candidates[:2]:
+        attempts.append((c, ["android"]))
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
@@ -1324,7 +1328,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         # Smart rotation: Webshare static ISP multi-proxy pool.
         # Each proxy is tried with android client first (direct progressive mp4/audio without JS runtime), then android_vr, then web.
         proxy_candidates = build_proxy_candidates(allowed)
-        attempts = [] if stream_url else [(c, client) for c in proxy_candidates for client in (["android"], ["android_vr"], None)]
+        attempts = [] if stream_url else [(c, client) for c in proxy_candidates for client in (["android_vr"], ["tv_embedded"], ["android"])]
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
 
