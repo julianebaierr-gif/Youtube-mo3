@@ -2621,7 +2621,9 @@
                         // Universal Safety Watchdog: Never let UI hang indefinitely at 93%!
                         if (elapsed >= 45 && !completed) {
                             clearInterval(animTimer);
-                            failDownload("Stream processing took longer than expected. Tap Retry below to reconnect with alternate mirror.");
+                            const restrKey = window._unsupportedVideoReason && window._unsupportedVideoReason[ytId];
+                            const restrMsg = restrKey ? getI18nMsg(restrKey) : null;
+                            failDownload(restrMsg || "Stream processing took longer than expected. Tap Retry below to reconnect with alternate mirror.");
                         }
                     }
                 }, 800);
@@ -2962,18 +2964,15 @@
                                     completeDownload(checkData.download_url);
                                     return;
                                 }
+                                if (checkData && !checkData.success) {
+                                    const restrKey = checkData.unsupported_reason || window._unsupportedVideoReason?.[ytId] || 'broadcaster_notice';
+                                    failDownload(getI18nMsg(restrKey) || getI18nMsg('region_restricted'));
+                                    return;
+                                }
                             }
-                            if (!fastSaverTried) {
-                                tryFastSaverEngine();
-                                return;
-                            }
-                            failDownload(getI18nMsg('region_restricted'));
+                            failDownload(getI18nMsg(window._unsupportedVideoReason?.[ytId] || 'broadcaster_notice') || getI18nMsg('region_restricted'));
                         } catch (e) {
-                            if (!fastSaverTried) {
-                                tryFastSaverEngine();
-                                return;
-                            }
-                            failDownload(getI18nMsg('region_restricted'));
+                            failDownload(getI18nMsg(window._unsupportedVideoReason?.[ytId] || 'broadcaster_notice') || getI18nMsg('region_restricted'));
                         }
                     }
 

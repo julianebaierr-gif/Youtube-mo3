@@ -667,7 +667,7 @@ async def report_issue(request: Request):
                 safe_err = html_lib.escape(error_detail)
                 safe_ip = html_lib.escape(client_ip)
 
-                is_expected_restr = any(k in error_detail for k in ["Broadcaster Protection", "Live Stream", "Private Video", "Age-Restricted", "Video Too Long", "Membership Required", "Paid Video", "Video Unavailable", "Region Restricted", "duration limits", "up to 3 hours", "exceeds", "🔞", "🔒", "📡", "💰", "❌", "⏱"])
+                is_expected_restr = any(k.lower() in error_detail.lower() for k in ["broadcaster", "live stream", "private video", "age-restricted", "video too long", "membership required", "paid video", "video unavailable", "region restricted", "duration limits", "up to 3 hours", "exceeds", "not available in your country", "blocked in your country", "🔞", "🔒", "📡", "💰", "❌", "⏱"])
                 header_badge = "ℹ️ <b>[Expected Restriction / Video Notice]</b>" if is_expected_restr else "🚨 <b>YT4MP3 Conversion Alert</b>"
 
                 alert_text = (
@@ -1101,10 +1101,15 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}",
             "country": target_country
         }
+    err_str = str(last_err) if last_err else ""
+    unsupported_reason = None
+    if "not made this video available in your country" in err_str or "UNPLAYABLE" in err_str:
+        unsupported_reason = "broadcaster_notice"
     return {
         "success": False,
         "error": "all_proxies_exhausted",
-        "detail": str(last_err),
+        "unsupported_reason": unsupported_reason,
+        "detail": err_str,
         "country": target_country
     }
 
@@ -1584,15 +1589,20 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
 
         m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
         allowed_countries = json.loads(m_c.group(1)) if m_c else []
+        supported_pool_ccs = {"US", "GB", "FR", "JP", "CO"}
+        is_serviceable_geo = bool(allowed_countries and any(cc.upper() in supported_pool_ccs for cc in allowed_countries))
+
         is_geo_blocked = bool(
             (len(allowed_countries) > 0 and len(allowed_countries) < 245) or
             (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
             re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
 
-        # Detect unsupported video categories (18+ age-restricted, members-only, private, live streams, paid rentals, unavailable)
+        # Detect unsupported video categories (18+ age-restricted, members-only, private, live streams, paid rentals, broadcaster notice)
         unsupported_reason = None
-        if not is_geo_blocked:
+        if is_geo_blocked and len(allowed_countries) > 0 and not is_serviceable_geo:
+            unsupported_reason = "broadcaster_notice"
+        elif not is_geo_blocked:
             if re.search(r'"reason":\s*"(?:This video is private|Private video)"|"status":\s*"LOGIN_REQUIRED".{0,200}private', html, re.I):
                 unsupported_reason = "private_video"
             elif re.search(r'members-only|Join this channel to get access|available to this channel\'s members|"membersOnly"|UNPLAYABLE.{0,250}members', html, re.I):
