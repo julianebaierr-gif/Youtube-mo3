@@ -2806,7 +2806,11 @@
                 let cloudStreamTried = false;
 
                 try {
-                    // Every video is 100% checked by our primary conversion engine first
+                    // Priority 0: Regional media routing (Geo Stream unlocks country-restricted videos immediately)
+                    if (window._isRegionalVideo && window._isRegionalVideo[ytId]) {
+                        tryCloudStreamEngine();
+                        return;
+                    }
 
                     // Always test real conversion engines before declaring any video failed or restricted!
 
@@ -2897,6 +2901,10 @@
                                     return;
                                 }
                             }
+                            if (!cloudStreamTried) {
+                                tryCloudStreamEngine();
+                                return;
+                            }
                             failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         } catch (e) {
                             if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
@@ -2918,6 +2926,10 @@
                                     return;
                                 }
                             }
+                            if (!cloudStreamTried) {
+                                tryCloudStreamEngine();
+                                return;
+                            }
                             failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         }
                     }
@@ -2935,7 +2947,7 @@
                         const targetFmt = isAudio ? 'mp3' : (fmtParam || 'mp4');
 
                         try {
-                            const checkResp = await fetchWithTimeout(`/api/geo-stream-check?url=${encodeURIComponent(ytUrl)}&format=${encodeURIComponent(targetFmt)}`, {}, 25000);
+                            const checkResp = await fetchWithTimeout(`/api/geo-stream-check?url=${encodeURIComponent(ytUrl)}&format=${encodeURIComponent(targetFmt)}`, {}, 35000);
                             if (checkResp && checkResp.ok) {
                                 const checkData = await checkResp.json();
                                 if (checkData && checkData.success && checkData.download_url) {

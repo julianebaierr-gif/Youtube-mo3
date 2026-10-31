@@ -495,7 +495,7 @@ WEBSHARE_POOLS = {
     "US": ["9.142.218.167:6831", "192.46.201.131:6645", "64.52.28.38:7725", "9.142.198.67:5734",
            "45.56.180.203:8437", "9.142.11.217:5373", "64.52.31.9:6196"],
     "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "87.86.24.81:5732"],
-    "FR": ["31.98.7.105:6283", "179.61.172.206:6757", "82.140.180.187:7147", "31.98.8.82:5760", "82.23.62.125:7878"],
+    "FR": ["31.98.7.105:6283", "179.61.172.206:6757", "31.98.8.82:5760"],
     "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
     "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
 }
@@ -909,7 +909,7 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     res_meta = {}
     if m_vid:
         try:
-            res_meta = await get_video_resolutions(m_vid.group(1))
+            res_meta = await get_video_resolutions(m_vid.group(1), skip_fastsaver_info=True)
         except Exception:
             res_meta = {}
     return {
@@ -956,18 +956,57 @@ def build_proxy_candidates(allowed: list) -> list:
 
     return candidates
 
-def detect_video_allowed_countries(vid: str) -> list:
-    yt_url = f"https://www.youtube.com/watch?v={vid}"
-    req = urllib.request.Request(
-        yt_url,
-        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"}
-    )
+_VIDEO_ALLOWED_COUNTRIES_CACHE = {}
+_GEO_STREAM_URL_CACHE = {}
+
+def _fetch_youtube_watch_html(vid: str) -> str:
+    yt_url = f"https://www.youtube.com/watch?v={vid}&hl=en&gl=US"
+    req_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    html = ""
     try:
+        req = urllib.request.Request(yt_url, headers=req_headers)
         with urllib.request.urlopen(req, timeout=5) as r:
             html = r.read().decode("utf-8", "ignore")
+    except Exception:
+        html = ""
+
+    # If datacenter IP got bot-challenged or missed playabilityStatus/availableCountries, retry via clean US ISP proxy
+    if not html or ("availableCountries" not in html and re.search(r"not a bot|Sign in to confirm you", html, re.I)):
+        us_ips = list(WEBSHARE_POOLS.get("US", []))
+        for ip in us_ips[:2]:
+            try:
+                proxy_url = f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}"
+                opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+                with opener.open(urllib.request.Request(yt_url, headers=req_headers), timeout=5) as r:
+                    p_html = r.read().decode("utf-8", "ignore")
+                if p_html and ("playabilityStatus" in p_html or "availableCountries" in p_html):
+                    html = p_html
+                    break
+            except Exception:
+                continue
+
+    if html:
         m = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
         if m:
-            return json.loads(m.group(1))
+            try:
+                _VIDEO_ALLOWED_COUNTRIES_CACHE[vid] = json.loads(m.group(1))
+            except Exception:
+                pass
+    return html
+
+def detect_video_allowed_countries(vid: str) -> list:
+    if vid in _VIDEO_ALLOWED_COUNTRIES_CACHE:
+        return _VIDEO_ALLOWED_COUNTRIES_CACHE[vid]
+    try:
+        html = _fetch_youtube_watch_html(vid)
+        m = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
+        if m:
+            countries = json.loads(m.group(1))
+            _VIDEO_ALLOWED_COUNTRIES_CACHE[vid] = countries
+            return countries
     except Exception as e:
         print("Country detection error:", e)
     return []
@@ -990,10 +1029,20 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
 
     # Check cache first
     import tempfile
+    import time
     cache_type = "audio" if is_audio else "video"
     cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.dat")
     if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
         return {"success": True, "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}", "cached": True}
+
+    cached_entry = _GEO_STREAM_URL_CACHE.get((vid, cache_type))
+    if cached_entry and (time.time() - cached_entry.get("ts", 0) < 240):
+        return {
+            "success": True,
+            "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}",
+            "country": cached_entry.get("country", "us"),
+            "pre_resolved": True,
+        }
 
     allowed = detect_video_allowed_countries(vid)
     proxy_candidates = build_proxy_candidates(allowed)
@@ -1004,7 +1053,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     last_err = None
     target_country = proxy_candidates[0][2] if proxy_candidates else "us"
 
-    attempts = [(c, client) for c in proxy_candidates[:3] for client in (["android"], ["android_vr"], None)]
+    attempts = [(c, client) for c in proxy_candidates[:4] for client in (["android"], ["android_vr"], None)]
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
@@ -1027,9 +1076,18 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
                         cand_url = audio_fmts[-1].get("url") if audio_fmts else info["requested_formats"][-1].get("url")
                     else:
                         cand_url = info["requested_formats"][0].get("url")
-                if cand_url:
+                if cand_url and "m3u8" not in cand_url:
                     stream_url = cand_url
                     target_country = cand_country
+                    _GEO_STREAM_URL_CACHE[(vid, cache_type)] = {
+                        "stream_url": cand_url,
+                        "proxy_url": proxy_url,
+                        "country": cand_country,
+                        "title": info.get("title") or f"YT4MP3_{vid}",
+                        "ext": info.get("ext") or ("m4a" if is_audio else "mp4"),
+                        "http_headers": dict(info.get("http_headers") or {}),
+                        "ts": time.time(),
+                    }
                     break
         except Exception as e:
             last_err = e
@@ -1173,10 +1231,42 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         if allowed:
             cookie_file = None
 
+        # Fast-path: Use pre-resolved stream URL from /api/geo-stream-check if fresh (< 4 mins old)
+        import time
+        upstream_res = None
+        pre_entry = _GEO_STREAM_URL_CACHE.get((vid, cache_type))
+        if pre_entry and (time.time() - pre_entry.get("ts", 0) < 240):
+            try:
+                pre_url = pre_entry["stream_url"]
+                pre_proxy = pre_entry["proxy_url"]
+                pre_headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                    "Accept": "*/*",
+                    "Connection": "keep-alive",
+                }
+                for hk, hv in (pre_entry.get("http_headers") or {}).items():
+                    if hk.lower() != "accept-encoding":
+                        pre_headers[hk] = hv
+                pre_opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": pre_proxy, "https": pre_proxy}))
+                res = pre_opener.open(urllib.request.Request(pre_url, headers=pre_headers), timeout=25)
+                ct = (res.headers.get("Content-Type") or "").lower()
+                if "mpegurl" not in ct:
+                    upstream_res = res
+                    stream_url = pre_url
+                    raw_title = pre_entry.get("title") or raw_title
+                    extracted_ext = pre_entry.get("ext") or ""
+                    if is_audio:
+                        actual_ext = extracted_ext if extracted_ext in ["m4a", "mp3", "aac"] else ("m4a" if extracted_ext == "mp4" else default_ext)
+                    else:
+                        actual_ext = extracted_ext or "mp4"
+            except Exception:
+                upstream_res = None
+                stream_url = None
+
         # Smart rotation: Webshare static ISP multi-proxy pool.
         # Each proxy is tried with android client first (direct progressive mp4/audio without JS runtime), then android_vr, then web.
         proxy_candidates = build_proxy_candidates(allowed)
-        attempts = [(c, client) for c in proxy_candidates for client in (["android"], ["android_vr"], None)]
+        attempts = [] if stream_url else [(c, client) for c in proxy_candidates for client in (["android"], ["android_vr"], None)]
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
 
@@ -1393,20 +1483,25 @@ h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5
 _VIDEO_RES_CACHE = {}
 
 @app.get("/api/video-resolutions")
-async def get_video_resolutions(id: str):
+async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
     vid = re.sub(r"[^a-zA-Z0-9_-]", "", id or "")
     if len(vid) != 11:
         return {"has_4k": False, "has_2k": False, "max_height": 1080, "duration_sec": 0, "is_regional": False, "is_geo_blocked": False, "source": "invalid_id"}
-    if vid in _VIDEO_RES_CACHE:
+    if vid in _VIDEO_RES_CACHE and not skip_fastsaver_info:
         cached = _VIDEO_RES_CACHE[vid]
-        if cached.get("duration_sec", 0) > 0 or cached.get("is_unsupported"):
+        if cached.get("duration_sec", 0) > 0 or cached.get("is_unsupported") or cached.get("is_regional"):
+            return cached
+    if vid in _VIDEO_RES_CACHE and skip_fastsaver_info:
+        cached = _VIDEO_RES_CACHE[vid]
+        if cached.get("source") == "yt_watch":
             return cached
 
     yt_url = f"https://www.youtube.com/watch?v={vid}"
     duration_sec = 0
 
     # 1. Primary: FastSaver Paid API /v1/youtube/info (100% accurate 4K, 2K, 1080p, 720p, filesizes, title, author, duration)
-    try:
+    if not skip_fastsaver_info:
+      try:
         info_url = f"https://api.fastsaver.io/v1/youtube/info?url={urllib.parse.quote(yt_url)}"
         req = urllib.request.Request(
             info_url,
@@ -1475,20 +1570,12 @@ async def get_video_resolutions(id: str):
             }
             _VIDEO_RES_CACHE[vid] = result
             return result
-    except Exception:
-        pass
+      except Exception:
+          pass
 
     # 2. Fallback: Check YouTube watch page if FastSaver info was unreachable or video is restricted
     try:
-        req = urllib.request.Request(
-            f"{yt_url}&hl=en&gl=US",
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                "Accept-Language": "en-US,en;q=0.9",
-            },
-        )
-        with urllib.request.urlopen(req, timeout=5) as res:
-            html = res.read().decode("utf-8", "ignore")
+        html = _fetch_youtube_watch_html(vid)
         dur_match = re.search(r'"lengthSeconds":"(\d+)"', html)
         if dur_match:
             duration_sec = int(dur_match.group(1))
@@ -1496,7 +1583,7 @@ async def get_video_resolutions(id: str):
         m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
         allowed_countries = json.loads(m_c.group(1)) if m_c else []
         is_geo_blocked = bool(
-            (len(allowed_countries) > 0 and len(allowed_countries) < 200) or
+            (len(allowed_countries) > 0 and len(allowed_countries) < 245) or
             (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
             re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
@@ -1508,7 +1595,7 @@ async def get_video_resolutions(id: str):
                 unsupported_reason = "private_video"
             elif re.search(r'members-only|Join this channel to get access|available to this channel\'s members|"membersOnly"|UNPLAYABLE.{0,250}members', html, re.I):
                 unsupported_reason = "channel_membership"
-            elif re.search(r'"status":\s*"LOGIN_REQUIRED"|"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|"isRestricted":\s*true|playerInterstitialRenderer', html, re.I):
+            elif re.search(r'"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|"isRestricted":\s*true|playerInterstitialRenderer', html, re.I) or (re.search(r'"status":\s*"LOGIN_REQUIRED"', html) and not re.search(r'not a bot|Sign in to confirm you|private', html, re.I)):
                 unsupported_reason = "age_restricted"
             elif re.search(r'"isLive":\s*true|"isLiveNow":\s*true', html, re.I):
                 unsupported_reason = "live_stream"
@@ -1564,7 +1651,7 @@ async def get_video_resolutions(id: str):
             "unsupported_reason": unsupported_reason,
             "source": "yt_watch",
         }
-        if duration_sec > 0 or unsupported_reason:
+        if duration_sec > 0 or unsupported_reason or is_geo_blocked:
             _VIDEO_RES_CACHE[vid] = result
         return result
     except Exception:
