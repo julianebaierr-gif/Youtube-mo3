@@ -488,17 +488,63 @@ async def start_auto_indexnow_scheduler():
 # ==============================================================================
 # WEBSHARE PROXY POOLS & HTTP HELPERS
 # ==============================================================================
-WEBSHARE_USER = os.environ.get("WEBSHARE_USER") or "jzoemevm"
-WEBSHARE_PASS = os.environ.get("WEBSHARE_PASS") or "cxoms419j5eq"
-WEBSHARE_POOLS = {
-    "US": ["9.142.218.167:6831", "192.46.201.131:6645", "64.52.28.38:7725", "9.142.198.67:5734",
-           "45.56.180.203:8437", "9.142.11.217:5373", "64.52.31.9:6196"],
-    "GB": ["195.40.133.198:6418", "195.40.128.79:6799", "87.86.24.81:5732"],
-    "FR": ["31.98.7.105:6283", "179.61.172.206:6757", "31.98.8.82:5760"],
-    "JP": ["82.22.93.22:7729", "82.22.93.45:7752", "82.22.93.42:7749"],
-    "CO": ["108.165.3.146:5277", "108.165.2.167:5798"],
+WEBSHARE_API_KEY = os.environ.get("WEBSHARE_API_KEY") or "a5s4fkwqxrpevtidf0gnzzl4bpae1l5iutemo0qj"
+WEBSHARE_PROXIES = {
+    "AL": ["http://jzoemevmdatacenter:cxoms419j5eq@188.68.1.193:6062", "http://jzoemevmdatacenter:cxoms419j5eq@45.67.3.6:6169"],
+    "AR": ["http://jzoemevmdatacenter:cxoms419j5eq@43.229.11.208:5846", "http://jzoemevmdatacenter:cxoms419j5eq@104.239.73.216:6759"],
+    "AT": ["http://jzoemevmdatacenter:cxoms419j5eq@64.137.88.166:6405", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.96.82:5495"],
+    "AU": ["http://jzoemevmdatacenter:cxoms419j5eq@92.113.129.227:8016", "http://jzoemevmdatacenter:cxoms419j5eq@103.221.55.176:6246"],
+    "BE": ["http://jzoemevmdatacenter:cxoms419j5eq@161.123.65.106:6815", "http://jzoemevmdatacenter:cxoms419j5eq@62.105.202.249:5892"],
+    "BR": ["http://jzoemevmdatacenter:cxoms419j5eq@185.72.241.163:7455", "http://jzoemevmdatacenter:cxoms419j5eq@185.72.241.131:7423"],
+    "CA": ["http://jzoemevmdatacenter:cxoms419j5eq@185.15.178.110:5794", "http://jzoemevmdatacenter:cxoms419j5eq@31.57.42.245:6515"],
+    "CH": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.230.6:7810", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.7.104:5535"],
+    "CL": ["http://jzoemevmdatacenter:cxoms419j5eq@64.137.37.5:6595", "http://jzoemevmdatacenter:cxoms419j5eq@104.239.44.2:5924"],
+    "CO": ["http://jzoemevm:cxoms419j5eq@108.165.3.146:5277", "http://jzoemevm:cxoms419j5eq@108.165.2.167:5798"],
+    "CR": ["http://jzoemevmdatacenter:cxoms419j5eq@82.21.238.165:7968", "http://jzoemevmdatacenter:cxoms419j5eq@82.23.227.53:7356", "http://jzoemevmdatacenter:cxoms419j5eq@82.21.238.97:7900"],
+    "CY": ["http://jzoemevmdatacenter:cxoms419j5eq@45.131.94.173:6160", "http://jzoemevmdatacenter:cxoms419j5eq@45.131.92.87:6698"],
+    "CZ": ["http://jzoemevmdatacenter:cxoms419j5eq@92.112.235.10:6533", "http://jzoemevmdatacenter:cxoms419j5eq@104.253.81.39:5467"],
+    "DE": ["http://jzoemevmdatacenter:cxoms419j5eq@45.147.186.31:6904", "http://jzoemevmdatacenter:cxoms419j5eq@45.151.162.109:6511"],
+    "DK": ["http://jzoemevmdatacenter:cxoms419j5eq@104.253.82.237:6658", "http://jzoemevmdatacenter:cxoms419j5eq@104.253.82.252:6673"],
+    "EE": ["http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.113:5992", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.41:5920", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.60:5939"],
+    "EG": ["http://jzoemevmdatacenter:cxoms419j5eq@154.73.250.52:5953", "http://jzoemevmdatacenter:cxoms419j5eq@154.73.250.246:6147"],
+    "ES": ["http://jzoemevmdatacenter:cxoms419j5eq@46.203.206.210:5655", "http://jzoemevmdatacenter:cxoms419j5eq@46.203.198.137:6581"],
+    "FI": ["http://jzoemevmdatacenter:cxoms419j5eq@82.22.249.104:6941", "http://jzoemevmdatacenter:cxoms419j5eq@103.99.34.11:6626"],
+    "FR": ["http://jzoemevm:cxoms419j5eq@31.98.7.105:6283", "http://jzoemevm:cxoms419j5eq@179.61.172.206:6757", "http://jzoemevm:cxoms419j5eq@82.140.180.187:7147", "http://jzoemevm:cxoms419j5eq@31.98.8.82:5760", "http://jzoemevm:cxoms419j5eq@82.23.62.125:7878", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.125.98:6506", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.196.178:7056"],
+    "GB": ["http://jzoemevm:cxoms419j5eq@195.40.133.198:6418", "http://jzoemevm:cxoms419j5eq@195.40.128.79:6799", "http://jzoemevm:cxoms419j5eq@87.86.24.81:5732", "http://jzoemevmdatacenter:cxoms419j5eq@107.181.154.11:5689", "http://jzoemevmdatacenter:cxoms419j5eq@198.105.122.140:6713"],
+    "GR": ["http://jzoemevmdatacenter:cxoms419j5eq@137.59.7.75:5619", "http://jzoemevmdatacenter:cxoms419j5eq@137.59.5.41:6524"],
+    "HR": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.221.236:6566", "http://jzoemevmdatacenter:cxoms419j5eq@82.21.209.187:6516"],
+    "HU": ["http://jzoemevmdatacenter:cxoms419j5eq@82.21.225.115:7942", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.236.215:8028"],
+    "IE": ["http://jzoemevmdatacenter:cxoms419j5eq@82.24.221.87:5938", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.214.15:6866"],
+    "IN": ["http://jzoemevmdatacenter:cxoms419j5eq@13.143.125.130:7172", "http://jzoemevmdatacenter:cxoms419j5eq@13.143.112.37:5548"],
+    "IT": ["http://jzoemevmdatacenter:cxoms419j5eq@217.198.177.67:5583", "http://jzoemevmdatacenter:cxoms419j5eq@45.83.59.242:7258"],
+    "JP": ["http://jzoemevm:cxoms419j5eq@82.22.93.22:7729", "http://jzoemevm:cxoms419j5eq@82.22.93.45:7752", "http://jzoemevm:cxoms419j5eq@82.22.93.42:7749", "http://jzoemevmdatacenter:cxoms419j5eq@31.59.11.92:6162", "http://jzoemevmdatacenter:cxoms419j5eq@108.165.87.176:6639"],
+    "LT": ["http://jzoemevmdatacenter:cxoms419j5eq@193.187.114.113:6128", "http://jzoemevmdatacenter:cxoms419j5eq@193.187.115.216:5731", "http://jzoemevmdatacenter:cxoms419j5eq@193.187.114.4:6019"],
+    "LV": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.204.135:6967", "http://jzoemevmdatacenter:cxoms419j5eq@45.131.103.143:6129"],
+    "MT": ["http://jzoemevmdatacenter:cxoms419j5eq@142.202.254.181:6159", "http://jzoemevmdatacenter:cxoms419j5eq@142.202.255.8:6248", "http://jzoemevmdatacenter:cxoms419j5eq@142.202.253.247:5922"],
+    "MX": ["http://jzoemevmdatacenter:cxoms419j5eq@185.48.52.106:5698", "http://jzoemevmdatacenter:cxoms419j5eq@216.173.104.215:6352", "http://jzoemevmdatacenter:cxoms419j5eq@216.173.104.217:6354"],
+    "NL": ["http://jzoemevmdatacenter:cxoms419j5eq@185.226.205.142:5674", "http://jzoemevmdatacenter:cxoms419j5eq@104.238.8.35:5893"],
+    "NO": ["http://jzoemevmdatacenter:cxoms419j5eq@104.239.53.44:7462", "http://jzoemevmdatacenter:cxoms419j5eq@104.239.52.234:7396"],
+    "PL": ["http://jzoemevmdatacenter:cxoms419j5eq@46.203.196.40:5486", "http://jzoemevmdatacenter:cxoms419j5eq@46.203.196.197:5643"],
+    "PT": ["http://jzoemevmdatacenter:cxoms419j5eq@181.214.37.184:6869", "http://jzoemevmdatacenter:cxoms419j5eq@45.93.45.66:6251", "http://jzoemevmdatacenter:cxoms419j5eq@181.214.37.153:6838"],
+    "RO": ["http://jzoemevmdatacenter:cxoms419j5eq@89.35.80.196:6851", "http://jzoemevmdatacenter:cxoms419j5eq@193.176.99.104:6010"],
+    "RS": ["http://jzoemevmdatacenter:cxoms419j5eq@82.24.247.194:7028", "http://jzoemevmdatacenter:cxoms419j5eq@82.23.237.118:7452"],
+    "SE": ["http://jzoemevmdatacenter:cxoms419j5eq@92.112.239.17:6805", "http://jzoemevmdatacenter:cxoms419j5eq@38.225.2.217:6000"],
+    "SG": ["http://jzoemevmdatacenter:cxoms419j5eq@45.39.73.198:5613", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.223.70:7884"],
+    "SI": ["http://jzoemevmdatacenter:cxoms419j5eq@209.242.204.10:5751", "http://jzoemevmdatacenter:cxoms419j5eq@209.242.201.96:6142"],
+    "SK": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.243.61:7419", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.233.254:8111"],
+    "TH": ["http://jzoemevmdatacenter:cxoms419j5eq@62.105.204.158:5802", "http://jzoemevmdatacenter:cxoms419j5eq@62.105.205.240:5384", "http://jzoemevmdatacenter:cxoms419j5eq@82.119.203.67:6211"],
+    "TR": ["http://jzoemevmdatacenter:cxoms419j5eq@142.111.216.47:6192", "http://jzoemevmdatacenter:cxoms419j5eq@166.88.110.70:5215"],
+    "UA": ["http://jzoemevmdatacenter:cxoms419j5eq@104.250.201.244:6789", "http://jzoemevmdatacenter:cxoms419j5eq@104.250.201.104:6649", "http://jzoemevmdatacenter:cxoms419j5eq@104.250.200.219:6469"],
+    "US": ["http://jzoemevm:cxoms419j5eq@9.142.218.167:6831", "http://jzoemevm:cxoms419j5eq@192.46.201.131:6645", "http://jzoemevm:cxoms419j5eq@64.52.28.38:7725", "http://jzoemevm:cxoms419j5eq@9.142.198.67:5734", "http://jzoemevm:cxoms419j5eq@45.56.180.203:8437", "http://jzoemevm:cxoms419j5eq@9.142.11.217:5373", "http://jzoemevm:cxoms419j5eq@64.52.31.9:6196", "http://jzoemevmdatacenter:cxoms419j5eq@107.175.56.218:6491", "http://jzoemevmdatacenter:cxoms419j5eq@38.154.205.168:5436"],
+    "ZA": ["http://jzoemevmdatacenter:cxoms419j5eq@82.21.245.104:6428", "http://jzoemevmdatacenter:cxoms419j5eq@82.26.245.109:6932"],
 }
-WEBSHARE_POOL_PRIORITY = ["US", "GB", "FR", "JP", "CO"]
+
+WEBSHARE_POOL_PRIORITY = [
+    "US", "GB", "DE", "FR", "JP", "IN", "TR", "EG", "BR", "CA", "AU", "IT", "ES", "NL", "PL",
+    "SE", "NO", "DK", "FI", "CH", "AT", "BE", "IE", "PT", "GR", "RO", "CZ", "SK", "HU", "HR",
+    "SI", "RS", "AL", "CY", "EE", "LT", "LV", "MT", "MX", "AR", "CO", "CL", "CR", "SG", "TH",
+    "UA", "ZA"
+]
 
 def _fetch_converter_json(target_url: str, headers: dict = None, timeout: float = 8.0) -> dict:
     req_headers = {
@@ -518,13 +564,12 @@ def _fetch_converter_json(target_url: str, headers: dict = None, timeout: float 
         pass
 
     # 2. Proxy fallback using Webshare static ISP IPs (bypasses Cloudflare datacenter IP block on Vercel/AWS)
-    us_ips = list(WEBSHARE_POOLS.get("US", []))
-    if us_ips:
+    us_proxies = list(WEBSHARE_PROXIES.get("US", []))
+    if us_proxies:
         import random
-        random.shuffle(us_ips)
-        for ip in us_ips[:3]:
+        random.shuffle(us_proxies)
+        for proxy_url in us_proxies[:3]:
             try:
-                proxy_url = f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}"
                 proxy_handler = urllib.request.ProxyHandler({'http': proxy_url, 'https': proxy_url})
                 opener = urllib.request.build_opener(proxy_handler)
                 with opener.open(req, timeout=timeout) as r:
@@ -933,25 +978,32 @@ def build_proxy_candidates(allowed: list) -> list:
         pool_cc = "US"
     else:
         for cc in WEBSHARE_POOL_PRIORITY:
-            if cc in allowed_set:
+            if cc in allowed_set and cc in WEBSHARE_PROXIES:
                 pool_cc = cc
                 break
-    if not pool_cc:
+        if not pool_cc:
+            for cc in allowed_set:
+                if cc in WEBSHARE_PROXIES:
+                    pool_cc = cc
+                    break
+    if not pool_cc or pool_cc not in WEBSHARE_PROXIES:
         pool_cc = "US"
 
-    # Primary pool: try all available IPs in this country
-    ips = list(WEBSHARE_POOLS.get(pool_cc, []))
-    random.shuffle(ips)
-    for i, ip in enumerate(ips):
-        candidates.append((f"Webshare-{pool_cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", pool_cc.lower()))
+    # Primary pool: try available proxy URLs in this country
+    proxies = list(WEBSHARE_PROXIES.get(pool_cc, []))
+    random.shuffle(proxies)
+    for i, p_url in enumerate(proxies):
+        candidates.append((f"Webshare-{pool_cc}-{i+1}", p_url, pool_cc.lower()))
 
     # Secondary pool: add up to 2 IPs from other allowed countries
-    for alt_cc in ["US", "GB", "FR", "JP"]:
-        if alt_cc != pool_cc and (not allowed_set or alt_cc in allowed_set):
-            alt_ips = list(WEBSHARE_POOLS.get(alt_cc, []))
-            random.shuffle(alt_ips)
-            for i, ip in enumerate(alt_ips[:2]):
-                candidates.append((f"Webshare-{alt_cc}-{i+1}", f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}", alt_cc.lower()))
+    for alt_cc in WEBSHARE_POOL_PRIORITY:
+        if alt_cc != pool_cc and (not allowed_set or alt_cc in allowed_set) and alt_cc in WEBSHARE_PROXIES:
+            alt_proxies = list(WEBSHARE_PROXIES.get(alt_cc, []))
+            random.shuffle(alt_proxies)
+            for i, p_url in enumerate(alt_proxies[:2]):
+                candidates.append((f"Webshare-{alt_cc}-{i+1}", p_url, alt_cc.lower()))
+            if len(candidates) >= 6:
+                break
 
     return candidates
 
@@ -974,10 +1026,9 @@ def _fetch_youtube_watch_html(vid: str) -> str:
 
     # If datacenter IP got bot-challenged or missed playabilityStatus/availableCountries, retry via clean US ISP proxy
     if not html or ("availableCountries" not in html and re.search(r"not a bot|Sign in to confirm you", html, re.I)):
-        us_ips = list(WEBSHARE_POOLS.get("US", []))
-        for ip in us_ips[:2]:
+        us_proxies = list(WEBSHARE_PROXIES.get("US", []))
+        for proxy_url in us_proxies[:2]:
             try:
-                proxy_url = f"http://{WEBSHARE_USER}:{WEBSHARE_PASS}@{ip}"
                 opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
                 with opener.open(urllib.request.Request(yt_url, headers=req_headers), timeout=5) as r:
                     p_html = r.read().decode("utf-8", "ignore")
@@ -1589,7 +1640,7 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
 
         m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
         allowed_countries = json.loads(m_c.group(1)) if m_c else []
-        supported_pool_ccs = {"US", "GB", "FR", "JP", "CO"}
+        supported_pool_ccs = set(WEBSHARE_PROXIES.keys())
         is_serviceable_geo = bool(allowed_countries and any(cc.upper() in supported_pool_ccs for cc in allowed_countries))
 
         is_geo_blocked = bool(
