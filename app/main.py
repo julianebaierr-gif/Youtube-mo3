@@ -506,7 +506,7 @@ WEBSHARE_PROXIES = {
     "DE": ["http://jzoemevmdatacenter:cxoms419j5eq@45.147.186.31:6904", "http://jzoemevmdatacenter:cxoms419j5eq@45.151.162.109:6511"],
     "DK": ["http://jzoemevmdatacenter:cxoms419j5eq@104.253.82.237:6658", "http://jzoemevmdatacenter:cxoms419j5eq@104.253.82.252:6673"],
     "EE": ["http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.113:5992", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.41:5920", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.60:5939"],
-    "EG": ["http://jzoemevmdatacenter:cxoms419j5eq@154.73.250.52:5953", "http://jzoemevmdatacenter:cxoms419j5eq@154.73.250.246:6147"],
+    "EG": ["http://jzoemevmdatacenter:cxoms419j5eq@161.123.131.207:5812", "http://jzoemevmdatacenter:cxoms419j5eq@161.123.131.176:5781"],
     "ES": ["http://jzoemevmdatacenter:cxoms419j5eq@46.203.206.210:5655", "http://jzoemevmdatacenter:cxoms419j5eq@46.203.198.137:6581"],
     "FI": ["http://jzoemevmdatacenter:cxoms419j5eq@82.22.249.104:6941", "http://jzoemevmdatacenter:cxoms419j5eq@103.99.34.11:6626"],
     "FR": ["http://jzoemevm:cxoms419j5eq@31.98.7.105:6283", "http://jzoemevm:cxoms419j5eq@179.61.172.206:6757", "http://jzoemevm:cxoms419j5eq@82.140.180.187:7147", "http://jzoemevm:cxoms419j5eq@31.98.8.82:5760", "http://jzoemevm:cxoms419j5eq@82.23.62.125:7878", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.125.98:6506", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.196.178:7056"],
