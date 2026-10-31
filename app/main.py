@@ -268,7 +268,6 @@ Disallow: /*?*s=
 Disallow: /*?*q=
 Disallow: /*?*ref=
 Sitemap: https://www.yt4mp3.com/sitemap.xml
-Sitemap: https://www.yt4mp3.com/feed.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
@@ -1053,7 +1052,10 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     last_err = None
     target_country = proxy_candidates[0][2] if proxy_candidates else "us"
 
-    attempts = [(c, client) for c in proxy_candidates[:4] for client in (["android"], ["android_vr"], None)]
+    # Fast attempts: 2 proxies with android client, then 1 with android_vr (max 8s timeout each)
+    attempts = [(c, ["android"]) for c in proxy_candidates[:2]]
+    if proxy_candidates:
+        attempts.append((proxy_candidates[0], ["android_vr"]))
     for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
         ydl_opts = {
             "proxy": proxy_url,
@@ -1061,7 +1063,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "no_warnings": True,
             "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
             "noplaylist": True,
-            "socket_timeout": 12,
+            "socket_timeout": 8,
         }
         if client:
             ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
@@ -1636,6 +1638,10 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
                     pass
                 heights = [480, 360] if (has_sd or (og_h >= 480)) else [360]
         max_h = max(heights) if heights else 1080
+        yt_watch_title = ""
+        m_title = re.search(r'<title>([^<]+)</title>', html)
+        if m_title:
+            yt_watch_title = m_title.group(1).replace(' - YouTube', '').strip()
         result = {
             "has_4k": max_h >= 2160 or 2160 in heights,
             "has_2k": max_h >= 1440 or 1440 in heights,
@@ -1645,6 +1651,7 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
             "available_heights": sorted(list(set(heights)), reverse=True),
             "filesizes": {},
             "duration_sec": duration_sec,
+            "title": yt_watch_title,
             "is_regional": is_geo_blocked,
             "is_geo_blocked": is_geo_blocked,
             "is_unsupported": bool(unsupported_reason),

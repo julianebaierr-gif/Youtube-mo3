@@ -2618,6 +2618,11 @@
                     if (modalEtaText) {
                         const elapsed = Math.max(1, Math.floor((Date.now() - conversionToken) / 1000));
                         modalEtaText.textContent = `${elapsed}s`;
+                        // Universal Safety Watchdog: Never let UI hang indefinitely at 93%!
+                        if (elapsed >= 45 && !completed) {
+                            clearInterval(animTimer);
+                            failDownload("Stream processing took longer than expected. Tap Retry below to reconnect with alternate mirror.");
+                        }
                     }
                 }, 800);
 
@@ -2947,7 +2952,7 @@
                         const targetFmt = isAudio ? 'mp3' : (fmtParam || 'mp4');
 
                         try {
-                            const checkResp = await fetchWithTimeout(`/api/geo-stream-check?url=${encodeURIComponent(ytUrl)}&format=${encodeURIComponent(targetFmt)}`, {}, 35000);
+                            const checkResp = await fetchWithTimeout(`/api/geo-stream-check?url=${encodeURIComponent(ytUrl)}&format=${encodeURIComponent(targetFmt)}`, {}, 18000);
                             if (checkResp && checkResp.ok) {
                                 const checkData = await checkResp.json();
                                 if (checkData && checkData.success && checkData.download_url) {
