@@ -969,41 +969,40 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
 # MULTI-PROXY STREAMING SYSTEM (GEO-BLOCKED / REGION-LOCKED)
 # ==============================================================================
 def build_proxy_candidates(allowed: list) -> list:
-    """Ordered list of (label, proxy_url, country_lower) across all active multi-proxy pool IPs."""
+    """Ordered list of (label, proxy_url, country_lower) across all active multi-proxy pool IPs,
+    interleaved across all available allowed countries for maximum unblocking speed."""
     import random
     allowed_set = {str(c).upper() for c in (allowed or [])}
+
+    # 1. Collect all matching allowed countries present in our pool, preserving priority
+    matched_ccs = [cc for cc in WEBSHARE_POOL_PRIORITY if cc in allowed_set and cc in WEBSHARE_PROXIES]
+    for cc in allowed_set:
+        if cc in WEBSHARE_PROXIES and cc not in matched_ccs:
+            matched_ccs.append(cc)
+
+    # Fallback if no specific country matched or general request
+    if not matched_ccs:
+        matched_ccs = [cc for cc in WEBSHARE_POOL_PRIORITY if cc in WEBSHARE_PROXIES][:4]
+
+    # Group available proxies per country (shuffled for load balancing)
+    pool_map = {}
+    for cc in matched_ccs:
+        pr_list = list(WEBSHARE_PROXIES.get(cc, []))
+        random.shuffle(pr_list)
+        pool_map[cc] = pr_list
+
+    # Interleave candidates across countries (1 from each, then 2nd from each, up to 8 max)
     candidates = []
-    pool_cc = None
-    if not allowed_set:
-        pool_cc = "US"
-    else:
-        for cc in WEBSHARE_POOL_PRIORITY:
-            if cc in allowed_set and cc in WEBSHARE_PROXIES:
-                pool_cc = cc
-                break
-        if not pool_cc:
-            for cc in allowed_set:
-                if cc in WEBSHARE_PROXIES:
-                    pool_cc = cc
+    max_len = max(len(l) for l in pool_map.values()) if pool_map else 0
+    for round_idx in range(max_len):
+        for cc in matched_ccs:
+            if round_idx < len(pool_map[cc]):
+                p_url = pool_map[cc][round_idx]
+                candidates.append((f"Webshare-{cc}-{round_idx+1}", p_url, cc.lower()))
+                if len(candidates) >= 8:
                     break
-    if not pool_cc or pool_cc not in WEBSHARE_PROXIES:
-        pool_cc = "US"
-
-    # Primary pool: try available proxy URLs in this country
-    proxies = list(WEBSHARE_PROXIES.get(pool_cc, []))
-    random.shuffle(proxies)
-    for i, p_url in enumerate(proxies):
-        candidates.append((f"Webshare-{pool_cc}-{i+1}", p_url, pool_cc.lower()))
-
-    # Secondary pool: add up to 2 IPs from other allowed countries
-    for alt_cc in WEBSHARE_POOL_PRIORITY:
-        if alt_cc != pool_cc and (not allowed_set or alt_cc in allowed_set) and alt_cc in WEBSHARE_PROXIES:
-            alt_proxies = list(WEBSHARE_PROXIES.get(alt_cc, []))
-            random.shuffle(alt_proxies)
-            for i, p_url in enumerate(alt_proxies[:2]):
-                candidates.append((f"Webshare-{alt_cc}-{i+1}", p_url, alt_cc.lower()))
-            if len(candidates) >= 6:
-                break
+        if len(candidates) >= 8:
+            break
 
     return candidates
 
@@ -1103,11 +1102,11 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
     last_err = None
     target_country = proxy_candidates[0][2] if proxy_candidates else "us"
 
-    # Automated Bot-Bypass Client Order: android_vr (bypasses bot challenges on datacenter IPs without cookies) -> tv_embedded -> android
+    # Automated Bot-Bypass Client Order: android_vr across ALL candidates first, then tv_embedded, then android
     attempts = []
-    for c in proxy_candidates[:3]:
+    for c in proxy_candidates:
         attempts.append((c, ["android_vr"]))
-    for c in proxy_candidates[:2]:
+    for c in proxy_candidates[:4]:
         attempts.append((c, ["tv_embedded"]))
     for c in proxy_candidates[:2]:
         attempts.append((c, ["android"]))
@@ -1118,7 +1117,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
             "no_warnings": True,
             "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
             "noplaylist": True,
-            "socket_timeout": 8,
+            "socket_timeout": 6,
         }
         if client:
             ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
@@ -1325,10 +1324,16 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 upstream_res = None
                 stream_url = None
 
-        # Smart rotation: Webshare static ISP multi-proxy pool.
-        # Each proxy is tried with android client first (direct progressive mp4/audio without JS runtime), then android_vr, then web.
+        # Smart interleaved rotation across all allowed country proxies: android_vr first across all candidates
         proxy_candidates = build_proxy_candidates(allowed)
-        attempts = [] if stream_url else [(c, client) for c in proxy_candidates for client in (["android_vr"], ["tv_embedded"], ["android"])]
+        if stream_url:
+            attempts = []
+        else:
+            attempts = (
+                [(c, ["android_vr"]) for c in proxy_candidates] +
+                [(c, ["tv_embedded"]) for c in proxy_candidates[:4]] +
+                [(c, ["android"]) for c in proxy_candidates[:2]]
+            )
         for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
             target_country = cand_country
 
@@ -1339,7 +1344,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
                 "noplaylist": True,
                 "extract_flat": False,
-                "socket_timeout": 15,
+                "socket_timeout": 7,
                 # Let yt-dlp solve YouTube JS challenges with whichever runtime exists (deno default, node if installed)
                 "js_runtimes": {"deno": {}, "node": {}},
             }
