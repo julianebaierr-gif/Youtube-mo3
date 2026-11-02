@@ -936,7 +936,7 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
             headers=headers,
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=55) as res:
+        with urllib.request.urlopen(req, timeout=40) as res:
             data = json.loads(res.read().decode("utf-8"))
         # Check remaining credits after download and alert if <= 10,000
         _check_fastsaver_credits_and_alert(force_check=True)
@@ -957,6 +957,14 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         _check_fastsaver_credits_and_alert(force_check=False)
     except Exception as e:
         detail_err = str(e)
+
+    # Automatic fallback: If FastSaver had a temporary hiccup, try long-video engine (Cobalt) directly
+    try:
+        cobalt_res = await long_video(url=url, mode=mode, quality=quality)
+        if cobalt_res and cobalt_res.get("success") and cobalt_res.get("download_url"):
+            return cobalt_res
+    except Exception:
+        pass
 
     m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
     res_meta = {}

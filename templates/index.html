@@ -2889,6 +2889,10 @@
                                     window._isRegionalVideo[ytId] = true;
                                 }
                             }
+                            if (!longVideoTried && (isAudio || (currentMediaData && currentMediaData.duration_sec > 7200))) {
+                                tryLongVideoEngine();
+                                return;
+                            }
                             if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryCloudStreamEngine();
                                 return;
@@ -2901,12 +2905,16 @@
                                     return;
                                 }
                             }
-                            if (currentMediaData && currentMediaData.duration_sec > 10800) {
+                            if (!isAudio && currentMediaData && currentMediaData.duration_sec > 18000) {
                                 const longMsg = getI18nMsg('video_too_long');
                                 if (longMsg) {
                                     failDownload(longMsg);
                                     return;
                                 }
+                            }
+                            if (!longVideoTried) {
+                                tryLongVideoEngine();
+                                return;
                             }
                             if (!cloudStreamTried) {
                                 tryCloudStreamEngine();
@@ -2914,6 +2922,11 @@
                             }
                             failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         } catch (e) {
+                            const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
+                            if (!longVideoTried && (isAudio || (currentMediaData && currentMediaData.duration_sec > 7200))) {
+                                tryLongVideoEngine();
+                                return;
+                            }
                             if (!cloudStreamTried && (window._isRegionalVideo?.[ytId] || /country|region|not available/i.test(lastServerErrorText))) {
                                 tryCloudStreamEngine();
                                 return;
@@ -2926,12 +2939,16 @@
                                     return;
                                 }
                             }
-                            if (currentMediaData && currentMediaData.duration_sec > 10800) {
+                            if (!isAudio && currentMediaData && currentMediaData.duration_sec > 18000) {
                                 const longMsg = getI18nMsg('video_too_long');
                                 if (longMsg) {
                                     failDownload(longMsg);
                                     return;
                                 }
+                            }
+                            if (!longVideoTried) {
+                                tryLongVideoEngine();
+                                return;
                             }
                             if (!cloudStreamTried) {
                                 tryCloudStreamEngine();
@@ -3013,8 +3030,15 @@
 
                         // Immediate Duration Limit Exit (No 60-second useless waiting)
                         if (/duration limit|up to 3 hours|video too long|exceeds the duration/i.test(errText || lastServerErrorText || '')) {
-                            failDownload("⚠️ This video exceeds server duration limits (up to 3 hours). Please try 720p or MP3 format.");
-                            return;
+                            const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
+                            if (!longVideoTried) {
+                                tryLongVideoEngine();
+                                return;
+                            }
+                            if (!isAudio) {
+                                failDownload("⚠️ This video exceeds server duration limits (up to 3 hours). Please try 720p or MP3 format.");
+                                return;
+                            }
                         }
 
                         if (window._prewarmedStreams && window._prewarmedStreams[activeFmt + '_' + ytId]) {
