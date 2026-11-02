@@ -712,8 +712,19 @@ async def report_issue(request: Request):
                 safe_err = html_lib.escape(error_detail)
                 safe_ip = html_lib.escape(client_ip)
 
-                is_expected_restr = any(k.lower() in error_detail.lower() for k in ["broadcaster", "live stream", "private video", "age-restricted", "video too long", "membership required", "paid video", "video unavailable", "region restricted", "duration limits", "up to 3 hours", "exceeds", "not available in your country", "blocked in your country", "🔞", "🔒", "📡", "💰", "❌", "⏱"])
-                header_badge = "ℹ️ <b>[Expected Restriction / Video Notice]</b>" if is_expected_restr else "🚨 <b>YT4MP3 Conversion Alert</b>"
+                is_expected_restr = any(k.lower() in error_detail.lower() for k in [
+                    "broadcaster", "live stream", "private video", "age-restricted", "video too long", 
+                    "membership required", "paid video", "video unavailable", "region restricted", 
+                    "duration limits", "up to 3 hours", "exceeds", "not available in your country", 
+                    "blocked in your country", "🔞", "🔒", "📡", "💰", "❌", "⏱", "senderschutz"
+                ])
+                # Suppress Telegram alerts for expected user notices (video too long, 18+ age restricted, DRM)
+                # to keep owner's phone quiet and free of false alarms. Only real crashes trigger alerts!
+                if is_expected_restr:
+                    print(f"[EXPECTED_NOTICE_LOCAL_LOG] {video_title} | {error_detail} (Telegram muted)")
+                    return {"success": True, "message": "Expected restriction handled gracefully on client; Telegram alert muted."}
+
+                header_badge = "🚨 <b>YT4MP3 Conversion Alert</b>"
 
                 alert_text = (
                     f"{header_badge}\n\n"
@@ -723,8 +734,6 @@ async def report_issue(request: Request):
                     f"⚠️ <b>Status:</b> {safe_err}\n"
                     f"🌐 <b>User IP:</b> <code>{safe_ip}</code>"
                 )
-                if is_expected_restr:
-                    alert_text += "\n💡 <i>Handled gracefully by Broadcaster DRM Shield.</i>"
                 tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
                 tg_payload = json.dumps({
                     "chat_id": tg_chat_id,
@@ -1665,9 +1674,11 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
         elif not is_geo_blocked:
             if re.search(r'"reason":\s*"(?:This video is private|Private video)"|"status":\s*"LOGIN_REQUIRED".{0,200}private', html, re.I):
                 unsupported_reason = "private_video"
-            elif re.search(r'members-only|Join this channel to get access|available to this channel\'s members|"membersOnly"|UNPLAYABLE.{0,250}members', html, re.I):
+            elif re.search(r'"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|"isRestricted":\s*true|playerInterstitialRenderer', html, re.I):
+                unsupported_reason = "age_restricted"
+            elif re.search(r'"isMembersOnly":\s*true|"reason":\s*"(?:This video is available to this channel\'s members|Join this channel to get access)"|UNPLAYABLE.{0,250}members', html, re.I):
                 unsupported_reason = "channel_membership"
-            elif re.search(r'"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|"isRestricted":\s*true|playerInterstitialRenderer', html, re.I) or (re.search(r'"status":\s*"LOGIN_REQUIRED"', html) and not re.search(r'not a bot|Sign in to confirm you|private', html, re.I)):
+            elif re.search(r'"status":\s*"LOGIN_REQUIRED"', html) and not re.search(r'not a bot|Sign in to confirm you', html, re.I):
                 unsupported_reason = "age_restricted"
             elif re.search(r'"isLive":\s*true|"isLiveNow":\s*true', html, re.I):
                 unsupported_reason = "live_stream"
