@@ -120,7 +120,7 @@ UI = {
 PAGES = {
     "home": {
         "title": "Download Video YouTube ke MP3 & MP4 Gratis | YT4MP3",
-        "meta_desc": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, cepat, tanpa aplikasi, dan bisa untuk HP Android serta iPhone.",
+        "meta_desc": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, tanpa aplikasi, dan bisa untuk HP Android serta iPhone.",
         "h1": "Konverter YouTube ke MP3 dan MP4 Online Gratis",
         "subtitle": "Download lagu MP3 suara jernih hingga 320 kbps dan simpan video MP4 kualitas Full HD 1080p tanpa perlu instal aplikasi tambahan.",
         "badge": "Pengunduh Media Tercepat",

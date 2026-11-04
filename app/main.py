@@ -263,10 +263,40 @@ async def robots_txt():
             return Response(content=f.read(), media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
     content = """User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /watch
+Disallow: /shorts/
+Disallow: /4youtube/
+Disallow: /4/
 Disallow: /?s=
 Disallow: /*?*s=
 Disallow: /*?*q=
 Disallow: /*?*ref=
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: AhrefsBot
+Allow: /
+
 Sitemap: https://www.yt4mp3.com/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
@@ -291,12 +321,9 @@ def get_authoritative_sitemap_xml() -> str:
     urls = get_all_sitemap_urls()
     items = []
     for u in urls:
-        priority = "1.0" if u == "https://www.yt4mp3.com/" or u.endswith("/") else "0.8"
         items.append(f"""  <url>
     <loc>{u}</loc>
     <lastmod>2026-10-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>{priority}</priority>
   </url>""")
     _SITEMAP_CACHE_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(items) + "\n</urlset>"
     return _SITEMAP_CACHE_XML
@@ -348,15 +375,30 @@ YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube vi
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
 
 
-@app.api_route("/feed.xml", methods=["GET", "HEAD"])
-@app.api_route("/rss.xml", methods=["GET", "HEAD"])
-@app.api_route("/feed", methods=["GET", "HEAD"])
-async def rss_feed():
-    from datetime import datetime, timezone
+_FEED_CACHE_XML = None
+
+def get_authoritative_feed_xml() -> str:
+    global _FEED_CACHE_XML
+    if _FEED_CACHE_XML:
+        return _FEED_CACHE_XML
+    feed_file = os.path.join(BASE_DIR, "public", "feed.xml")
+    if os.path.exists(feed_file):
+        try:
+            with open(feed_file, "r", encoding="utf-8") as f:
+                content = f.read()
+                if content and "<rss" in content:
+                    _FEED_CACHE_XML = content
+                    return _FEED_CACHE_XML
+        except Exception:
+            pass
     import html
-    now_rfc822 = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
-    
     pages = ["home", "youtube-to-mp3", "youtube-to-mp4", "youtube-shorts-downloader"]
+    release_dates = {
+        "home": "Fri, 30 Oct 2026 12:00:00 +0000",
+        "youtube-to-mp3": "Tue, 27 Oct 2026 12:00:00 +0000",
+        "youtube-to-mp4": "Wed, 28 Oct 2026 12:00:00 +0000",
+        "youtube-shorts-downloader": "Thu, 29 Oct 2026 12:00:00 +0000",
+    }
     urls = []
     for lang in SUPPORTED_LANGUAGES:
         for p in pages:
@@ -367,31 +409,42 @@ async def rss_feed():
                 link = f"https://www.yt4mp3.com/{lang}/" if p == "home" else f"https://www.yt4mp3.com/{lang}/{p}"
             title = data.get("title") or "YT4MP3"
             desc = data.get("meta_desc") or "YouTube converter tool"
-            urls.append((link, title, desc))
+            desc = desc.replace("Cepat, cepat", "Cepat")
+            pub_date = release_dates.get(p, "Fri, 30 Oct 2026 12:00:00 +0000")
+            urls.append((link, title, desc, lang, pub_date))
             
     items_xml = "".join([
         f"""    <item>
-      <title>{html.escape(title)}</title>
+      <title>{html.escape(title, quote=True)}</title>
       <link>{link}</link>
       <guid isPermaLink="true">{link}</guid>
-      <description>{html.escape(desc)}</description>
-      <pubDate>{now_rfc822}</pubDate>
-    </item>\n""" for link, title, desc in urls
+      <description>{html.escape(desc, quote=True)}</description>
+      <dc:language>{item_lang}</dc:language>
+      <pubDate>{pub_date}</pubDate>
+    </item>\n""" for link, title, desc, item_lang, pub_date in urls
     ])
-    feed_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    _FEED_CACHE_XML = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>YT4MP3 - YouTube Media Converter Tools &amp; Updates</title>
     <link>https://www.yt4mp3.com/</link>
     <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>{now_rfc822}</lastBuildDate>
+    <lastBuildDate>Fri, 30 Oct 2026 12:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""
+    return _FEED_CACHE_XML
+
+@app.api_route("/feed.xml", methods=["GET", "HEAD"])
+@app.api_route("/rss.xml", methods=["GET", "HEAD"])
+@app.api_route("/feed", methods=["GET", "HEAD"])
+async def rss_feed():
+    feed_xml = get_authoritative_feed_xml()
     headers = dict(EDGE_HTML_HEADERS)
-    headers["Content-Type"] = "application/xml; charset=utf-8"
-    return Response(content=feed_xml, media_type="application/xml; charset=utf-8", headers=headers)
+    headers["Content-Type"] = "application/rss+xml; charset=utf-8"
+    headers["Content-Disposition"] = 'inline; filename="feed.xml"'
+    return Response(content=feed_xml, media_type="application/rss+xml; charset=utf-8", headers=headers)
 
 @app.get("/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt")
 async def indexnow_key():

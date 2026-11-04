@@ -9,7 +9,11 @@
       "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-        "includeFiles": ["public/**", "templates/**", "static/**"]
+        "includeFiles": [
+          "public/**",
+          "templates/**",
+          "static/**"
+        ]
       }
     }
   ],
@@ -41,6 +45,23 @@
         {
           "key": "Content-Type",
           "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "inline"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(feed.xml|rss.xml)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/rss+xml; charset=utf-8"
         },
         {
           "key": "Content-Disposition",
@@ -154,6 +175,14 @@
     {
       "src": "/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
       "dest": "/public/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt"
+    },
+    {
+      "src": "/feed.xml",
+      "dest": "/public/feed.xml"
+    },
+    {
+      "src": "/rss.xml",
+      "dest": "/public/feed.xml"
     },
     {
       "src": "/public/(.*)",
