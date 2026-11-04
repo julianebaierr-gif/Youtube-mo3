@@ -849,77 +849,93 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     allowed_countries = res_meta.get("allowed_countries", [])
     target_country = pick_best_proxy_country(allowed_countries)
 
-    # 1. Primary: FastSaver Pro Paid API (only if video is NOT geo-restricted)
-    if not is_regional:
-        headers = {
-            "X-Api-Key": FASTSAVER_API_KEY,
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
-        }
-        if mode == "audio":
-            fmt = "audio"
-        else:
-            q = re.sub(r"[^0-9]", "", str(quality)) or "720"
-            fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
-            fmt = fmt_map.get(q, "720p")
-        body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+    # 1. If video is Country-Locked (Geo-Restricted): ONLY then use DataImpulse Residential Proxy (capped at 720p max)
+    if is_regional:
         try:
-            req = urllib.request.Request(
-                "https://api.fastsaver.io/v1/youtube/download",
-                data=body,
-                headers=headers,
-                method="POST",
+            clean_q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+            if mode == "video" and int(clean_q) > 720:
+                clean_q = "720"
+
+            stream_data = resolve_dataimpulse_stream(
+                url,
+                mode=mode,
+                quality=clean_q,
+                target_country=target_country
             )
-            with urllib.request.urlopen(req, timeout=40) as res:
-                data = json.loads(res.read().decode("utf-8"))
-            _check_fastsaver_credits_and_alert(force_check=True)
-            if data.get("ok") and data.get("download_url"):
-                return {
-                    "success": True,
-                    "download_url": data["download_url"],
-                    "filename": data.get("filename", ""),
-                    "engine": "fastsaver",
-                }
-        except Exception as e:
-            print(f"[FASTSAVER_FAIL_TRIGGERING_RESIDENTIAL_FALLBACK] {vid}: {e}")
+            sid = stream_data["session_id"]
+            title = stream_data["title"]
+            ext = stream_data["ext"]
+            stream_raw_url = stream_data.get("stream_url", "")
+            surl = base64.urlsafe_b64encode(stream_raw_url.encode("utf-8")).decode("ascii") if stream_raw_url else ""
+            clean_title = re.sub(r'[\/:*?"<>|\r\n\t]', "_", title).strip() or "video"
+            download_url = f"/api/proxy-download?sid={sid}&vid={vid}&mode={mode}&ext={ext}&title={urllib.parse.quote(clean_title)}&country={target_country or ''}&surl={surl}"
+            return {
+                "success": True,
+                "download_url": download_url,
+                "filename": f"{clean_title}.{ext}",
+                "engine": "residential_proxy",
+                "capped_at_720": True,
+            }
+        except Exception as proxy_err:
+            print(f"[DATAIMPULSE_PROXY_FAIL] {vid}: {proxy_err}")
+            return {
+                "success": False,
+                "error": str(proxy_err),
+                "is_unsupported": bool(res_meta.get("is_unsupported")),
+                "unsupported_reason": res_meta.get("unsupported_reason"),
+                "is_regional": True,
+            }
 
-    # 2. Fallback: DataImpulse Residential Proxy (when FastSaver fails or video is geo-locked)
-    # Strictly capped at 720p maximum as requested
+    # 2. For ALL normal videos (NOT country locked): Use FastSaver Pro Paid API ONLY. No proxy!
+    headers = {
+        "X-Api-Key": FASTSAVER_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+    }
+    if mode == "audio":
+        fmt = "audio"
+    else:
+        q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+        fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
+        fmt = fmt_map.get(q, "720p")
+    body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+    detail_err = "Conversion could not be completed"
     try:
-        clean_q = re.sub(r"[^0-9]", "", str(quality)) or "720"
-        if mode == "video" and int(clean_q) > 720:
-            clean_q = "720"
-
-        stream_data = resolve_dataimpulse_stream(
-            url,
-            mode=mode,
-            quality=clean_q,
-            target_country=target_country
+        req = urllib.request.Request(
+            "https://api.fastsaver.io/v1/youtube/download",
+            data=body,
+            headers=headers,
+            method="POST",
         )
-        sid = stream_data["session_id"]
-        title = stream_data["title"]
-        ext = stream_data["ext"]
-        stream_raw_url = stream_data.get("stream_url", "")
-        surl = base64.urlsafe_b64encode(stream_raw_url.encode("utf-8")).decode("ascii") if stream_raw_url else ""
-        clean_title = re.sub(r'[\/:*?"<>|\r\n\t]', "_", title).strip() or "video"
-        download_url = f"/api/proxy-download?sid={sid}&vid={vid}&mode={mode}&ext={ext}&title={urllib.parse.quote(clean_title)}&country={target_country or ''}&surl={surl}"
-        return {
-            "success": True,
-            "download_url": download_url,
-            "filename": f"{clean_title}.{ext}",
-            "engine": "residential_proxy",
-            "capped_at_720": True,
-        }
-    except Exception as proxy_err:
-        print(f"[DATAIMPULSE_PROXY_FAIL] {vid}: {proxy_err}")
-        return {
-            "success": False,
-            "error": str(proxy_err),
-            "is_unsupported": bool(res_meta.get("is_unsupported")),
-            "unsupported_reason": res_meta.get("unsupported_reason"),
-            "is_regional": is_regional,
-        }
+        with urllib.request.urlopen(req, timeout=40) as res:
+            data = json.loads(res.read().decode("utf-8"))
+        _check_fastsaver_credits_and_alert(force_check=True)
+        if data.get("ok") and data.get("download_url"):
+            return {
+                "success": True,
+                "download_url": data["download_url"],
+                "filename": data.get("filename", ""),
+                "engine": "fastsaver",
+            }
+        detail_err = str(data.get("detail", "fastsaver_unknown_error"))
+    except urllib.error.HTTPError as e:
+        try:
+            err_body = json.loads(e.read().decode("utf-8", "ignore"))
+            detail_err = str(err_body.get("detail", f"HTTP {e.code}"))
+        except Exception:
+            detail_err = f"HTTP {e.code}"
+        _check_fastsaver_credits_and_alert(force_check=False)
+    except Exception as e:
+        detail_err = str(e)
+
+    return {
+        "success": False,
+        "error": detail_err,
+        "is_unsupported": bool(res_meta.get("is_unsupported")),
+        "unsupported_reason": res_meta.get("unsupported_reason"),
+        "is_regional": False,
+    }
 
 @app.get("/api/proxy-download")
 async def proxy_download(sid: str = "", vid: str = "", mode: str = "audio", ext: str = "mp4", title: str = "video", country: str = "", surl: str = ""):
