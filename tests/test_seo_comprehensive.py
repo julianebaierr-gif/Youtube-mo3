@@ -32,20 +32,20 @@ def test_sitemap_contains_exact_63_urls_and_no_duplicates():
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    # Requirement 3: 63 URLs
+    # Requirement: 63 URLs
     assert len(urls) == 63, f"Expected exactly 63 URLs in sitemap, found {len(urls)}"
     
     loc_list = [u.find("ns:loc", ns).text.strip() for u in urls]
     
-    # Requirement 4: No duplicate URLs
+    # Requirement: No duplicate URLs
     assert len(loc_list) == len(set(loc_list)), "Duplicate URLs detected in sitemap"
 
-    # Requirement 5: All sitemap URLs use HTTPS and preferred domain
+    # Requirement: All sitemap URLs use HTTPS and preferred domain
     for loc in loc_list:
         assert loc.startswith("https://www.yt4mp3.com/"), f"Invalid scheme or domain in {loc}"
 
 
-def test_sitemap_removes_changefreq_and_priority():
+def test_sitemap_changefreq_hourly_and_priority():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
@@ -55,8 +55,8 @@ def test_sitemap_removes_changefreq_and_priority():
         loc = u.find("ns:loc", ns).text.strip()
         cf = u.find("ns:changefreq", ns)
         pr = u.find("ns:priority", ns)
-        assert cf is None, f"Unwanted <changefreq> found in {loc}"
-        assert pr is None, f"Unwanted <priority> found in {loc}"
+        assert cf is not None and cf.text.strip() == "hourly", f"Missing or non-hourly changefreq in {loc}"
+        assert pr is not None and pr.text.strip() in ["1.0", "0.8"], f"Missing or invalid priority in {loc}"
 
 
 def test_sitemap_valid_lastmod_dates():
@@ -65,16 +65,11 @@ def test_sitemap_valid_lastmod_dates():
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    date_regex = re.compile(r"^\d{4}-\d{2}-\d{2}$")
     for u in urls:
         loc = u.find("ns:loc", ns).text.strip()
         lm = u.find("ns:lastmod", ns)
         assert lm is not None, f"Missing lastmod in {loc}"
-        lastmod_str = lm.text.strip()
-        assert date_regex.match(lastmod_str), f"Invalid date format in {loc}: {lastmod_str}"
-        # Validate that date can be parsed
-        parsed_dt = datetime.strptime(lastmod_str, "%Y-%m-%d")
-        assert parsed_dt.year >= 2024, f"Suspicious lastmod year in {loc}: {lastmod_str}"
+        assert lm.text.strip() == "2026-11-04", f"lastmod date is not 2026-11-04 in {loc}"
 
 
 # -------------------------------------------------------------
@@ -96,10 +91,10 @@ def test_rss_xml_parsing_and_structure():
     assert channel.find("link").text == "https://www.yt4mp3.com/"
     assert "converting YouTube videos to MP3 and MP4" in channel.find("description").text
     assert channel.find("language").text == "en-us"
-    assert channel.find("lastBuildDate").text is not None
+    assert "04 Nov 2026" in channel.find("lastBuildDate").text
 
 
-def test_rss_feed_contains_60_items_with_stable_guids():
+def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
     res = client.get("/feed.xml")
     root = ET.fromstring(res.text)
     channel = root.find("channel")
@@ -110,6 +105,8 @@ def test_rss_feed_contains_60_items_with_stable_guids():
 
     guids = set()
     links = set()
+    found_months = set()
+    
     for item in items:
         link = item.find("link").text.strip()
         guid = item.find("guid").text.strip()
@@ -123,7 +120,10 @@ def test_rss_feed_contains_60_items_with_stable_guids():
         assert desc, f"Empty description in {link}"
         assert pub_date, f"Empty pubDate in {link}"
 
-        # Task 4 item 9: verify 'Cepat, cepat' fix
+        # Verify dates span the last 3 months
+        parsed_date = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S +0000")
+        found_months.add(parsed_date.strftime("%b %Y"))
+
         assert "Cepat, cepat" not in desc, f"Repeated words 'Cepat, cepat' found in {link}"
 
         guids.add(guid)
@@ -131,6 +131,10 @@ def test_rss_feed_contains_60_items_with_stable_guids():
 
     assert len(guids) == 60, "Duplicate GUIDs found in feed"
     assert len(links) == 60, "Duplicate links found in feed"
+    
+    # Must contain dates spanning the last 3 months (Aug, Sep, Oct, Nov 2026)
+    expected_months = {"Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026"}
+    assert found_months == expected_months, f"Expected {expected_months}, got {found_months}"
 
 
 def test_rss_dates_stable_and_not_dynamically_changing():

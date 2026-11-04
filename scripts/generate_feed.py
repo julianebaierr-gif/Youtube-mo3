@@ -10,11 +10,13 @@ from app.i18n import SUPPORTED_LANGUAGES, get_page_content
 
 def build_feed_xml() -> str:
     pages = ["home", "youtube-to-mp3", "youtube-to-mp4", "youtube-shorts-downloader"]
+    
+    # Staggered publication dates across the last 3 months leading up to today (Nov 04, 2026)
     release_dates = {
-        "home": "Fri, 30 Oct 2026 12:00:00 +0000",
-        "youtube-to-mp3": "Tue, 27 Oct 2026 12:00:00 +0000",
-        "youtube-to-mp4": "Wed, 28 Oct 2026 12:00:00 +0000",
-        "youtube-shorts-downloader": "Thu, 29 Oct 2026 12:00:00 +0000",
+        "youtube-to-mp3": "Tue, 18 Aug 2026 10:00:00 +0000",       # 3 months ago (August)
+        "youtube-to-mp4": "Tue, 15 Sep 2026 10:00:00 +0000",       # 2 months ago (September)
+        "youtube-shorts-downloader": "Thu, 15 Oct 2026 10:00:00 +0000", # 1 month ago (October)
+        "home": "Wed, 04 Nov 2026 10:00:00 +0000",                 # Today (November 4, 2026)
     }
     
     urls = []
@@ -28,7 +30,7 @@ def build_feed_xml() -> str:
             title = data.get("title") or "YT4MP3"
             desc = data.get("meta_desc") or "YouTube converter tool"
             desc = desc.replace("Cepat, cepat", "Cepat")
-            pub_date = release_dates.get(p, "Fri, 30 Oct 2026 12:00:00 +0000")
+            pub_date = release_dates.get(p, "Wed, 04 Nov 2026 10:00:00 +0000")
             urls.append((link, title, desc, lang, pub_date))
 
     items_xml = "".join([
@@ -49,7 +51,7 @@ def build_feed_xml() -> str:
     <link>https://www.yt4mp3.com/</link>
     <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Oct 2026 12:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 04 Nov 2026 13:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""

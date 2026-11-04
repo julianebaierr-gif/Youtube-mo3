@@ -321,9 +321,13 @@ def get_authoritative_sitemap_xml() -> str:
     urls = get_all_sitemap_urls()
     items = []
     for u in urls:
+        is_legal = any(legal in u for legal in ["contact-us", "terms-of-service", "privacy-policy"])
+        priority = "0.8" if is_legal else "1.0"
         items.append(f"""  <url>
     <loc>{u}</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>{priority}</priority>
   </url>""")
     _SITEMAP_CACHE_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(items) + "\n</urlset>"
     return _SITEMAP_CACHE_XML
@@ -394,10 +398,10 @@ def get_authoritative_feed_xml() -> str:
     import html
     pages = ["home", "youtube-to-mp3", "youtube-to-mp4", "youtube-shorts-downloader"]
     release_dates = {
-        "home": "Fri, 30 Oct 2026 12:00:00 +0000",
-        "youtube-to-mp3": "Tue, 27 Oct 2026 12:00:00 +0000",
-        "youtube-to-mp4": "Wed, 28 Oct 2026 12:00:00 +0000",
-        "youtube-shorts-downloader": "Thu, 29 Oct 2026 12:00:00 +0000",
+        "youtube-to-mp3": "Tue, 18 Aug 2026 10:00:00 +0000",
+        "youtube-to-mp4": "Tue, 15 Sep 2026 10:00:00 +0000",
+        "youtube-shorts-downloader": "Thu, 15 Oct 2026 10:00:00 +0000",
+        "home": "Wed, 04 Nov 2026 10:00:00 +0000",
     }
     urls = []
     for lang in SUPPORTED_LANGUAGES:
@@ -430,7 +434,7 @@ def get_authoritative_feed_xml() -> str:
     <link>https://www.yt4mp3.com/</link>
     <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Oct 2026 12:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 04 Nov 2026 13:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""
