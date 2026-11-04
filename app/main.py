@@ -730,67 +730,283 @@ def _check_fastsaver_credits_and_alert(force_check: bool = False, test_alert: bo
 async def fastsaver_balance_check(test_alert: int = 0):
     return _check_fastsaver_credits_and_alert(force_check=True, test_alert=(int(test_alert) == 1))
 
+# ==============================================================================
+# DATAIMPULSE RESIDENTIAL PROXY ENGINE — Fallback for geo-restricted & locked videos
+# Capped strictly at 720p maximum as requested. Primary engine remains FastSaver Pro.
+# ==============================================================================
+DATAIMPULSE_HOST = "gw.dataimpulse.com"
+DATAIMPULSE_PORT = 823
+DATAIMPULSE_USER = os.environ.get("DATAIMPULSE_USER") or "c8f15994b4066af9b4b9"
+DATAIMPULSE_PASS = os.environ.get("DATAIMPULSE_PASS") or "42eaaf24f75bc5fb"
+
+_PROXY_STREAM_CACHE: dict[str, dict] = {}
+
+def get_dataimpulse_proxy_url(country: str = None, session_id: str = None) -> str:
+    user_parts = [DATAIMPULSE_USER]
+    if country:
+        c = re.sub(r"[^a-zA-Z]", "", country).lower()[:2]
+        if c:
+            user_parts.append(f"__cr.{c}")
+    if session_id:
+        s = re.sub(r"[^a-zA-Z0-9_-]", "", session_id)
+        if s:
+            user_parts.append(f";sid.{s}")
+    username = "".join(user_parts)
+    return f"http://{username}:{DATAIMPULSE_PASS}@{DATAIMPULSE_HOST}:{DATAIMPULSE_PORT}"
+
+def pick_best_proxy_country(allowed_countries: list) -> str:
+    if not allowed_countries:
+        return None
+    allowed_upper = [c.upper() for c in allowed_countries if isinstance(c, str)]
+    preferred = ["US", "DE", "FR", "GB", "CA", "ES", "IT", "MX", "BR", "JP", "IN", "AU"]
+    for p in preferred:
+        if p in allowed_upper:
+            return p.lower()
+    return allowed_upper[0].lower() if allowed_upper else None
+
+def get_proxy_format_selector(mode: str = "audio", quality: str = "720") -> str:
+    if mode == "audio":
+        return "140/ba[ext=m4a]/ba/251/bestaudio/best"
+    # User requirement: Strictly capped at 720p maximum! Never exceed 720p.
+    return "18/22/b[height<=720]/bv*[height<=720]+ba/best[height<=720]/best"
+
+def resolve_dataimpulse_stream(yt_url: str, mode: str = "audio", quality: str = "720", target_country: str = None) -> dict:
+    import yt_dlp
+    import time
+    session_id = uuid.uuid4().hex[:10]
+    proxy_url = get_dataimpulse_proxy_url(country=target_country, session_id=session_id)
+    fmt_selector = get_proxy_format_selector(mode=mode, quality=quality)
+    
+    ydl_opts = {
+        "proxy": proxy_url,
+        "quiet": True,
+        "no_warnings": True,
+        "format": fmt_selector,
+        "noplaylist": True,
+        "extract_flat": False,
+        "socket_timeout": 25,
+    }
+    
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(yt_url, download=False)
+        
+    stream_url = info.get("url")
+    if not stream_url and info.get("requested_formats"):
+        stream_url = info["requested_formats"][-1].get("url")
+        
+    if not stream_url:
+        raise ValueError("Could not extract playable stream URL via residential proxy")
+        
+    title = info.get("title") or "YouTube Media"
+    raw_h = info.get("height") or (720 if mode == "video" else 0)
+    h = min(raw_h, 720) if mode == "video" else 0
+    ext = "mp3" if mode == "audio" else "mp4"
+    
+    _PROXY_STREAM_CACHE[session_id] = {
+        "stream_url": stream_url,
+        "proxy_url": proxy_url,
+        "title": title,
+        "ext": ext,
+        "mode": mode,
+        "height": h,
+        "created_at": time.time(),
+    }
+    
+    return {
+        "session_id": session_id,
+        "stream_url": stream_url,
+        "proxy_url": proxy_url,
+        "title": title,
+        "ext": ext,
+        "height": h,
+    }
+
 @app.get("/api/fastsaver-video")
 async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
-    headers = {
-        "X-Api-Key": FASTSAVER_API_KEY,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
-    }
-    # Determine format string for FastSaver
-    if mode == "audio":
-        fmt = "audio"
-    else:
-        q = re.sub(r"[^0-9]", "", str(quality)) or "720"
-        fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
-        fmt = fmt_map.get(q, "720p")
-    body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
-    try:
-        req = urllib.request.Request(
-            "https://api.fastsaver.io/v1/youtube/download",
-            data=body,
-            headers=headers,
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=40) as res:
-            data = json.loads(res.read().decode("utf-8"))
-        # Check remaining credits after download and alert if <= 10,000
-        _check_fastsaver_credits_and_alert(force_check=True)
-        if data.get("ok") and data.get("download_url"):
-            return {
-                "success": True,
-                "download_url": data["download_url"],
-                "filename": data.get("filename", ""),
-                "engine": "fastsaver",
-            }
-        detail_err = str(data.get("detail", "fastsaver_unknown_error"))
-    except urllib.error.HTTPError as e:
-        try:
-            err_body = json.loads(e.read().decode("utf-8", "ignore"))
-            detail_err = str(err_body.get("detail", f"HTTP {e.code}"))
-        except Exception:
-            detail_err = f"HTTP {e.code}"
-        _check_fastsaver_credits_and_alert(force_check=False)
-    except Exception as e:
-        detail_err = str(e)
 
     m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
+    vid = m_vid.group(1) if m_vid else ""
+
+    # Check video resolution metadata (to identify regional / geo-blocked videos)
     res_meta = {}
-    if m_vid:
+    if vid:
         try:
-            res_meta = await get_video_resolutions(m_vid.group(1), skip_fastsaver_info=True)
+            res_meta = await get_video_resolutions(vid, skip_fastsaver_info=False)
         except Exception:
             res_meta = {}
-    return {
-        "success": False,
-        "error": detail_err,
-        "is_unsupported": bool(res_meta.get("is_unsupported")),
-        "unsupported_reason": res_meta.get("unsupported_reason"),
-        "is_regional": bool(res_meta.get("is_regional")),
-    }
+
+    is_regional = bool(res_meta.get("is_regional") or res_meta.get("is_geo_blocked"))
+    allowed_countries = res_meta.get("allowed_countries", [])
+    target_country = pick_best_proxy_country(allowed_countries)
+
+    # 1. Primary: FastSaver Pro Paid API (only if video is NOT geo-restricted)
+    if not is_regional:
+        headers = {
+            "X-Api-Key": FASTSAVER_API_KEY,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
+        }
+        if mode == "audio":
+            fmt = "audio"
+        else:
+            q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+            fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
+            fmt = fmt_map.get(q, "720p")
+        body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+        try:
+            req = urllib.request.Request(
+                "https://api.fastsaver.io/v1/youtube/download",
+                data=body,
+                headers=headers,
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=40) as res:
+                data = json.loads(res.read().decode("utf-8"))
+            _check_fastsaver_credits_and_alert(force_check=True)
+            if data.get("ok") and data.get("download_url"):
+                return {
+                    "success": True,
+                    "download_url": data["download_url"],
+                    "filename": data.get("filename", ""),
+                    "engine": "fastsaver",
+                }
+        except Exception as e:
+            print(f"[FASTSAVER_FAIL_TRIGGERING_RESIDENTIAL_FALLBACK] {vid}: {e}")
+
+    # 2. Fallback: DataImpulse Residential Proxy (when FastSaver fails or video is geo-locked)
+    # Strictly capped at 720p maximum as requested
+    try:
+        clean_q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+        if mode == "video" and int(clean_q) > 720:
+            clean_q = "720"
+
+        stream_data = resolve_dataimpulse_stream(
+            url,
+            mode=mode,
+            quality=clean_q,
+            target_country=target_country
+        )
+        sid = stream_data["session_id"]
+        title = stream_data["title"]
+        ext = stream_data["ext"]
+        clean_title = re.sub(r'[\/:*?"<>|]', "_", title).strip() or "video"
+        download_url = f"/api/proxy-download?sid={sid}&vid={vid}&mode={mode}&ext={ext}&title={urllib.parse.quote(clean_title)}&country={target_country or ''}"
+        return {
+            "success": True,
+            "download_url": download_url,
+            "filename": f"{clean_title}.{ext}",
+            "engine": "residential_proxy",
+            "capped_at_720": True,
+        }
+    except Exception as proxy_err:
+        print(f"[DATAIMPULSE_PROXY_FAIL] {vid}: {proxy_err}")
+        return {
+            "success": False,
+            "error": str(proxy_err),
+            "is_unsupported": bool(res_meta.get("is_unsupported")),
+            "unsupported_reason": res_meta.get("unsupported_reason"),
+            "is_regional": is_regional,
+        }
+
+@app.get("/api/proxy-download")
+async def proxy_download(sid: str = "", vid: str = "", mode: str = "audio", ext: str = "mp4", title: str = "video", country: str = ""):
+    stream_info = _PROXY_STREAM_CACHE.get(sid)
+    if not stream_info and vid:
+        try:
+            stream_info = resolve_dataimpulse_stream(
+                f"https://www.youtube.com/watch?v={vid}",
+                mode=mode,
+                quality="720",
+                target_country=country or None
+            )
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Proxy stream resolution failed: {e}")
+
+    if not stream_info or not stream_info.get("stream_url"):
+        raise HTTPException(status_code=404, detail="Stream expired or not found")
+
+    stream_url = stream_info["stream_url"]
+    proxy_url = stream_info.get("proxy_url") or get_dataimpulse_proxy_url(country=country)
+    safe_title = re.sub(r'[\/:*?"<>|]', "_", title or stream_info.get("title", "download")).strip()
+    media_type = "audio/mpeg" if ext == "mp3" else ("audio/mp4" if ext == "m4a" else "video/mp4")
+
+    def iterfile():
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+        req = urllib.request.Request(
+            stream_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Accept": "*/*",
+            }
+        )
+        with opener.open(req, timeout=35) as res:
+            while True:
+                chunk = res.read(64 * 1024)
+                if not chunk:
+                    break
+                yield chunk
+
+    return StreamingResponse(
+        iterfile(),
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{safe_title}.{ext}"',
+            "Cache-Control": "no-cache",
+        }
+    )
+
+@app.get("/api/geo-stream")
+async def geo_stream(url: str, format: str = "mp3", quality: str = "720"):
+    # Direct alias for legacy links: resolves and streams via DataImpulse Residential Proxy
+    mode = "audio" if format.lower() in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus"] else "video"
+    m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
+    vid = m_vid.group(1) if m_vid else ""
+
+    target_country = None
+    if vid:
+        try:
+            res_meta = await get_video_resolutions(vid, skip_fastsaver_info=True)
+            target_country = pick_best_proxy_country(res_meta.get("allowed_countries", []))
+        except Exception:
+            target_country = None
+
+    clean_q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+    if mode == "video" and int(clean_q) > 720:
+        clean_q = "720"
+
+    stream_info = resolve_dataimpulse_stream(url, mode=mode, quality=clean_q, target_country=target_country)
+    ext = "mp3" if mode == "audio" else "mp4"
+    safe_title = re.sub(r'[\/:*?"<>|]', "_", stream_info.get("title", "download")).strip()
+    media_type = "audio/mpeg" if ext == "mp3" else "video/mp4"
+
+    def iterfile():
+        proxy_url = stream_info["proxy_url"]
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+        req = urllib.request.Request(
+            stream_info["stream_url"],
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Accept": "*/*",
+            }
+        )
+        with opener.open(req, timeout=35) as res:
+            while True:
+                chunk = res.read(64 * 1024)
+                if not chunk:
+                    break
+                yield chunk
+
+    return StreamingResponse(
+        iterfile(),
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{safe_title}.{ext}"',
+            "Cache-Control": "no-cache",
+        }
+    )
 
 
 # ==============================================================================
@@ -910,7 +1126,11 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
         if dur_match:
             duration_sec = int(dur_match.group(1))
 
+        m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
+        allowed_countries = json.loads(m_c.group(1)) if m_c else []
         is_geo_blocked = bool(
+            (len(allowed_countries) > 0 and len(allowed_countries) < 240) or
+            (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
             re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
 
@@ -967,11 +1187,26 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
         m_title = re.search(r'<title>([^<]+)</title>', html)
         if m_title:
             yt_watch_title = m_title.group(1).replace(' - YouTube', '').strip()
+
+        if is_geo_blocked:
+            # Strictly cap at 720p maximum for geo-locked / proxy downloads
+            max_h = min(max_h, 720)
+            has_4k = False
+            has_2k = False
+            has_1080 = False
+            has_720 = max_h >= 720
+            heights = [h for h in heights if h <= 720]
+        else:
+            has_4k = max_h >= 2160 or 2160 in heights
+            has_2k = max_h >= 1440 or 1440 in heights
+            has_1080 = max_h >= 1080 or 1080 in heights
+            has_720 = max_h >= 720 or 720 in heights
+
         result = {
-            "has_4k": max_h >= 2160 or 2160 in heights,
-            "has_2k": max_h >= 1440 or 1440 in heights,
-            "has_1080": max_h >= 1080 or 1080 in heights,
-            "has_720": max_h >= 720 or 720 in heights,
+            "has_4k": has_4k,
+            "has_2k": has_2k,
+            "has_1080": has_1080,
+            "has_720": has_720,
             "max_height": max_h,
             "available_heights": sorted(list(set(heights)), reverse=True),
             "filesizes": {},
@@ -979,6 +1214,7 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
             "title": yt_watch_title,
             "is_regional": is_geo_blocked,
             "is_geo_blocked": is_geo_blocked,
+            "allowed_countries": allowed_countries,
             "is_unsupported": bool(unsupported_reason),
             "unsupported_reason": unsupported_reason,
             "source": "yt_watch",
