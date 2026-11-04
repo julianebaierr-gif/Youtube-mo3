@@ -4,6 +4,7 @@ import urllib.parse
 import json
 import re
 import uuid
+import base64
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -821,6 +822,13 @@ def resolve_dataimpulse_stream(yt_url: str, mode: str = "audio", quality: str = 
         "height": h,
     }
 
+def make_content_disposition(title: str, ext: str) -> str:
+    clean = re.sub(r'[\/:*?"<>|\r\n\t]', "_", title or "download").strip()
+    ascii_clean = clean.encode("ascii", "ignore").decode("ascii").strip()
+    ascii_clean = re.sub(r'\s+', ' ', ascii_clean).strip(". ") or "download"
+    encoded_utf8 = urllib.parse.quote(clean.encode("utf-8"))
+    return f'attachment; filename="{ascii_clean}.{ext}"; filename*=UTF-8\'\'{encoded_utf8}.{ext}'
+
 @app.get("/api/fastsaver-video")
 async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
@@ -892,8 +900,10 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         sid = stream_data["session_id"]
         title = stream_data["title"]
         ext = stream_data["ext"]
-        clean_title = re.sub(r'[\/:*?"<>|]', "_", title).strip() or "video"
-        download_url = f"/api/proxy-download?sid={sid}&vid={vid}&mode={mode}&ext={ext}&title={urllib.parse.quote(clean_title)}&country={target_country or ''}"
+        stream_raw_url = stream_data.get("stream_url", "")
+        surl = base64.urlsafe_b64encode(stream_raw_url.encode("utf-8")).decode("ascii") if stream_raw_url else ""
+        clean_title = re.sub(r'[\/:*?"<>|\r\n\t]', "_", title).strip() or "video"
+        download_url = f"/api/proxy-download?sid={sid}&vid={vid}&mode={mode}&ext={ext}&title={urllib.parse.quote(clean_title)}&country={target_country or ''}&surl={surl}"
         return {
             "success": True,
             "download_url": download_url,
@@ -912,9 +922,20 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         }
 
 @app.get("/api/proxy-download")
-async def proxy_download(sid: str = "", vid: str = "", mode: str = "audio", ext: str = "mp4", title: str = "video", country: str = ""):
-    stream_info = _PROXY_STREAM_CACHE.get(sid)
-    if not stream_info and vid:
+async def proxy_download(sid: str = "", vid: str = "", mode: str = "audio", ext: str = "mp4", title: str = "video", country: str = "", surl: str = ""):
+    stream_url = None
+    if surl:
+        try:
+            stream_url = base64.urlsafe_b64decode(surl.encode("ascii")).decode("utf-8")
+        except Exception:
+            stream_url = None
+
+    if not stream_url:
+        stream_info = _PROXY_STREAM_CACHE.get(sid)
+        if stream_info:
+            stream_url = stream_info.get("stream_url")
+
+    if not stream_url and vid:
         try:
             stream_info = resolve_dataimpulse_stream(
                 f"https://www.youtube.com/watch?v={vid}",
@@ -922,15 +943,14 @@ async def proxy_download(sid: str = "", vid: str = "", mode: str = "audio", ext:
                 quality="720",
                 target_country=country or None
             )
+            stream_url = stream_info.get("stream_url")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Proxy stream resolution failed: {e}")
 
-    if not stream_info or not stream_info.get("stream_url"):
+    if not stream_url:
         raise HTTPException(status_code=404, detail="Stream expired or not found")
 
-    stream_url = stream_info["stream_url"]
-    proxy_url = stream_info.get("proxy_url") or get_dataimpulse_proxy_url(country=country)
-    safe_title = re.sub(r'[\/:*?"<>|]', "_", title or stream_info.get("title", "download")).strip()
+    proxy_url = get_dataimpulse_proxy_url(country=country, session_id=sid)
     media_type = "audio/mpeg" if ext == "mp3" else ("audio/mp4" if ext == "m4a" else "video/mp4")
 
     def iterfile():
@@ -953,7 +973,7 @@ async def proxy_download(sid: str = "", vid: str = "", mode: str = "audio", ext:
         iterfile(),
         media_type=media_type,
         headers={
-            "Content-Disposition": f'attachment; filename="{safe_title}.{ext}"',
+            "Content-Disposition": make_content_disposition(title, ext),
             "Cache-Control": "no-cache",
         }
     )
@@ -1003,7 +1023,7 @@ async def geo_stream(url: str, format: str = "mp3", quality: str = "720"):
         iterfile(),
         media_type=media_type,
         headers={
-            "Content-Disposition": f'attachment; filename="{safe_title}.{ext}"',
+            "Content-Disposition": make_content_disposition(stream_info.get("title", "download"), ext),
             "Cache-Control": "no-cache",
         }
     )
