@@ -223,6 +223,11 @@ def test_robots_txt_spec():
     assert "Sitemap: https://www.yt4mp3.com/sitemap.xml" in content
     assert "Allow: /" in content
     assert "Disallow: /api/" in content
+    # Verify removed disallow directives
+    assert "Disallow: /watch" not in content
+    assert "Disallow: /shorts/" not in content
+    assert "Disallow: /4youtube/" not in content
+    assert "Disallow: /4/" not in content
     # Ensure important language paths are NOT disallowed
     for lang in SUPPORTED_LANGUAGES:
         assert f"Disallow: /{lang}" not in content

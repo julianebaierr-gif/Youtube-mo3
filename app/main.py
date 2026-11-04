@@ -264,10 +264,6 @@ async def robots_txt():
     content = """User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /watch
-Disallow: /shorts/
-Disallow: /4youtube/
-Disallow: /4/
 Disallow: /?s=
 Disallow: /*?*s=
 Disallow: /*?*q=
