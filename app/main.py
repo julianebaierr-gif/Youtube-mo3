@@ -545,66 +545,8 @@ async def start_auto_indexnow_scheduler():
     asyncio.create_task(_auto_index_loop())
 
 # ==============================================================================
-# WEBSHARE PROXY POOLS & HTTP HELPERS
+# CONVERTER HTTP HELPERS
 # ==============================================================================
-WEBSHARE_API_KEY = os.environ.get("WEBSHARE_API_KEY") or "a5s4fkwqxrpevtidf0gnzzl4bpae1l5iutemo0qj"
-WEBSHARE_PROXIES = {
-    "AL": ["http://jzoemevmdatacenter:cxoms419j5eq@188.68.1.193:6062", "http://jzoemevmdatacenter:cxoms419j5eq@45.67.3.6:6169"],
-    "AR": ["http://jzoemevmdatacenter:cxoms419j5eq@43.229.11.208:5846", "http://jzoemevmdatacenter:cxoms419j5eq@104.239.73.216:6759"],
-    "AT": ["http://jzoemevmdatacenter:cxoms419j5eq@64.137.88.166:6405", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.96.82:5495"],
-    "AU": ["http://jzoemevmdatacenter:cxoms419j5eq@92.113.129.227:8016", "http://jzoemevmdatacenter:cxoms419j5eq@103.221.55.176:6246"],
-    "BE": ["http://jzoemevmdatacenter:cxoms419j5eq@161.123.65.106:6815", "http://jzoemevmdatacenter:cxoms419j5eq@62.105.202.249:5892"],
-    "BR": ["http://jzoemevmdatacenter:cxoms419j5eq@185.72.241.163:7455", "http://jzoemevmdatacenter:cxoms419j5eq@185.72.241.131:7423"],
-    "CA": ["http://jzoemevmdatacenter:cxoms419j5eq@185.15.178.110:5794", "http://jzoemevmdatacenter:cxoms419j5eq@31.57.42.245:6515"],
-    "CH": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.230.6:7810", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.7.104:5535"],
-    "CL": ["http://jzoemevmdatacenter:cxoms419j5eq@64.137.37.5:6595", "http://jzoemevmdatacenter:cxoms419j5eq@104.239.44.2:5924"],
-    "CO": ["http://jzoemevm:cxoms419j5eq@108.165.3.146:5277", "http://jzoemevm:cxoms419j5eq@108.165.2.167:5798"],
-    "CR": ["http://jzoemevmdatacenter:cxoms419j5eq@82.21.238.165:7968", "http://jzoemevmdatacenter:cxoms419j5eq@82.23.227.53:7356", "http://jzoemevmdatacenter:cxoms419j5eq@82.21.238.97:7900"],
-    "CY": ["http://jzoemevmdatacenter:cxoms419j5eq@45.131.94.173:6160", "http://jzoemevmdatacenter:cxoms419j5eq@45.131.92.87:6698"],
-    "CZ": ["http://jzoemevmdatacenter:cxoms419j5eq@92.112.235.10:6533", "http://jzoemevmdatacenter:cxoms419j5eq@104.253.81.39:5467"],
-    "DE": ["http://jzoemevmdatacenter:cxoms419j5eq@45.147.186.31:6904", "http://jzoemevmdatacenter:cxoms419j5eq@45.151.162.109:6511"],
-    "DK": ["http://jzoemevmdatacenter:cxoms419j5eq@104.253.82.237:6658", "http://jzoemevmdatacenter:cxoms419j5eq@104.253.82.252:6673"],
-    "EE": ["http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.113:5992", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.41:5920", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.201.60:5939"],
-    "EG": ["http://jzoemevmdatacenter:cxoms419j5eq@161.123.131.207:5812", "http://jzoemevmdatacenter:cxoms419j5eq@161.123.131.176:5781"],
-    "ES": ["http://jzoemevmdatacenter:cxoms419j5eq@46.203.206.210:5655", "http://jzoemevmdatacenter:cxoms419j5eq@46.203.198.137:6581"],
-    "FI": ["http://jzoemevmdatacenter:cxoms419j5eq@82.22.249.104:6941", "http://jzoemevmdatacenter:cxoms419j5eq@103.99.34.11:6626"],
-    "FR": ["http://jzoemevm:cxoms419j5eq@31.98.7.105:6283", "http://jzoemevm:cxoms419j5eq@179.61.172.206:6757", "http://jzoemevm:cxoms419j5eq@82.140.180.187:7147", "http://jzoemevm:cxoms419j5eq@31.98.8.82:5760", "http://jzoemevm:cxoms419j5eq@82.23.62.125:7878", "http://jzoemevmdatacenter:cxoms419j5eq@45.39.125.98:6506", "http://jzoemevmdatacenter:cxoms419j5eq@140.99.196.178:7056"],
-    "GB": ["http://jzoemevm:cxoms419j5eq@195.40.133.198:6418", "http://jzoemevm:cxoms419j5eq@195.40.128.79:6799", "http://jzoemevm:cxoms419j5eq@87.86.24.81:5732", "http://jzoemevmdatacenter:cxoms419j5eq@107.181.154.11:5689", "http://jzoemevmdatacenter:cxoms419j5eq@198.105.122.140:6713"],
-    "GR": ["http://jzoemevmdatacenter:cxoms419j5eq@137.59.7.75:5619", "http://jzoemevmdatacenter:cxoms419j5eq@137.59.5.41:6524"],
-    "HR": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.221.236:6566", "http://jzoemevmdatacenter:cxoms419j5eq@82.21.209.187:6516"],
-    "HU": ["http://jzoemevmdatacenter:cxoms419j5eq@82.21.225.115:7942", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.236.215:8028"],
-    "IE": ["http://jzoemevmdatacenter:cxoms419j5eq@82.24.221.87:5938", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.214.15:6866"],
-    "IN": ["http://jzoemevmdatacenter:cxoms419j5eq@13.143.125.130:7172", "http://jzoemevmdatacenter:cxoms419j5eq@13.143.112.37:5548"],
-    "IT": ["http://jzoemevmdatacenter:cxoms419j5eq@217.198.177.67:5583", "http://jzoemevmdatacenter:cxoms419j5eq@45.83.59.242:7258"],
-    "JP": ["http://jzoemevm:cxoms419j5eq@82.22.93.22:7729", "http://jzoemevm:cxoms419j5eq@82.22.93.45:7752", "http://jzoemevm:cxoms419j5eq@82.22.93.42:7749", "http://jzoemevmdatacenter:cxoms419j5eq@31.59.11.92:6162", "http://jzoemevmdatacenter:cxoms419j5eq@108.165.87.176:6639"],
-    "LT": ["http://jzoemevmdatacenter:cxoms419j5eq@193.187.114.113:6128", "http://jzoemevmdatacenter:cxoms419j5eq@193.187.115.216:5731", "http://jzoemevmdatacenter:cxoms419j5eq@193.187.114.4:6019"],
-    "LV": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.204.135:6967", "http://jzoemevmdatacenter:cxoms419j5eq@45.131.103.143:6129"],
-    "MT": ["http://jzoemevmdatacenter:cxoms419j5eq@142.202.254.181:6159", "http://jzoemevmdatacenter:cxoms419j5eq@142.202.255.8:6248", "http://jzoemevmdatacenter:cxoms419j5eq@142.202.253.247:5922"],
-    "MX": ["http://jzoemevmdatacenter:cxoms419j5eq@185.48.52.106:5698", "http://jzoemevmdatacenter:cxoms419j5eq@216.173.104.215:6352", "http://jzoemevmdatacenter:cxoms419j5eq@216.173.104.217:6354"],
-    "NL": ["http://jzoemevmdatacenter:cxoms419j5eq@185.226.205.142:5674", "http://jzoemevmdatacenter:cxoms419j5eq@104.238.8.35:5893"],
-    "NO": ["http://jzoemevmdatacenter:cxoms419j5eq@104.239.53.44:7462", "http://jzoemevmdatacenter:cxoms419j5eq@104.239.52.234:7396"],
-    "PL": ["http://jzoemevmdatacenter:cxoms419j5eq@46.203.196.40:5486", "http://jzoemevmdatacenter:cxoms419j5eq@46.203.196.197:5643"],
-    "PT": ["http://jzoemevmdatacenter:cxoms419j5eq@181.214.37.184:6869", "http://jzoemevmdatacenter:cxoms419j5eq@45.93.45.66:6251", "http://jzoemevmdatacenter:cxoms419j5eq@181.214.37.153:6838"],
-    "RO": ["http://jzoemevmdatacenter:cxoms419j5eq@89.35.80.196:6851", "http://jzoemevmdatacenter:cxoms419j5eq@193.176.99.104:6010"],
-    "RS": ["http://jzoemevmdatacenter:cxoms419j5eq@82.24.247.194:7028", "http://jzoemevmdatacenter:cxoms419j5eq@82.23.237.118:7452"],
-    "SE": ["http://jzoemevmdatacenter:cxoms419j5eq@92.112.239.17:6805", "http://jzoemevmdatacenter:cxoms419j5eq@38.225.2.217:6000"],
-    "SG": ["http://jzoemevmdatacenter:cxoms419j5eq@45.39.73.198:5613", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.223.70:7884"],
-    "SI": ["http://jzoemevmdatacenter:cxoms419j5eq@209.242.204.10:5751", "http://jzoemevmdatacenter:cxoms419j5eq@209.242.201.96:6142"],
-    "SK": ["http://jzoemevmdatacenter:cxoms419j5eq@82.23.243.61:7419", "http://jzoemevmdatacenter:cxoms419j5eq@82.29.233.254:8111"],
-    "TH": ["http://jzoemevmdatacenter:cxoms419j5eq@62.105.204.158:5802", "http://jzoemevmdatacenter:cxoms419j5eq@62.105.205.240:5384", "http://jzoemevmdatacenter:cxoms419j5eq@82.119.203.67:6211"],
-    "TR": ["http://jzoemevmdatacenter:cxoms419j5eq@142.111.216.47:6192", "http://jzoemevmdatacenter:cxoms419j5eq@166.88.110.70:5215"],
-    "UA": ["http://jzoemevmdatacenter:cxoms419j5eq@104.250.201.244:6789", "http://jzoemevmdatacenter:cxoms419j5eq@104.250.201.104:6649", "http://jzoemevmdatacenter:cxoms419j5eq@104.250.200.219:6469"],
-    "US": ["http://jzoemevm:cxoms419j5eq@9.142.218.167:6831", "http://jzoemevm:cxoms419j5eq@192.46.201.131:6645", "http://jzoemevm:cxoms419j5eq@64.52.28.38:7725", "http://jzoemevm:cxoms419j5eq@9.142.198.67:5734", "http://jzoemevm:cxoms419j5eq@45.56.180.203:8437", "http://jzoemevm:cxoms419j5eq@9.142.11.217:5373", "http://jzoemevm:cxoms419j5eq@64.52.31.9:6196", "http://jzoemevmdatacenter:cxoms419j5eq@107.175.56.218:6491", "http://jzoemevmdatacenter:cxoms419j5eq@38.154.205.168:5436"],
-    "ZA": ["http://jzoemevmdatacenter:cxoms419j5eq@82.21.245.104:6428", "http://jzoemevmdatacenter:cxoms419j5eq@82.26.245.109:6932"],
-}
-
-WEBSHARE_POOL_PRIORITY = [
-    "US", "GB", "DE", "FR", "JP", "IN", "TR", "EG", "BR", "CA", "AU", "IT", "ES", "NL", "PL",
-    "SE", "NO", "DK", "FI", "CH", "AT", "BE", "IE", "PT", "GR", "RO", "CZ", "SK", "HU", "HR",
-    "SI", "RS", "AL", "CY", "EE", "LT", "LV", "MT", "MX", "AR", "CO", "CL", "CR", "SG", "TH",
-    "UA", "ZA"
-]
-
 def _fetch_converter_json(target_url: str, headers: dict = None, timeout: float = 8.0) -> dict:
     req_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
@@ -614,32 +556,14 @@ def _fetch_converter_json(target_url: str, headers: dict = None, timeout: float 
     if headers:
         req_headers.update(headers)
     req = urllib.request.Request(target_url, headers=req_headers)
-    
-    # 1. Direct request
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return json.loads(r.read())
     except Exception:
-        pass
-
-    # 2. Proxy fallback using Webshare static ISP IPs (bypasses Cloudflare datacenter IP block on Vercel/AWS)
-    us_proxies = list(WEBSHARE_PROXIES.get("US", []))
-    if us_proxies:
-        import random
-        random.shuffle(us_proxies)
-        for proxy_url in us_proxies[:3]:
-            try:
-                proxy_handler = urllib.request.ProxyHandler({'http': proxy_url, 'https': proxy_url})
-                opener = urllib.request.build_opener(proxy_handler)
-                with opener.open(req, timeout=timeout) as r:
-                    return json.loads(r.read())
-            except Exception:
-                continue
-
-    raise Exception(f"Failed to fetch converter endpoint: {target_url}")
+        raise Exception(f"Failed to fetch converter endpoint: {target_url}")
 
 @app.get("/api/convert")
-async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
+async def convert_media(url: str, format: str = "mp3", engine: str = "auto"):
     encoded_url = urllib.parse.quote(url)
     raw_fmt = format.lower().strip()
     
@@ -710,7 +634,7 @@ async def proxy_convert(url: str, format: str = "mp3", engine: str = "auto"):
     raise HTTPException(status_code=502, detail="Unable to initiate media conversion")
 
 @app.get("/api/progress")
-async def proxy_progress(id: str):
+async def convert_progress(id: str):
     endpoints = [
         f"https://p.savenow.to/api/progress?id={id}",
         f"https://lto2.affadaffa.com/api/progress?id={id}"
@@ -821,7 +745,7 @@ async def report_issue(request: Request):
 # LONG VIDEO ENGINE (3+ hours) via public cobalt instances
 # savenow.to / loader.to reject videos longer than 3 hours. Cobalt instances have
 # no such limit and return a direct streaming "tunnel" URL. Cobalt does not send
-# CORS headers, so the browser calls this proxy, then downloads the tunnel URL directly.
+# CORS headers, so the browser calls this endpoint, then downloads the tunnel URL directly.
 # ==============================================================================
 COBALT_INSTANCES = [
     i.strip() for i in (os.environ.get("COBALT_INSTANCES") or "https://api.cobalt.liubquanti.click/").split(",") if i.strip()
@@ -1042,585 +966,20 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
 
 
 # ==============================================================================
-# MULTI-PROXY STREAMING SYSTEM (GEO-BLOCKED / REGION-LOCKED)
+# YOUTUBE WATCH INFO HELPER
 # ==============================================================================
-def build_proxy_candidates(allowed: list) -> list:
-    """Ordered list of (label, proxy_url, country_lower) across all active multi-proxy pool IPs,
-    interleaved across all available allowed countries for maximum unblocking speed."""
-    import random
-    allowed_set = {str(c).upper() for c in (allowed or [])}
-
-    # 1. Collect all matching allowed countries present in our pool, preserving priority
-    matched_ccs = [cc for cc in WEBSHARE_POOL_PRIORITY if cc in allowed_set and cc in WEBSHARE_PROXIES]
-    for cc in allowed_set:
-        if cc in WEBSHARE_PROXIES and cc not in matched_ccs:
-            matched_ccs.append(cc)
-
-    # Fallback if no specific country matched or general request
-    if not matched_ccs:
-        matched_ccs = [cc for cc in WEBSHARE_POOL_PRIORITY if cc in WEBSHARE_PROXIES][:4]
-
-    # Group available proxies per country: prioritize clean ISP residential proxies (jzoemevm)
-    # over datacenter proxies (jzoemevmdatacenter) to bypass YouTube bot challenges 100%!
-    pool_map = {}
-    for cc in matched_ccs:
-        pr_list = list(WEBSHARE_PROXIES.get(cc, []))
-        isp_list = [p for p in pr_list if "jzoemevm:" in p]
-        dc_list = [p for p in pr_list if "jzoemevmdatacenter:" in p]
-        random.shuffle(isp_list)
-        random.shuffle(dc_list)
-        pool_map[cc] = isp_list + dc_list
-
-    # Interleave candidates across countries (1 from each, then 2nd from each, up to 8 max)
-    candidates = []
-    max_len = max(len(l) for l in pool_map.values()) if pool_map else 0
-    for round_idx in range(max_len):
-        for cc in matched_ccs:
-            if round_idx < len(pool_map[cc]):
-                p_url = pool_map[cc][round_idx]
-                candidates.append((f"Webshare-{cc}-{round_idx+1}", p_url, cc.lower()))
-                if len(candidates) >= 8:
-                    break
-        if len(candidates) >= 8:
-            break
-
-    return candidates
-
-_VIDEO_ALLOWED_COUNTRIES_CACHE = {}
-_GEO_STREAM_URL_CACHE = {}
-
 def _fetch_youtube_watch_html(vid: str) -> str:
     yt_url = f"https://www.youtube.com/watch?v={vid}&hl=en&gl=US"
     req_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
     }
-    html = ""
     try:
         req = urllib.request.Request(yt_url, headers=req_headers)
         with urllib.request.urlopen(req, timeout=5) as r:
-            html = r.read().decode("utf-8", "ignore")
+            return r.read().decode("utf-8", "ignore")
     except Exception:
-        html = ""
-
-    # If datacenter IP got bot-challenged or missed playabilityStatus/availableCountries, retry via clean US ISP proxy
-    if not html or ("availableCountries" not in html and re.search(r"not a bot|Sign in to confirm you", html, re.I)):
-        us_proxies = list(WEBSHARE_PROXIES.get("US", []))
-        for proxy_url in us_proxies[:2]:
-            try:
-                opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
-                with opener.open(urllib.request.Request(yt_url, headers=req_headers), timeout=5) as r:
-                    p_html = r.read().decode("utf-8", "ignore")
-                if p_html and ("playabilityStatus" in p_html or "availableCountries" in p_html):
-                    html = p_html
-                    break
-            except Exception:
-                continue
-
-    if html:
-        m = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
-        if m:
-            try:
-                _VIDEO_ALLOWED_COUNTRIES_CACHE[vid] = json.loads(m.group(1))
-            except Exception:
-                pass
-    return html
-
-def detect_video_allowed_countries(vid: str) -> list:
-    if vid in _VIDEO_ALLOWED_COUNTRIES_CACHE:
-        return _VIDEO_ALLOWED_COUNTRIES_CACHE[vid]
-    try:
-        html = _fetch_youtube_watch_html(vid)
-        m = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
-        if m:
-            countries = json.loads(m.group(1))
-            _VIDEO_ALLOWED_COUNTRIES_CACHE[vid] = countries
-            return countries
-    except Exception as e:
-        print("Country detection error:", e)
-    return []
-
-@app.get("/api/geo-stream-check")
-async def geo_stream_check(url: str = "", format: str = "mp3"):
-    clean_url = (url or "").strip()
-    vid = None
-    m = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", clean_url)
-    if m:
-        vid = m.group(1)
-    elif len(clean_url) == 11 and re.match(r"^[a-zA-Z0-9_-]{11}$", clean_url):
-        vid = clean_url
-
-    if not vid or len(vid) != 11:
-        return {"success": False, "error": "invalid_url"}
-
-    fmt_clean = (format or "mp3").lower().strip()
-    is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
-
-    # Check cache first
-    import tempfile
-    import time
-    cache_type = "audio" if is_audio else "video"
-    cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.dat")
-    if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
-        return {"success": True, "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}", "cached": True}
-
-    cached_entry = _GEO_STREAM_URL_CACHE.get((vid, cache_type))
-    if cached_entry and (time.time() - cached_entry.get("ts", 0) < 240):
-        return {
-            "success": True,
-            "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}",
-            "country": cached_entry.get("country", "us"),
-            "pre_resolved": True,
-        }
-
-    allowed = detect_video_allowed_countries(vid)
-    proxy_candidates = build_proxy_candidates(allowed)
-    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
-
-    import yt_dlp
-    stream_url = None
-    last_err = None
-    target_country = proxy_candidates[0][2] if proxy_candidates else "us"
-
-    # Automated Bot-Bypass Client Order: android_vr across ALL candidates first, then tv_embedded, then android
-    attempts = []
-    for c in proxy_candidates:
-        attempts.append((c, ["android_vr"]))
-    for c in proxy_candidates[:4]:
-        attempts.append((c, ["tv_embedded"]))
-    for c in proxy_candidates[:2]:
-        attempts.append((c, ["android"]))
-    for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
-        ydl_opts = {
-            "proxy": proxy_url,
-            "quiet": True,
-            "no_warnings": True,
-            "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
-            "noplaylist": True,
-            "socket_timeout": 6,
-        }
-        if client:
-            ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
-        try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
-            if info:
-                cand_url = info.get("url")
-                if not cand_url and info.get("requested_formats"):
-                    if is_audio:
-                        audio_fmts = [f for f in info["requested_formats"] if f.get("vcodec") == "none"]
-                        cand_url = audio_fmts[-1].get("url") if audio_fmts else info["requested_formats"][-1].get("url")
-                    else:
-                        cand_url = info["requested_formats"][0].get("url")
-                if cand_url and "m3u8" not in cand_url:
-                    stream_url = cand_url
-                    target_country = cand_country
-                    pre_dict = {
-                        "stream_url": cand_url,
-                        "proxy_url": proxy_url,
-                        "country": cand_country,
-                        "title": info.get("title") or f"YT4MP3_{vid}",
-                        "ext": info.get("ext") or ("m4a" if is_audio else "mp4"),
-                        "http_headers": dict(info.get("http_headers") or {}),
-                        "ts": time.time(),
-                    }
-                    _GEO_STREAM_URL_CACHE[(vid, cache_type)] = pre_dict
-                    try:
-                        import tempfile
-                        preres_f = os.path.join(tempfile.gettempdir(), f"yt4mp3_preres_{vid}_{cache_type}.json")
-                        with open(preres_f, "w", encoding="utf-8") as pf:
-                            json.dump(pre_dict, pf)
-                    except Exception:
-                        pass
-                    break
-        except Exception as e:
-            last_err = e
-            continue
-
-    if stream_url:
-        return {
-            "success": True,
-            "download_url": f"/api/geo-stream?url={urllib.parse.quote(clean_url)}&format={fmt_clean}",
-            "country": target_country
-        }
-    err_str = str(last_err) if last_err else ""
-    unsupported_reason = None
-    if "not made this video available in your country" in err_str or "UNPLAYABLE" in err_str:
-        unsupported_reason = "broadcaster_notice"
-    return {
-        "success": False,
-        "error": "all_proxies_exhausted",
-        "unsupported_reason": unsupported_reason,
-        "detail": err_str,
-        "country": target_country
-    }
-
-
-@app.get("/api/geo-stream")
-async def geo_stream(url: str = "", format: str = "mp3"):
-    clean_url = (url or "").strip()
-    vid = None
-    m = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", clean_url)
-    if m:
-        vid = m.group(1)
-    elif len(clean_url) == 11 and re.match(r"^[a-zA-Z0-9_-]{11}$", clean_url):
-        vid = clean_url
-
-    if not vid or len(vid) != 11:
-        return HTMLResponse(content="""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Invalid Link | YT4MP3</title>
-<style>body{font-family:sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}
-.card{background:#fff;padding:32px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-width:440px;text-align:center;border:1px solid #e2e8f0;}
-h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a{display:inline-block;margin-top:16px;background:#2563eb;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;}
-</style></head>
-<body><div class="card"><h2>⚠️ Invalid YouTube Link</h2><p>Please enter a valid YouTube video URL.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=400)
-
-    # Detect allowed country
-    allowed = detect_video_allowed_countries(vid)
-
-    fmt_clean = (format or "mp3").lower().strip()
-    is_audio = fmt_clean in ["mp3", "m4a", "flac", "wav", "aac", "ogg", "opus", "audio", "320", "256", "128", "64"]
-    default_ext = "m4a" if fmt_clean in ["m4a", "aac"] else ("mp3" if is_audio else "mp4")
-
-    # 1. Zero-Bandwidth Cache Check: If file was already streamed, serve from /tmp with 0 MB proxy usage!
-    import tempfile
-    cache_type = "audio" if is_audio else "video"
-    cache_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.dat")
-    meta_path = os.path.join(tempfile.gettempdir(), f"yt4mp3_geo_{vid}_{cache_type}.meta")
-
-    if os.path.exists(cache_path) and os.path.getsize(cache_path) > 10000:
-        saved_title = f"YT4MP3_{vid}"
-        saved_ext = default_ext
-        if os.path.exists(meta_path):
-            try:
-                with open(meta_path, "r", encoding="utf-8") as mf:
-                    meta_lines = mf.read().splitlines()
-                    if meta_lines:
-                        saved_title = meta_lines[0].strip()
-                    if len(meta_lines) > 1 and meta_lines[1].strip():
-                        saved_ext = meta_lines[1].strip()
-            except Exception:
-                pass
-        safe_title = re.sub(r'[\\/*?:"<>|]', "", saved_title).strip()
-        safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
-        filename = f"{safe_title}.{saved_ext}"
-        file_size = os.path.getsize(cache_path)
-        content_type = "audio/mp4" if saved_ext == "m4a" else ("audio/mpeg" if saved_ext == "mp3" else "video/mp4")
-
-        def iter_cached_file():
-            with open(cache_path, "rb") as cf:
-                while True:
-                    chunk = cf.read(128 * 1024)
-                    if not chunk:
-                        break
-                    yield chunk
-
-        resp_headers = {
-            "Content-Disposition": f'attachment; filename="{filename}"',
-            "Cache-Control": "public, max-age=3600",
-            "Content-Length": str(file_size),
-            "Accept-Ranges": "bytes",
-            "X-Proxy-Cached": "1",
-        }
-        return StreamingResponse(iter_cached_file(), media_type=content_type, headers=resp_headers)
-
-    # Audio format selector: prefer lightweight pure AAC audio (140/ba, ~20MB) to conserve proxy bandwidth;
-    # Video format selector: progressive video stream (18/22/b, ~360p-720p).
-    fmt_selector = "140/ba/18/b/best" if is_audio else "18/22/b/bv[ext=mp4]/bv/best"
-
-    try:
-        import yt_dlp
-
-        # Check for cookies (from env var or file) to 100% unlock age-restricted/member videos
-        cookie_file = None
-        raw_cookies = os.environ.get("YOUTUBE_COOKIES")
-        if raw_cookies and len(raw_cookies.strip()) > 50:
-            import tempfile
-            import base64
-            cleaned_cookies = raw_cookies.strip()
-            # Handle base64 encoded cookies or literal \n newlines
-            if not cleaned_cookies.startswith("#") and "\t" not in cleaned_cookies:
-                try:
-                    cleaned_cookies = base64.b64decode(cleaned_cookies).decode("utf-8", errors="ignore")
-                except Exception:
-                    pass
-            if "\\n" in cleaned_cookies and "\n" not in cleaned_cookies:
-                cleaned_cookies = cleaned_cookies.replace("\\n", "\n")
-
-            # CRITICAL: Only use if it actually has Netscape format and valid tabs
-            if cleaned_cookies.startswith("# Netscape HTTP Cookie File") and "\t" in cleaned_cookies and "LOGIN_INFO" in cleaned_cookies:
-                env_cookie_path = os.path.join(tempfile.gettempdir(), "yt4mp3_cookies.txt")
-                try:
-                    with open(env_cookie_path, "w", encoding="utf-8") as cf:
-                        cf.write(cleaned_cookies)
-                    cookie_file = env_cookie_path
-                except Exception:
-                    pass
-
-        if not cookie_file:
-            candidates = [
-                os.path.join(os.getcwd(), "cookies.txt"),
-                "/etc/secrets/cookies.txt",
-                os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "cookies.txt"),
-            ]
-            for c_path in candidates:
-                if os.path.exists(c_path) and os.path.getsize(c_path) > 20:
-                    cookie_file = c_path
-                    break
-
-        info = None
-        stream_url = None
-        raw_title = f"YT4MP3_{vid}"
-        actual_ext = default_ext
-        last_extract_err = None
-
-        # For geo-restricted videos with country restrictions, enforce clean anonymous proxy IP.
-        # Passing foreign account cookies/tokens forces YouTube to evaluate the account's home region,
-        # which breaks regional broadcaster geo-unblocking (e.g. Sky Sports UK, beIN Sports).
-        if allowed:
-            cookie_file = None
-
-        # Fast-path: Use pre-resolved stream URL from /api/geo-stream-check if fresh (< 4 mins old)
-        import time
-        upstream_res = None
-        pre_entry = _GEO_STREAM_URL_CACHE.get((vid, cache_type))
-        if not pre_entry:
-            try:
-                import tempfile
-                preres_f = os.path.join(tempfile.gettempdir(), f"yt4mp3_preres_{vid}_{cache_type}.json")
-                if os.path.exists(preres_f):
-                    with open(preres_f, "r", encoding="utf-8") as pf:
-                        saved_pre = json.load(pf)
-                        if time.time() - saved_pre.get("ts", 0) < 240:
-                            pre_entry = saved_pre
-            except Exception:
-                pass
-        if pre_entry and (time.time() - pre_entry.get("ts", 0) < 240):
-            try:
-                pre_url = pre_entry["stream_url"]
-                pre_proxy = pre_entry["proxy_url"]
-                pre_headers = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                    "Accept": "*/*",
-                    "Connection": "keep-alive",
-                }
-                for hk, hv in (pre_entry.get("http_headers") or {}).items():
-                    if hk.lower() != "accept-encoding":
-                        pre_headers[hk] = hv
-                pre_opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": pre_proxy, "https": pre_proxy}))
-                res = pre_opener.open(urllib.request.Request(pre_url, headers=pre_headers), timeout=25)
-                ct = (res.headers.get("Content-Type") or "").lower()
-                if "mpegurl" not in ct:
-                    upstream_res = res
-                    stream_url = pre_url
-                    raw_title = pre_entry.get("title") or raw_title
-                    extracted_ext = pre_entry.get("ext") or ""
-                    if is_audio:
-                        actual_ext = extracted_ext if extracted_ext in ["m4a", "mp3", "aac"] else ("m4a" if extracted_ext == "mp4" else default_ext)
-                    else:
-                        actual_ext = extracted_ext or "mp4"
-            except Exception:
-                upstream_res = None
-                stream_url = None
-
-        # Smart interleaved rotation across all allowed country proxies: android_vr first across all candidates
-        proxy_candidates = build_proxy_candidates(allowed)
-        if stream_url:
-            attempts = []
-        else:
-            attempts = (
-                [(c, ["android_vr"]) for c in proxy_candidates] +
-                [(c, ["tv_embedded"]) for c in proxy_candidates[:4]] +
-                [(c, ["android"]) for c in proxy_candidates[:2]]
-            )
-        for attempt, ((proxy_label, proxy_url, cand_country), client) in enumerate(attempts):
-            target_country = cand_country
-
-            ydl_opts = {
-                "proxy": proxy_url,
-                "quiet": True,
-                "no_warnings": True,
-                "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
-                "noplaylist": True,
-                "extract_flat": False,
-                "socket_timeout": 6,
-                "extractor_retries": 0,
-                "file_access_retries": 0,
-                "fragment_retries": 0,
-                # Let yt-dlp solve YouTube JS challenges with whichever runtime exists (deno default, node if installed)
-                "js_runtimes": {"deno": {}, "node": {}},
-            }
-            if client:
-                ydl_opts["extractor_args"] = {"youtube": {"player_client": client}}
-            if cookie_file:
-                ydl_opts["cookiefile"] = cookie_file
-
-            # PO Token (Proof of Origin) & Visitor Data support to bypass bot challenges on datacenter IPs
-            po_token = None if allowed else os.environ.get("YOUTUBE_PO_TOKEN")
-            visitor_data = None if allowed else os.environ.get("YOUTUBE_VISITOR_DATA")
-            if po_token or visitor_data:
-                yt_args = ydl_opts.setdefault("extractor_args", {}).setdefault("youtube", {})
-                if po_token:
-                    yt_args["po_token"] = [
-                        f"web.gvs+{po_token}",
-                        f"web.player+{po_token}",
-                        f"mweb.gvs+{po_token}",
-                        f"mweb.player+{po_token}",
-                        f"android.gvs+{po_token}",
-                        f"android_vr.gvs+{po_token}",
-                    ]
-                if visitor_data:
-                    yt_args["visitor_data"] = [visitor_data]
-
-            try:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
-
-                cand_url = None
-                if info:
-                    cand_url = info.get("url")
-                    if not cand_url and info.get("requested_formats"):
-                        if is_audio:
-                            audio_fmts = [f for f in info["requested_formats"] if f.get("vcodec") == "none"]
-                            cand_url = audio_fmts[-1].get("url") if audio_fmts else info["requested_formats"][-1].get("url")
-                        else:
-                            cand_url = info["requested_formats"][0].get("url")
-
-                if cand_url:
-                    upstream_headers = {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-                        "Accept": "*/*",
-                        "Connection": "keep-alive",
-                    }
-                    # Use the exact headers yt-dlp resolved for this player client
-                    if isinstance(info.get("http_headers"), dict):
-                        upstream_headers.update({k: v for k, v in info["http_headers"].items() if k.lower() != "accept-encoding"})
-                    opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
-                    # Open the stream inside the attempt: an unsolved/blocked URL (403) falls through to the next client/proxy
-                    res = opener.open(urllib.request.Request(cand_url, headers=upstream_headers), timeout=30)
-                    ct = (res.headers.get("Content-Type") or "").lower()
-                    if ("mpegurl" in ct or "m3u8" in cand_url) and attempt < len(attempts) - 1:
-                        try:
-                            res.close()
-                        except Exception:
-                            pass
-                        continue
-                    upstream_res = res
-                    stream_url = cand_url
-                    raw_title = info.get("title") or raw_title
-                    extracted_ext = info.get("ext") or ""
-                    if is_audio:
-                        actual_ext = extracted_ext if extracted_ext in ["m4a", "mp3", "aac"] else ("m4a" if extracted_ext == "mp4" else default_ext)
-                    else:
-                        actual_ext = extracted_ext or "mp4"
-                    break
-            except Exception as e:
-                last_extract_err = e
-                continue
-
-        if not stream_url:
-            print(f"[GEO_STREAM_EXHAUSTED] vid={vid} format={fmt_clean} last_err={last_extract_err}")
-            return HTMLResponse(content=f"""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Playback Restricted | YT4MP3</title>
-<style>body{{font-family:sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}}
-.card{{background:#fff;padding:32px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);max-width:440px;text-align:center;border:1px solid #e2e8f0;}}
-h2{{color:#e11d48;margin-top:0;}}p{{color:#475569;font-size:14px;line-height:1.5;}}a{{display:inline-block;margin-top:16px;background:#2563eb;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;}}
-</style></head>
-<body><div class="card"><h2>🔒 Official Broadcaster Notice</h2><p>This video is subject to broadcaster licensing policies and cannot be converted directly.</p><a href="/">Return to YT4MP3</a></div></body></html>""", status_code=403)
-
-        safe_title = re.sub(r'[\\/*?:"<>|]', "", raw_title).strip()
-        safe_title = re.sub(r"[^\x20-\x7E]", "_", safe_title)[:80].strip() or f"YT4MP3_{vid}"
-        filename = f"{safe_title}.{actual_ext}"
-        content_type = "audio/mp4" if actual_ext == "m4a" else ("audio/mpeg" if actual_ext == "mp3" else "video/mp4")
-
-        content_len = upstream_res.headers.get("Content-Length")
-
-        # Telegram notification of successful unlock
-        try:
-            tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
-            tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "-1003463852033"
-            if tg_token and tg_chat_id:
-                alert_text = (
-                    f"🌍 <b>Geo Proxy Stream:</b>\n"
-                    f"Unlocked <code>{vid}</code> via {proxy_label} ({fmt_clean.upper()})\n"
-                    f"Title: {safe_title}"
-                )
-                payload = json.dumps({
-                    "chat_id": tg_chat_id,
-                    "text": alert_text,
-                    "parse_mode": "HTML",
-                    "disable_web_page_preview": True,
-                }).encode("utf-8")
-                tg_req = urllib.request.Request(
-                    f"https://api.telegram.org/bot{tg_token}/sendMessage",
-                    data=payload,
-                    headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
-                )
-                urllib.request.urlopen(tg_req, timeout=3).read()
-        except Exception:
-            pass
-
-        cache_part = f"{cache_path}.part"
-        def stream_chunks():
-            f_cache = None
-            fully_downloaded = False
-            try:
-                f_cache = open(cache_part, "wb")
-            except Exception:
-                f_cache = None
-
-            try:
-                while True:
-                    chunk = upstream_res.read(128 * 1024)
-                    if not chunk:
-                        fully_downloaded = True
-                        break
-                    if f_cache:
-                        try:
-                            f_cache.write(chunk)
-                        except Exception:
-                            pass
-                    yield chunk
-            finally:
-                if f_cache:
-                    try:
-                        f_cache.close()
-                    except Exception:
-                        pass
-                    if fully_downloaded:
-                        try:
-                            if os.path.exists(cache_path):
-                                os.remove(cache_path)
-                            os.rename(cache_part, cache_path)
-                            with open(meta_path, "w", encoding="utf-8") as mf:
-                                mf.write(f"{raw_title}\n{actual_ext}")
-                        except Exception:
-                            pass
-                    else:
-                        try:
-                            if os.path.exists(cache_part):
-                                os.remove(cache_part)
-                        except Exception:
-                            pass
-                try:
-                    upstream_res.close()
-                except Exception:
-                    pass
-
-        resp_headers = {
-            "Content-Disposition": f'attachment; filename="{filename}"',
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Accept-Ranges": "bytes",
-        }
-        if content_len:
-            resp_headers["Content-Length"] = str(content_len)
-
-        return StreamingResponse(stream_chunks(), media_type=content_type, headers=resp_headers)
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Geo-proxy stream error: {str(e)}")
+        return ""
 
 
 _VIDEO_RES_CACHE = {}
@@ -1723,36 +1082,26 @@ async def get_video_resolutions(id: str, skip_fastsaver_info: bool = False):
         if dur_match:
             duration_sec = int(dur_match.group(1))
 
-        m_c = re.search(r'"availableCountries":\s*(\[[^\]]+\])', html)
-        allowed_countries = json.loads(m_c.group(1)) if m_c else []
-        supported_pool_ccs = set(WEBSHARE_PROXIES.keys())
-        is_serviceable_geo = bool(allowed_countries and any(cc.upper() in supported_pool_ccs for cc in allowed_countries))
-
         is_geo_blocked = bool(
-            (len(allowed_countries) > 0 and len(allowed_countries) < 245) or
-            (re.search(r'"status":\s*"UNPLAYABLE"', html) and len(allowed_countries) > 0) or
             re.search(r'not available in your country|blocked in your country|The uploader has not made this video available in your country', html, re.I)
         )
 
-        # Detect unsupported video categories (18+ age-restricted, members-only, private, live streams, paid rentals, broadcaster notice)
+        # Detect unsupported video categories (18+ age-restricted, members-only, private, live streams, paid rentals)
         unsupported_reason = None
-        if is_geo_blocked and len(allowed_countries) > 0 and not is_serviceable_geo:
-            unsupported_reason = "broadcaster_notice"
-        elif not is_geo_blocked:
-            if re.search(r'"reason":\s*"(?:This video is private|Private video)"|"status":\s*"LOGIN_REQUIRED".{0,200}private', html, re.I):
-                unsupported_reason = "private_video"
-            elif re.search(r'"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|confirm your age|inappropriate for some users|"isRestricted":\s*true|playerInterstitialRenderer', html, re.I):
-                unsupported_reason = "age_restricted"
-            elif re.search(r'"isMembersOnly":\s*true|"reason":\s*"(?:This video is available to this channel\'s members|Join this channel to get access)"|UNPLAYABLE.{0,250}members', html, re.I):
-                unsupported_reason = "channel_membership"
-            elif re.search(r'"status":\s*"LOGIN_REQUIRED"', html) and not re.search(r'not a bot|Sign in to confirm you', html, re.I):
-                unsupported_reason = "age_restricted"
-            elif re.search(r'"isLive":\s*true|"isLiveNow":\s*true', html, re.I):
-                unsupported_reason = "live_stream"
-            elif re.search(r'Buy or rent|Rental duration|"offerId":|requiresPurchase', html, re.I):
-                unsupported_reason = "paid_rental"
-            elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
-                unsupported_reason = "video_unavailable" 
+        if re.search(r'"reason":\s*"(?:This video is private|Private video)"|"status":\s*"LOGIN_REQUIRED".{0,200}private', html, re.I):
+            unsupported_reason = "private_video"
+        elif re.search(r'"reason":\s*"Sign in to confirm your age"|"adultContent":\s*true|"isRestricted":\s*true', html, re.I):
+            unsupported_reason = "age_restricted"
+        elif re.search(r'"isMembersOnly":\s*true|"reason":\s*"(?:This video is available to this channel\'s members|Join this channel to get access)"|UNPLAYABLE.{0,250}members', html, re.I):
+            unsupported_reason = "channel_membership"
+        elif re.search(r'"status":\s*"LOGIN_REQUIRED"', html) and not re.search(r'not a bot|Sign in to confirm you', html, re.I):
+            unsupported_reason = "age_restricted"
+        elif re.search(r'"isLive":\s*true|"isLiveNow":\s*true', html, re.I):
+            unsupported_reason = "live_stream"
+        elif re.search(r'Buy or rent|Rental duration|"offerId":|requiresPurchase', html, re.I):
+            unsupported_reason = "paid_rental"
+        elif re.search(r'"status":\s*"ERROR"|playabilityStatus":\{"status":"ERROR"', html):
+            unsupported_reason = "video_unavailable"
 
         heights = [int(h) for h in re.findall(r'"qualityLabel":"(\d+)p', html)]
         if not heights:
