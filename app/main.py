@@ -321,13 +321,19 @@ def get_authoritative_sitemap_xml() -> str:
     urls = get_all_sitemap_urls()
     items = []
     for u in urls:
-        is_legal = any(legal in u for legal in ["contact-us", "terms-of-service", "privacy-policy"])
-        priority = "0.8" if is_legal else "1.0"
+        if "youtube-to-mp3" in u:
+            lmod = "2026-08-18"
+        elif "youtube-to-mp4" in u:
+            lmod = "2026-09-15"
+        elif "youtube-shorts-downloader" in u:
+            lmod = "2026-10-15"
+        elif any(legal in u for legal in ["contact-us", "terms-of-service", "privacy-policy"]):
+            lmod = "2026-10-30"
+        else:
+            lmod = "2026-11-04"
         items.append(f"""  <url>
     <loc>{u}</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>{priority}</priority>
+    <lastmod>{lmod}</lastmod>
   </url>""")
     _SITEMAP_CACHE_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(items) + "\n</urlset>"
     return _SITEMAP_CACHE_XML

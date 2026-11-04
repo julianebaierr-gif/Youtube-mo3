@@ -45,7 +45,7 @@ def test_sitemap_contains_exact_63_urls_and_no_duplicates():
         assert loc.startswith("https://www.yt4mp3.com/"), f"Invalid scheme or domain in {loc}"
 
 
-def test_sitemap_changefreq_hourly_and_priority():
+def test_sitemap_removes_changefreq_and_priority():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
@@ -55,21 +55,36 @@ def test_sitemap_changefreq_hourly_and_priority():
         loc = u.find("ns:loc", ns).text.strip()
         cf = u.find("ns:changefreq", ns)
         pr = u.find("ns:priority", ns)
-        assert cf is not None and cf.text.strip() == "hourly", f"Missing or non-hourly changefreq in {loc}"
-        assert pr is not None and pr.text.strip() in ["1.0", "0.8"], f"Missing or invalid priority in {loc}"
+        assert cf is None, f"Unwanted <changefreq> found in {loc}"
+        assert pr is None, f"Unwanted <priority> found in {loc}"
 
 
-def test_sitemap_valid_lastmod_dates():
+def test_sitemap_valid_distinct_lastmod_dates():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
+    distinct_dates = set()
     for u in urls:
         loc = u.find("ns:loc", ns).text.strip()
         lm = u.find("ns:lastmod", ns)
         assert lm is not None, f"Missing lastmod in {loc}"
-        assert lm.text.strip() == "2026-11-04", f"lastmod date is not 2026-11-04 in {loc}"
+        lastmod = lm.text.strip()
+        distinct_dates.add(lastmod)
+
+        if "youtube-to-mp3" in loc:
+            assert lastmod == "2026-08-18"
+        elif "youtube-to-mp4" in loc:
+            assert lastmod == "2026-09-15"
+        elif "youtube-shorts-downloader" in loc:
+            assert lastmod == "2026-10-15"
+        elif any(legal in loc for legal in ["contact-us", "terms-of-service", "privacy-policy"]):
+            assert lastmod == "2026-10-30"
+        else:
+            assert lastmod == "2026-11-04"
+
+    assert len(distinct_dates) >= 4
 
 
 # -------------------------------------------------------------
