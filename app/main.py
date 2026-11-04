@@ -544,118 +544,6 @@ async def start_auto_indexnow_scheduler():
             await asyncio.sleep(14400)
     asyncio.create_task(_auto_index_loop())
 
-# ==============================================================================
-# CONVERTER HTTP HELPERS
-# ==============================================================================
-def _fetch_converter_json(target_url: str, headers: dict = None, timeout: float = 8.0) -> dict:
-    req_headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-        "Referer": "https://y2down.cc/",
-        "Origin": "https://y2down.cc"
-    }
-    if headers:
-        req_headers.update(headers)
-    req = urllib.request.Request(target_url, headers=req_headers)
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read())
-    except Exception:
-        raise Exception(f"Failed to fetch converter endpoint: {target_url}")
-
-@app.get("/api/convert")
-async def convert_media(url: str, format: str = "mp3", engine: str = "auto"):
-    encoded_url = urllib.parse.quote(url)
-    raw_fmt = format.lower().strip()
-    
-    # Robust format normalization to prevent 422 Unprocessable Entity
-    clean_fmt = raw_fmt.replace("kbps", "").replace("p", "").strip()
-    if clean_fmt in ["320", "256", "128", "64", "mp3", "audio"]:
-        fmt = "mp3"
-    elif clean_fmt in ["2160", "4k"]:
-        fmt = "4k"
-    elif clean_fmt in ["1440", "2k"]:
-        fmt = "1440"
-    elif clean_fmt in ["1080", "fhd"]:
-        fmt = "1080"
-    elif clean_fmt in ["720", "hd"]:
-        fmt = "720"
-    elif clean_fmt in ["480", "360", "240"]:
-        fmt = clean_fmt
-    elif clean_fmt in ["m4a", "flac", "wav", "aac", "webm", "opus", "ogg"]:
-        fmt = clean_fmt
-    else:
-        fmt = "mp3"
-    
-    captured_err = None
-    is_geo = False
-
-    # 1. Primary Engine: savenow.to (clean stream without button=1)
-    if engine != "loader":
-        try:
-            api_url = f"https://p.savenow.to/api/v2/download?format={fmt}&url={encoded_url}"
-            data = _fetch_converter_json(api_url, timeout=8.0)
-            if data and data.get("id"):
-                dl = data.get("download_url")
-                if dl:
-                    if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "b.php", "ajax/ad", "hoofsduke", "converttr.org", "google.com"]):
-                        dl = None
-                    elif dl.startswith("http://"):
-                        dl = dl.replace("http://", "https://")
-                return {"success": True, "id": data.get("id"), "engine": "savenow", "download_url": dl}
-            elif data and (data.get("text") or data.get("error") or data.get("message")):
-                captured_err = str(data.get("text") or data.get("error") or data.get("message"))
-                if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
-                    is_geo = True
-        except Exception:
-            pass
-
-    # 2. Secondary Engine: loader.to
-    try:
-        lto_url = f"https://loader.to/ajax/download.php?format={fmt}&url={encoded_url}"
-        data = _fetch_converter_json(lto_url, headers={"Referer": "https://loader.to/", "Origin": "https://loader.to"}, timeout=8.0)
-        if data and data.get("id"):
-            dl = data.get("download_url")
-            if dl:
-                if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "b.php", "ajax/ad", "hoofsduke", "converttr.org", "google.com"]):
-                    dl = None
-                elif dl.startswith("http://"):
-                    dl = dl.replace("http://", "https://")
-            return {"success": True, "id": data.get("id"), "engine": "loader", "download_url": dl}
-        elif data and (data.get("text") or data.get("error") or data.get("message")):
-            captured_err = str(data.get("text") or data.get("error") or data.get("message"))
-            if re.search(r"country|region|unavailable|blocked|not available", captured_err, re.I):
-                is_geo = True
-    except Exception:
-        pass
-
-    if captured_err:
-        return {"success": False, "error": captured_err, "is_regional": is_geo, "is_geo_blocked": is_geo}
-
-    raise HTTPException(status_code=502, detail="Unable to initiate media conversion")
-
-@app.get("/api/progress")
-async def convert_progress(id: str):
-    endpoints = [
-        f"https://p.savenow.to/api/progress?id={id}",
-        f"https://lto2.affadaffa.com/api/progress?id={id}"
-    ]
-    for ep in endpoints:
-        try:
-            data = _fetch_converter_json(ep, timeout=6.0)
-            if data:
-                # Sanitize download_url if present
-                if data.get("download_url"):
-                    dl = str(data["download_url"]).strip()
-                    # Reject ad gateway URLs (p.savenow.to and lto2.affadaffa.com are ad gateways; real files are on worker nodes like *.savenow.to)
-                    if "://p.savenow.to/" in dl or "://lto2.affadaffa.com/" in dl or any(ad in dl.lower() for ad in ["ey43.com", "/ad/", "b.php", "ajax/ad", "hoofsduke", "converttr.org", "google.com"]):
-                        data["download_url"] = None
-                    elif dl.startswith("http://"):
-                        data["download_url"] = dl.replace("http://", "https://")
-                return data
-        except Exception:
-            continue
-    raise HTTPException(status_code=502, detail="Progress check failed")
-
 @app.get("/api/report-issue")
 @app.post("/api/report-issue")
 async def report_issue(request: Request):
@@ -742,59 +630,7 @@ async def report_issue(request: Request):
 
 
 # ==============================================================================
-# LONG VIDEO ENGINE (3+ hours) via public cobalt instances
-# savenow.to / loader.to reject videos longer than 3 hours. Cobalt instances have
-# no such limit and return a direct streaming "tunnel" URL. Cobalt does not send
-# CORS headers, so the browser calls this endpoint, then downloads the tunnel URL directly.
-# ==============================================================================
-COBALT_INSTANCES = [
-    i.strip() for i in (os.environ.get("COBALT_INSTANCES") or "https://api.cobalt.liubquanti.click/").split(",") if i.strip()
-]
-
-@app.get("/api/long-video")
-async def long_video(url: str, mode: str = "audio", quality: str = "720"):
-    if not re.search(r"(youtube\.com|youtu\.be)", url or ""):
-        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
-    body = {"url": url, "filenameStyle": "basic"}
-    if mode == "audio":
-        body.update({"downloadMode": "audio", "audioFormat": "mp3", "audioBitrate": "320"})
-    else:
-        q = re.sub(r"[^0-9]", "", str(quality)) or "720"
-        if q not in ["144", "240", "360", "480", "720", "1080", "1440", "2160"]:
-            q = "720"
-        codec = "vp9" if q in ("1440", "2160") else "h264"
-        body.update({"downloadMode": "auto", "videoQuality": q, "youtubeVideoCodec": codec})
-
-    last_err = "No long-video engine available"
-    for inst in COBALT_INSTANCES:
-        try:
-            req = urllib.request.Request(
-                inst,
-                data=json.dumps(body).encode("utf-8"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
-                },
-            )
-            with urllib.request.urlopen(req, timeout=25) as res:
-                data = json.loads(res.read().decode("utf-8"))
-            if data.get("status") in ("tunnel", "redirect") and data.get("url"):
-                return {"success": True, "download_url": data["url"], "filename": data.get("filename", ""), "engine": "cobalt"}
-            last_err = str((data.get("error") or {}).get("code") or data.get("status") or "unknown")
-        except urllib.error.HTTPError as e:
-            try:
-                err_body = json.loads(e.read().decode("utf-8", "ignore"))
-                last_err = str((err_body.get("error") or {}).get("code") or f"HTTP {e.code}")
-            except Exception:
-                last_err = f"HTTP {e.code}"
-        except Exception as e:
-            last_err = str(e)
-    return {"success": False, "error": last_err}
-
-
-# ==============================================================================
-# FASTSAVER ENGINE (4th fallback) — paid API with 4K support, no duration limit
+# FASTSAVER PRO ENGINE — primary paid API with 4K support, high-speed stream delivery
 # Uses api.fastsaver.io with API key. Costs credits per download.
 # ==============================================================================
 FASTSAVER_API_KEY = os.environ.get("FASTSAVER_API_KEY") or "fs_sk_9w9n0d9x3t0r0g2g0d3e0j3f6u7q"
@@ -940,14 +776,6 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         _check_fastsaver_credits_and_alert(force_check=False)
     except Exception as e:
         detail_err = str(e)
-
-    # Automatic fallback: If FastSaver had a temporary hiccup, try long-video engine (Cobalt) directly
-    try:
-        cobalt_res = await long_video(url=url, mode=mode, quality=quality)
-        if cobalt_res and cobalt_res.get("success") and cobalt_res.get("download_url"):
-            return cobalt_res
-    except Exception:
-        pass
 
     m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
     res_meta = {}

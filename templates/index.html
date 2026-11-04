@@ -959,20 +959,7 @@
                     </div>
                     {% endif %}
 
-                                        <!-- Long Video Pre-Flight Warning Notice -->
-                    <div id="long-video-notice" class="hidden mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs sm:text-sm flex items-start gap-3 shadow-sm transition-all text-left">
-                        <div class="w-7 h-7 rounded-lg bg-amber-200 text-amber-800 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </div>
-                        <div class="flex-1 leading-relaxed">
-                            <p class="font-bold text-amber-950 mb-0.5">ℹ️ Video Duration Notice</p>
-                            <p class="text-amber-900 font-medium">
-                                This video is <span id="long-video-dur-val" class="font-bold font-mono"></span> long. Online servers only support videos up to 3 hours. Please try <strong>720p</strong> or <strong>MP3</strong> audio for best results.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Audio Formats List -->
+                                        <!-- Audio Formats List -->
                     <div id="audio-formats" class="space-y-2.5 {% if seo.active_tab == 'yt-mp4' %}hidden{% endif %}">
                         <!-- Filled dynamically -->
                     </div>
@@ -1759,31 +1746,6 @@
                 return fetch(url, opts);
             }
 
-            function isDownloadReady(progData) {
-                if (!progData) return false;
-                if (progData.download_url && typeof progData.download_url === 'string' && progData.download_url.length > 8) {
-                    const dl = progData.download_url.toLowerCase();
-                    // Filter external redirect networks
-                    if (dl.includes('savenow.to') || dl.includes('affadaffa.com') || dl.includes('ey43.com') || dl.includes('/ad/') || dl.includes('b.php') || dl.includes('hoofsduke') || dl.includes('converttr.org') || dl.includes('google.com')) {
-                        return false;
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            function isConversionError(progData) {
-                if (!progData) return false;
-                if (progData.success === 0 && !progData.download_url && (progData.progress >= 1000 || progData.progress === 0)) return true;
-                if (progData.success === -1) return true;
-                const rawTxt = (progData.text || progData.message || '').toString().toLowerCase();
-                if (rawTxt) {
-                    if (rawTxt.includes('membership') || rawTxt.includes('private') || rawTxt.includes('unavailable') || rawTxt.includes('error') || rawTxt.includes('removed') || rawTxt.includes('copyright') || rawTxt.includes('failed') || rawTxt.includes('restricted') || rawTxt.includes('duration limit')) return true;
-                }
-                if (progData.error) return true;
-                return false;
-            }
-
             const I18N_NOTICES = {
                 en: {
                     invalid_url: "⚠️ Please paste a complete YouTube video link (e.g. https://www.youtube.com/watch?v=... or youtu.be/...)",
@@ -1971,59 +1933,6 @@
                 const lang = (document.documentElement.lang || 'en').toLowerCase().split('-')[0];
                 const dict = I18N_NOTICES[lang] || I18N_NOTICES.en;
                 return dict[key] || I18N_NOTICES.en[key] || "";
-            }
-
-            // Multi-engine stream initiator with cloud server fallback
-            async function initiateStream(ytUrl, fmt, preferredEngine = 'auto') {
-                // Robust format normalization
-                let cleanFmt = (fmt || 'mp3').toString().toLowerCase().replace('kbps', '').replace('p', '').trim();
-                if (['320', '256', '128', '64', 'audio'].includes(cleanFmt)) cleanFmt = 'mp3';
-                else if (['2160', '4k'].includes(cleanFmt)) cleanFmt = '4k';
-                else if (['1440', '2k'].includes(cleanFmt)) cleanFmt = '1440';
-                else if (['1080', 'fhd'].includes(cleanFmt)) cleanFmt = '1080';
-                else if (['720', 'hd'].includes(cleanFmt)) cleanFmt = '720';
-                else if (!['mp3', 'm4a', 'flac', 'wav', 'aac', 'webm', '480', '360', '240'].includes(cleanFmt)) cleanFmt = 'mp3';
-
-                let capturedError = '';
-                let isRegional = false;
-
-                // 1. Server-side API endpoint
-                try {
-                    const u = `/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=${encodeURIComponent(preferredEngine)}`;
-                    const r = await fetchWithTimeout(u, {}, 8000);
-                    if (r.ok) {
-                        const d = await r.json();
-                        if (d && d.id) return { id: d.id, engine: d.engine || 'savenow', download_url: d.download_url || null };
-                        if (d && (d.error || d.text)) {
-                            capturedError = (d.error || d.text || '').toString();
-                            if (d.is_regional || /country|region|unavailable|blocked|not available/i.test(capturedError)) isRegional = true;
-                        }
-                    }
-                } catch(e) {}
-
-                if (isRegional || /country|region|unavailable|blocked|not available/i.test(capturedError)) {
-                    return { id: null, errorText: capturedError || "Video not available in your country", isRegionalRoute: true };
-                }
-                if (capturedError) {
-                    return { id: null, errorText: capturedError, isRegionalRoute: false };
-                }
-                return null;
-            }
-
-            // Multi-endpoint progress poller with rapid fallback
-            async function pollProgressEndpoint(convId, engine) {
-                const endpoints = [`https://p.savenow.to/api/progress?id=${convId}`, `/api/progress?id=${convId}`, `https://lto2.affadaffa.com/api/progress?id=${convId}`];
-                
-                for (const ep of endpoints) {
-                    try {
-                        const r = await fetchWithTimeout(ep, {}, 3200);
-                        if (r.ok) {
-                            const d = await r.json();
-                            if (d) return d;
-                        }
-                    } catch(e) {}
-                }
-                return null;
             }
 
             // Active Background Pre-Warmer:
@@ -2325,30 +2234,6 @@
                 resViews.textContent = data.views ? `${data.views} views` : '';
                                 resPlatformTag.textContent = data.platform.name || 'YouTube';
 
-                // Pre-flight Long Video Duration Check (> 2 or 3 hours)
-                const noticeBox = document.getElementById('long-video-notice');
-                const noticeDurVal = document.getElementById('long-video-dur-val');
-                if (noticeBox) {
-                    let isLong = false;
-                    let durDisplay = data.duration || '';
-                    if (durDisplay) {
-                        const parts = durDisplay.split(':').map(p => parseInt(p, 10) || 0);
-                        if (parts.length === 3 && parts[0] >= 3) {
-                            isLong = true;
-                            durDisplay = `${parts[0]}h ${parts[1]}m`;
-                        } else if (parts.length === 3 && parts[0] >= 2) {
-                            isLong = true;
-                            durDisplay = `${parts[0]}h ${parts[1]}m`;
-                        }
-                    }
-                    if (isLong) {
-                        if (noticeDurVal) noticeDurVal.textContent = durDisplay;
-                        noticeBox.classList.remove('hidden');
-                    } else {
-                        noticeBox.classList.add('hidden');
-                    }
-                }
-
                 // Reset inline Video Preview iframe on new conversion
                 const previewBox = document.getElementById('res-preview-box');
                 const iframeWrap = document.getElementById('res-video-iframe-wrap');
@@ -2514,7 +2399,7 @@
 
 
 
-            async function triggerDirectDownload(format, quality, label, forcedEngine = 'auto') {
+            async function triggerDirectDownload(format, quality, label) {
                 if (!currentMediaData) return;
 
                 const safeFormat = (format || 'mp4').toString().toLowerCase();
@@ -2533,7 +2418,7 @@
                 if (safeFormat === 'mp3') {
                     fmtParam = 'mp3';
                 } else if (safeFormat === 'webm') {
-                    // On savenow.to, 'webm' is audio-only; map video WebM button to 1080p HD video stream
+                    // Map video WebM button to 1080p HD video stream
                     fmtParam = '1080';
                 } else if (['m4a', 'flac', 'wav', 'aac'].includes(safeFormat)) {
                     fmtParam = safeFormat;
@@ -2633,7 +2518,7 @@
                     if (!url || url === '#' || url.startsWith('javascript:')) return;
                     // Filter external ad redirects
                     const lowerUrl = url.toLowerCase();
-                    if (lowerUrl.includes('ey43.com') || lowerUrl.includes('b.php') || lowerUrl.includes('/ad/') || lowerUrl.includes('google.com') || lowerUrl.includes('savenow.to') || lowerUrl.includes('affadaffa.com')) {
+                    if (lowerUrl.includes('ey43.com') || lowerUrl.includes('b.php') || lowerUrl.includes('/ad/') || lowerUrl.includes('google.com')) {
                         console.warn('Ignored external redirect URL:', url);
                         return;
                     }
@@ -2810,49 +2695,9 @@
                 let activePollTimer = null;
 
                 try {
-                    // Always test FastSaver Pro Paid API first: converts instantly for global and semi-regional videos (e.g. 100+ countries)
-
-                    const prewarmKey = activeFmt + '_' + ytId;
-                    const prewarmed = null;
-
-                    // Robust single-conversion pipeline with automatic fallback for restricted/long/large videos:
-                    const MAX_WAIT_MS = 180000; // 3 minutes window for large/long videos
-                    const pipelineStart = Date.now();
-                    let savenowTried = false;
-                    let loaderFallbackTried = false;
-                    let stepDownTried = false;
-                    let longVideoTried = false;
-                    let lastServerErrorText = initialPrewarmErrorText || '';
-
-                    // Long-video engine: for videos >3 hours that savenow/loader refuse
-                    async function tryLongVideoEngine() {
-                        if (completed || longVideoTried) return;
-                        longVideoTried = true;
-                        modalStatusMsg.textContent = 'Long video detected — trying extended engine...';
-                        modalStatusMsg.className = "text-xs font-semibold text-amber-700 mb-4 bg-amber-50 py-2.5 px-3 rounded-lg border border-amber-200";
-                        modalIcon.className = "fa-solid fa-gear fa-spin text-amber-600";
-                        try {
-                            const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
-                            const mode = isAudio ? 'audio' : 'video';
-                            const q = isAudio ? '320' : (fmtParam === '4k' ? '2160' : (fmtParam === '1440' ? '1440' : (fmtParam === '1080' ? '1080' : '720')));
-                            const resp = await fetchWithTimeout(`/api/long-video?url=${encodeURIComponent(ytUrl)}&mode=${mode}&quality=${q}`, {}, 30000);
-                            if (!resp.ok) { stepDownOrSwitchEngine(lastServerErrorText); return; }
-                            const data = await resp.json();
-                            if (data.success && data.download_url) {
-                                completeDownload(data.download_url);
-                                return;
-                            }
-                            stepDownOrSwitchEngine(lastServerErrorText);
-                        } catch (e) {
-                            stepDownOrSwitchEngine(lastServerErrorText);
-                        }
-                    }
-
                     // FastSaver Pro Paid API Engine: high-speed stream conversion
-                    let fastSaverTried = false;
-                    async function tryFastSaverEngine() {
-                        if (completed || fastSaverTried) return;
-                        fastSaverTried = true;
+                    async function runFastSaverPaidConversion() {
+                        if (completed) return;
                         modalStatusMsg.textContent = 'Processing high-speed stream...';
                         modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
                         modalIcon.className = "fa-solid fa-bolt fa-beat text-blue-600";
@@ -2868,231 +2713,25 @@
                                     completeDownload(data.download_url);
                                     return;
                                 }
-                                if (data && data.error) {
-                                    lastServerErrorText = String(data.error);
-                                }
                                 if (data && data.unsupported_reason) {
-                                    window._unsupportedVideoReason = window._unsupportedVideoReason || {};
-                                    window._unsupportedVideoReason[ytId] = data.unsupported_reason;
+                                    const restrMsg = getI18nMsg(data.unsupported_reason);
+                                    if (restrMsg) {
+                                        failDownload(restrMsg);
+                                        return;
+                                    }
                                 }
-                            }
-                            if (!longVideoTried && (isAudio || (currentMediaData && currentMediaData.duration_sec > 7200))) {
-                                tryLongVideoEngine();
-                                return;
-                            }
-                            const restrReason = window._unsupportedVideoReason && window._unsupportedVideoReason[ytId];
-                            if (restrReason) {
-                                const restrMsg = getI18nMsg(restrReason);
-                                if (restrMsg) {
-                                    failDownload(restrMsg);
+                                if (data && data.error) {
+                                    failDownload(String(data.error));
                                     return;
                                 }
                             }
-                            if (!isAudio && currentMediaData && currentMediaData.duration_sec > 18000) {
-                                const longMsg = getI18nMsg('video_too_long');
-                                if (longMsg) {
-                                    failDownload(longMsg);
-                                    return;
-                                }
-                            }
-                            stepDownOrSwitchEngine(lastServerErrorText);
+                            failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         } catch (e) {
-                            const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
-                            if (!longVideoTried && (isAudio || (currentMediaData && currentMediaData.duration_sec > 7200))) {
-                                tryLongVideoEngine();
-                                return;
-                            }
-                            const restrReason = window._unsupportedVideoReason && window._unsupportedVideoReason[ytId];
-                            if (restrReason) {
-                                const restrMsg = getI18nMsg(restrReason);
-                                if (restrMsg) {
-                                    failDownload(restrMsg);
-                                    return;
-                                }
-                            }
-                            if (!isAudio && currentMediaData && currentMediaData.duration_sec > 18000) {
-                                const longMsg = getI18nMsg('video_too_long');
-                                if (longMsg) {
-                                    failDownload(longMsg);
-                                    return;
-                                }
-                            }
-                            stepDownOrSwitchEngine(lastServerErrorText);
+                            failDownload("Stream conversion could not be completed right now. Please tap Retry below.");
                         }
                     }
 
-                    function setRealProgress(p) {
-                        if (p && p.progress > 0) {
-                            const realPct = Math.min(96, Math.round(p.progress / 10));
-                            if (realPct > curPct) {
-                                curPct = realPct;
-                                updateConversionVisuals(curPct);
-                            }
-                        }
-                    }
-
-                    function updateWaitMessage() {
-                        const sec = Math.round((Date.now() - pipelineStart) / 1000);
-                        modalEtaText.textContent = `${sec}s`;
-                        if (sec >= 45) modalStatusMsg.textContent = 'Long video detected, almost done. Please keep this page open...';
-                        else if (sec >= 20) modalStatusMsg.textContent = 'Encoding your file... (larger videos take a bit longer)';
-                        else if (sec >= 6) modalStatusMsg.textContent = 'Converting on our server... usually 10-20 seconds.';
-                    }
-
-                    async function initLoaderDirect(targetFmt) {
-                        let cleanFmt = targetFmt || activeFmt;
-                        try {
-                            const r = await fetchWithTimeout(`/api/convert?url=${encodeURIComponent(ytUrl)}&format=${cleanFmt}&engine=loader`, {}, 10000);
-                            if (r.ok) {
-                                const d = await r.json();
-                                if (d && d.id) return { id: d.id, engine: d.engine || 'loader', download_url: d.download_url || null };
-                            }
-                        } catch(e) {}
-                        return null;
-                    }
-
-                    function stepDownOrSwitchEngine(errText) {
-                        if (completed || window._activeConversionToken !== conversionToken) return;
-                        if (activePollTimer) clearTimeout(activePollTimer);
-                        if (errText) lastServerErrorText = errText;
-
-                        // Immediate Duration Limit Exit (No 60-second useless waiting)
-                        if (/duration limit|up to 3 hours|video too long|exceeds the duration/i.test(errText || lastServerErrorText || '')) {
-                            const isAudio = ['mp3', 'm4a', 'flac', 'wav', 'aac', 'ogg', 'opus'].includes(safeFormat);
-                            if (!longVideoTried) {
-                                tryLongVideoEngine();
-                                return;
-                            }
-                            if (!isAudio) {
-                                failDownload("⚠️ This video exceeds server duration limits (up to 3 hours). Please try 720p or MP3 format.");
-                                return;
-                            }
-                        }
-
-                        if (window._prewarmedStreams && window._prewarmedStreams[activeFmt + '_' + ytId]) {
-                            window._prewarmedStreams[activeFmt + '_' + ytId].failed = true;
-                            if (errText) window._prewarmedStreams[activeFmt + '_' + ytId].errorText = errText;
-                        }
-
-                        // 1. Primary Free Mirror: SaveNow
-                        if (!savenowTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
-                            savenowTried = true;
-                            modalStatusMsg.textContent = 'Connecting to secondary conversion mirror...';
-                            modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
-                            runEngine('savenow');
-                            return;
-                        }
-
-                        // 3. Alternate Free Mirror: Loader.to
-                        if (!loaderFallbackTried && (Date.now() - pipelineStart < MAX_WAIT_MS - 15000)) {
-                            loaderFallbackTried = true;
-                            modalStatusMsg.textContent = 'Connecting to alternate free mirror (Loader)...';
-                            modalStatusMsg.className = "text-xs font-semibold text-blue-700 mb-4 bg-blue-50 py-2.5 px-3 rounded-lg border border-blue-200";
-                            runEngine('loader');
-                            return;
-                        }
-
-                        // 4. Smart Resolution Step-Down (if 1080/4k was requested on an SD/720p video)
-                        if (!stepDownTried && ['4k', '2160', '1440', '2k', '1080', '720'].includes(activeFmt) && (Date.now() - pipelineStart < MAX_WAIT_MS - 20000)) {
-                            stepDownTried = true;
-                            activeFmt = (activeFmt === '720') ? '480' : '720';
-                            modalStatusMsg.textContent = `Adapting to highest available stream (${activeFmt}p)...`;
-                            runEngine('savenow');
-                            return;
-                        }
-
-                        // 5. High-speed FastSaver Pro Paid API
-                        if (!fastSaverTried) {
-                            tryFastSaverEngine();
-                            return;
-                        }
-
-                        // 4. Long-video engine
-                        if (!longVideoTried) {
-                            tryLongVideoEngine();
-                            return;
-                        }
-
-                        failDownload("This video could not be converted right now. Please tap Retry below.");
-                    }
-
-                    function pollConversion(convId) {
-                        let finishedNoFile = 0;
-                        let netFails = 0;
-                        let lastProgressVal = -1;
-                        let stuckTicks = 0;
-                        const tick = async () => {
-                            if (completed) return;
-                            let p = null;
-                            try { p = await pollProgressEndpoint(convId); } catch(e) {}
-                            if (p) {
-                                netFails = 0;
-                                if (isDownloadReady(p)) { completeDownload(p.download_url); return; }
-                                if (isConversionError(p)) {
-                                    stepDownOrSwitchEngine(p.text || p.message || '');
-                                    return;
-                                }
-                                // Finished but returned an unusable/ad link: step down after 3 confirmations
-                                if ((p.progress || 0) >= 1000) {
-                                    finishedNoFile++;
-                                    if (finishedNoFile >= 3) {
-                                        // Server says "Finished" but gave no usable download link: go straight to FastSaver backup
-                                        if (!fastSaverTried) { if (activePollTimer) clearTimeout(activePollTimer); tryFastSaverEngine(); return; }
-                                        stepDownOrSwitchEngine(p.text || p.message || ''); return;
-                                    }
-                                } else if (p.progress !== undefined && p.progress !== null) {
-                                    if (p.progress === lastProgressVal && p.progress < 1000) {
-                                        stuckTicks++;
-                                        // Watchdog: Savenow/loader can legitimately sit at progress=50 for up to ~20s
-                                        // while it processes the conversion server-side. Only switch engine if stuck
-                                        // for >25 seconds (25 ticks × 1s each). This prevents premature abandonment
-                                        // of a valid in-progress Savenow job that returns 1000% on poll ~18-20.
-                                        const stuckLimit = (p.progress === 50) ? 25 : 7;
-                                        if (stuckTicks >= stuckLimit) {
-                                            if (activePollTimer) clearTimeout(activePollTimer);
-                                            stepDownOrSwitchEngine(p.text || "Conversion server unresponsive");
-                                            return;
-                                        }
-                                    } else {
-                                        lastProgressVal = p.progress;
-                                        stuckTicks = 0;
-                                    }
-                                }
-                                setRealProgress(p);
-                            } else {
-                                netFails++;
-                                if (netFails >= 15) { stepDownOrSwitchEngine("Network connection lost."); return; }
-                            }
-                            updateWaitMessage();
-                            if (Date.now() - pipelineStart > MAX_WAIT_MS) {
-                                failDownload("This video is taking unusually long. Please tap Retry below.");
-                                return;
-                            }
-                            activePollTimer = setTimeout(tick, 1000);
-                        };
-                        activePollTimer = setTimeout(tick, 300);
-                    }
-
-                    async function runEngine(engine) {
-                        if (completed || window._activeConversionToken !== conversionToken) return;
-                        if (!loaderFallbackTried) {
-                            modalStatusMsg.textContent = 'Starting conversion...';
-                        }
-                        const initData = engine === 'loader' ? await initLoaderDirect(activeFmt) : await initiateStream(ytUrl, activeFmt);
-                        if (completed || window._activeConversionToken !== conversionToken) return;
-                        if (!initData || !initData.id) {
-                            const errTxt = (initData && initData.errorText) ? initData.errorText : "";
-                            stepDownOrSwitchEngine(errTxt || "Conversion servers are busy.");
-                            return;
-                        }
-                        if (isDownloadReady(initData)) { completeDownload(initData.download_url); return; }
-                        pollConversion(initData.id);
-                    }
-
-                    // FastSaver Pro Paid API: 100% Direct Binary Stream (ZERO Ads, ZERO Redirects to Google)
-                    // Direct stream delivery
-                    modalStatusMsg.textContent = 'Preparing direct high-speed download...';
-                    tryFastSaverEngine();
+                    runFastSaverPaidConversion();
 
                 } catch (err) {
                     console.error('Conversion error:', err);
@@ -3135,7 +2774,7 @@
                     const fmt = window._lastRequestedFormat || 'mp3';
                     const q = window._lastRequestedQuality || '320kbps';
                     const lbl = window._lastRequestedLabel || 'Download';
-                    triggerDirectDownload(fmt, q, lbl, 'loader');
+                    triggerDirectDownload(fmt, q, lbl);
                 });
             }
 
