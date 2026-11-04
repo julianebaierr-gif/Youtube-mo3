@@ -2813,13 +2813,8 @@
                 let cloudStreamTried = false;
 
                 try {
-                    // Priority 0: Regional media routing (Geo Stream unlocks country-restricted videos immediately)
-                    if (window._isRegionalVideo && window._isRegionalVideo[ytId]) {
-                        tryCloudStreamEngine();
-                        return;
-                    }
-
-                    // Always test real conversion engines before declaring any video failed or restricted!
+                    // Always test FastSaver Pro Paid API first: converts instantly for global and semi-regional videos (e.g. 100+ countries)
+                    // If FastSaver cannot access strict region-locked videos (e.g. France/Mexico only), it seamlessly falls back to tryCloudStreamEngine!
 
                     const prewarmKey = activeFmt + '_' + ytId;
                     const prewarmed = null;

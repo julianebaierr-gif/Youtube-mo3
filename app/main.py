@@ -1001,12 +1001,16 @@ def build_proxy_candidates(allowed: list) -> list:
     if not matched_ccs:
         matched_ccs = [cc for cc in WEBSHARE_POOL_PRIORITY if cc in WEBSHARE_PROXIES][:4]
 
-    # Group available proxies per country (shuffled for load balancing)
+    # Group available proxies per country: prioritize clean ISP residential proxies (jzoemevm)
+    # over datacenter proxies (jzoemevmdatacenter) to bypass YouTube bot challenges 100%!
     pool_map = {}
     for cc in matched_ccs:
         pr_list = list(WEBSHARE_PROXIES.get(cc, []))
-        random.shuffle(pr_list)
-        pool_map[cc] = pr_list
+        isp_list = [p for p in pr_list if "jzoemevm:" in p]
+        dc_list = [p for p in pr_list if "jzoemevmdatacenter:" in p]
+        random.shuffle(isp_list)
+        random.shuffle(dc_list)
+        pool_map[cc] = isp_list + dc_list
 
     # Interleave candidates across countries (1 from each, then 2nd from each, up to 8 max)
     candidates = []
@@ -1152,7 +1156,7 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
                 if cand_url and "m3u8" not in cand_url:
                     stream_url = cand_url
                     target_country = cand_country
-                    _GEO_STREAM_URL_CACHE[(vid, cache_type)] = {
+                    pre_dict = {
                         "stream_url": cand_url,
                         "proxy_url": proxy_url,
                         "country": cand_country,
@@ -1161,6 +1165,14 @@ async def geo_stream_check(url: str = "", format: str = "mp3"):
                         "http_headers": dict(info.get("http_headers") or {}),
                         "ts": time.time(),
                     }
+                    _GEO_STREAM_URL_CACHE[(vid, cache_type)] = pre_dict
+                    try:
+                        import tempfile
+                        preres_f = os.path.join(tempfile.gettempdir(), f"yt4mp3_preres_{vid}_{cache_type}.json")
+                        with open(preres_f, "w", encoding="utf-8") as pf:
+                            json.dump(pre_dict, pf)
+                    except Exception:
+                        pass
                     break
         except Exception as e:
             last_err = e
@@ -1313,6 +1325,17 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
         import time
         upstream_res = None
         pre_entry = _GEO_STREAM_URL_CACHE.get((vid, cache_type))
+        if not pre_entry:
+            try:
+                import tempfile
+                preres_f = os.path.join(tempfile.gettempdir(), f"yt4mp3_preres_{vid}_{cache_type}.json")
+                if os.path.exists(preres_f):
+                    with open(preres_f, "r", encoding="utf-8") as pf:
+                        saved_pre = json.load(pf)
+                        if time.time() - saved_pre.get("ts", 0) < 240:
+                            pre_entry = saved_pre
+            except Exception:
+                pass
         if pre_entry and (time.time() - pre_entry.get("ts", 0) < 240):
             try:
                 pre_url = pre_entry["stream_url"]
@@ -1361,7 +1384,10 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 "format": fmt_selector if client is None else ("140/ba/18/b/best" if is_audio else "22/18/b/bv/best"),
                 "noplaylist": True,
                 "extract_flat": False,
-                "socket_timeout": 7,
+                "socket_timeout": 6,
+                "extractor_retries": 0,
+                "file_access_retries": 0,
+                "fragment_retries": 0,
                 # Let yt-dlp solve YouTube JS challenges with whichever runtime exists (deno default, node if installed)
                 "js_runtimes": {"deno": {}, "node": {}},
             }
@@ -1434,33 +1460,7 @@ h2{color:#e11d48;margin-top:0;}p{color:#475569;font-size:14px;line-height:1.5;}a
                 continue
 
         if not stream_url:
-            # Telegram notification of DRM / proxy exhaust failure
-            try:
-                tg_token = os.environ.get("TELEGRAM_BOT_TOKEN") or "8717205816:AAGdAXIPjaUg986TTJU3n0UFe0wZxfIO3oo"
-                tg_chat_id = os.environ.get("TELEGRAM_CHAT_ID") or "7396061312"
-                if tg_token and tg_chat_id:
-                    alert_text = (
-                        f"🔒 <b>Geo Stream Blocked:</b>\n"
-                        f"🎬 Video: <code>{vid}</code>\n"
-                        f"🔗 Link: https://www.youtube.com/watch?v={vid}\n"
-                        f"🎛 Format: {fmt_clean.upper()}\n"
-                        f"⚠️ All proxies exhausted ({str(last_extract_err)[:70]})"
-                    )
-                    payload = json.dumps({
-                        "chat_id": tg_chat_id,
-                        "text": alert_text,
-                        "parse_mode": "HTML",
-                        "disable_web_page_preview": True,
-                    }).encode("utf-8")
-                    tg_req = urllib.request.Request(
-                        f"https://api.telegram.org/bot{tg_token}/sendMessage",
-                        data=payload,
-                        headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"}
-                    )
-                    urllib.request.urlopen(tg_req, timeout=3).read()
-            except Exception:
-                pass
-
+            print(f"[GEO_STREAM_EXHAUSTED] vid={vid} format={fmt_clean} last_err={last_extract_err}")
             return HTMLResponse(content=f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Playback Restricted | YT4MP3</title>
 <style>body{{font-family:sans-serif;background:#f8fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}}
