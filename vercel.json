@@ -139,9 +139,32 @@
           "value": "public, max-age=86400, s-maxage=86400"
         }
       ]
+    },
+    {
+      "source": "/(watch|shorts/.*|4youtube/.*|4/.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     }
   ],
   "routes": [
+    {
+      "src": "/robots\\.text",
+      "status": 301,
+      "headers": {
+        "Location": "/robots.txt"
+      }
+    },
+    {
+      "src": "/about/?",
+      "status": 301,
+      "headers": {
+        "Location": "/contact-us#about"
+      }
+    },
     {
       "src": "/robots.txt",
       "dest": "/public/robots.txt"

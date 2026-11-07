@@ -1,10 +1,18 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /?s=
-Disallow: /*?*s=
-Disallow: /*?*q=
-Disallow: /*?*ref=
+Disallow: /watch
+Disallow: /shorts/
+Disallow: /*?s=
+Disallow: /*&s=
+Disallow: /*?q=
+Disallow: /*?ref=
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /watch
+Disallow: /shorts/
 
 User-agent: GPTBot
 Allow: /

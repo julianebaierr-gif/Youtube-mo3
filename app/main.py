@@ -203,8 +203,35 @@ async def privacy_page(request: Request):
 async def dmca_page(request: Request):
     return RedirectResponse(url="/contact-us#dmca", status_code=301)
 
+@app.get("/about", response_class=HTMLResponse)
+@app.get("/about/", response_class=HTMLResponse)
+async def about_page_redirect(request: Request):
+    return RedirectResponse(url="/contact-us#about", status_code=301)
+
+@app.api_route("/robots.text", methods=["GET", "HEAD"])
+async def robots_text_redirect():
+    return RedirectResponse(url="https://www.yt4mp3.com/robots.txt", status_code=301)
+
 def render_shortcut_page(request: Request):
-    resp = render_converter_page(request, "home", "en")
+    seo_data = get_page_content("en", "home")
+    ui_strings = get_ui_strings("en")
+    hreflangs = get_hreflang_links("home")
+    switcher = get_language_switcher_links("home", "en")
+    current_meta = SUPPORTED_LANGUAGES["en"]
+    tmpl = templates.env.get_template("index.html")
+    html_str = tmpl.render(
+        request=request,
+        seo=seo_data,
+        t=ui_strings,
+        lang="en",
+        lang_dir="ltr",
+        hreflangs=hreflangs,
+        switcher=switcher,
+        current_lang=current_meta,
+        supported_languages=SUPPORTED_LANGUAGES,
+        robots_meta="noindex, nofollow"
+    )
+    resp = HTMLResponse(content=html_str)
     resp.headers["X-Robots-Tag"] = "noindex, nofollow"
     resp.headers["Cache-Control"] = "private, no-store"
     return resp
@@ -265,10 +292,12 @@ async def robots_txt():
     content = """User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /?s=
-Disallow: /*?*s=
-Disallow: /*?*q=
-Disallow: /*?*ref=
+Disallow: /watch
+Disallow: /shorts/
+Disallow: /*?s=
+Disallow: /*&s=
+Disallow: /*?q=
+Disallow: /*?ref=
 
 User-agent: GPTBot
 Allow: /

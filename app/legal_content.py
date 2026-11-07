@@ -9,7 +9,10 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                 'subtitle': 'Have questions, feedback, or a copyright inquiry? Get in touch with our support team.',
                 'badge': 'Support & Inquiries',
                 'canonical_url': 'https://www.yt4mp3.com/contact-us',
-                'article_html': '<p>Welcome to the official YT4MP3 support portal. Our objective is to ensure that '
+                'article_html': '<h2 id="about">About YT4MP3: Organization, Mission & Technical Standards</h2>\n'
+                                '<p><strong>YT4MP3</strong> (operated by <strong>YT4MP3 Media Technologies</strong>) is an independent browser-based media format transcoding utility founded in 2024. Our mission is to provide educators, students, journalists, podcasters, and content creators with a clean, standards-compliant tool for archiving public-domain recordings, Creative Commons licensed material, and personal video backups without requiring desktop software or untrusted browser extensions.</p>\n'
+                                '<p>All audio and video streams processed through YT4MP3 use industry-standard H.264/AVC video containers, AAC stereo audio, and LAME MP3 encoding profiles (up to 320 kbps). Temporary server conversion buffers are processed on demand and automatically purged after file delivery. Our technical documentation and format guides are written and reviewed by our audio/video engineering team to ensure accuracy across iOS, Android, Windows, and macOS platforms.</p>\n\n'
+                                '<p>Welcome to the official YT4MP3 support portal. Our objective is to ensure that '
                                 'every visitor enjoys a smooth, reliable, and uninterrupted media conversion '
                                 'experience. Whether you have questions regarding our YouTube to MP3 audio converter, '
                                 'need advice on saving 1080p or 4K MP4 videos, or wish to report a temporary link '

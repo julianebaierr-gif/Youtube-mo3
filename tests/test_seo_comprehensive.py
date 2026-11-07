@@ -223,14 +223,67 @@ def test_robots_txt_spec():
     assert "Sitemap: https://www.yt4mp3.com/sitemap.xml" in content
     assert "Allow: /" in content
     assert "Disallow: /api/" in content
-    # Verify removed disallow directives
-    assert "Disallow: /watch" not in content
-    assert "Disallow: /shorts/" not in content
-    assert "Disallow: /4youtube/" not in content
-    assert "Disallow: /4/" not in content
+    assert "Disallow: /watch" in content
+    assert "Disallow: /shorts/" in content
+    assert "Disallow: /*?s=" in content
+    assert "Disallow: /*&s=" in content
+    assert "Disallow: /*?q=" in content
+    assert "Disallow: /*?ref=" in content
+    assert "Disallow: /*?*s=" not in content
     # Ensure important language paths are NOT disallowed
     for lang in SUPPORTED_LANGUAGES:
         assert f"Disallow: /{lang}" not in content
+
+
+def test_sitemap_xhtml_hreflang_links():
+    res = client.get("/sitemap.xml")
+    assert res.status_code == 200
+    root = ET.fromstring(res.text)
+    ns = {
+        "ns": "http://www.sitemaps.org/schemas/sitemap/0.9",
+        "xhtml": "http://www.w3.org/1999/xhtml",
+    }
+    urls = root.findall("ns:url", ns)
+    localized_count = 0
+    for u in urls:
+        loc = u.find("ns:loc", ns).text.strip()
+        if any(legal in loc for legal in ["contact-us", "terms-of-service", "privacy-policy"]):
+            continue
+        localized_count += 1
+        xhtml_links = u.findall("xhtml:link", ns)
+        assert len(xhtml_links) == 16, f"Expected 16 xhtml:link hreflang tags in {loc}, found {len(xhtml_links)}"
+        langs = {xl.attrib.get("hreflang") for xl in xhtml_links}
+        assert "x-default" in langs
+        assert "en" in langs
+        assert "es" in langs
+    assert localized_count == 60
+
+
+def test_shortcut_routes_noindex_and_no_spam():
+    for path in ["/watch?v=dQw4w9WgXcQ", "/shorts/dQw4w9WgXcQ"]:
+        res = client.get(path)
+        assert res.status_code == 200
+        assert "noindex" in res.headers.get("x-robots-tag", "").lower()
+        assert '<meta name="robots" content="noindex, nofollow">' in res.text
+
+    # Verify Spanish page has localized og:locale, og:image:alt, UI strings, and zero keyword stuffing
+    res_es = client.get("/es/")
+    assert res_es.status_code == 200
+    html_es = res_es.text
+    assert '<meta property="og:locale" content="es_ES">' in html_es
+    assert "Fetching available MP3" not in html_es
+    assert ">Simple Process<" not in html_es
+    assert ">Utility<" not in html_es
+    assert ">Questions<" not in html_es
+    assert ">Service Status: Online<" not in html_es
+    assert "descargar mp3 de youtube --" not in html_es
+    assert "yo a mp3" not in html_es
+
+    # Verify English home page has zero keyword stuffing and no soft-404 error text
+    res_en = client.get("/")
+    html_en = res_en.text
+    for bad in ["youtube downlader", "yt downlaoder", "youtibe downloader", "youtube to m[3", "sss.fb", "yotuube to mp", "Unable to fetch video information."]:
+        assert bad not in html_en, f"Found banned phrase '{bad}' on homepage!"
 
 
 # -------------------------------------------------------------

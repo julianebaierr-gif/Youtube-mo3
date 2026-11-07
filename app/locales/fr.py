@@ -83,7 +83,7 @@ UI = {
     "step3_title": "Téléchargement direct",
     "comp_badge": "Comparatif",
     "comp_title": "YT4MP3 vs Autres Convertisseurs",
-    "comp_subtitle": "Découvrez pourquoi des millions d’utilisateurs préfèrent YT4MP3 aux outils lents et saturés de publicités.",
+    "comp_subtitle": "Comparez la vitesse, les formats et la compatibilité de YT4MP3 avec les convertisseurs en ligne classiques.",
     "comp_feature_col": "Fonctionnalité & Performance",
     "comp_yt4mp3_col": "YT4MP3 (Recommandé)",
     "comp_others_col": "Autres Convertisseurs",

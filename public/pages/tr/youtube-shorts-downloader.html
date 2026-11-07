@@ -79,13 +79,13 @@
     <meta property="og:url" content="https://www.yt4mp3.com/tr/youtube-shorts-downloader">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="YT4MP3">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:locale" content="tr_TR">
     <meta property="og:image" content="https://www.yt4mp3.com/static/og-image.png">
     <meta property="og:image:secure_url" content="https://www.yt4mp3.com/static/og-image.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="YT4MP3 - Free YouTube to MP3 & MP4 Converter">
+    <meta property="og:image:alt" content="YouTube Shorts İndir (1080p MP4 &amp; MP3) | YT4MP3">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="YouTube Shorts İndir (1080p MP4 &amp; MP3) | YT4MP3">
     <meta name="twitter:description" content="YouTube Shorts videolarını 1080p Full HD MP4 ve 320kbps MP3 ses olarak ücretsiz ve filigransız indirin. iPhone, Android ve PC için hızlı reklamsız indirici.">
@@ -1072,7 +1072,7 @@
                 </a>
                 <a href="/tr/youtube-to-mp4" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all bg-white hover:bg-gray-50 text-gray-700 border-gray-200">
                     <i class="fa-solid fa-video text-xs text-gray-400"></i>
-                    <span>MP4 Video</span>
+                    <span>MP4 Video İndir</span>
                 </a>
                 <a href="/tr/youtube-shorts-downloader" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 border transition-all bg-amber-50 border-amber-500 text-amber-700">
                     <i class="fa-solid fa-bolt text-xs text-amber-600"></i>
@@ -1160,12 +1160,12 @@
                 <div class="space-y-2 bg-white p-3 sm:p-3.5 rounded-xl border border-gray-200 font-mono text-xs overflow-x-auto shadow-inner">
                     <div class="flex items-center gap-2 text-gray-500 text-[11px] sm:text-xs min-w-[320px]">
                         <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-bold text-[10px] uppercase font-sans">Önce:</span>
-                        <span class="truncate">https://www.<span class="bg-gray-200 text-slate-900 px-1 py-0.5 rounded font-bold">youtube</span>.com/watch?v=dQw4w9WgXcQ</span>
+                        <span class="truncate">https://www.<span class="bg-gray-200 text-slate-900 px-1 py-0.5 rounded font-bold">youtube</span>.com/watch?v=VIDEO_ID</span>
                     </div>
                     <div class="flex items-center justify-between gap-2 text-slate-900 text-[11px] sm:text-xs pt-2 border-t border-dashed border-gray-200 min-w-[320px]">
                         <div class="flex items-center gap-2 truncate">
                             <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] uppercase font-sans">Sonra:</span>
-                            <span class="truncate">https://www.<span class="bg-rose-600 text-white px-1.5 py-0.5 rounded font-black">yt4mp3</span>.com/watch?v=dQw4w9WgXcQ</span>
+                            <span class="truncate">https://www.<span class="bg-rose-600 text-white px-1.5 py-0.5 rounded font-black">yt4mp3</span>.com/watch?v=VIDEO_ID</span>
                         </div>
                         <button type="button" onclick="testUrlShortcutDemo()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-sans text-xs font-bold border border-rose-200 flex-shrink-0 transition-all flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-bolt text-[10px]"></i>
@@ -1182,7 +1182,7 @@
             <!-- Prominent Legal Disclaimer -->
             <div class="mt-4 pt-3 border-t border-gray-100 max-w-2xl mx-auto">
                 <p class="text-[11px] text-gray-500 text-center leading-relaxed">
-                    <span class="font-semibold text-gray-600">Notice:</span> YT4MP3, kişisel yedekleme, çevrimdışı eğitim ve adil kullanım amacıyla tasarlanmış bağımsız bir medya dönüştürücüsüdür. Kullanıcılar YouTube Hizmet Şartları ve geçerli telif hakkı yasalarına uymakla yükümlüdür.
+                    <span class="font-semibold text-gray-600">Uyarı:</span> YT4MP3, kişisel yedekleme, çevrimdışı eğitim ve adil kullanım amacıyla tasarlanmış bağımsız bir medya dönüştürücüsüdür. Kullanıcılar YouTube Hizmet Şartları ve geçerli telif hakkı yasalarına uymakla yükümlüdür.
                 </p>
             </div>
 
@@ -1209,7 +1209,7 @@
                         <div class="audio-bar"></div>
                         <div class="audio-bar"></div>
                     </div>
-                    <span>Fetching available MP3 & MP4 quality bitrates...</span>
+                    <span>Mevcut MP3 ve MP4 kalite seçenekleri getiriliyor...</span>
                 </div>
             </div>
 
@@ -1219,7 +1219,7 @@
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <p class="font-bold text-slate-900 text-base mb-1">Conversion Notice</p>
-                <p id="error-message" class="text-sm text-red-700 mb-4">Unable to fetch video information.</p>
+                <p id="error-message" class="text-sm text-red-700 mb-4"></p>
                 <div class="flex items-center justify-center gap-2.5 flex-wrap">
                     <button onclick="document.getElementById('media-url-input').focus();" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-800 bg-white border border-gray-300 hover:bg-gray-50 transition-all shadow-sm cursor-pointer">
                         Try Another Video Link
@@ -1471,9 +1471,9 @@
         <section class="py-12 bg-white border-y border-gray-200">
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="text-center max-w-lg mx-auto mb-8">
-                    <span class="text-xs font-black uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Simple Process</span>
+                    <span class="text-xs font-black uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Kolay İşlem</span>
                     <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YouTube Videoları Nasıl Dönüştürülür?</h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">No registration, no software installation, completely free.</p>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Kayıt yok, program kurulumu yok, tamamen ücretsiz.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -1513,9 +1513,9 @@
         <!-- WHY CHOOSE MEDIACONVERT PRO (FEATURES) -->
         <section class="py-14 max-w-4xl mx-auto px-4 sm:px-6">
             <div class="text-center max-xl mx-auto mb-10">
-                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">Utility</span>
+                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">Özellikler</span>
                 <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">Neden YT4MP3?</h2>
-                <p class="text-gray-500 text-xs sm:text-sm mt-1">Engineered for clean audio extraction and high-resolution video streams.</p>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">Temiz ses ayrıştırma ve yüksek çözünürlüklü video akışları için tasarlandı.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -1589,7 +1589,7 @@
                 <div class="text-center max-w-xl mx-auto mb-10">
                     <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">Karşılaştırma</span>
                     <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YT4MP3 ve Diğer Dönüştürücüler</h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Milyonlarca kullanıcının neden yavaş ve reklam dolu siteler yerine YT4MP3&#39;ü tercih ettiğini görün.</p>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">YT4MP3&#39;ün hızını, format seçeneklerini ve tarayıcı uyumluluğunu standart çevrimiçi dönüştürücülerle karşılaştırın.</p>
                 </div>
 
                 <!-- Desktop / Tablet Comparison Table -->
@@ -1643,7 +1643,7 @@
                                 <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
                                     <div class="flex items-start gap-2">
                                         <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
-                                        <span>Gerçek 320 kbps MP3 ve senkronize sesli 1080p/4K MP4</span>
+                                        <span>320 kbps MP3 ve senkronize sesli 1080p/4K MP4 desteği</span>
                                     </div>
                                 </td>
                                 <td class="p-4 text-gray-500">
@@ -1716,7 +1716,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> Zorunlu üyelik, ödeme duvarları veya spam e-postalar</span>
+                                <span><strong>Diğer Dönüştürücüler:</strong> Zorunlu üyelik, ödeme duvarları veya spam e-postalar</span>
                             </div>
                         </div>
                     </div>
@@ -1733,7 +1733,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> Uzun bekleme sıraları, hız kısıtlamaları ve sayaçlar</span>
+                                <span><strong>Diğer Dönüştürücüler:</strong> Uzun bekleme sıraları, hız kısıtlamaları ve sayaçlar</span>
                             </div>
                         </div>
                     </div>
@@ -1746,11 +1746,11 @@
                         <div class="pt-2 text-xs space-y-1.5">
                             <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span><strong>YT4MP3:</strong> Gerçek 320 kbps MP3 ve senkronize sesli 1080p/4K MP4</span>
+                                <span><strong>YT4MP3:</strong> 320 kbps MP3 ve senkronize sesli 1080p/4K MP4 desteği</span>
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 128 kbps sıkıştırma veya bulanık 360p çözünürlükle sınırlı</span>
+                                <span><strong>Diğer Dönüştürücüler:</strong> 128 kbps sıkıştırma veya bulanık 360p çözünürlükle sınırlı</span>
                             </div>
                         </div>
                     </div>
@@ -1767,7 +1767,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> Spam yönlendirmeler, açılır pencereler ve yavaş kuyruklar</span>
+                                <span><strong>Diğer Dönüştürücüler:</strong> Spam yönlendirmeler, açılır pencereler ve yavaş kuyruklar</span>
                             </div>
                         </div>
                     </div>
@@ -1784,7 +1784,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> iOS Safari&#39;de hata verir veya şüpheli APK yüklemesi ister</span>
+                                <span><strong>Diğer Dönüştürücüler:</strong> iOS Safari&#39;de hata verir veya şüpheli APK yüklemesi ister</span>
                             </div>
                         </div>
                     </div>
@@ -1801,7 +1801,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 10-20 dakikalık katı sınır; Shorts bağlantılarını tanımaz</span>
+                                <span><strong>Diğer Dönüştürücüler:</strong> 10-20 dakikalık katı sınır; Shorts bağlantılarını tanımaz</span>
                             </div>
                         </div>
                     </div>
@@ -2093,9 +2093,9 @@
         <!-- FAQ ACCORDION -->
         <section class="py-14 max-w-3xl mx-auto px-4 sm:px-6">
             <div class="text-center max-w-xl mx-auto mb-8">
-                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Questions</span>
+                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Sorular</span>
                 <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">Sıkça Sorulan Sorular</h2>
-                <p class="text-gray-500 text-xs sm:text-sm mt-1">Practical answers about audio quality, formats, and device compatibility.</p>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">Ses kalitesi, formatlar ve cihaz uyumluluğu hakkında pratik yanıtlar.</p>
             </div>
 
             <div class="space-y-2.5">
@@ -2268,9 +2268,9 @@
         <section class="py-12 bg-gray-50 border-t border-gray-200">
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="text-center max-w-xl mx-auto mb-8">
-                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">More Tools</span>
-                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">Explore YouTube Converters &amp; Tools</h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">High-speed media extraction tools for audio, video, and Shorts.</p>
+                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">Diğer Araçlar</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YouTube Dönüştürücü ve Araçlarını Keşfedin</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">Ses, video ve Shorts için yüksek hızlı medya dönüştürme araçları.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -2281,9 +2281,9 @@
                                 <i class="fa-solid fa-music"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-rose-600 transition-colors mb-1.5">YouTube MP3</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Extract studio-grade 320kbps MP3 audio from any YouTube video, music, or podcast.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">YouTube videolarından, müziklerden ve podcastlerden 320kbps MP3 ses ayıklayın.</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-rose-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Convert MP3 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-rose-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">MP3 Dönüştür <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
 
                     <!-- Tool 2: YouTube to MP4 -->
@@ -2293,9 +2293,9 @@
                                 <i class="fa-solid fa-video"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors mb-1.5">YouTube MP4</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Download high-definition 1080p Full HD, 720p, and 4K MP4 video files directly.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">1080p Full HD, 720p ve 4K MP4 video dosyalarını doğrudan indirin.</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Download MP4 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">MP4 İndir <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
 
                     <!-- Tool 3: YouTube Shorts Downloader -->
@@ -2305,9 +2305,9 @@
                                 <i class="fa-solid fa-mobile-screen"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-emerald-600 transition-colors mb-1.5">YouTube Shorts</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Save viral YouTube Shorts in pristine vertical MP4 video or sound-only MP3 format.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">YouTube Shorts videolarını dikey MP4 veya yalnızca MP3 ses olarak kaydedin.</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-emerald-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Get Shorts <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-emerald-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Shorts İndir <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
 
                     <!-- Tool 4: Universal Converter Home -->
@@ -2317,10 +2317,24 @@
                                 <i class="fa-solid fa-bolt"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-purple-600 transition-colors mb-1.5">Ana Sayfa</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Universal converter supporting all YouTube links, bitrates, resolutions, and formats.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">Tüm YouTube bağlantılarını, bit hızlarını ve çözünürlükleri destekleyen evrensel dönüştürücü.</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-purple-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Open Tool <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-purple-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Aracı Aç <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
+                </div>
+
+                <!-- ABOUT YT4MP3 & TECHNICAL STANDARDS (E-E-A-T TRUST SIGNAL) -->
+                <div class="mt-10 p-6 rounded-2xl bg-white border border-gray-200 shadow-sm" id="about-yt4mp3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">Hakkımızda &amp; Standartlar</span>
+                    </div>
+                    <h2 class="text-base sm:text-lg font-black text-slate-900 mb-2">YT4MP3 Hakkında ve Teknik Standartlarımız</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed mb-2">
+                        YT4MP3, eğitimcilerin, öğrencilerin ve içerik üreticilerinin kamu malı kayıtları, Creative Commons lisanslı içerikleri ve kişisel video yedeklerini ek yazılım kurmadan arşivlemesi için geliştirilmiş bağımsız bir web aracıdır.
+                    </p>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                        Tüm ses ve video akışları standart H.264, AAC ve LAME MP3 profilleriyle anlık olarak işlenir. Geçici önbellek dosyaları aktarım sonrasında otomatik olarak silinir ve DMCA telif hakkı kurallarına tam uyum sağlanır.
+                    </p>
                 </div>
             </div>
         </section>
@@ -2360,20 +2374,20 @@
                         <span class="font-black text-lg tracking-tight text-white">YT<span class="text-rose-500">4</span>MP3</span>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed mb-3">
-                        Fast YouTube to MP3 (320kbps) audio converter and YouTube to MP4 (1080p / 4K) video downloader.
+                        Hızlı YouTube MP3 (320kbps) ses dönüştürücü ve YouTube MP4 (1080p / 4K) video indirici.
                     </p>
                     <div class="flex items-center gap-1.5 text-xs text-emerald-400">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>Service Status: Online</span>
+                        <span>Servis Durumu: Çevrimiçi</span>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Audio</h3>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Ses</h3>
                     <ul class="space-y-2 text-xs">
                         <li><a href="/tr/youtube-to-mp3" class="hover:text-white transition-colors">YouTube MP3</a></li>
-                        <li><a href="/tr/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Music to MP3</a></li>
-                        <li><a href="/tr/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Shorts to MP3</a></li>
+                        <li><a href="/tr/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Music MP3 Dönüştürücü</a></li>
+                        <li><a href="/tr/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Shorts MP3 İndir</a></li>
                     </ul>
                 </div>
 
@@ -2381,23 +2395,23 @@
                     <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Video</h3>
                     <ul class="space-y-2 text-xs">
                         <li><a href="/tr/youtube-to-mp4" class="hover:text-white transition-colors">YouTube MP4</a></li>
-                        <li><a href="/tr/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p Downloader</a></li>
+                        <li><a href="/tr/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p İndirici</a></li>
                         <li><a href="/tr/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 4K UHD Video</a></li>
                         <li><a href="/tr/youtube-shorts-downloader" class="hover:text-white transition-colors">YouTube Shorts</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Legal & DMCA</h3>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Yasal &amp; DMCA</h3>
                     <p class="text-[12px] text-slate-300 leading-relaxed mb-3">
                         YT4MP3, kişisel yedekleme, çevrimdışı eğitim ve adil kullanım amacıyla tasarlanmış bağımsız bir medya dönüştürücüsüdür. Kullanıcılar YouTube Hizmet Şartları ve geçerli telif hakkı yasalarına uymakla yükümlüdür.
                     </p>
                     <div class="text-xs text-slate-300 flex flex-wrap gap-2 mb-2">
-                        <a href="/privacy-policy" class="hover:text-white underline">Privacy</a>
+                        <a href="/privacy-policy" class="hover:text-white underline">Gizlilik</a>
                         <span>•</span>
-                        <a href="/terms-of-service" class="hover:text-white underline">Terms</a>
+                        <a href="/terms-of-service" class="hover:text-white underline">Koşullar</a>
                         <span>•</span>
-                        <a href="/contact-us" class="hover:text-white underline">DMCA / Contact</a>
+                        <a href="/contact-us" class="hover:text-white underline">Hakkımızda / DMCA / İletişim</a>
                     </div>
                     <p class="text-[11px] text-slate-400">DMCA Notice: <a href="mailto:contact.yt4mp3@gmail.com" class="text-slate-300 hover:underline">contact.yt4mp3@gmail.com</a></p>
                 </div>

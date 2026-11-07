@@ -79,13 +79,13 @@
     <meta property="og:url" content="https://www.yt4mp3.com/ja/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="YT4MP3">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:locale" content="ja_JP">
     <meta property="og:image" content="https://www.yt4mp3.com/static/og-image.png">
     <meta property="og:image:secure_url" content="https://www.yt4mp3.com/static/og-image.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="YT4MP3 - Free YouTube to MP3 & MP4 Converter">
+    <meta property="og:image:alt" content="YouTube動画保存 &amp; MP3音楽変換 無料ツール | YT4MP3">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="YouTube動画保存 &amp; MP3音楽変換 無料ツール | YT4MP3">
     <meta name="twitter:description" content="YouTube動画をMP3（最高320kbps）やMP4（1080p/4K）に高画質・高音質で無料変換して保存。専用アプリ不要、危険な広告なし。iPhone、Android、PCのブラウザから安全かつ高速にダウンロードできます。完全無料・登録不要。">
@@ -1088,12 +1088,12 @@
                 <div class="space-y-2 bg-white p-3 sm:p-3.5 rounded-xl border border-gray-200 font-mono text-xs overflow-x-auto shadow-inner">
                     <div class="flex items-center gap-2 text-gray-500 text-[11px] sm:text-xs min-w-[320px]">
                         <span class="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-bold text-[10px] uppercase font-sans">変更前:</span>
-                        <span class="truncate">https://www.<span class="bg-gray-200 text-slate-900 px-1 py-0.5 rounded font-bold">youtube</span>.com/watch?v=dQw4w9WgXcQ</span>
+                        <span class="truncate">https://www.<span class="bg-gray-200 text-slate-900 px-1 py-0.5 rounded font-bold">youtube</span>.com/watch?v=VIDEO_ID</span>
                     </div>
                     <div class="flex items-center justify-between gap-2 text-slate-900 text-[11px] sm:text-xs pt-2 border-t border-dashed border-gray-200 min-w-[320px]">
                         <div class="flex items-center gap-2 truncate">
                             <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] uppercase font-sans">変更後:</span>
-                            <span class="truncate">https://www.<span class="bg-rose-600 text-white px-1.5 py-0.5 rounded font-black">yt4mp3</span>.com/watch?v=dQw4w9WgXcQ</span>
+                            <span class="truncate">https://www.<span class="bg-rose-600 text-white px-1.5 py-0.5 rounded font-black">yt4mp3</span>.com/watch?v=VIDEO_ID</span>
                         </div>
                         <button type="button" onclick="testUrlShortcutDemo()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-sans text-xs font-bold border border-rose-200 flex-shrink-0 transition-all flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-bolt text-[10px]"></i>
@@ -1110,7 +1110,7 @@
             <!-- Prominent Legal Disclaimer -->
             <div class="mt-4 pt-3 border-t border-gray-100 max-w-2xl mx-auto">
                 <p class="text-[11px] text-gray-500 text-center leading-relaxed">
-                    <span class="font-semibold text-gray-600">Notice:</span> YT4MP3は、個人のバックアップ、オフライン学習、公正な利用（フェアユース）を目的とした独立したメディア変換ツールです。ユーザーはYouTubeの利用規約および関連する著作権法令を遵守する責任を負います。
+                    <span class="font-semibold text-gray-600">お知らせ:</span> YT4MP3は、個人のバックアップ、オフライン学習、公正な利用（フェアユース）を目的とした独立したメディア変換ツールです。ユーザーはYouTubeの利用規約および関連する著作権法令を遵守する責任を負います。
                 </p>
             </div>
 
@@ -1137,7 +1137,7 @@
                         <div class="audio-bar"></div>
                         <div class="audio-bar"></div>
                     </div>
-                    <span>Fetching available MP3 & MP4 quality bitrates...</span>
+                    <span>利用可能なMP3・MP4のビットレートと画質を取得しています...</span>
                 </div>
             </div>
 
@@ -1147,7 +1147,7 @@
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <p class="font-bold text-slate-900 text-base mb-1">Conversion Notice</p>
-                <p id="error-message" class="text-sm text-red-700 mb-4">Unable to fetch video information.</p>
+                <p id="error-message" class="text-sm text-red-700 mb-4"></p>
                 <div class="flex items-center justify-center gap-2.5 flex-wrap">
                     <button onclick="document.getElementById('media-url-input').focus();" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-800 bg-white border border-gray-300 hover:bg-gray-50 transition-all shadow-sm cursor-pointer">
                         Try Another Video Link
@@ -1399,9 +1399,9 @@
         <section class="py-12 bg-white border-y border-gray-200">
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="text-center max-w-lg mx-auto mb-8">
-                    <span class="text-xs font-black uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Simple Process</span>
+                    <span class="text-xs font-black uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">簡単3ステップ</span>
                     <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YouTube動画を変換する方法</h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">No registration, no software installation, completely free.</p>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">会員登録不要、ソフトのインストール不要、完全無料で利用できます。</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -1441,9 +1441,9 @@
         <!-- WHY CHOOSE MEDIACONVERT PRO (FEATURES) -->
         <section class="py-14 max-w-4xl mx-auto px-4 sm:px-6">
             <div class="text-center max-xl mx-auto mb-10">
-                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">Utility</span>
+                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">主な機能</span>
                 <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YT4MP3が選ばれる理由</h2>
-                <p class="text-gray-500 text-xs sm:text-sm mt-1">Engineered for clean audio extraction and high-resolution video streams.</p>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">クリアな音声抽出と高解像度ビデオストリームのために設計されています。</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -1517,7 +1517,7 @@
                 <div class="text-center max-w-xl mx-auto mb-10">
                     <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">比較</span>
                     <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YT4MP3と他の変換ツールの違い</h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">低速で広告だらけの変換サイトではなく、何百万人ものユーザーがYT4MP3を選ぶ理由をご覧ください。</p>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">YT4MP3の変換速度、対応フォーマット、ブラウザ互換性を一般的な変換サイトと比較してください。</p>
                 </div>
 
                 <!-- Desktop / Tablet Comparison Table -->
@@ -1571,7 +1571,7 @@
                                 <td class="p-4 bg-emerald-50/30 text-emerald-900 font-semibold border-x border-emerald-200/40">
                                     <div class="flex items-start gap-2">
                                         <i class="fa-solid fa-check text-emerald-600 mt-0.5 flex-shrink-0"></i>
-                                        <span>本物の320kbps高音質MP3＆1080p/4K高画質MP4</span>
+                                        <span>最大320kbpsの高音質MP3＆音声同期済み1080p/4K MP4</span>
                                     </div>
                                 </td>
                                 <td class="p-4 text-gray-500">
@@ -1644,7 +1644,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 強制的な会員登録、有料課金、迷惑メール</span>
+                                <span><strong>他の変換サイト:</strong> 強制的な会員登録、有料課金、迷惑メール</span>
                             </div>
                         </div>
                     </div>
@@ -1661,7 +1661,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 長い待ち行列、速度制限、カウントダウンタイマー</span>
+                                <span><strong>他の変換サイト:</strong> 長い待ち行列、速度制限、カウントダウンタイマー</span>
                             </div>
                         </div>
                     </div>
@@ -1674,11 +1674,11 @@
                         <div class="pt-2 text-xs space-y-1.5">
                             <div class="flex items-start gap-1.5 text-emerald-800 font-semibold">
                                 <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
-                                <span><strong>YT4MP3:</strong> 本物の320kbps高音質MP3＆1080p/4K高画質MP4</span>
+                                <span><strong>YT4MP3:</strong> 最大320kbpsの高音質MP3＆音声同期済み1080p/4K MP4</span>
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 圧縮された128kbpsや不鮮明な360pに制限</span>
+                                <span><strong>他の変換サイト:</strong> 圧縮された128kbpsや不鮮明な360pに制限</span>
                             </div>
                         </div>
                     </div>
@@ -1695,7 +1695,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 詐欺的なリダイレクト、危険なポップアップ広告</span>
+                                <span><strong>他の変換サイト:</strong> 詐欺的なリダイレクト、危険なポップアップ広告</span>
                             </div>
                         </div>
                     </div>
@@ -1712,7 +1712,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> iOS Safariで失敗する、または不審なAPKアプリの導入を要求</span>
+                                <span><strong>他の変換サイト:</strong> iOS Safariで失敗する、または不審なAPKアプリの導入を要求</span>
                             </div>
                         </div>
                     </div>
@@ -1729,7 +1729,7 @@
                             </div>
                             <div class="flex items-start gap-1.5 text-gray-500">
                                 <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
-                                <span><strong>Others:</strong> 10〜20分の厳しい長さ制限、Shortsリンク非対応</span>
+                                <span><strong>他の変換サイト:</strong> 10〜20分の厳しい長さ制限、Shortsリンク非対応</span>
                             </div>
                         </div>
                     </div>
@@ -1860,9 +1860,9 @@
         <!-- FAQ ACCORDION -->
         <section class="py-14 max-w-3xl mx-auto px-4 sm:px-6">
             <div class="text-center max-w-xl mx-auto mb-8">
-                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">Questions</span>
+                <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-200">よくある質問</span>
                 <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">よくある質問 (FAQ)</h2>
-                <p class="text-gray-500 text-xs sm:text-sm mt-1">Practical answers about audio quality, formats, and device compatibility.</p>
+                <p class="text-gray-500 text-xs sm:text-sm mt-1">音質、ファイル形式、デバイスの互換性に関する実用的な回答。</p>
             </div>
 
             <div class="space-y-2.5">
@@ -1955,9 +1955,9 @@
         <section class="py-12 bg-gray-50 border-t border-gray-200">
             <div class="max-w-4xl mx-auto px-4 sm:px-6">
                 <div class="text-center max-w-xl mx-auto mb-8">
-                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">More Tools</span>
-                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">Explore YouTube Converters &amp; Tools</h2>
-                    <p class="text-gray-500 text-xs sm:text-sm mt-1">High-speed media extraction tools for audio, video, and Shorts.</p>
+                    <span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 border border-rose-200">関連ツール</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-2">YouTube変換ツール一覧</h2>
+                    <p class="text-gray-500 text-xs sm:text-sm mt-1">音声、動画、YouTubeショート向けの高速メディア変換ツール。</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -1968,9 +1968,9 @@
                                 <i class="fa-solid fa-music"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-rose-600 transition-colors mb-1.5">YouTube MP3変換</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Extract studio-grade 320kbps MP3 audio from any YouTube video, music, or podcast.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">YouTubeの動画、音楽、ポッドキャストから高音質320kbpsのMP3音声を抽出します。</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-rose-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Convert MP3 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-rose-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">MP3に変換 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
 
                     <!-- Tool 2: YouTube to MP4 -->
@@ -1980,9 +1980,9 @@
                                 <i class="fa-solid fa-video"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors mb-1.5">YouTube MP4変換</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Download high-definition 1080p Full HD, 720p, and 4K MP4 video files directly.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">1080p フルHD、720p、4KのMP4動画ファイルを直接ダウンロードします。</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Download MP4 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">MP4を保存 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
 
                     <!-- Tool 3: YouTube Shorts Downloader -->
@@ -1992,9 +1992,9 @@
                                 <i class="fa-solid fa-mobile-screen"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-emerald-600 transition-colors mb-1.5">YouTubeショート</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Save viral YouTube Shorts in pristine vertical MP4 video or sound-only MP3 format.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">YouTubeショート動画を縦型MP4ビデオまたはMP3音声形式で保存します。</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-emerald-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Get Shorts <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-emerald-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">ショートを保存 <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
 
                     <!-- Tool 4: Universal Converter Home -->
@@ -2004,10 +2004,24 @@
                                 <i class="fa-solid fa-bolt"></i>
                             </div>
                             <h3 class="font-bold text-slate-900 text-sm group-hover:text-purple-600 transition-colors mb-1.5">ホーム</h3>
-                            <p class="text-xs text-gray-500 leading-relaxed">Universal converter supporting all YouTube links, bitrates, resolutions, and formats.</p>
+                            <p class="text-xs text-gray-500 leading-relaxed">すべてのYouTubeリンク、ビットレート、解像度、フォーマットに対応する万能コンバーター。</p>
                         </div>
-                        <span class="mt-4 text-xs font-bold text-purple-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">Open Tool <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <span class="mt-4 text-xs font-bold text-purple-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">ツールを開く <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
                     </a>
+                </div>
+
+                <!-- ABOUT YT4MP3 & TECHNICAL STANDARDS (E-E-A-T TRUST SIGNAL) -->
+                <div class="mt-10 p-6 rounded-2xl bg-white border border-gray-200 shadow-sm" id="about-yt4mp3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[11px] font-bold uppercase px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">運営情報・技術基準</span>
+                    </div>
+                    <h2 class="text-base sm:text-lg font-black text-slate-900 mb-2">YT4MP3について＆技術基準</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed mb-2">
+                        YT4MP3は、教育関係者、学生、クリエイターがパブリックドメインの録音やCreative Commonsライセンス作品、自身の動画バックアップをソフト不要で保存できるよう開発されたブラウザベースのメディア変換ユーティリティです。
+                    </p>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                        すべての音声・映像ストリームは標準のH.264、AAC、LAME MP3プロファイルでオンデマンド処理されます。一時バッファは転送後に自動消去され、DMCAおよび著作権法を厳格に遵守しています。
+                    </p>
                 </div>
             </div>
         </section>
@@ -2047,44 +2061,44 @@
                         <span class="font-black text-lg tracking-tight text-white">YT<span class="text-rose-500">4</span>MP3</span>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed mb-3">
-                        Fast YouTube to MP3 (320kbps) audio converter and YouTube to MP4 (1080p / 4K) video downloader.
+                        高速YouTube MP3（320kbps）音声変換＆YouTube MP4（1080p / 4K）動画ダウンローダー。
                     </p>
                     <div class="flex items-center gap-1.5 text-xs text-emerald-400">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>Service Status: Online</span>
+                        <span>サービス状況: 正常稼働中</span>
                     </div>
                 </div>
 
                 <div>
-                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Audio</h3>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube 音声変換</h3>
                     <ul class="space-y-2 text-xs">
                         <li><a href="/ja/youtube-to-mp3" class="hover:text-white transition-colors">YouTube MP3変換</a></li>
-                        <li><a href="/ja/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Music to MP3</a></li>
-                        <li><a href="/ja/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Shorts to MP3</a></li>
+                        <li><a href="/ja/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Music MP3変換</a></li>
+                        <li><a href="/ja/youtube-to-mp3" class="hover:text-white transition-colors">YouTube ショート MP3変換</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Video</h3>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube 動画保存</h3>
                     <ul class="space-y-2 text-xs">
                         <li><a href="/ja/youtube-to-mp4" class="hover:text-white transition-colors">YouTube MP4変換</a></li>
-                        <li><a href="/ja/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p Downloader</a></li>
-                        <li><a href="/ja/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 4K UHD Video</a></li>
+                        <li><a href="/ja/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p ダウンローダー</a></li>
+                        <li><a href="/ja/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 4K UHD 動画保存</a></li>
                         <li><a href="/ja/youtube-shorts-downloader" class="hover:text-white transition-colors">YouTubeショート</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Legal & DMCA</h3>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">法的情報・DMCA</h3>
                     <p class="text-[12px] text-slate-300 leading-relaxed mb-3">
                         YT4MP3は、個人のバックアップ、オフライン学習、公正な利用（フェアユース）を目的とした独立したメディア変換ツールです。ユーザーはYouTubeの利用規約および関連する著作権法令を遵守する責任を負います。
                     </p>
                     <div class="text-xs text-slate-300 flex flex-wrap gap-2 mb-2">
-                        <a href="/privacy-policy" class="hover:text-white underline">Privacy</a>
+                        <a href="/privacy-policy" class="hover:text-white underline">プライバシー</a>
                         <span>•</span>
-                        <a href="/terms-of-service" class="hover:text-white underline">Terms</a>
+                        <a href="/terms-of-service" class="hover:text-white underline">利用規約</a>
                         <span>•</span>
-                        <a href="/contact-us" class="hover:text-white underline">DMCA / Contact</a>
+                        <a href="/contact-us" class="hover:text-white underline">運営情報 / DMCA / お問い合わせ</a>
                     </div>
                     <p class="text-[11px] text-slate-400">DMCA Notice: <a href="mailto:contact.yt4mp3@gmail.com" class="text-slate-300 hover:underline">contact.yt4mp3@gmail.com</a></p>
                 </div>

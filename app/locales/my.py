@@ -3,7 +3,7 @@
 Burmese (my - မြန်မာစာ) SEO Content Module for YT4MP3.
 Target Market: Myanmar (Burma), Burmese Diaspora worldwide (Thailand, Malaysia, Singapore, USA, Japan, Europe).
 Standard Myanmar Unicode Script (100% compatible with Android and iOS devices).
-Zero popups, clean mobile data saving, genuine 320kbps MP3 and 1080p/4K MP4 conversions.
+Zero popups, clean mobile data saving, up to 320kbps MP3 and 1080p/4K MP4 conversions.
 """
 
 KEYWORDS_RESEARCH = {
