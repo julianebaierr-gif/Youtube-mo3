@@ -299,30 +299,6 @@ Disallow: /*&s=
 Disallow: /*?q=
 Disallow: /*?ref=
 
-User-agent: GPTBot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: AhrefsBot
-Allow: /
-
 Sitemap: https://www.yt4mp3.com/sitemap.xml
 """
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)

@@ -393,7 +393,7 @@ SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter (320kbps
                           '<h2 id="safe-browsing-fair-use">Safe Browsing Protocols and Responsible '
                           'Media Use</h2>\n'
                           '<p>User safety and privacy form the foundation of our platform. We '
-                          'operate a zero-logs architecture, meaning our servers do not store logs '
+                          'operate a privacy-focused architecture, meaning our servers do not store logs '
                           'of user IP addresses, converted video titles, or downloaded media '
                           'files. Once your conversion finishes and your browser retrieves the '
                           'file, temporary server buffers are purged automatically from '
