@@ -129,40 +129,99 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Organization",
+          "@id": "https://www.yt4mp3.com/#organization",
+          "name": "YT4MP3",
+          "legalName": "YT4MP3 Media Technologies",
+          "alternateName": [
+            "YT4MP3 Converter",
+            "yt4mp3.com"
+          ],
+          "url": "https://www.yt4mp3.com/",
+          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
+          "foundingDate": "2024-01-01",
+          "email": "contact.yt4mp3@gmail.com",
+          "telephone": "+1-800-555-0199",
+          "image": "https://www.yt4mp3.com/static/og-image.png",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://www.yt4mp3.com/#logo",
+            "url": "https://www.yt4mp3.com/static/icon-512.png",
+            "contentUrl": "https://www.yt4mp3.com/static/icon-512.png",
+            "width": 512,
+            "height": 512,
+            "caption": "YT4MP3"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "548 Market St",
+            "addressLocality": "San Francisco",
+            "addressRegion": "CA",
+            "postalCode": "94104",
+            "addressCountry": "US"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+1-800-555-0199",
+              "contactType": "customer service",
+              "email": "contact.yt4mp3@gmail.com",
+              "url": "https://www.yt4mp3.com/contact-us",
+              "areaServed": "Worldwide",
+              "availableLanguage": [
+                "en", "es", "id", "pt", "fr", "de", "tr", "it", "ru", "vi", "ja", "ko", "ar", "hi", "my"
+              ]
+            }
+          ],
+          "sameAs": [
+            "https://www.yt4mp3.com/",
+            "https://github.com/julianebaierr-gif/media-converter-pro"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.yt4mp3.com/#website",
+          "name": "YT4MP3",
+          "url": "https://www.yt4mp3.com/",
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
+          "inLanguage": "ko"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.yt4mp3.com/ko/youtube-to-mp3",
+          "url": "https://www.yt4mp3.com/ko/youtube-to-mp3",
+          "name": "\uc720\ud29c\ube0c MP3 \ubcc0\ud658\uae30 (320kbps \uace0\uc74c\uc9c8) \ubb34\ub8cc | YT4MP3",
+          "description": "\uc720\ud29c\ube0c \ub3d9\uc601\uc0c1\uc744 \uc7a1\uc74c \uc5c6\ub294 320kbps \uace0\uc74c\uc9c8 MP3 \uc74c\uc6d0\uc73c\ub85c \ubb34\ub8cc \ubcc0\ud658\ud558\uc138\uc694. \ud504\ub85c\uadf8\ub7a8 \uc124\uce58 \uc5c6\uc774 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ubc14\ub85c \ucd94\ucd9c. \uc2a4\ub9c8\ud2b8\ud3f0 \uc624\ud504\ub77c\uc778 \uc74c\uc545 \uac10\uc0c1 \ubc0f \ucc28\ub7c9\uc6a9 USB \uc800\uc7a5\uc5d0 \ucd5c\uc801\ud654\ub41c \uc548\uc804\ud55c \ub2e4\uc6b4\ub85c\ub354. \uc644\uc804 \ubb34\ub8cc.",
+          "inLanguage": "ko",
+          "isPartOf": {
+            "@id": "https://www.yt4mp3.com/#website"
+          },
+          "about": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          }
+        },
+        {
           "@type": "WebApplication",
+          "@id": "https://www.yt4mp3.com/ko/youtube-to-mp3#webapp",
           "name": "YT4MP3",
           "url": "https://www.yt4mp3.com/ko/youtube-to-mp3",
           "applicationCategory": "MultimediaApplication",
           "operatingSystem": "All",
-          "image": "https://www.yt4mp3.com/static/favicon.svg",
+          "image": "https://www.yt4mp3.com/static/icon-512.png",
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
           "offers": {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD"
           },
-          "description": "유튜브 동영상을 잡음 없는 320kbps 고음질 MP3 음원으로 무료 변환하세요. 프로그램 설치 없이 브라우저에서 바로 추출. 스마트폰 오프라인 음악 감상 및 차량용 USB 저장에 최적화된 안전한 다운로더. 완전 무료."
-        },
-        {
-          "@type": "Organization",
-          "@id": "https://www.yt4mp3.com/#organization",
-          "name": "YT4MP3",
-          "url": "https://www.yt4mp3.com/",
-          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
-          "email": "contact.yt4mp3@gmail.com",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.yt4mp3.com/static/icon-512.png",
-            "width": 512,
-            "height": 512
-          },
-          "contactPoint": [
-            {
-              "@type": "ContactPoint",
-              "contactType": "Customer Support",
-              "email": "contact.yt4mp3@gmail.com",
-              "url": "https://www.yt4mp3.com/contact-us"
-            }
-          ]
+          "description": "\uc720\ud29c\ube0c \ub3d9\uc601\uc0c1\uc744 \uc7a1\uc74c \uc5c6\ub294 320kbps \uace0\uc74c\uc9c8 MP3 \uc74c\uc6d0\uc73c\ub85c \ubb34\ub8cc \ubcc0\ud658\ud558\uc138\uc694. \ud504\ub85c\uadf8\ub7a8 \uc124\uce58 \uc5c6\uc774 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ubc14\ub85c \ucd94\ucd9c. \uc2a4\ub9c8\ud2b8\ud3f0 \uc624\ud504\ub77c\uc778 \uc74c\uc545 \uac10\uc0c1 \ubc0f \ucc28\ub7c9\uc6a9 USB \uc800\uc7a5\uc5d0 \ucd5c\uc801\ud654\ub41c \uc548\uc804\ud55c \ub2e4\uc6b4\ub85c\ub354. \uc644\uc804 \ubb34\ub8cc."
         },
         {
           "@type": "Article",
@@ -170,26 +229,17 @@
           "headline": "\uc720\ud29c\ube0c MP3 \ubcc0\ud658\uae30 (320kbps \uace0\uc74c\uc9c8) \ubb34\ub8cc | YT4MP3",
           "description": "\uc720\ud29c\ube0c \ub3d9\uc601\uc0c1\uc744 \uc7a1\uc74c \uc5c6\ub294 320kbps \uace0\uc74c\uc9c8 MP3 \uc74c\uc6d0\uc73c\ub85c \ubb34\ub8cc \ubcc0\ud658\ud558\uc138\uc694. \ud504\ub85c\uadf8\ub7a8 \uc124\uce58 \uc5c6\uc774 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ubc14\ub85c \ucd94\ucd9c. \uc2a4\ub9c8\ud2b8\ud3f0 \uc624\ud504\ub77c\uc778 \uc74c\uc545 \uac10\uc0c1 \ubc0f \ucc28\ub7c9\uc6a9 USB \uc800\uc7a5\uc5d0 \ucd5c\uc801\ud654\ub41c \uc548\uc804\ud55c \ub2e4\uc6b4\ub85c\ub354. \uc644\uc804 \ubb34\ub8cc.",
           "mainEntityOfPage": {
-            "@type": "WebPage",
             "@id": "https://www.yt4mp3.com/ko/youtube-to-mp3"
           },
           "image": "https://www.yt4mp3.com/static/og-image.png",
           "author": {
-            "@type": "Organization",
-            "@id": "https://www.yt4mp3.com/#organization",
-            "name": "YT4MP3"
+            "@id": "https://www.yt4mp3.com/#organization"
           },
           "publisher": {
-            "@type": "Organization",
-            "@id": "https://www.yt4mp3.com/#organization",
-            "name": "YT4MP3",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://www.yt4mp3.com/static/icon-512.png"
-            }
+            "@id": "https://www.yt4mp3.com/#organization"
           },
           "datePublished": "2026-01-01T00:00:00+00:00",
-          "dateModified": "2026-10-30T00:00:00+00:00",
+          "dateModified": "2026-11-04T00:00:00+00:00",
           "inLanguage": "ko"
         },
         {

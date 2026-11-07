@@ -647,7 +647,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['유튜브 쇼츠 다운로드',
  'yt4mp3를 스마트폰 홈 화면에 앱처럼 추가하는 방법',
  '1080p 쇼츠 동영상 파일 용량은 보통 얼마나 되나요']
 UI["nav_shorts"] = 'YouTube 쇼츠'
-PAGES["youtube-shorts-downloader"] = {'title': '유튜브 쇼츠 다운로드 - Shorts를 MP4 및 MP3로 변환 저장 | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': '유튜브 쇼츠 다운로드 (1080p MP4 및 MP3 변환) | YT4MP3',
  'meta_desc': '유튜브 쇼츠 동영상을 1080p 풀HD MP4 영상 및 320kbps MP3 음원으로 워터마크 없이 무료 다운로드하세요. 아이폰, 갤럭시, PC 완벽 호환, 팝업 광고 없는 안전한 고속 쇼츠 다운로더. 완전 무료 서비스.',
  'h1': '유튜브 쇼츠 동영상 온라인 다운로드',
  'subtitle': 'YouTube Shorts 세로 영상을 1080p Full HD 원본 화질이나 320kbps 고음질 MP3로 워터마크 없이 저장하세요. 무료, 초고속, 앱 설치 불필요.',

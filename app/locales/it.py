@@ -647,7 +647,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['scaricare youtube shorts',
  'come installare l app yt4mp3 per scaricare shorts',
  'quanto spazio occupa un video shorts a 1080p']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'Scaricare YouTube Shorts - Video Shorts in 1080p | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'Scaricare YouTube Shorts (1080p MP4 e MP3) | YT4MP3',
  'meta_desc': 'Scarica YouTube Shorts in 1080p Full HD MP4 e audio MP3 a 320kbps gratis senza filigrana. Downloader '
               'veloce per iPhone, Android e PC senza pubblicità.',
  'h1': 'Scaricare YouTube Shorts Online',

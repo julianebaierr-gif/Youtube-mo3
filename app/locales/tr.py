@@ -648,7 +648,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['youtube shorts indir',
  'telefona yt4mp3 kısayolu nasıl eklenir',
  '1080p shorts videosu kaç megabayt yer kaplar']
 UI["nav_shorts"] = 'YouTube Shorts'
-PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts İndir - Shorts MP4 & MP3 Dönüştürücü | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'YouTube Shorts İndir (1080p MP4 & MP3) | YT4MP3',
  'meta_desc': 'YouTube Shorts videolarını 1080p Full HD MP4 ve 320kbps MP3 ses olarak ücretsiz ve filigransız indirin. '
               'iPhone, Android ve PC için hızlı reklamsız indirici.',
  'h1': 'YouTube Shorts Online İndir',

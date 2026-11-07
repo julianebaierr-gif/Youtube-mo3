@@ -7,10 +7,10 @@ Interactive Table of Contents with jump sitelinks.
 100% human tone with 0% AI detected vocabulary.
 """
 
-SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter | 320kbps & 1080p',
+SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter (320kbps & 1080p)',
           'meta_desc': 'YT4MP3 is the best free YouTube to MP3 and MP4 converter. Convert YouTube videos in 320kbps '
                        'high quality audio and 1080p Full HD video fast with zero ads.',
-          'h1': 'YT4MP3 - YouTube to MP3 and MP4 Converter',
+          'h1': 'YT4MP3 - YouTube to MP3 & MP4 Converter',
           'subtitle': 'Save 320kbps MP3 audio or download 1080p and 4K MP4 video directly in your web browser. Free '
                       'online video downloader compatible with phones and computers.',
           'badge': 'Free Online Video Converter',
@@ -1699,9 +1699,9 @@ SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter | 320kbp
                             {'q': 'What should I do if a video download fails midway?',
                              'a': 'Ensure you have adequate device storage, verify your internet connection stability, '
                                   'and click Convert again to restart the stream.'}]},
- 'youtube-shorts-downloader': {'title': 'YouTube Shorts Downloader - Download Shorts 1080p | YT4MP3',
+ 'youtube-shorts-downloader': {'title': 'YT4MP3 - YouTube Shorts Downloader (1080p MP4 & MP3)',
                                'meta_desc': 'Free YouTube Shorts downloader. Save Shorts videos in 1080p Full HD MP4 and convert to 320kbps MP3 audio without watermarks on iPhone, Android, and PC.',
-                               'h1': 'YouTube Shorts Downloader Online',
+                               'h1': 'YT4MP3 - YouTube Shorts Downloader',
                                'subtitle': 'Save vertical YouTube Shorts in original 1080p HD MP4 video or convert to '
                                            '320kbps MP3 audio with zero watermarks. Fast, free, and runs directly '
                                            'inside your web browser.',

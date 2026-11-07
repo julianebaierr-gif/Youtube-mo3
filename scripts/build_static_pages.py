@@ -6,6 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 
 from fastapi.testclient import TestClient
+import app.main as main_mod
 from app.main import app, SUPPORTED_LANGUAGES, FAVICON_SVG_CONTENT
 
 PUBLIC_DIR = os.path.join(BASE_DIR, "public")
@@ -28,6 +29,15 @@ def build_static():
     # 2. Write favicon.svg and favicon.ico into public/
     with open(os.path.join(PUBLIC_DIR, "favicon.svg"), "w", encoding="utf-8", newline="\n") as f:
         f.write(FAVICON_SVG_CONTENT)
+
+    # 2b. Regenerate public/feed.xml so titles/descriptions match latest SEO content
+    feed_path = os.path.join(PUBLIC_DIR, "feed.xml")
+    if os.path.exists(feed_path):
+        os.remove(feed_path)
+    main_mod._FEED_CACHE_XML = None
+    fresh_feed = main_mod.get_authoritative_feed_xml()
+    with open(feed_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(fresh_feed)
 
     # 3. Pre-render all 63 canonical HTML pages into public/pages/
     pages_dir = os.path.join(PUBLIC_DIR, "pages")

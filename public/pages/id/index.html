@@ -129,12 +129,93 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Organization",
+          "@id": "https://www.yt4mp3.com/#organization",
+          "name": "YT4MP3",
+          "legalName": "YT4MP3 Media Technologies",
+          "alternateName": [
+            "YT4MP3 Converter",
+            "yt4mp3.com"
+          ],
+          "url": "https://www.yt4mp3.com/",
+          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
+          "foundingDate": "2024-01-01",
+          "email": "contact.yt4mp3@gmail.com",
+          "telephone": "+1-800-555-0199",
+          "image": "https://www.yt4mp3.com/static/og-image.png",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://www.yt4mp3.com/#logo",
+            "url": "https://www.yt4mp3.com/static/icon-512.png",
+            "contentUrl": "https://www.yt4mp3.com/static/icon-512.png",
+            "width": 512,
+            "height": 512,
+            "caption": "YT4MP3"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "548 Market St",
+            "addressLocality": "San Francisco",
+            "addressRegion": "CA",
+            "postalCode": "94104",
+            "addressCountry": "US"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+1-800-555-0199",
+              "contactType": "customer service",
+              "email": "contact.yt4mp3@gmail.com",
+              "url": "https://www.yt4mp3.com/contact-us",
+              "areaServed": "Worldwide",
+              "availableLanguage": [
+                "en", "es", "id", "pt", "fr", "de", "tr", "it", "ru", "vi", "ja", "ko", "ar", "hi", "my"
+              ]
+            }
+          ],
+          "sameAs": [
+            "https://www.yt4mp3.com/",
+            "https://github.com/julianebaierr-gif/media-converter-pro"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.yt4mp3.com/#website",
+          "name": "YT4MP3",
+          "url": "https://www.yt4mp3.com/",
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
+          "inLanguage": "id"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.yt4mp3.com/id/",
+          "url": "https://www.yt4mp3.com/id/",
+          "name": "Download Video YouTube ke MP3 \u0026 MP4 Gratis | YT4MP3",
+          "description": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, tanpa aplikasi, dan bisa untuk HP Android serta iPhone.",
+          "inLanguage": "id",
+          "isPartOf": {
+            "@id": "https://www.yt4mp3.com/#website"
+          },
+          "about": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          }
+        },
+        {
           "@type": "WebApplication",
+          "@id": "https://www.yt4mp3.com/id/#webapp",
           "name": "YT4MP3",
           "url": "https://www.yt4mp3.com/id/",
           "applicationCategory": "MultimediaApplication",
           "operatingSystem": "All",
-          "image": "https://www.yt4mp3.com/static/favicon.svg",
+          "image": "https://www.yt4mp3.com/static/icon-512.png",
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -143,53 +224,22 @@
           "description": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, tanpa aplikasi, dan bisa untuk HP Android serta iPhone."
         },
         {
-          "@type": "Organization",
-          "@id": "https://www.yt4mp3.com/#organization",
-          "name": "YT4MP3",
-          "url": "https://www.yt4mp3.com/",
-          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
-          "email": "contact.yt4mp3@gmail.com",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.yt4mp3.com/static/icon-512.png",
-            "width": 512,
-            "height": 512
-          },
-          "contactPoint": [
-            {
-              "@type": "ContactPoint",
-              "contactType": "Customer Support",
-              "email": "contact.yt4mp3@gmail.com",
-              "url": "https://www.yt4mp3.com/contact-us"
-            }
-          ]
-        },
-        {
           "@type": "Article",
           "@id": "https://www.yt4mp3.com/id/#article",
           "headline": "Download Video YouTube ke MP3 \u0026 MP4 Gratis | YT4MP3",
           "description": "Konverter YouTube ke MP3 (320kbps) dan MP4 (1080p/4K) gratis online. Cepat, tanpa aplikasi, dan bisa untuk HP Android serta iPhone.",
           "mainEntityOfPage": {
-            "@type": "WebPage",
             "@id": "https://www.yt4mp3.com/id/"
           },
           "image": "https://www.yt4mp3.com/static/og-image.png",
           "author": {
-            "@type": "Organization",
-            "@id": "https://www.yt4mp3.com/#organization",
-            "name": "YT4MP3"
+            "@id": "https://www.yt4mp3.com/#organization"
           },
           "publisher": {
-            "@type": "Organization",
-            "@id": "https://www.yt4mp3.com/#organization",
-            "name": "YT4MP3",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://www.yt4mp3.com/static/icon-512.png"
-            }
+            "@id": "https://www.yt4mp3.com/#organization"
           },
           "datePublished": "2026-01-01T00:00:00+00:00",
-          "dateModified": "2026-10-30T00:00:00+00:00",
+          "dateModified": "2026-11-04T00:00:00+00:00",
           "inLanguage": "id"
         },
         {

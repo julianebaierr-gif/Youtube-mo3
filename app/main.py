@@ -493,19 +493,24 @@ def get_all_sitemap_urls() -> list:
     return urls
 
 @app.api_route("/api/indexnow", methods=["GET", "POST"])
-async def trigger_indexnow():
-    url_list = get_all_sitemap_urls()
+async def trigger_indexnow(key: str = "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b"):
+    clean_key = re.sub(r"[^a-zA-Z0-9-]", "", key or "") or "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b"
+    url_list = list(get_all_sitemap_urls())
+    for extra_url in ["https://www.yt4mp3.com/sitemap.xml", "https://www.yt4mp3.com/feed.xml"]:
+        if extra_url not in url_list:
+            url_list.append(extra_url)
     payload = {
         "host": "www.yt4mp3.com",
-        "key": "8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b",
-        "keyLocation": "https://www.yt4mp3.com/8f9b3e1c4a2d7e5f9a0b1c2d3e4f5a6b.txt",
+        "key": clean_key,
+        "keyLocation": f"https://www.yt4mp3.com/{clean_key}.txt",
         "urlList": url_list
     }
     data = json.dumps(payload).encode("utf-8")
-    # Official unified IndexNow endpoint (automatically shares with Bing, Yandex, Seznam, Naver, Yep without duplicate spam pings)
+    # Official unified IndexNow endpoints (shares with Bing, Yandex, Seznam, Naver, Yep)
     endpoints = [
         "https://api.indexnow.org/indexnow",
-        "https://www.bing.com/indexnow"
+        "https://www.bing.com/indexnow",
+        "https://yandex.com/indexnow"
     ]
     results = {}
     for ep in endpoints:
@@ -1591,6 +1596,9 @@ async def localized_home_page(request: Request, lang: str):
         return RedirectResponse(url=f"/{lower_lang}/", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         clean_id = lang.strip("/")
+        if re.match(r'^[a-fA-F0-9-]{16,64}\.txt$', clean_id):
+            key_val = clean_id[:-4]
+            return Response(content=key_val, media_type="text/plain; charset=utf-8", headers=EDGE_HTML_HEADERS)
         if len(clean_id) == 11 and re.match(r'^[a-zA-Z0-9_-]{11}$', clean_id):
             return render_shortcut_page(request)
         if clean_id.startswith("4youtube") or clean_id.startswith("watch"):

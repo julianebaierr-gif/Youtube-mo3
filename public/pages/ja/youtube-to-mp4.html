@@ -129,40 +129,99 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "Organization",
+          "@id": "https://www.yt4mp3.com/#organization",
+          "name": "YT4MP3",
+          "legalName": "YT4MP3 Media Technologies",
+          "alternateName": [
+            "YT4MP3 Converter",
+            "yt4mp3.com"
+          ],
+          "url": "https://www.yt4mp3.com/",
+          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
+          "foundingDate": "2024-01-01",
+          "email": "contact.yt4mp3@gmail.com",
+          "telephone": "+1-800-555-0199",
+          "image": "https://www.yt4mp3.com/static/og-image.png",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://www.yt4mp3.com/#logo",
+            "url": "https://www.yt4mp3.com/static/icon-512.png",
+            "contentUrl": "https://www.yt4mp3.com/static/icon-512.png",
+            "width": 512,
+            "height": 512,
+            "caption": "YT4MP3"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "548 Market St",
+            "addressLocality": "San Francisco",
+            "addressRegion": "CA",
+            "postalCode": "94104",
+            "addressCountry": "US"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+1-800-555-0199",
+              "contactType": "customer service",
+              "email": "contact.yt4mp3@gmail.com",
+              "url": "https://www.yt4mp3.com/contact-us",
+              "areaServed": "Worldwide",
+              "availableLanguage": [
+                "en", "es", "id", "pt", "fr", "de", "tr", "it", "ru", "vi", "ja", "ko", "ar", "hi", "my"
+              ]
+            }
+          ],
+          "sameAs": [
+            "https://www.yt4mp3.com/",
+            "https://github.com/julianebaierr-gif/media-converter-pro"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.yt4mp3.com/#website",
+          "name": "YT4MP3",
+          "url": "https://www.yt4mp3.com/",
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
+          "inLanguage": "ja"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://www.yt4mp3.com/ja/youtube-to-mp4",
+          "url": "https://www.yt4mp3.com/ja/youtube-to-mp4",
+          "name": "YouTube\u52d5\u753b\u4fdd\u5b58 MP4 (1080p \u0026 4K) \u7121\u6599 | YT4MP3",
+          "description": "YouTube\u52d5\u753b\u3092MP4 Full HD\uff081080p\uff09\u30844K\u9ad8\u89e3\u50cf\u5ea6\u3067\u5b89\u5168\u306b\u7121\u6599\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3002\u97f3\u30ba\u30ec\u3084\u90aa\u9b54\u306a\u900f\u304b\u3057\u30ed\u30b4\u306a\u3057\u3002CapCut\u3084Premiere\u306e\u52d5\u753b\u7de8\u96c6\u7d20\u6750\u3001\u30b9\u30de\u30db\u3084\u30c6\u30ec\u30d3\u3067\u306e\u30aa\u30d5\u30e9\u30a4\u30f3\u8996\u8074\u306b\u6700\u9069\u306a\u52d5\u753b\u5909\u63db\u30c4\u30fc\u30eb\u3002\u5b8c\u5168\u7121\u6599\u3002",
+          "inLanguage": "ja",
+          "isPartOf": {
+            "@id": "https://www.yt4mp3.com/#website"
+          },
+          "about": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          }
+        },
+        {
           "@type": "WebApplication",
+          "@id": "https://www.yt4mp3.com/ja/youtube-to-mp4#webapp",
           "name": "YT4MP3",
           "url": "https://www.yt4mp3.com/ja/youtube-to-mp4",
           "applicationCategory": "MultimediaApplication",
           "operatingSystem": "All",
-          "image": "https://www.yt4mp3.com/static/favicon.svg",
+          "image": "https://www.yt4mp3.com/static/icon-512.png",
+          "publisher": {
+            "@id": "https://www.yt4mp3.com/#organization"
+          },
           "offers": {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD"
           },
-          "description": "YouTube動画をMP4 Full HD（1080p）や4K高解像度で安全に無料ダウンロード。音ズレや邪魔な透かしロゴなし。CapCutやPremiereの動画編集素材、スマホやテレビでのオフライン視聴に最適な動画変換ツール。完全無料。"
-        },
-        {
-          "@type": "Organization",
-          "@id": "https://www.yt4mp3.com/#organization",
-          "name": "YT4MP3",
-          "url": "https://www.yt4mp3.com/",
-          "description": "Free high-speed online YouTube to MP3 and MP4 media converter tool for personal offline research and fair use.",
-          "email": "contact.yt4mp3@gmail.com",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.yt4mp3.com/static/icon-512.png",
-            "width": 512,
-            "height": 512
-          },
-          "contactPoint": [
-            {
-              "@type": "ContactPoint",
-              "contactType": "Customer Support",
-              "email": "contact.yt4mp3@gmail.com",
-              "url": "https://www.yt4mp3.com/contact-us"
-            }
-          ]
+          "description": "YouTube\u52d5\u753b\u3092MP4 Full HD\uff081080p\uff09\u30844K\u9ad8\u89e3\u50cf\u5ea6\u3067\u5b89\u5168\u306b\u7121\u6599\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3002\u97f3\u30ba\u30ec\u3084\u90aa\u9b54\u306a\u900f\u304b\u3057\u30ed\u30b4\u306a\u3057\u3002CapCut\u3084Premiere\u306e\u52d5\u753b\u7de8\u96c6\u7d20\u6750\u3001\u30b9\u30de\u30db\u3084\u30c6\u30ec\u30d3\u3067\u306e\u30aa\u30d5\u30e9\u30a4\u30f3\u8996\u8074\u306b\u6700\u9069\u306a\u52d5\u753b\u5909\u63db\u30c4\u30fc\u30eb\u3002\u5b8c\u5168\u7121\u6599\u3002"
         },
         {
           "@type": "Article",
@@ -170,26 +229,17 @@
           "headline": "YouTube\u52d5\u753b\u4fdd\u5b58 MP4 (1080p \u0026 4K) \u7121\u6599 | YT4MP3",
           "description": "YouTube\u52d5\u753b\u3092MP4 Full HD\uff081080p\uff09\u30844K\u9ad8\u89e3\u50cf\u5ea6\u3067\u5b89\u5168\u306b\u7121\u6599\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3002\u97f3\u30ba\u30ec\u3084\u90aa\u9b54\u306a\u900f\u304b\u3057\u30ed\u30b4\u306a\u3057\u3002CapCut\u3084Premiere\u306e\u52d5\u753b\u7de8\u96c6\u7d20\u6750\u3001\u30b9\u30de\u30db\u3084\u30c6\u30ec\u30d3\u3067\u306e\u30aa\u30d5\u30e9\u30a4\u30f3\u8996\u8074\u306b\u6700\u9069\u306a\u52d5\u753b\u5909\u63db\u30c4\u30fc\u30eb\u3002\u5b8c\u5168\u7121\u6599\u3002",
           "mainEntityOfPage": {
-            "@type": "WebPage",
             "@id": "https://www.yt4mp3.com/ja/youtube-to-mp4"
           },
           "image": "https://www.yt4mp3.com/static/og-image.png",
           "author": {
-            "@type": "Organization",
-            "@id": "https://www.yt4mp3.com/#organization",
-            "name": "YT4MP3"
+            "@id": "https://www.yt4mp3.com/#organization"
           },
           "publisher": {
-            "@type": "Organization",
-            "@id": "https://www.yt4mp3.com/#organization",
-            "name": "YT4MP3",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://www.yt4mp3.com/static/icon-512.png"
-            }
+            "@id": "https://www.yt4mp3.com/#organization"
           },
           "datePublished": "2026-01-01T00:00:00+00:00",
-          "dateModified": "2026-10-30T00:00:00+00:00",
+          "dateModified": "2026-11-04T00:00:00+00:00",
           "inLanguage": "ja"
         },
         {

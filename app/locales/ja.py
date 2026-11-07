@@ -648,7 +648,7 @@ KEYWORDS_RESEARCH["shorts_keywords"] = ['YouTubeショート保存',
  'YT4MP3をスマホのホーム画面に追加してアプリ化する方法',
  '1080pのショート動画のファイルサイズ容量はどれくらい']
 UI["nav_shorts"] = 'YouTubeショート'
-PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 - ShortsをMP4＆MP3に変換ダウンロード | YT4MP3',
+PAGES["youtube-shorts-downloader"] = {'title': 'YouTubeショート保存 (1080p MP4＆MP3変換) | YT4MP3',
  'meta_desc': 'YouTubeショート動画を1080pフルHD MP4動画および320kbps MP3音声で無料ダウンロード。透かしロゴなし、危険な広告なし。iPhone、Android、PCのブラウザからワンタップで即座に保存できます。登録不要・完全無料。',
  'h1': 'YouTubeショート動画をオンライン保存',
  'subtitle': 'YouTube Shortsの縦型動画をオリジナルの1080pフルHD高画質または320kbps高音質MP3としてロゴなしで保存。高速・完全無料・アプリ不要。',
