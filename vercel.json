@@ -10,16 +10,18 @@
       "use": "@vercel/python",
       "config": {
         "includeFiles": [
-          "public/**",
-          "templates/**",
-          "static/**"
+          "public/*.xml",
+          "public/*.txt",
+          "public/*.json",
+          "public/*.js",
+          "templates/**"
         ]
       }
     }
   ],
   "headers": [
     {
-      "source": "/(youtube-to-.*|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy|)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
@@ -32,10 +34,6 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800"
         }
       ]
     },
@@ -183,6 +181,62 @@
     {
       "src": "/rss.xml",
       "dest": "/public/feed.xml"
+    },
+    {
+      "src": "/favicon\\.(ico|svg)",
+      "dest": "/public/favicon.svg"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/public/static/$1"
+    },
+    {
+      "src": "/(index\\.html|index\\.php|home|home/|en|en/)",
+      "status": 301,
+      "headers": {
+        "Location": "/"
+      }
+    },
+    {
+      "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy)/",
+      "status": 301,
+      "headers": {
+        "Location": "/$1"
+      }
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)",
+      "status": 301,
+      "headers": {
+        "Location": "/$1/"
+      }
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)/",
+      "status": 301,
+      "headers": {
+        "Location": "/$1/$2"
+      }
+    },
+    {
+      "src": "/",
+      "dest": "/public/pages/en/index.html"
+    },
+    {
+      "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)",
+      "dest": "/public/pages/en/$1.html"
+    },
+    {
+      "src": "/(contact-us|terms-of-service|privacy-policy)",
+      "dest": "/public/pages/legal/$1.html"
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/",
+      "dest": "/public/pages/$1/index.html"
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)",
+      "dest": "/public/pages/$1/$2.html"
     },
     {
       "src": "/public/(.*)",
