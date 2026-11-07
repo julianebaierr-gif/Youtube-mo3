@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter (320kbps & 1080p)',
+SEO_PAGES = {'home': {'title': 'YT4MP3 - YouTube to MP3 & MP4 Converter | 320kbps & 1080p',
           'meta_desc': 'YT4MP3 is the best free YouTube to MP3 and MP4 converter. Convert YouTube '
                        'videos in 320kbps audio and 1080p Full HD video fast with no pop-ups.',
           'h1': 'YT4MP3 - YouTube to MP3 & MP4 Converter',

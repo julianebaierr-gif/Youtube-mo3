@@ -120,7 +120,7 @@ UI = {
 
 PAGES = {
     "home": {
-        "title": "Convertisseur YouTube en MP3 et MP4 Gratuit | YT4MP3",
+        "title": "Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3",
         "meta_desc": "Convertissez et téléchargez des vidéos YouTube en MP3 320kbps et MP4 1080p/4K gratuitement. Sans logiciel ni inscription, compatible mobile et PC.",
         "h1": "Convertisseur YouTube en MP3 et MP4 en Ligne",
         "subtitle": "Extrayez l'audio en haute fidélité jusqu'à 320 kbps et téléchargez des vidéos en Full HD ou 4K directement dans votre navigateur sans installer d'application.",
@@ -438,7 +438,7 @@ PAGES = {
 </ul>"""
     },
     "youtube-to-mp4": {
-        "title": "Télécharger Vidéo YouTube MP4 1080p et 4K Gratuit | YT4MP3",
+        "title": "Télécharger Vidéo YouTube en MP4 1080p et 4K Gratuit",
         "meta_desc": "Téléchargez des vidéos YouTube en MP4 Full HD (1080p) et 4K gratuitement. Sans filigrane, image nette, rapide et prêt pour le montage vidéo.",
         "h1": "Télécharger Vidéos YouTube en MP4 Full HD",
         "subtitle": "Enregistrez vos documentaires, tutoriels, clips et cours favoris au format universel MP4 avec la résolution maximale disponible et un son synchronisé.",

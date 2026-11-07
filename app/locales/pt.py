@@ -310,7 +310,7 @@ PAGES = {
 <p>Incentivamos o uso da tecnologia para a preservação de arquivos de estudo, backups de vídeos próprios, conteúdos de domínio público e produções sob licença Creative Commons. Ter uma cópia local de materiais importantes garante seu acesso constante a fontes valiosas de informação e entretenimento, mesmo quando você estiver desconectado da rede mundial de computadores.</p>"""
     },
     "youtube-to-mp3": {
-        "title": "Conversor YouTube para MP3 320kbps Alta Qualidade | YT4MP3",
+        "title": "Conversor YouTube para MP3 320kbps de Alta Qualidade",
         "meta_desc": "Converta vídeos do YouTube em MP3 de 320 kbps grátis. Som cristalino, sem aplicativo, rápido e compatível com celulares, pendrive e som automotivo.",
         "h1": "Conversor YouTube para MP3 Alta Definição",
         "subtitle": "Baixe músicas, sets de DJ, podcasts, cultos e trilhas sonoras em formato MP3 de alta fidelidade com bitrate de até 320 kbps.",
