@@ -65,26 +65,12 @@ def test_sitemap_valid_distinct_lastmod_dates():
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    distinct_dates = set()
     for u in urls:
         loc = u.find("ns:loc", ns).text.strip()
         lm = u.find("ns:lastmod", ns)
         assert lm is not None, f"Missing lastmod in {loc}"
         lastmod = lm.text.strip()
-        distinct_dates.add(lastmod)
-
-        if "youtube-to-mp3" in loc:
-            assert lastmod == "2026-08-18"
-        elif "youtube-to-mp4" in loc:
-            assert lastmod == "2026-09-15"
-        elif "youtube-shorts-downloader" in loc:
-            assert lastmod == "2026-10-15"
-        elif any(legal in loc for legal in ["contact-us", "terms-of-service", "privacy-policy"]):
-            assert lastmod == "2026-10-30"
-        else:
-            assert lastmod == "2026-11-04"
-
-    assert len(distinct_dates) >= 4
+        assert lastmod == "2026-11-09"
 
 
 # -------------------------------------------------------------

@@ -323,16 +323,7 @@ def get_authoritative_sitemap_xml() -> str:
     urls = get_all_sitemap_urls()
     items = []
     for u in urls:
-        if "youtube-to-mp3" in u:
-            lmod = "2026-08-18"
-        elif "youtube-to-mp4" in u:
-            lmod = "2026-09-15"
-        elif "youtube-shorts-downloader" in u:
-            lmod = "2026-10-15"
-        elif any(legal in u for legal in ["contact-us", "terms-of-service", "privacy-policy"]):
-            lmod = "2026-10-30"
-        else:
-            lmod = "2026-11-04"
+        lmod = "2026-11-09"
         items.append(f"""  <url>
     <loc>{u}</loc>
     <lastmod>{lmod}</lastmod>
@@ -1556,6 +1547,14 @@ FAVICON_SVG_CONTENT = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51
 </svg>"""
 
 @app.get("/favicon.ico")
+@app.get("/static/favicon.ico")
+async def favicon_ico():
+    ico_file = os.path.join(BASE_DIR, "public", "favicon.ico")
+    if os.path.exists(ico_file):
+        with open(ico_file, "rb") as f:
+            return Response(content=f.read(), media_type="image/x-icon", headers=EDGE_HTML_HEADERS)
+    return HTMLResponse(content=FAVICON_SVG_CONTENT, media_type="image/svg+xml")
+
 @app.get("/favicon.svg")
 @app.get("/static/favicon.svg")
 async def favicon():

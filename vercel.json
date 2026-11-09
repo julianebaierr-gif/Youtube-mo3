@@ -14,6 +14,7 @@
           "public/*.txt",
           "public/*.json",
           "public/*.js",
+          "public/*.ico",
           "templates/**"
         ]
       }
@@ -219,7 +220,11 @@
       "dest": "/public/feed.xml"
     },
     {
-      "src": "/favicon\\.(ico|svg)",
+      "src": "/favicon\\.ico",
+      "dest": "/public/favicon.ico"
+    },
+    {
+      "src": "/favicon\\.svg",
       "dest": "/public/favicon.svg"
     },
     {
