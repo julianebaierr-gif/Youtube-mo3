@@ -170,6 +170,19 @@
       "dest": "/public/robots.txt"
     },
     {
+      "src": "/sitemap\\.xml",
+      "has": [
+        {
+          "type": "host",
+          "value": "yt4mp3.com"
+        }
+      ],
+      "status": 301,
+      "headers": {
+        "Location": "https://www.yt4mp3.com/sitemap.xml"
+      }
+    },
+    {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml"
     },
