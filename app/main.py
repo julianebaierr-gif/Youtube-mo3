@@ -768,7 +768,7 @@ def pick_best_proxy_country(allowed_countries: list) -> str:
 
 def get_proxy_format_selector(mode: str = "audio", quality: str = "720") -> str:
     if mode == "audio":
-        return "140/ba[ext=m4a]/ba/251/bestaudio/best"
+        return "140/ba[ext=m4a]/ba/251/bestaudio/18/best"
     # User requirement: Strictly capped at 720p maximum! Never exceed 720p.
     return "18/22/b[height<=720]/bv*[height<=720]+ba/best[height<=720]/best"
 
@@ -779,7 +779,7 @@ def resolve_dataimpulse_stream(yt_url: str, mode: str = "audio", quality: str = 
     proxy_url = get_dataimpulse_proxy_url(country=target_country, session_id=session_id)
     fmt_selector = get_proxy_format_selector(mode=mode, quality=quality)
     
-    ydl_opts = {
+    base_opts = {
         "proxy": proxy_url,
         "quiet": True,
         "no_warnings": True,
@@ -789,8 +789,23 @@ def resolve_dataimpulse_stream(yt_url: str, mode: str = "audio", quality: str = 
         "socket_timeout": 25,
     }
     
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(yt_url, download=False)
+    info = None
+    last_err = None
+    for client_try in [["android", "web"], None]:
+        ydl_opts = dict(base_opts)
+        if client_try:
+            ydl_opts["extractor_args"] = {"youtube": {"player_client": client_try}}
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(yt_url, download=False)
+            if info and (info.get("url") or info.get("requested_formats")):
+                break
+        except Exception as e:
+            last_err = e
+            info = None
+            
+    if not info:
+        raise last_err or ValueError("Could not extract stream info via residential proxy")
         
     stream_url = info.get("url")
     if not stream_url and info.get("requested_formats"):
@@ -930,6 +945,36 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     except Exception as e:
         detail_err = str(e)
 
+    # 3. Fallback: If FastSaver failed (e.g. download.failed on YouTube Kids / special streams) and video is not unsupported,
+    # automatically recover via DataImpulse Residential Proxy (strictly capped at 720p max)
+    if not res_meta.get("is_unsupported"):
+        try:
+            clean_q = re.sub(r"[^0-9]", "", str(quality)) or "720"
+            if mode == "video" and int(clean_q) > 720:
+                clean_q = "720"
+            stream_data = resolve_dataimpulse_stream(
+                url,
+                mode=mode,
+                quality=clean_q,
+                target_country=target_country or "us"
+            )
+            sid = stream_data["session_id"]
+            title = stream_data["title"]
+            ext = stream_data["ext"]
+            stream_raw_url = stream_data.get("stream_url", "")
+            surl = base64.urlsafe_b64encode(stream_raw_url.encode("utf-8")).decode("ascii") if stream_raw_url else ""
+            clean_title = re.sub(r'[\/:*?"<>|\r\n\t]', "_", title).strip() or "video"
+            download_url = f"/api/proxy-download?sid={sid}&vid={vid}&mode={mode}&ext={ext}&title={urllib.parse.quote(clean_title)}&country={target_country or 'us'}&surl={surl}"
+            return {
+                "success": True,
+                "download_url": download_url,
+                "filename": f"{clean_title}.{ext}",
+                "engine": "residential_proxy_fallback",
+                "capped_at_720": True,
+            }
+        except Exception as fallback_err:
+            print(f"[DATAIMPULSE_FALLBACK_FAIL] {vid}: {fallback_err}")
+
     return {
         "success": False,
         "error": detail_err,
@@ -1055,12 +1100,25 @@ def _fetch_youtube_watch_html(vid: str) -> str:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
     }
+    html = ""
     try:
         req = urllib.request.Request(yt_url, headers=req_headers)
-        with urllib.request.urlopen(req, timeout=5) as r:
-            return r.read().decode("utf-8", "ignore")
+        with urllib.request.urlopen(req, timeout=4) as r:
+            html = r.read().decode("utf-8", "ignore")
     except Exception:
-        return ""
+        html = ""
+    if '"playabilityStatus"' not in html:
+        try:
+            proxy_url = get_dataimpulse_proxy_url(country="us", session_id=f"watch{vid[:6]}")
+            opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+            req_p = urllib.request.Request(yt_url, headers=req_headers)
+            with opener.open(req_p, timeout=6) as r_p:
+                html_p = r_p.read().decode("utf-8", "ignore")
+                if '"playabilityStatus"' in html_p:
+                    html = html_p
+        except Exception:
+            pass
+    return html
 
 
 _VIDEO_RES_CACHE = {}
