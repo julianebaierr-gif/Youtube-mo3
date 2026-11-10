@@ -39,6 +39,19 @@
       ]
     },
     {
+      "source": "/(BingSiteAuth.xml|bingsiteauth.xml)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/sitemap.xml",
       "headers": [
         {
@@ -202,6 +215,10 @@
     {
       "src": "/sw.js",
       "dest": "/public/sw.js"
+    },
+    {
+      "src": "/(BingSiteAuth|bingsiteauth)\\.xml",
+      "dest": "/public/BingSiteAuth.xml"
     },
     {
       "src": "/google7dfcf5b26cc1f483.html",

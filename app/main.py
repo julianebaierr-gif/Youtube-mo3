@@ -273,6 +273,17 @@ async def service_worker_endpoint():
 
 
 # SEO, Discovery & System Endpoints
+@app.api_route("/BingSiteAuth.xml", methods=["GET", "HEAD"])
+@app.api_route("/bingsiteauth.xml", methods=["GET", "HEAD"])
+async def bing_site_auth():
+    bing_file = os.path.join(BASE_DIR, "public", "BingSiteAuth.xml")
+    if os.path.exists(bing_file):
+        with open(bing_file, "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="application/xml; charset=utf-8", headers=EDGE_HTML_HEADERS)
+    content = '<?xml version="1.0"?>\n<users>\n\t<user>98533D5A610C8BB068BDE589D75E9C6F</user>\n</users>\n'
+    return Response(content=content, media_type="application/xml; charset=utf-8", headers=EDGE_HTML_HEADERS)
+
 @app.api_route("/ads.txt", methods=["GET", "HEAD"])
 async def ads_txt():
     ads_file = os.path.join(BASE_DIR, "public", "ads.txt")
