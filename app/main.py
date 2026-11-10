@@ -772,13 +772,111 @@ def get_proxy_format_selector(mode: str = "audio", quality: str = "720") -> str:
     # User requirement: Strictly capped at 720p maximum! Never exceed 720p.
     return "18/22/b[height<=720]/bv*[height<=720]+ba/best[height<=720]/best"
 
+def _extract_via_innertube_android(vid: str, proxy_url: str, mode: str = "audio") -> dict:
+    if not vid or len(vid) != 11:
+        return {}
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url}))
+    w_req = urllib.request.Request(
+        f"https://www.youtube.com/watch?v={vid}&hl=en&gl=US",
+        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36"},
+    )
+    visitor_data = ""
+    with opener.open(w_req, timeout=8) as r_w:
+        w_html = r_w.read().decode("utf-8", "ignore")
+    m_vis = re.search(r'"VISITOR_DATA":\s*"([^"]+)"|"visitorData":\s*"([^"]+)"', w_html)
+    if m_vis:
+        visitor_data = m_vis.group(1) or m_vis.group(2) or ""
+
+    client_ctx = {
+        "androidSdkVersion": 30,
+        "clientName": "ANDROID",
+        "clientVersion": "21.26.364",
+        "hl": "en",
+        "osName": "Android",
+        "osVersion": "11",
+        "userAgent": "com.google.android.youtube/21.26.364 (Linux; U; Android 11) gzip",
+    }
+    if visitor_data:
+        client_ctx["visitorData"] = visitor_data
+
+    payload = {
+        "videoId": vid,
+        "context": {"client": client_ctx},
+        "contentCheckOk": True,
+        "racyCheckOk": True,
+    }
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "com.google.android.youtube/21.26.364 (Linux; U; Android 11) gzip",
+        "X-Goog-Api-Format-Version": "2",
+        "X-YouTube-Client-Name": "3",
+        "X-YouTube-Client-Version": "21.26.364",
+    }
+    if visitor_data:
+        headers["X-Goog-Visitor-Id"] = visitor_data
+
+    req = urllib.request.Request(
+        "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+        data=json.dumps(payload).encode("utf-8"),
+        headers=headers,
+        method="POST",
+    )
+    with opener.open(req, timeout=10) as r:
+        data = json.loads(r.read().decode("utf-8"))
+
+    sd = data.get("streamingData") or {}
+    vd = data.get("videoDetails") or {}
+    title = vd.get("title") or "YouTube Media"
+    prog_formats = [f for f in (sd.get("formats") or []) if f.get("url")]
+    adap_formats = [f for f in (sd.get("adaptiveFormats") or []) if f.get("url")]
+
+    chosen = None
+    if mode == "audio":
+        for pref_itag in [140, 251, 139, 250, 249]:
+            for f in adap_formats:
+                if f.get("itag") == pref_itag:
+                    chosen = f
+                    break
+            if chosen:
+                break
+        if not chosen and prog_formats:
+            chosen = prog_formats[0]
+    else:
+        valid_prog = [f for f in prog_formats if int(f.get("height") or 360) <= 720]
+        if valid_prog:
+            valid_prog.sort(key=lambda x: int(x.get("height") or 360), reverse=True)
+            chosen = valid_prog[0]
+        elif prog_formats:
+            chosen = prog_formats[0]
+
+    if chosen and chosen.get("url"):
+        raw_h = int(chosen.get("height") or (360 if mode == "video" else 0))
+        return {
+            "url": chosen["url"],
+            "title": title,
+            "height": min(raw_h, 720) if mode == "video" else 0,
+        }
+    return {}
+
 def resolve_dataimpulse_stream(yt_url: str, mode: str = "audio", quality: str = "720", target_country: str = None) -> dict:
     import yt_dlp
     import time
     session_id = uuid.uuid4().hex[:10]
     proxy_url = get_dataimpulse_proxy_url(country=target_country, session_id=session_id)
     fmt_selector = get_proxy_format_selector(mode=mode, quality=quality)
-    
+
+    m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", yt_url or "")
+    vid = m_vid.group(1) if m_vid else ""
+
+    info = None
+    if vid:
+        try:
+            it_res = _extract_via_innertube_android(vid, proxy_url, mode=mode)
+            if it_res and it_res.get("url"):
+                info = it_res
+        except Exception:
+            info = None
+
     base_opts = {
         "proxy": proxy_url,
         "quiet": True,
@@ -789,20 +887,20 @@ def resolve_dataimpulse_stream(yt_url: str, mode: str = "audio", quality: str = 
         "socket_timeout": 25,
     }
     
-    info = None
     last_err = None
-    for client_try in [["android", "web"], None]:
-        ydl_opts = dict(base_opts)
-        if client_try:
-            ydl_opts["extractor_args"] = {"youtube": {"player_client": client_try}}
-        try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(yt_url, download=False)
-            if info and (info.get("url") or info.get("requested_formats")):
-                break
-        except Exception as e:
-            last_err = e
-            info = None
+    if not info:
+        for client_try in [["android", "web"], None]:
+            ydl_opts = dict(base_opts)
+            if client_try:
+                ydl_opts["extractor_args"] = {"youtube": {"player_client": client_try}}
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(yt_url, download=False)
+                if info and (info.get("url") or info.get("requested_formats")):
+                    break
+            except Exception as e:
+                last_err = e
+                info = None
             
     if not info:
         raise last_err or ValueError("Could not extract stream info via residential proxy")
