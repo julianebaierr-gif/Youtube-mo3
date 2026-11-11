@@ -167,6 +167,32 @@
   ],
   "routes": [
     {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "yt4mp3.com"
+        }
+      ],
+      "status": 301,
+      "headers": {
+        "Location": "https://www.yt4mp3.com/$1"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.yt4mp3.cc"
+        }
+      ],
+      "status": 301,
+      "headers": {
+        "Location": "https://www.yt4mp3.com/$1"
+      }
+    },
+    {
       "src": "/robots\\.text",
       "status": 301,
       "headers": {

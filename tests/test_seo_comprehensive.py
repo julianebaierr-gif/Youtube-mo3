@@ -314,3 +314,37 @@ def test_converter_ui_and_scripts_preserved():
     assert 'convert_btn' in html or 'Convert' in html
     # Language switcher dropdown preservation
     assert 'class="language-selector' in html or 'id="langSelect' in html or 'href="/es/"' in html
+
+
+# -------------------------------------------------------------
+# 7. Canonical Domain Host 301 Redirect Tests (SEO Duplicate Host Protection)
+# -------------------------------------------------------------
+def test_non_www_to_www_301_redirect():
+    # Test FastAPI application level middleware
+    test_client = TestClient(app, follow_redirects=False)
+    
+    # 1. Root path on non-www
+    r1 = test_client.get("/", headers={"Host": "yt4mp3.com"})
+    assert r1.status_code == 301
+    assert r1.headers.get("location") == "https://www.yt4mp3.com/"
+    
+    # 2. Sub-path on non-www
+    r2 = test_client.get("/youtube-to-mp3", headers={"Host": "yt4mp3.com"})
+    assert r2.status_code == 301
+    assert r2.headers.get("location") == "https://www.yt4mp3.com/youtube-to-mp3"
+    
+    # 3. Canonical www domain serves 200 OK
+    r3 = test_client.get("/", headers={"Host": "www.yt4mp3.com"})
+    assert r3.status_code == 200
+    
+    # 4. Verify vercel.json has top-priority Edge 301 redirect rule
+    import json
+    with open("vercel.json", "r") as f:
+        vcfg = json.load(f)
+    routes = vcfg.get("routes", [])
+    assert len(routes) > 0
+    top_route = routes[0]
+    assert top_route.get("status") == 301
+    assert top_route.get("has", [{}])[0].get("value") == "yt4mp3.com"
+    assert top_route.get("headers", {}).get("Location") == "https://www.yt4mp3.com/$1"
+
