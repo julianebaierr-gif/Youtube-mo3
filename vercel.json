@@ -12,6 +12,7 @@
         "maxDuration": 60,
         "includeFiles": [
           "public/*.xml",
+          "public/*.xsl",
           "public/*.txt",
           "public/*.json",
           "public/*.js",
@@ -66,6 +67,23 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xsl",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/xsl; charset=utf-8"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "inline"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=86400"
         }
       ]
     },
@@ -226,6 +244,10 @@
     {
       "src": "/sitemap.xml",
       "dest": "/public/sitemap.xml"
+    },
+    {
+      "src": "/sitemap\\.xsl",
+      "dest": "/public/sitemap.xsl"
     },
     {
       "src": "/llms.txt",

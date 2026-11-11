@@ -334,12 +334,12 @@ def get_authoritative_sitemap_xml() -> str:
     urls = get_all_sitemap_urls()
     items = []
     for u in urls:
-        lmod = "2026-11-09"
+        lmod = "2026-11-11"
         items.append(f"""  <url>
     <loc>{u}</loc>
     <lastmod>{lmod}</lastmod>
   </url>""")
-    _SITEMAP_CACHE_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(items) + "\n</urlset>"
+    _SITEMAP_CACHE_XML = '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(items) + "\n</urlset>"
     return _SITEMAP_CACHE_XML
 
 @app.api_route("/sitemap.xml", methods=["GET", "HEAD"])
@@ -348,6 +348,15 @@ async def sitemap_xml():
     sitemap_headers = dict(EDGE_HTML_HEADERS)
     sitemap_headers["Content-Disposition"] = 'inline; filename="sitemap.xml"'
     return Response(content=xml_content, media_type="application/xml; charset=utf-8", headers=sitemap_headers)
+
+@app.api_route("/sitemap.xsl", methods=["GET", "HEAD"])
+async def sitemap_xsl():
+    xsl_file = os.path.join(BASE_DIR, "public", "sitemap.xsl")
+    if os.path.exists(xsl_file):
+        with open(xsl_file, "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="text/xsl; charset=utf-8", headers={"Cache-Control": "public, max-age=86400, s-maxage=86400"})
+    raise HTTPException(status_code=404, detail="Sitemap stylesheet not found")
 
 # Redirect any alternate/legacy sitemap endpoints to the single authoritative sitemap
 @app.api_route("/sitemap_index.xml", methods=["GET", "HEAD"])
@@ -444,7 +453,7 @@ def get_authoritative_feed_xml() -> str:
     <link>https://www.yt4mp3.com/</link>
     <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 04 Nov 2026 13:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 11 Nov 2026 13:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""

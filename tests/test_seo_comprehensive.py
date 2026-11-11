@@ -70,7 +70,19 @@ def test_sitemap_valid_distinct_lastmod_dates():
         lm = u.find("ns:lastmod", ns)
         assert lm is not None, f"Missing lastmod in {loc}"
         lastmod = lm.text.strip()
-        assert lastmod == "2026-11-09"
+        assert lastmod == "2026-11-11"
+
+def test_sitemap_has_clean_xsl_stylesheet():
+    res = client.get("/sitemap.xml")
+    assert res.status_code == 200
+    assert '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>' in res.text
+
+    # Verify sitemap.xsl route is accessible and valid
+    xsl_res = client.get("/sitemap.xsl")
+    assert xsl_res.status_code == 200
+    assert "text/xsl" in xsl_res.headers.get("content-type", "")
+    assert "<xsl:stylesheet" in xsl_res.text
+    assert "XML Sitemap" in xsl_res.text
 
 
 # -------------------------------------------------------------
@@ -92,7 +104,7 @@ def test_rss_xml_parsing_and_structure():
     assert channel.find("link").text == "https://www.yt4mp3.com/"
     assert "converting YouTube videos to MP3 and MP4" in channel.find("description").text
     assert channel.find("language").text == "en-us"
-    assert "04 Nov 2026" in channel.find("lastBuildDate").text
+    assert "11 Nov 2026" in channel.find("lastBuildDate").text
 
 
 def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():

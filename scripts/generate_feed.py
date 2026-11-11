@@ -51,7 +51,7 @@ def build_feed_xml() -> str:
     <link>https://www.yt4mp3.com/</link>
     <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 04 Nov 2026 13:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 11 Nov 2026 13:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""
