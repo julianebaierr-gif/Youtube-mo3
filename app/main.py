@@ -1011,7 +1011,7 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
                 "is_regional": True,
             }
 
-    # 2. For ALL normal videos (NOT country locked): Use FastSaver Pro Paid API ONLY. No proxy!
+    # 2. For ALL normal videos (NOT country locked): Use FastSaver Pro Paid API with auto-retry
     headers = {
         "X-Api-Key": FASTSAVER_API_KEY,
         "Content-Type": "application/json",
@@ -1020,39 +1020,61 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     }
     if mode == "audio":
         fmt = "audio"
+        fs_formats_to_try = ["audio"]
     else:
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
         fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
         fmt = fmt_map.get(q, "720p")
-    body = json.dumps({"url": url, "format": fmt}).encode("utf-8")
+        fs_formats_to_try = [fmt]
+        # If requested a lower/mid resolution like 480p or 360p, also allow fallback to 720p if needed
+        if fmt not in ["720p", "1080p", "2160p"]:
+            fs_formats_to_try.append("720p")
+
     detail_err = "Conversion could not be completed"
-    try:
-        req = urllib.request.Request(
-            "https://api.fastsaver.io/v1/youtube/download",
-            data=body,
-            headers=headers,
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=40) as res:
-            data = json.loads(res.read().decode("utf-8"))
-        _check_fastsaver_credits_and_alert(force_check=True)
-        if data.get("ok") and data.get("download_url"):
-            return {
-                "success": True,
-                "download_url": data["download_url"],
-                "filename": data.get("filename", ""),
-                "engine": "fastsaver",
-            }
-        detail_err = str(data.get("detail", "fastsaver_unknown_error"))
-    except urllib.error.HTTPError as e:
-        try:
-            err_body = json.loads(e.read().decode("utf-8", "ignore"))
-            detail_err = str(err_body.get("detail", f"HTTP {e.code}"))
-        except Exception:
-            detail_err = f"HTTP {e.code}"
-        _check_fastsaver_credits_and_alert(force_check=False)
-    except Exception as e:
-        detail_err = str(e)
+    import time
+    fastsaver_succeeded = False
+    for target_fmt in fs_formats_to_try:
+        body = json.dumps({"url": url, "format": target_fmt}).encode("utf-8")
+        # Try up to 2 times for each format with a 1.2s delay to absorb transient worker hiccups
+        for attempt in range(2):
+            try:
+                req = urllib.request.Request(
+                    "https://api.fastsaver.io/v1/youtube/download",
+                    data=body,
+                    headers=headers,
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=18) as res:
+                    data = json.loads(res.read().decode("utf-8"))
+                _check_fastsaver_credits_and_alert(force_check=True)
+                if data.get("ok") and data.get("download_url"):
+                    return {
+                        "success": True,
+                        "download_url": data["download_url"],
+                        "filename": data.get("filename", ""),
+                        "engine": "fastsaver",
+                    }
+                detail_err = str(data.get("detail", "fastsaver_unknown_error"))
+                # If FastSaver returned transient download.failed on attempt 0, pause and retry
+                if detail_err == "download.failed" and attempt == 0:
+                    time.sleep(1.2)
+                    continue
+            except urllib.error.HTTPError as e:
+                try:
+                    err_body = json.loads(e.read().decode("utf-8", "ignore"))
+                    detail_err = str(err_body.get("detail", f"HTTP {e.code}"))
+                except Exception:
+                    detail_err = f"HTTP {e.code}"
+                _check_fastsaver_credits_and_alert(force_check=False)
+                if attempt == 0:
+                    time.sleep(1.0)
+                    continue
+            except Exception as e:
+                detail_err = str(e)
+                if attempt == 0:
+                    time.sleep(1.0)
+                    continue
+            break  # Break inner loop if not continuing
 
     # 3. Fallback: If FastSaver failed (e.g. download.failed on YouTube Kids / special streams) and video is not unsupported,
     # automatically recover via DataImpulse Residential Proxy (strictly capped at 720p max)
@@ -1084,9 +1106,14 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         except Exception as fallback_err:
             print(f"[DATAIMPULSE_FALLBACK_FAIL] {vid}: {fallback_err}")
 
+    user_facing_error = detail_err
+    if detail_err in ["download.failed", "fastsaver_unknown_error"]:
+        user_facing_error = "Stream server is temporarily busy. Please tap Retry to reconnect."
+
     return {
         "success": False,
-        "error": detail_err,
+        "error": user_facing_error,
+        "raw_error": detail_err,
         "is_unsupported": bool(res_meta.get("is_unsupported")),
         "unsupported_reason": res_meta.get("unsupported_reason"),
         "is_regional": False,
