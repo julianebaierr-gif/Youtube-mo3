@@ -185,6 +185,13 @@
   ],
   "routes": [
     {
+      "src": "/(?:static/)?og-image\\.png",
+      "status": 301,
+      "headers": {
+        "Location": "https://www.yt4mp3.com/static/icon-512.png"
+      }
+    },
+    {
       "src": "/(.*)",
       "has": [
         {
