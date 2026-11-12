@@ -5,9 +5,7 @@ Manages blog metadata, localized strings, and article dispatching across all 15 
 
 from typing import Dict, List, Any, Optional
 from app.i18n import SUPPORTED_LANGUAGES
-
-# Currently empty as requested: No articles published yet
-BLOG_ARTICLES: List[Dict[str, Any]] = []
+from app.articles_data import BLOG_ARTICLES
 
 BLOG_I18N_PAGES: Dict[str, Dict[str, Any]] = {
     "en": {

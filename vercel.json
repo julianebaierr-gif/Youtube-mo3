@@ -312,10 +312,10 @@
       }
     },
     {
-      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)",
+      "src": "/blog/youtube-to-mp3-converter-free-guide/",
       "status": 301,
       "headers": {
-        "Location": "/$1/"
+        "Location": "/blog/youtube-to-mp3-converter-free-guide"
       }
     },
     {
@@ -323,6 +323,13 @@
       "status": 301,
       "headers": {
         "Location": "/$1/blog/"
+      }
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/blog/youtube-to-mp3-converter-free-guide/",
+      "status": 301,
+      "headers": {
+        "Location": "/$1/blog/youtube-to-mp3-converter-free-guide"
       }
     },
     {
@@ -341,6 +348,10 @@
       "dest": "/public/pages/en/blog.html"
     },
     {
+      "src": "/blog/youtube-to-mp3-converter-free-guide",
+      "dest": "/public/pages/en/blog/youtube-to-mp3-converter-free-guide.html"
+    },
+    {
       "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)",
       "dest": "/public/pages/en/$1.html"
     },
@@ -355,6 +366,10 @@
     {
       "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/blog/",
       "dest": "/public/pages/$1/blog.html"
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/blog/youtube-to-mp3-converter-free-guide",
+      "dest": "/public/pages/$1/blog/youtube-to-mp3-converter-free-guide.html"
     },
     {
       "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)",

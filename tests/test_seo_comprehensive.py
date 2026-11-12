@@ -26,14 +26,14 @@ def test_sitemap_xml_parsing_and_namespace():
     assert root.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}urlset"
 
 
-def test_sitemap_contains_exact_78_urls_and_no_duplicates():
+def test_sitemap_contains_exact_93_urls_and_no_duplicates():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    # Requirement: 78 URLs (63 core converter + legal pages + 15 multilingual blog hubs)
-    assert len(urls) == 78, f"Expected exactly 78 URLs in sitemap, found {len(urls)}"
+    # Requirement: 93 URLs (63 core converter + legal pages + 15 multilingual blog hubs + 15 multilingual articles)
+    assert len(urls) == 93, f"Expected exactly 93 URLs in sitemap, found {len(urls)}"
     
     loc_list = [u.find("ns:loc", ns).text.strip() for u in urls]
     
@@ -254,7 +254,7 @@ def test_sitemap_xhtml_hreflang_links():
         assert "x-default" in langs
         assert "en" in langs
         assert "es" in langs
-    assert localized_count == 75
+    assert localized_count == 90
 
 
 def test_shortcut_routes_noindex_and_no_spam():
@@ -285,15 +285,15 @@ def test_shortcut_routes_noindex_and_no_spam():
 
 
 # -------------------------------------------------------------
-# 5. Technical Indexing & Status 200 for all 78 URLs
+# 5. Technical Indexing & Status 200 for all 93 URLs
 # -------------------------------------------------------------
-def test_all_78_sitemap_urls_accessible_and_indexable():
+def test_all_93_sitemap_urls_accessible_and_indexable():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = [u.find("ns:loc", ns).text.strip() for u in root.findall("ns:url", ns)]
 
-    assert len(urls) == 78
+    assert len(urls) == 93
 
     for url in urls:
         path = url.replace("https://www.yt4mp3.com", "")
@@ -372,7 +372,8 @@ def test_blog_hub_english():
     assert 'rel="canonical" href="https://www.yt4mp3.com/blog"' in html
     assert 'dir="ltr"' in html
     assert 'lang="en"' in html
-    assert "Editorial Guides Coming Soon" in html
+    assert "The Complete Guide to YouTube Audio Extraction" in html
+    assert "youtube-to-mp3-converter-free-guide" in html
     # Check all 16 reciprocal hreflangs
     assert 'hreflang="x-default"' in html
     assert 'hreflang="en"' in html
@@ -388,7 +389,6 @@ def test_blog_hub_arabic_rtl():
     assert 'rel="canonical" href="https://www.yt4mp3.com/ar/blog/"' in html
     assert 'dir="rtl"' in html
     assert 'lang="ar"' in html
-    assert "المقالات والأدلة قادمة قريباً" in html
     assert html.count("hreflang=") == 16
 
 
@@ -409,5 +409,37 @@ def test_blog_redirects():
     r3 = test_client.get("/AR/blog/")
     assert r3.status_code == 301
     assert r3.headers.get("location") == "/ar/blog/"
+
+
+def test_blog_article_english():
+    res = client.get("/blog/youtube-to-mp3-converter-free-guide")
+    assert res.status_code == 200
+    html = res.text
+    assert "The Complete Guide to YouTube Audio Extraction" in html
+    assert 'rel="canonical" href="https://www.yt4mp3.com/blog/youtube-to-mp3-converter-free-guide"' in html
+    assert 'dir="ltr"' in html
+    assert 'lang="en"' in html
+    # Check internal links to all 4 main pages
+    assert 'href="/youtube-to-mp3"' in html
+    assert 'href="/youtube-to-mp4"' in html
+    assert 'href="/youtube-shorts-downloader"' in html
+    assert 'href="/"' in html
+    assert html.count("hreflang=") == 16
+
+
+def test_blog_article_arabic_rtl():
+    res = client.get("/ar/blog/youtube-to-mp3-converter-free-guide")
+    assert res.status_code == 200
+    html = res.text
+    assert 'dir="rtl"' in html
+    assert 'lang="ar"' in html
+    assert 'rel="canonical" href="https://www.yt4mp3.com/ar/blog/youtube-to-mp3-converter-free-guide"' in html
+    # Check Arabic internal links to all 4 main pages
+    assert 'href="/ar/youtube-to-mp3"' in html
+    assert 'href="/ar/youtube-to-mp4"' in html
+    assert 'href="/ar/youtube-shorts-downloader"' in html
+    assert 'href="/ar/"' in html
+    assert html.count("hreflang=") == 16
+
 
 

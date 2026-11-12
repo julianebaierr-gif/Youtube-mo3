@@ -190,6 +190,46 @@ def render_blog_hub(request: Request, lang: str = "en"):
     
     return HTMLResponse(content=html_str, headers=EDGE_HTML_HEADERS)
 
+_ARTICLE_HTML_CACHE: dict[tuple[str, str], str] = {}
+
+def render_blog_article(request: Request, slug: str, lang: str = "en"):
+    if lang not in SUPPORTED_LANGUAGES:
+        raise HTTPException(status_code=404, detail="Language not found")
+    
+    article = get_article_by_slug(slug, lang)
+    if not article:
+        raise HTTPException(status_code=404, detail="Article not found")
+        
+    cache_key = (lang, slug)
+    html_str = _ARTICLE_HTML_CACHE.get(cache_key)
+    if html_str is None:
+        blog_ui = get_blog_content(lang)
+        ui_strings = get_ui_strings(lang)
+        hreflangs = get_blog_hreflang_links(slug=slug)
+        switcher = get_blog_switcher_links(slug=slug, current_lang=lang)
+        current_meta = SUPPORTED_LANGUAGES[lang]
+        
+        canonical_url = f"https://www.yt4mp3.com/blog/{slug}" if lang == "en" else f"https://www.yt4mp3.com/{lang}/blog/{slug}"
+        
+        tmpl = templates.env.get_template("article.html")
+        html_str = tmpl.render(
+            request=request,
+            article=article,
+            blog_ui=blog_ui,
+            t=ui_strings,
+            lang=lang,
+            lang_dir=current_meta.get("dir", "ltr"),
+            hreflangs=hreflangs,
+            switcher=switcher,
+            current_lang=current_meta,
+            supported_languages=SUPPORTED_LANGUAGES,
+            canonical_url=canonical_url,
+            og_locale="en_US" if lang == "en" else f"{lang}_{lang.upper()}"
+        )
+        _ARTICLE_HTML_CACHE[cache_key] = html_str
+        
+    return HTMLResponse(content=html_str, headers=EDGE_HTML_HEADERS)
+
 # Root English Routes
 @app.get("/", response_class=HTMLResponse)
 async def home_page(request: Request):
@@ -261,7 +301,7 @@ async def blog_article_page(request: Request, slug: str):
     article = get_article_by_slug(slug, "en")
     if not article:
         raise HTTPException(status_code=404, detail="Article not found")
-    return render_blog_hub(request, "en")
+    return render_blog_article(request, slug, "en")
 
 # /dmca redirects to contact-us which contains the full DMCA section
 @app.get("/dmca", response_class=HTMLResponse)
@@ -1947,9 +1987,11 @@ async def localized_blog_article_page(request: Request, lang: str, slug: str):
         return RedirectResponse(url=f"/{lower_lang}/blog/{slug}", status_code=301)
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Page not found")
+    if request.url.path.endswith("/"):
+        return RedirectResponse(url=f"/{lang}/blog/{slug}", status_code=301)
     article = get_article_by_slug(slug, lang)
     if not article:
         raise HTTPException(status_code=404, detail="Article not found")
-    return render_blog_hub(request, lang)
+    return render_blog_article(request, slug, lang)
 
 
