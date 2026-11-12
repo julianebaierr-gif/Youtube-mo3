@@ -305,7 +305,7 @@
       }
     },
     {
-      "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy)/",
+      "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy|blog)/",
       "status": 301,
       "headers": {
         "Location": "/$1"
@@ -316,6 +316,13 @@
       "status": 301,
       "headers": {
         "Location": "/$1/"
+      }
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/blog",
+      "status": 301,
+      "headers": {
+        "Location": "/$1/blog/"
       }
     },
     {
@@ -330,6 +337,10 @@
       "dest": "/public/pages/en/index.html"
     },
     {
+      "src": "/blog",
+      "dest": "/public/pages/en/blog.html"
+    },
+    {
       "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)",
       "dest": "/public/pages/en/$1.html"
     },
@@ -340,6 +351,10 @@
     {
       "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/",
       "dest": "/public/pages/$1/index.html"
+    },
+    {
+      "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/blog/",
+      "dest": "/public/pages/$1/blog.html"
     },
     {
       "src": "/(ar|de|es|fr|hi|id|it|ja|ko|pt|ru|tr|vi|my)/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)",

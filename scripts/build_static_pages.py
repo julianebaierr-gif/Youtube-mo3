@@ -49,6 +49,7 @@ def build_static():
         "/youtube-to-mp3": os.path.join(pages_dir, "en", "youtube-to-mp3.html"),
         "/youtube-to-mp4": os.path.join(pages_dir, "en", "youtube-to-mp4.html"),
         "/youtube-shorts-downloader": os.path.join(pages_dir, "en", "youtube-shorts-downloader.html"),
+        "/blog": os.path.join(pages_dir, "en", "blog.html"),
         "/contact-us": os.path.join(pages_dir, "legal", "contact-us.html"),
         "/terms-of-service": os.path.join(pages_dir, "legal", "terms-of-service.html"),
         "/privacy-policy": os.path.join(pages_dir, "legal", "privacy-policy.html"),
@@ -72,6 +73,7 @@ def build_static():
             f"/{lang}/youtube-to-mp3": os.path.join(pages_dir, lang, "youtube-to-mp3.html"),
             f"/{lang}/youtube-to-mp4": os.path.join(pages_dir, lang, "youtube-to-mp4.html"),
             f"/{lang}/youtube-shorts-downloader": os.path.join(pages_dir, lang, "youtube-shorts-downloader.html"),
+            f"/{lang}/blog/": os.path.join(pages_dir, lang, "blog.html"),
         }
         for route, out_path in lang_routes.items():
             resp = client.get(route)

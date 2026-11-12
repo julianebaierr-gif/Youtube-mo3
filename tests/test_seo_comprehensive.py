@@ -26,14 +26,14 @@ def test_sitemap_xml_parsing_and_namespace():
     assert root.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}urlset"
 
 
-def test_sitemap_contains_exact_63_urls_and_no_duplicates():
+def test_sitemap_contains_exact_78_urls_and_no_duplicates():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    # Requirement: 63 URLs
-    assert len(urls) == 63, f"Expected exactly 63 URLs in sitemap, found {len(urls)}"
+    # Requirement: 78 URLs (63 core converter + legal pages + 15 multilingual blog hubs)
+    assert len(urls) == 78, f"Expected exactly 78 URLs in sitemap, found {len(urls)}"
     
     loc_list = [u.find("ns:loc", ns).text.strip() for u in urls]
     
@@ -70,7 +70,7 @@ def test_sitemap_valid_distinct_lastmod_dates():
         lm = u.find("ns:lastmod", ns)
         assert lm is not None, f"Missing lastmod in {loc}"
         lastmod = lm.text.strip()
-        assert lastmod == "2026-11-11"
+        assert lastmod in ["2026-11-11", "2026-11-12"]
 
 def test_sitemap_has_clean_xsl_stylesheet():
     res = client.get("/sitemap.xml")
@@ -254,7 +254,7 @@ def test_sitemap_xhtml_hreflang_links():
         assert "x-default" in langs
         assert "en" in langs
         assert "es" in langs
-    assert localized_count == 60
+    assert localized_count == 75
 
 
 def test_shortcut_routes_noindex_and_no_spam():
@@ -285,15 +285,15 @@ def test_shortcut_routes_noindex_and_no_spam():
 
 
 # -------------------------------------------------------------
-# 5. Technical Indexing & Status 200 for all 63 URLs
+# 5. Technical Indexing & Status 200 for all 78 URLs
 # -------------------------------------------------------------
-def test_all_63_sitemap_urls_accessible_and_indexable():
+def test_all_78_sitemap_urls_accessible_and_indexable():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = [u.find("ns:loc", ns).text.strip() for u in root.findall("ns:url", ns)]
 
-    assert len(urls) == 63
+    assert len(urls) == 78
 
     for url in urls:
         path = url.replace("https://www.yt4mp3.com", "")
@@ -359,4 +359,55 @@ def test_non_www_to_www_301_redirect():
     assert top_route.get("status") == 301
     assert top_route.get("has", [{}])[0].get("value") == "yt4mp3.com"
     assert top_route.get("headers", {}).get("Location") == "https://www.yt4mp3.com/$1"
+
+
+# -------------------------------------------------------------
+# 8. Multilingual Blog Hub Tests
+# -------------------------------------------------------------
+def test_blog_hub_english():
+    res = client.get("/blog")
+    assert res.status_code == 200
+    html = res.text
+    assert "<title>YT4MP3 Blog" in html
+    assert 'rel="canonical" href="https://www.yt4mp3.com/blog"' in html
+    assert 'dir="ltr"' in html
+    assert 'lang="en"' in html
+    assert "Editorial Guides Coming Soon" in html
+    # Check all 16 reciprocal hreflangs
+    assert 'hreflang="x-default"' in html
+    assert 'hreflang="en"' in html
+    assert 'hreflang="ar" href="https://www.yt4mp3.com/ar/blog/"' in html
+    assert html.count("hreflang=") == 16
+
+
+def test_blog_hub_arabic_rtl():
+    res = client.get("/ar/blog/")
+    assert res.status_code == 200
+    html = res.text
+    assert "مدونة YT4MP3" in html
+    assert 'rel="canonical" href="https://www.yt4mp3.com/ar/blog/"' in html
+    assert 'dir="rtl"' in html
+    assert 'lang="ar"' in html
+    assert "المقالات والأدلة قادمة قريباً" in html
+    assert html.count("hreflang=") == 16
+
+
+def test_blog_redirects():
+    test_client = TestClient(app, follow_redirects=False)
+    
+    # English trailing slash redirect
+    r1 = test_client.get("/blog/")
+    assert r1.status_code == 301
+    assert r1.headers.get("location") == "/blog"
+    
+    # Localized non-trailing slash redirect
+    r2 = test_client.get("/ar/blog")
+    assert r2.status_code == 301
+    assert r2.headers.get("location") == "/ar/blog/"
+    
+    # Uppercase or invalid language
+    r3 = test_client.get("/AR/blog/")
+    assert r3.status_code == 301
+    assert r3.headers.get("location") == "/ar/blog/"
+
 
