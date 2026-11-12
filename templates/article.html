@@ -588,6 +588,28 @@
                             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                         </svg>
                     </div>
+                    {% if 'mp4' in article.slug %}
+                    <h2 class="article-cta-heading">
+                        Ready to Convert YouTube Videos to 1080p MP4?
+                    </h2>
+                    <p class="article-cta-text">
+                        Experience ultra high-speed 1080p Full HD video conversion and 320kbps audio downloads with zero ads on YT4MP3.
+                    </p>
+                    <div class="article-cta-buttons">
+                        <a href="{% if lang and lang != 'en' %}/{{ lang }}/youtube-to-mp4{% else %}/youtube-to-mp4{% endif %}" class="article-cta-btn-main">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+                            </svg>
+                            <span>Launch YouTube to MP4 Converter</span>
+                        </a>
+                        <a href="{% if lang and lang != 'en' %}/{{ lang }}/youtube-to-mp3{% else %}/youtube-to-mp3{% endif %}" class="article-cta-btn-sub">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                            </svg>
+                            <span>Convert to MP3 (320kbps)</span>
+                        </a>
+                    </div>
+                    {% else %}
                     <h2 class="article-cta-heading">
                         {{ blog_ui.callout_title | default('Ready to Convert YouTube Videos to 320kbps MP3?') }}
                     </h2>
@@ -609,6 +631,7 @@
                             <span>{{ blog_ui.view_all_guides | default('Explore All Guides') }}</span>
                         </a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 

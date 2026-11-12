@@ -26,14 +26,14 @@ def test_sitemap_xml_parsing_and_namespace():
     assert root.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}urlset"
 
 
-def test_sitemap_contains_exact_93_urls_and_no_duplicates():
+def test_sitemap_contains_exact_108_urls_and_no_duplicates():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    # Requirement: 93 URLs (63 core converter + legal pages + 15 multilingual blog hubs + 15 multilingual articles)
-    assert len(urls) == 93, f"Expected exactly 93 URLs in sitemap, found {len(urls)}"
+    # Requirement: 108 URLs (63 core converter + legal pages + 15 multilingual blog hubs + 30 multilingual articles)
+    assert len(urls) == 108, f"Expected exactly 108 URLs in sitemap, found {len(urls)}"
     
     loc_list = [u.find("ns:loc", ns).text.strip() for u in urls]
     
@@ -113,8 +113,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
     channel = root.find("channel")
     items = channel.findall("item")
 
-    # 90 items (60 tools + 15 blog hubs + 15 blog articles across all 15 languages)
-    assert len(items) == 90, f"Expected 90 RSS feed items, found {len(items)}"
+    # 105 items (60 tools + 15 blog hubs + 30 blog articles across all 15 languages)
+    assert len(items) == 105, f"Expected 105 RSS feed items, found {len(items)}"
 
     guids = set()
     links = set()
@@ -142,8 +142,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
         guids.add(guid)
         links.add(link)
 
-    assert len(guids) == 90, "Duplicate GUIDs found in feed"
-    assert len(links) == 90, "Duplicate links found in feed"
+    assert len(guids) == 105, "Duplicate GUIDs found in feed"
+    assert len(links) == 105, "Duplicate links found in feed"
     
     # Must contain dates spanning the last 3 months (Aug, Sep, Oct, Nov 2026)
     expected_months = {"Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026"}
@@ -254,7 +254,7 @@ def test_sitemap_xhtml_hreflang_links():
         assert "x-default" in langs
         assert "en" in langs
         assert "es" in langs
-    assert localized_count == 90
+    assert localized_count == 105
 
 
 def test_shortcut_routes_noindex_and_no_spam():
@@ -287,13 +287,13 @@ def test_shortcut_routes_noindex_and_no_spam():
 # -------------------------------------------------------------
 # 5. Technical Indexing & Status 200 for all 93 URLs
 # -------------------------------------------------------------
-def test_all_93_sitemap_urls_accessible_and_indexable():
+def test_all_108_sitemap_urls_accessible_and_indexable():
     res = client.get("/sitemap.xml")
     root = ET.fromstring(res.text)
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = [u.find("ns:loc", ns).text.strip() for u in root.findall("ns:url", ns)]
 
-    assert len(urls) == 93
+    assert len(urls) == 108
 
     for url in urls:
         path = url.replace("https://www.yt4mp3.com", "")

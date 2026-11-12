@@ -43,6 +43,8 @@ def build_static():
     pages_dir = os.path.join(PUBLIC_DIR, "pages")
     os.makedirs(pages_dir, exist_ok=True)
 
+    from app.articles_data import BLOG_ARTICLES
+
     # Root English pages
     en_routes = {
         "/": os.path.join(pages_dir, "en", "index.html"),
@@ -50,11 +52,13 @@ def build_static():
         "/youtube-to-mp4": os.path.join(pages_dir, "en", "youtube-to-mp4.html"),
         "/youtube-shorts-downloader": os.path.join(pages_dir, "en", "youtube-shorts-downloader.html"),
         "/blog": os.path.join(pages_dir, "en", "blog.html"),
-        "/blog/youtube-to-mp3-converter-free-guide": os.path.join(pages_dir, "en", "blog", "youtube-to-mp3-converter-free-guide.html"),
         "/contact-us": os.path.join(pages_dir, "legal", "contact-us.html"),
         "/terms-of-service": os.path.join(pages_dir, "legal", "terms-of-service.html"),
         "/privacy-policy": os.path.join(pages_dir, "legal", "privacy-policy.html"),
     }
+    for art in BLOG_ARTICLES:
+        slug = art.get("slug")
+        en_routes[f"/blog/{slug}"] = os.path.join(pages_dir, "en", "blog", f"{slug}.html")
 
     count = 0
     for route, out_path in en_routes.items():
@@ -65,7 +69,7 @@ def build_static():
             f.write(resp.text)
         count += 1
 
-    # 14 International Languages x 4 pages = 56 pages
+    # 14 International Languages
     for lang in SUPPORTED_LANGUAGES:
         if lang == "en":
             continue
@@ -75,8 +79,11 @@ def build_static():
             f"/{lang}/youtube-to-mp4": os.path.join(pages_dir, lang, "youtube-to-mp4.html"),
             f"/{lang}/youtube-shorts-downloader": os.path.join(pages_dir, lang, "youtube-shorts-downloader.html"),
             f"/{lang}/blog/": os.path.join(pages_dir, lang, "blog.html"),
-            f"/{lang}/blog/youtube-to-mp3-converter-free-guide": os.path.join(pages_dir, lang, "blog", "youtube-to-mp3-converter-free-guide.html"),
         }
+        for art in BLOG_ARTICLES:
+            slug = art.get("slug")
+            lang_routes[f"/{lang}/blog/{slug}"] = os.path.join(pages_dir, lang, "blog", f"{slug}.html")
+
         for route, out_path in lang_routes.items():
             resp = client.get(route)
             assert resp.status_code == 200, f"Failed to render {route}: {resp.status_code}"

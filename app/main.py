@@ -558,11 +558,10 @@ def get_authoritative_feed_xml() -> str:
         pub_date = release_dates["blog"]
         urls.append((link, title, desc, lang, pub_date))
 
-    # 3. Blog Article Pages
+    # 3. Blog Article Pages (all articles across all languages)
     from app.articles_data import BLOG_ARTICLES
-    if BLOG_ARTICLES:
-        art = BLOG_ARTICLES[0]
-        slug = art.get("slug", "youtube-to-mp3-converter-free-guide")
+    for art in BLOG_ARTICLES:
+        slug = art.get("slug")
         for lang in SUPPORTED_LANGUAGES:
             if lang == "en":
                 link = f"https://www.yt4mp3.com/blog/{slug}"
