@@ -523,12 +523,15 @@ def get_authoritative_feed_xml() -> str:
     import html
     pages = ["home", "youtube-to-mp3", "youtube-to-mp4", "youtube-shorts-downloader"]
     release_dates = {
-        "youtube-to-mp3": "Tue, 18 Aug 2026 10:00:00 +0000",
-        "youtube-to-mp4": "Tue, 15 Sep 2026 10:00:00 +0000",
-        "youtube-shorts-downloader": "Thu, 15 Oct 2026 10:00:00 +0000",
-        "home": "Wed, 04 Nov 2026 10:00:00 +0000",
+        "youtube-to-mp3": "Tue, 18 Aug 2026",
+        "youtube-to-mp4": "Tue, 15 Sep 2026",
+        "youtube-shorts-downloader": "Thu, 15 Oct 2026",
+        "home": "Wed, 04 Nov 2026",
+        "blog": "Thu, 12 Nov 2026",
+        "article": "Thu, 12 Nov 2026",
     }
     urls = []
+    # 1. Main Tools
     for lang in SUPPORTED_LANGUAGES:
         for p in pages:
             data = get_page_content(lang, p)
@@ -539,7 +542,38 @@ def get_authoritative_feed_xml() -> str:
             title = data.get("title") or "YT4MP3"
             desc = data.get("meta_desc") or "YouTube converter tool"
             desc = desc.replace("Cepat, cepat", "Cepat")
-            pub_date = release_dates.get(p, "Fri, 30 Oct 2026 12:00:00 +0000")
+            pub_date = release_dates.get(p, "Wed, 04 Nov 2026")
+            urls.append((link, title, desc, lang, pub_date))
+            
+    # 2. Blog Hub Pages
+    from app.blog_data import BLOG_I18N_PAGES
+    for lang in SUPPORTED_LANGUAGES:
+        blog_meta = BLOG_I18N_PAGES.get(lang, BLOG_I18N_PAGES["en"])
+        if lang == "en":
+            link = "https://www.yt4mp3.com/blog"
+        else:
+            link = f"https://www.yt4mp3.com/{lang}/blog/"
+        title = blog_meta.get("title", "YT4MP3 Blog")
+        desc = blog_meta.get("meta_desc", "Expert guides and tutorials on media conversion.")
+        pub_date = release_dates["blog"]
+        urls.append((link, title, desc, lang, pub_date))
+
+    # 3. Blog Article Pages
+    from app.articles_data import BLOG_ARTICLES
+    if BLOG_ARTICLES:
+        art = BLOG_ARTICLES[0]
+        slug = art.get("slug", "youtube-to-mp3-converter-free-guide")
+        for lang in SUPPORTED_LANGUAGES:
+            if lang == "en":
+                link = f"https://www.yt4mp3.com/blog/{slug}"
+                title = art.get("title", "YouTube Audio Extraction and Free MP3 Guide")
+                desc = art.get("meta_desc") or art.get("excerpt") or ""
+            else:
+                link = f"https://www.yt4mp3.com/{lang}/blog/{slug}"
+                trans = art.get("translations", {}).get(lang, {})
+                title = trans.get("title", art.get("title"))
+                desc = trans.get("meta_desc") or trans.get("excerpt") or art.get("meta_desc", "")
+            pub_date = release_dates["article"]
             urls.append((link, title, desc, lang, pub_date))
             
     items_xml = "".join([
@@ -557,9 +591,9 @@ def get_authoritative_feed_xml() -> str:
   <channel>
     <title>YT4MP3 - YouTube Media Converter Tools &amp; Updates</title>
     <link>https://www.yt4mp3.com/</link>
-    <description>Latest tools and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
+    <description>Latest tools, guides, and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 11 Nov 2026</lastBuildDate>
+    <lastBuildDate>Thu, 12 Nov 2026</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""

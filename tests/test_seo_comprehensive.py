@@ -104,7 +104,7 @@ def test_rss_xml_parsing_and_structure():
     assert channel.find("link").text == "https://www.yt4mp3.com/"
     assert "converting YouTube videos to MP3 and MP4" in channel.find("description").text
     assert channel.find("language").text == "en-us"
-    assert "11 Nov 2026" in channel.find("lastBuildDate").text
+    assert "12 Nov 2026" in channel.find("lastBuildDate").text
 
 
 def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
@@ -113,8 +113,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
     channel = root.find("channel")
     items = channel.findall("item")
 
-    # Exactly 60 items (15 languages * 4 tools)
-    assert len(items) == 60, f"Expected 60 RSS feed items, found {len(items)}"
+    # 90 items (60 tools + 15 blog hubs + 15 blog articles across all 15 languages)
+    assert len(items) == 90, f"Expected 90 RSS feed items, found {len(items)}"
 
     guids = set()
     links = set()
@@ -133,8 +133,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
         assert desc, f"Empty description in {link}"
         assert pub_date, f"Empty pubDate in {link}"
 
-        # Verify dates span the last 3 months
-        parsed_date = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S +0000")
+        # Verify dates without time component
+        parsed_date = datetime.strptime(pub_date, "%a, %d %b %Y")
         found_months.add(parsed_date.strftime("%b %Y"))
 
         assert "Cepat, cepat" not in desc, f"Repeated words 'Cepat, cepat' found in {link}"
@@ -142,8 +142,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
         guids.add(guid)
         links.add(link)
 
-    assert len(guids) == 60, "Duplicate GUIDs found in feed"
-    assert len(links) == 60, "Duplicate links found in feed"
+    assert len(guids) == 90, "Duplicate GUIDs found in feed"
+    assert len(links) == 90, "Duplicate links found in feed"
     
     # Must contain dates spanning the last 3 months (Aug, Sep, Oct, Nov 2026)
     expected_months = {"Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026"}
