@@ -455,7 +455,7 @@ for code, meta in LOCALES_DATA.items():
         "published_date": meta["published_date"],
         "modified_date": meta["published_date"],
         "reading_time": meta["reading_time"],
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp3.jpg",
         "content_html": loc_html,
     }
 
@@ -468,7 +468,7 @@ ARTICLE_OBJECT = {
     "published_date": "November 12, 2026",
     "modified_date": "November 12, 2026",
     "reading_time": "12 min read",
-    "thumbnail": "/static/og-image.png",
+    "thumbnail": "/static/blog/blog-youtube-to-mp3.jpg",
     "content_html": en_content_html,
     "translations": translations_dict
 }

@@ -35,7 +35,7 @@ ALL_ARTICLES_DATA = {
         "published_date": "November 12, 2026",
         "modified_date": "November 12, 2026",
         "reading_time": "12 min read",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp3.jpg",
         "content_html": en_full_html
     },
     "ar": {
@@ -47,7 +47,7 @@ ALL_ARTICLES_DATA = {
         "published_date": "12 نوفمبر 2026",
         "modified_date": "12 نوفمبر 2026",
         "reading_time": "12 دقيقة قراءة",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp3.jpg",
         "content_html": ar_full_html
     },
     "es": {
@@ -59,7 +59,7 @@ ALL_ARTICLES_DATA = {
         "published_date": "12 de noviembre de 2026",
         "modified_date": "12 de noviembre de 2026",
         "reading_time": "12 min de lectura",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp3.jpg",
         "content_html": es_full_html
     }
 }
@@ -201,7 +201,7 @@ for code, meta in OTHER_LANGUAGES.items():
         "published_date": meta["published_date"],
         "modified_date": meta["published_date"],
         "reading_time": meta["reading_time"],
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp3.jpg",
         "content_html": full_content
     }
 

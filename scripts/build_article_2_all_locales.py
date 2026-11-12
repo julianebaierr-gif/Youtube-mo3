@@ -127,7 +127,7 @@ ARTICLE_METADATA = {
         "published_date": "November 12, 2026",
         "modified_date": "November 12, 2026",
         "reading_time": "12 min read",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "ar": {
         "slug": SLUG,
@@ -138,7 +138,7 @@ ARTICLE_METADATA = {
         "published_date": "12 نوفمبر 2026",
         "modified_date": "12 نوفمبر 2026",
         "reading_time": "12 دقيقة قراءة",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "es": {
         "slug": SLUG,
@@ -149,7 +149,7 @@ ARTICLE_METADATA = {
         "published_date": "12 de noviembre de 2026",
         "modified_date": "12 de noviembre de 2026",
         "reading_time": "12 min de lectura",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "de": {
         "slug": SLUG,
@@ -160,7 +160,7 @@ ARTICLE_METADATA = {
         "published_date": "12. November 2026",
         "modified_date": "12. November 2026",
         "reading_time": "12 Min. Lesezeit",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "fr": {
         "slug": SLUG,
@@ -171,7 +171,7 @@ ARTICLE_METADATA = {
         "published_date": "12 novembre 2026",
         "modified_date": "12 novembre 2026",
         "reading_time": "12 min de lecture",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "pt": {
         "slug": SLUG,
@@ -182,7 +182,7 @@ ARTICLE_METADATA = {
         "published_date": "12 de novembro de 2026",
         "modified_date": "12 de novembro de 2026",
         "reading_time": "12 min de leitura",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "it": {
         "slug": SLUG,
@@ -193,7 +193,7 @@ ARTICLE_METADATA = {
         "published_date": "12 novembre 2026",
         "modified_date": "12 novembre 2026",
         "reading_time": "12 min di lettura",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "id": {
         "slug": SLUG,
@@ -204,7 +204,7 @@ ARTICLE_METADATA = {
         "published_date": "12 November 2026",
         "modified_date": "12 November 2026",
         "reading_time": "12 menit baca",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "ru": {
         "slug": SLUG,
@@ -215,7 +215,7 @@ ARTICLE_METADATA = {
         "published_date": "12 ноября 2026",
         "modified_date": "12 ноября 2026",
         "reading_time": "12 мин чтения",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "tr": {
         "slug": SLUG,
@@ -226,7 +226,7 @@ ARTICLE_METADATA = {
         "published_date": "12 Kasim 2026",
         "modified_date": "12 Kasim 2026",
         "reading_time": "12 dk okuma",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "vi": {
         "slug": SLUG,
@@ -237,7 +237,7 @@ ARTICLE_METADATA = {
         "published_date": "12 thang 11, 2026",
         "modified_date": "12 thang 11, 2026",
         "reading_time": "12 phut doc",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "ja": {
         "slug": SLUG,
@@ -248,7 +248,7 @@ ARTICLE_METADATA = {
         "published_date": "2026年11月12日",
         "modified_date": "2026年11月12日",
         "reading_time": "読了目安 12分",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "ko": {
         "slug": SLUG,
@@ -259,7 +259,7 @@ ARTICLE_METADATA = {
         "published_date": "2026년 11월 12일",
         "modified_date": "2026년 11월 12일",
         "reading_time": "12분 분량",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "hi": {
         "slug": SLUG,
@@ -270,7 +270,7 @@ ARTICLE_METADATA = {
         "published_date": "12 नवंबर 2026",
         "modified_date": "12 नवंबर 2026",
         "reading_time": "12 मिनट का समय",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     },
     "my": {
         "slug": SLUG,
@@ -281,7 +281,7 @@ ARTICLE_METADATA = {
         "published_date": "၁၂ နိုဝင်ဘာ ၂၀၂၆",
         "modified_date": "၁၂ နိုဝင်ဘာ ၂၀၂၆",
         "reading_time": "ဖတ်ရှုချိန် ၁၂ မိနစ်",
-        "thumbnail": "/static/og-image.png",
+        "thumbnail": "/static/blog/blog-youtube-to-mp4.jpg",
     }
 }
 
