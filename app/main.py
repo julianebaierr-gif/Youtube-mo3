@@ -1110,13 +1110,33 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
     m_vid = re.search(r"(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|\/v\/|watch\?v=|\&v=|^)([a-zA-Z0-9_-]{11})(?:[&?]|$)", url or "")
     vid = m_vid.group(1) if m_vid else ""
 
-    # Check video resolution metadata (to identify regional / geo-blocked videos)
+    # Check video resolution metadata (to identify regional / geo-blocked videos and unsupported streams)
     res_meta = {}
     if vid:
         try:
             res_meta = await get_video_resolutions(vid, skip_fastsaver_info=False)
         except Exception:
             res_meta = {}
+
+    # If the video is recognized as inherently unsupported (Live stream, Private, or Age-restricted),
+    # return a friendly message immediately without pinging FastSaver to avoid useless failed requests.
+    if res_meta.get("is_unsupported"):
+        unsupported_messages = {
+            "live_stream": "Live streams cannot be converted while active. Please choose a finished video.",
+            "private_video": "This video is private and cannot be accessed.",
+            "age_restricted": "This video is age-restricted and requires YouTube login.",
+            "channel_membership": "This video is exclusive to channel members.",
+            "paid_rental": "This video requires a paid rental purchase on YouTube.",
+            "video_unavailable": "This video is unavailable or has been removed from YouTube.",
+        }
+        reason_key = res_meta.get("unsupported_reason", "")
+        friendly_msg = unsupported_messages.get(reason_key, "This video cannot be converted due to YouTube restrictions.")
+        return {
+            "success": False,
+            "error": friendly_msg,
+            "is_unsupported": True,
+            "unsupported_reason": reason_key,
+        }
 
     is_regional = bool(res_meta.get("is_regional") or res_meta.get("is_geo_blocked"))
     allowed_countries = res_meta.get("allowed_countries", [])
@@ -1159,7 +1179,10 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
                 "is_regional": True,
             }
 
-    # 2. For ALL normal videos (NOT country locked): Use FastSaver Pro Paid API with auto-retry
+    # 2. For ALL normal videos (NOT country locked): Use FastSaver Pro Paid API
+    # Clean the URL to standard canonical format so tracking parameters don't cause failures
+    clean_target_url = f"https://www.youtube.com/watch?v={vid}" if vid else url
+
     headers = {
         "X-Api-Key": FASTSAVER_API_KEY,
         "Content-Type": "application/json",
@@ -1167,23 +1190,36 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130 Safari/537.36",
     }
     if mode == "audio":
-        fmt = "audio"
         fs_formats_to_try = ["audio"]
     else:
         q = re.sub(r"[^0-9]", "", str(quality)) or "720"
         fmt_map = {"2160": "2160p", "1440": "1440p", "1080": "1080p", "720": "720p", "480": "480p", "360": "360p", "240": "240p", "144": "144p"}
         fmt = fmt_map.get(q, "720p")
+
+        # Smart resolution clamp: if video's actual max height is lower than requested, clamp to max available
+        avail = res_meta.get("available_heights", [])
+        try:
+            q_int = int(q)
+            if avail and q_int not in avail:
+                smaller = [h for h in avail if h <= q_int]
+                if smaller:
+                    fmt = f"{max(smaller)}p"
+                elif avail:
+                    fmt = f"{min(avail)}p"
+        except Exception:
+            pass
+
         fs_formats_to_try = [fmt]
-        # If requested a lower/mid resolution like 480p or 360p, also allow fallback to 720p if needed
-        if fmt not in ["720p", "1080p", "2160p"]:
+        # Only add 720p fallback if the requested was higher and 720p is known to be available
+        if fmt != "720p" and (not avail or 720 in avail):
             fs_formats_to_try.append("720p")
 
     detail_err = "Conversion could not be completed"
     import time
     fastsaver_succeeded = False
     for target_fmt in fs_formats_to_try:
-        body = json.dumps({"url": url, "format": target_fmt}).encode("utf-8")
-        # Try up to 2 times for each format with a 1.2s delay to absorb transient worker hiccups
+        body = json.dumps({"url": clean_target_url, "format": target_fmt}).encode("utf-8")
+        # Try at most 1 retry only on network timeouts, never retry on permanent 400 Bad Requests
         for attempt in range(2):
             try:
                 req = urllib.request.Request(
@@ -1203,10 +1239,8 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
                         "engine": "fastsaver",
                     }
                 detail_err = str(data.get("detail", "fastsaver_unknown_error"))
-                # If FastSaver returned transient download.failed on attempt 0, pause and retry
-                if detail_err == "download.failed" and attempt == 0:
-                    time.sleep(1.2)
-                    continue
+                # Deterministic error on FastSaver side, do not retry same format
+                break
             except urllib.error.HTTPError as e:
                 try:
                     err_body = json.loads(e.read().decode("utf-8", "ignore"))
@@ -1214,14 +1248,19 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
                 except Exception:
                     detail_err = f"HTTP {e.code}"
                 _check_fastsaver_credits_and_alert(force_check=False)
+                # HTTP 400 indicates invalid/unsupported video; do NOT retry
+                if e.code == 400:
+                    break
                 if attempt == 0:
                     time.sleep(1.0)
                     continue
+                break
             except Exception as e:
                 detail_err = str(e)
                 if attempt == 0:
                     time.sleep(1.0)
                     continue
+                break
             break  # Break inner loop if not continuing
 
     # 3. Fallback: If FastSaver failed (e.g. download.failed on YouTube Kids / special streams) and video is not unsupported,
