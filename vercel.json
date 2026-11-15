@@ -181,6 +181,24 @@
           "value": "noindex, nofollow"
         }
       ]
+    },
+    {
+      "source": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader|blog.*|)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/public/pages/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=0, must-revalidate"
+        }
+      ]
     }
   ],
   "routes": [

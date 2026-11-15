@@ -1,5 +1,5 @@
 // YT4MP3 Lightweight Service Worker for PWA compliance
-const CACHE_NAME = 'yt4mp3-shell-v1';
+const CACHE_NAME = 'yt4mp3-shell-v4';
 const PRECACHE_ASSETS = [
   '/',
   '/static/favicon.svg',
@@ -41,6 +41,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // For HTML navigation requests, ALWAYS bypass local cache and fetch fresh network HTML
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request, { cache: 'reload' })
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, clone).catch(() => {});
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(event.request).then((cached) => cached || caches.match('/'));
+        })
+    );
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
@@ -57,9 +77,6 @@ self.addEventListener('fetch', (event) => {
         // Fallback to cache if offline
         return caches.match(event.request).then((cached) => {
           if (cached) return cached;
-          if (event.request.mode === 'navigate') {
-            return caches.match('/');
-          }
           return new Response('Network offline', { status: 503, statusText: 'Offline' });
         });
       })

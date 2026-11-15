@@ -162,6 +162,58 @@ MP3_ARTICLE_HTML = """
 <p>Media conversion technology represents a neutral utility; its legal and ethical standing depends entirely upon how individual users apply it. Under the copyright laws of the United States, European Union, and international treaties, the Fair Use doctrine and private study provisions permit users to make personal backup copies of non-copyrighted material, public domain recordings, Creative Commons licensed works, and original user-generated content for private educational scholarship, parody, or commentary.</p>
 
 <p>Countless independent musical artists, podcasters, non-profit institutions, and educational lecturers publish their work under open Creative Commons licensing specifically so the public can download, study, and remix their materials offline. However, downloading commercial studio albums or monetized copyrighted entertainment without authorization violates platform terms of service and harms creators. We encourage all users to support original content creators by subscribing to their official channels, attending live concerts, purchasing official merchandise, and using <a href="https://www.yt4mp3.com/">YT4MP3</a> responsibly for legitimate educational study, personal backup, and Creative Commons archiving.</p>
+
+<div class="my-10 p-6 bg-slate-900 text-white rounded-2xl border border-slate-800 shadow-lg">
+  <div class="flex items-center gap-2 mb-3">
+    <i class="fa-solid fa-compass text-rose-500 text-lg"></i>
+    <h3 class="text-base font-bold text-white tracking-wide uppercase m-0">Explore YT4MP3 Conversion Ecosystem</h3>
+  </div>
+  <p class="text-xs text-slate-300 leading-relaxed mb-4">Access our dedicated converters, high-definition video downloaders, and comprehensive technical user guides:</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <a href="https://www.yt4mp3.com/youtube-to-mp3" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-music"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-rose-400 transition-colors">YouTube to MP3 Converter</p>
+        <p class="text-[11px] text-slate-400 m-0">Studio 320kbps audio with automatic ID3 tags</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/youtube-to-mp4" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-video"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-blue-400 transition-colors">YouTube to MP4 Downloader</p>
+        <p class="text-[11px] text-slate-400 m-0">1080p, 2K &amp; 4K video with synchronized 60fps</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/youtube-shorts-downloader" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-amber-400 transition-colors">YouTube Shorts Downloader</p>
+        <p class="text-[11px] text-slate-400 m-0">No watermark 9:16 vertical MP4 &amp; viral audio</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog/youtube-to-mp3-converter-free-guide" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-book-open"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-emerald-400 transition-colors">MP3 Step-by-Step Guide</p>
+        <p class="text-[11px] text-slate-400 m-0">Bitrate selection, car stereos &amp; mobile tips</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog/youtube-to-mp4-converter-free-guide" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-film"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-purple-400 transition-colors">MP4 In-Depth Guide</p>
+        <p class="text-[11px] text-slate-400 m-0">Codec comparison, H.264 vs VP9 &amp; 1080p</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-newspaper"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-sky-400 transition-colors">Knowledge Hub &amp; Blog</p>
+        <p class="text-[11px] text-slate-400 m-0">Audio codecs, video streaming &amp; updates</p>
+      </div>
+    </a>
+  </div>
+</div>
 """
 
 # ==============================================================================
@@ -310,6 +362,58 @@ MP4_ARTICLE_HTML = """
 <p>Video conversion technology is fundamentally neutral; its ethical and legal standing depends upon individual user application. Under the Fair Use doctrine (17 U.S. Code § 107) and international copyright frameworks, extracting clips from public domain videos, Creative Commons licensed recordings, or copyrighted broadcasts for personal research, educational scholarship, criticism, news reporting, and transformative commentary is legally recognized.</p>
 
 <p>However, downloading commercial motion pictures, pay-per-view broadcasts, or commercial music videos to redistribute, sell, or publicly screen without the copyright holder's authorization violates platform policies and intellectual property regulations. We strongly advocate supporting original video creators: like their videos, subscribe to their channels, support their crowdfunding campaigns, and utilize <a href="https://www.yt4mp3.com/">YT4MP3</a> responsibly for legal offline study, personal backup, and educational media preservation.</p>
+
+<div class="my-10 p-6 bg-slate-900 text-white rounded-2xl border border-slate-800 shadow-lg">
+  <div class="flex items-center gap-2 mb-3">
+    <i class="fa-solid fa-compass text-blue-500 text-lg"></i>
+    <h3 class="text-base font-bold text-white tracking-wide uppercase m-0">Explore YT4MP3 Conversion Ecosystem</h3>
+  </div>
+  <p class="text-xs text-slate-300 leading-relaxed mb-4">Access our dedicated converters, high-definition video downloaders, and comprehensive technical user guides:</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <a href="https://www.yt4mp3.com/youtube-to-mp3" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-music"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-rose-400 transition-colors">YouTube to MP3 Converter</p>
+        <p class="text-[11px] text-slate-400 m-0">Studio 320kbps audio with automatic ID3 tags</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/youtube-to-mp4" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-video"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-blue-400 transition-colors">YouTube to MP4 Downloader</p>
+        <p class="text-[11px] text-slate-400 m-0">1080p, 2K &amp; 4K video with synchronized 60fps</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/youtube-shorts-downloader" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-amber-400 transition-colors">YouTube Shorts Downloader</p>
+        <p class="text-[11px] text-slate-400 m-0">No watermark 9:16 vertical MP4 &amp; viral audio</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog/youtube-to-mp3-converter-free-guide" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-book-open"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-emerald-400 transition-colors">MP3 Step-by-Step Guide</p>
+        <p class="text-[11px] text-slate-400 m-0">Bitrate selection, car stereos &amp; mobile tips</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog/youtube-to-mp4-converter-free-guide" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-film"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-purple-400 transition-colors">MP4 In-Depth Guide</p>
+        <p class="text-[11px] text-slate-400 m-0">Codec comparison, H.264 vs VP9 &amp; 1080p</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-newspaper"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-sky-400 transition-colors">Knowledge Hub &amp; Blog</p>
+        <p class="text-[11px] text-slate-400 m-0">Audio codecs, video streaming &amp; updates</p>
+      </div>
+    </a>
+  </div>
+</div>
 """
 
 # ==============================================================================
@@ -454,6 +558,58 @@ SHORTS_ARTICLE_HTML = """
 <p>As short-form video continues to explode in popularity, respecting intellectual property rights and fair attribution remains vital. Short-form creators dedicate considerable time and energy to writing, filming, and editing original content. While personal offline viewing, research archiving, and transformative fair-use critique are widely protected under international copyright law, re-uploading someone else's complete video to claim as your own without permission or attribution violates intellectual property standards.</p>
 
 <p>When creating reaction videos or commentary featuring clips from Shorts, always credit the original creator by tagging their handle, linking to their original channel, and adding genuine transformative commentary or educational critique. Use <a href="https://www.yt4mp3.com/">YT4MP3</a> ethically to enhance your learning, preserve inspiring media, and support independent creators across the globe.</p>
+
+<div class="my-10 p-6 bg-slate-900 text-white rounded-2xl border border-slate-800 shadow-lg">
+  <div class="flex items-center gap-2 mb-3">
+    <i class="fa-solid fa-compass text-amber-500 text-lg"></i>
+    <h3 class="text-base font-bold text-white tracking-wide uppercase m-0">Explore YT4MP3 Conversion Ecosystem</h3>
+  </div>
+  <p class="text-xs text-slate-300 leading-relaxed mb-4">Access our dedicated converters, high-definition video downloaders, and comprehensive technical user guides:</p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <a href="https://www.yt4mp3.com/youtube-to-mp3" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-music"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-rose-400 transition-colors">YouTube to MP3 Converter</p>
+        <p class="text-[11px] text-slate-400 m-0">Studio 320kbps audio with automatic ID3 tags</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/youtube-to-mp4" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-video"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-blue-400 transition-colors">YouTube to MP4 Downloader</p>
+        <p class="text-[11px] text-slate-400 m-0">1080p, 2K &amp; 4K video with synchronized 60fps</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/youtube-shorts-downloader" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-amber-400 transition-colors">YouTube Shorts Downloader</p>
+        <p class="text-[11px] text-slate-400 m-0">No watermark 9:16 vertical MP4 &amp; viral audio</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog/youtube-to-mp3-converter-free-guide" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-book-open"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-emerald-400 transition-colors">MP3 Step-by-Step Guide</p>
+        <p class="text-[11px] text-slate-400 m-0">Bitrate selection, car stereos &amp; mobile tips</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog/youtube-to-mp4-converter-free-guide" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-film"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-purple-400 transition-colors">MP4 In-Depth Guide</p>
+        <p class="text-[11px] text-slate-400 m-0">Codec comparison, H.264 vs VP9 &amp; 1080p</p>
+      </div>
+    </a>
+    <a href="https://www.yt4mp3.com/blog" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl border border-slate-700 flex items-center gap-3 transition-colors no-underline group">
+      <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform"><i class="fa-solid fa-newspaper"></i></div>
+      <div>
+        <p class="text-xs font-bold text-white mb-0.5 group-hover:text-sky-400 transition-colors">Knowledge Hub &amp; Blog</p>
+        <p class="text-[11px] text-slate-400 m-0">Audio codecs, video streaming &amp; updates</p>
+      </div>
+    </a>
+  </div>
+</div>
 """
 
 def update_seo_pages():

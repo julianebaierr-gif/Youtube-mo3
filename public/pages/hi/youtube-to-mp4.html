@@ -366,6 +366,21 @@
             color: #e11d48;
             text-decoration: underline;
         }
+        /* High-visibility internal and editorial link styling */
+        .seo-article a {
+            color: #e11d48 !important;
+            font-weight: 600 !important;
+            text-decoration: underline !important;
+            text-decoration-thickness: 1.5px !important;
+            text-underline-offset: 3px !important;
+            transition: all 0.15s ease-in-out;
+        }
+        .seo-article a:hover {
+            color: #be123c !important;
+            text-decoration-color: #be123c !important;
+            background-color: #fff1f2;
+            border-radius: 3px;
+        }
         .seo-article h2[id], .seo-article h3[id] {
             scroll-margin-top: 5rem;
         }
@@ -830,6 +845,15 @@
                     <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> यूट्यूब वीडियो कैसे कन्वर्ट करें:
                 </span>
                 <span>वीडियो लिंक कॉपी करें ➔ पेस्ट करें और फॉर्मेट चुनें ➔ फ़ाइल डाउनलोड करें</span>
+            </div>
+
+            <!-- In-Depth Editorial Guide Jump Link -->
+            <div class="mt-4 flex items-center justify-center">
+                <a href="#editorial-guide" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all shadow-xs group">
+                    <i class="fa-solid fa-book-open text-rose-600 group-hover:scale-110 transition-transform"></i>
+                    <span>Read In-Depth Technical Guide &amp; Codec Matrix (1,500+ Words)</span>
+                    <i class="fa-solid fa-arrow-down text-rose-500 group-hover:translate-y-0.5 transition-transform"></i>
+                </a>
             </div>
 
             
@@ -1544,7 +1568,7 @@
         </section>
 
         <!-- SEO ARTICLE & DETAILED REFERENCE CONTENT -->
-        <section class="py-14 bg-white border-t border-gray-200">
+        <section id="editorial-guide" class="py-14 bg-white border-t border-gray-200">
             <div class="seo-article max-w-3xl mx-auto px-4 sm:px-6">
                 <div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">
 <p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid fa-list-ul mr-2 text-rose-600"></i>वीडियो गाइड विषय-सूची</p>

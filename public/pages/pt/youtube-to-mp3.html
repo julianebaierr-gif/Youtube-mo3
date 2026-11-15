@@ -366,6 +366,21 @@
             color: #e11d48;
             text-decoration: underline;
         }
+        /* High-visibility internal and editorial link styling */
+        .seo-article a {
+            color: #e11d48 !important;
+            font-weight: 600 !important;
+            text-decoration: underline !important;
+            text-decoration-thickness: 1.5px !important;
+            text-underline-offset: 3px !important;
+            transition: all 0.15s ease-in-out;
+        }
+        .seo-article a:hover {
+            color: #be123c !important;
+            text-decoration-color: #be123c !important;
+            background-color: #fff1f2;
+            border-radius: 3px;
+        }
         .seo-article h2[id], .seo-article h3[id] {
             scroll-margin-top: 5rem;
         }
@@ -830,6 +845,15 @@
                     <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> Como Baixar Vídeos do YouTube em 3 Passos:
                 </span>
                 <span>Copie o Link do Vídeo ➔ Cole e Escolha o Formato ➔ Baixe Direto no Dispositivo</span>
+            </div>
+
+            <!-- In-Depth Editorial Guide Jump Link -->
+            <div class="mt-4 flex items-center justify-center">
+                <a href="#editorial-guide" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all shadow-xs group">
+                    <i class="fa-solid fa-book-open text-rose-600 group-hover:scale-110 transition-transform"></i>
+                    <span>Read In-Depth Technical Guide &amp; Codec Matrix (1,500+ Words)</span>
+                    <i class="fa-solid fa-arrow-down text-rose-500 group-hover:translate-y-0.5 transition-transform"></i>
+                </a>
             </div>
 
             
@@ -1544,7 +1568,7 @@
         </section>
 
         <!-- SEO ARTICLE & DETAILED REFERENCE CONTENT -->
-        <section class="py-14 bg-white border-t border-gray-200">
+        <section id="editorial-guide" class="py-14 bg-white border-t border-gray-200">
             <div class="seo-article max-w-3xl mx-auto px-4 sm:px-6">
                 <h2>Guia de Áudio: Como Obter o Melhor Som com o Conversor YouTube para MP3</h2>
 <p>O formato MP3 permanece como o padrão mais confiável para colecionadores de música e ouvintes do dia a dia. Seja para animar churrascos com a família, treinar pesado na academia ou fazer viagens longas pelas estradas brasileiras, ter suas músicas salvas no celular ou pendrive elimina a dependência de planos de internet móvel e evita interrupções desagradáveis de comerciais.</p>
