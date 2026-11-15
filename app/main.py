@@ -523,10 +523,10 @@ def get_authoritative_feed_xml() -> str:
     import html
     pages = ["home", "youtube-to-mp3", "youtube-to-mp4", "youtube-shorts-downloader"]
     release_dates = {
+        "home": "Sat, 01 Aug 2026",
         "youtube-to-mp3": "Tue, 18 Aug 2026",
         "youtube-to-mp4": "Tue, 15 Sep 2026",
         "youtube-shorts-downloader": "Thu, 15 Oct 2026",
-        "home": "Wed, 04 Nov 2026",
         "blog": "Thu, 12 Nov 2026",
         "article": "Thu, 12 Nov 2026",
     }
@@ -542,7 +542,7 @@ def get_authoritative_feed_xml() -> str:
             title = data.get("title") or "YT4MP3"
             desc = data.get("meta_desc") or "YouTube converter tool"
             desc = desc.replace("Cepat, cepat", "Cepat")
-            pub_date = release_dates.get(p, "Wed, 04 Nov 2026")
+            pub_date = release_dates.get(p, "Sat, 01 Aug 2026")
             urls.append((link, title, desc, lang, pub_date))
             
     # 2. Blog Hub Pages
