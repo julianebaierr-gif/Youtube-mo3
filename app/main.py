@@ -575,6 +575,28 @@ def get_authoritative_feed_xml() -> str:
             pub_date = release_dates["article"]
             urls.append((link, title, desc, lang, pub_date))
             
+    # Read sitemap dates so feed lastmod matches sitemap.xml exactly
+    sitemap_file = os.path.join(BASE_DIR, "public", "sitemap.xml")
+    sitemap_dates = {}
+    if os.path.exists(sitemap_file):
+        try:
+            import xml.etree.ElementTree as ET
+            stree = ET.parse(sitemap_file)
+            ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+            for u in stree.getroot().findall('sm:url', ns):
+                loc = u.find('sm:loc', ns)
+                lm = u.find('sm:lastmod', ns)
+                if loc is not None and loc.text:
+                    sitemap_dates[loc.text.strip()] = lm.text.strip() if lm is not None and lm.text else "2026-11-11"
+        except Exception:
+            pass
+
+    updated_3_pages = {
+        "https://www.yt4mp3.com/youtube-to-mp3": "2026-11-15",
+        "https://www.yt4mp3.com/youtube-to-mp4": "2026-11-15",
+        "https://www.yt4mp3.com/youtube-shorts-downloader": "2026-11-15",
+    }
+
     items_xml = "".join([
         f"""    <item>
       <title>{html.escape(title, quote=True)}</title>
@@ -583,6 +605,7 @@ def get_authoritative_feed_xml() -> str:
       <description>{html.escape(desc, quote=True)}</description>
       <dc:language>{item_lang}</dc:language>
       <pubDate>{pub_date}</pubDate>
+      <lastmod>{updated_3_pages.get(link) or sitemap_dates.get(link, "2026-11-11")}</lastmod>
     </item>\n""" for link, title, desc, item_lang, pub_date in urls
     ])
     _FEED_CACHE_XML = f"""<?xml version="1.0" encoding="UTF-8"?>
