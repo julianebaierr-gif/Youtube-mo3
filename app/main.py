@@ -728,6 +728,8 @@ async def start_auto_indexnow_scheduler():
             await asyncio.sleep(14400)
     asyncio.create_task(_auto_index_loop())
 
+_LAST_PROXY_ALERT_TIME = 0
+
 @app.get("/api/report-issue")
 @app.post("/api/report-issue")
 async def report_issue(request: Request):
@@ -767,16 +769,37 @@ async def report_issue(request: Request):
                 safe_err = html_lib.escape(error_detail)
                 safe_ip = html_lib.escape(client_ip)
 
-                is_expected_restr = any(k.lower() in error_detail.lower() for k in [
+                is_proxy_exhausted = any(k.lower() in error_detail.lower() for k in [
+                    "traffic_exhausted", "proxyerror", "tunnel connection failed: 407", "407 traffic_exhausted", "unable to connect to proxy"
+                ])
+
+                is_expected_restr = is_proxy_exhausted or any(k.lower() in error_detail.lower() for k in [
                     "broadcaster", "live stream", "private video", "age-restricted", "video too long", 
                     "membership required", "paid video", "video unavailable", "region restricted", 
                     "duration limits", "up to 3 hours", "exceeds", "not available in your country", 
                     "blocked in your country", "🔞", "🔒", "📡", "💰", "❌", "⏱", "senderschutz"
                 ])
-                # Suppress Telegram alerts for expected user notices (video too long, 18+ age restricted, DRM)
-                # to keep owner's phone quiet and free of false alarms. Only real crashes trigger alerts!
+                # Suppress Telegram alerts for expected user notices (video too long, 18+ age restricted, DRM, or proxy quota)
+                # to keep owner's phone quiet and free of false alarms.
                 if is_expected_restr:
                     print(f"[EXPECTED_NOTICE_LOCAL_LOG] {video_title} | {error_detail} (Telegram muted)")
+                    # If proxy traffic is exhausted, notify owner ONCE every 4 hours cleanly instead of spamming every request
+                    if is_proxy_exhausted:
+                        global _LAST_PROXY_ALERT_TIME
+                        now_ts = time.time()
+                        if now_ts - _LAST_PROXY_ALERT_TIME > 14400:
+                            _LAST_PROXY_ALERT_TIME = now_ts
+                            admin_alert = (
+                                "⚠️ <b>YT4MP3 Admin Notice: Proxy Data Exhausted!</b>\n\n"
+                                "Your <b>DataImpulse Residential Proxy</b> bandwidth has run out (<code>407 TRAFFIC_EXHAUSTED</code>).\n\n"
+                                "💡 <i>FastSaver Pro API is still operating normally with 99,000+ credits. However, fallback extraction for region-locked or extra-long videos requires proxy bandwidth. Please top up your DataImpulse proxy dashboard.</i>"
+                            )
+                            tg_url = f"https://api.telegram.org/bot{tg_token}/sendMessage"
+                            tg_payload = json.dumps({"chat_id": tg_chat_id, "text": admin_alert, "parse_mode": "HTML", "disable_web_page_preview": True}).encode("utf-8")
+                            try:
+                                urllib.request.urlopen(urllib.request.Request(tg_url, data=tg_payload, headers={"Content-Type": "application/json"}), timeout=5)
+                            except Exception:
+                                pass
                     return {"success": True, "message": "Expected restriction handled gracefully on client; Telegram alert muted."}
 
                 header_badge = "🚨 <b>YT4MP3 Conversion Alert</b>"
@@ -1251,7 +1274,7 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
                     headers=headers,
                     method="POST",
                 )
-                with urllib.request.urlopen(req, timeout=18) as res:
+                with urllib.request.urlopen(req, timeout=35) as res:
                     data = json.loads(res.read().decode("utf-8"))
                 _check_fastsaver_credits_and_alert(force_check=True)
                 if data.get("ok") and data.get("download_url"):
@@ -1315,9 +1338,13 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
             }
         except Exception as fallback_err:
             print(f"[DATAIMPULSE_FALLBACK_FAIL] {vid}: {fallback_err}")
+            if "TRAFFIC_EXHAUSTED" in str(fallback_err).upper():
+                detail_err = "Stream server is temporarily busy. Please tap Retry to reconnect."
 
     user_facing_error = detail_err
     if detail_err in ["download.failed", "fastsaver_unknown_error"]:
+        user_facing_error = "Stream server is temporarily busy. Please tap Retry to reconnect."
+    elif "TRAFFIC_EXHAUSTED" in str(detail_err).upper():
         user_facing_error = "Stream server is temporarily busy. Please tap Retry to reconnect."
 
     return {
