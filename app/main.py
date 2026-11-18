@@ -773,13 +773,19 @@ async def report_issue(request: Request):
                     "traffic_exhausted", "proxyerror", "tunnel connection failed: 407", "407 traffic_exhausted", "unable to connect to proxy"
                 ])
 
-                is_expected_restr = is_proxy_exhausted or any(k.lower() in error_detail.lower() for k in [
+                is_transient_notice = any(k.lower() in error_detail.lower() for k in [
+                    "temporarily busy", "stream server is temporarily busy", "stream server was busy", 
+                    "tap retry", "retry to reconnect", "retry below", "download.failed", "fastsaver_unknown_error",
+                    "stream processing timeout", "stream conversion could not be completed"
+                ])
+
+                is_expected_restr = is_proxy_exhausted or is_transient_notice or any(k.lower() in error_detail.lower() for k in [
                     "broadcaster", "live stream", "private video", "age-restricted", "video too long", 
                     "membership required", "paid video", "video unavailable", "region restricted", 
                     "duration limits", "up to 3 hours", "exceeds", "not available in your country", 
                     "blocked in your country", "🔞", "🔒", "📡", "💰", "❌", "⏱", "senderschutz"
                 ])
-                # Suppress Telegram alerts for expected user notices (video too long, 18+ age restricted, DRM, or proxy quota)
+                # Suppress Telegram alerts for expected user notices (video too long, 18+ age restricted, DRM, proxy quota, or transient retry)
                 # to keep owner's phone quiet and free of false alarms.
                 if is_expected_restr:
                     print(f"[EXPECTED_NOTICE_LOCAL_LOG] {video_title} | {error_detail} (Telegram muted)")
@@ -1256,9 +1262,10 @@ async def fastsaver_video(url: str, mode: str = "audio", quality: str = "720"):
             pass
 
         fs_formats_to_try = [fmt]
-        # Only add 720p fallback if the requested was higher and 720p is known to be available
-        if fmt != "720p" and (not avail or 720 in avail):
-            fs_formats_to_try.append("720p")
+        # Graceful degradation fallbacks for video: try requested format, then 720p, 480p, 360p
+        for candidate in ["720p", "480p", "360p"]:
+            if candidate not in fs_formats_to_try:
+                fs_formats_to_try.append(candidate)
 
     detail_err = "Conversion could not be completed"
     import time
