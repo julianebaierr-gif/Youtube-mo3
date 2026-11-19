@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-KEYWORDS_RESEARCH = {'content_gap': ['Y2Mate y Snappea muestran publicidad agresiva con redirecciones maliciosas y falsos botones de '
-                 'descarga.',
-                 'Los competidores no ofrecen tablas claras de comparacion de tasas de bits (320kbps vs 128kbps) ni '
+KEYWORDS_RESEARCH = {'content_gap': ['Los competidores no ofrecen tablas claras de comparacion de tasas de bits (320kbps vs 128kbps) ni '
                  'explican la diferencia entre codecs AAC y MP3.',
                  'No explican como guardar archivos en la app Archivos de iPhone o gestionar almacenamiento en Android '
                  'sin apps sospechosas.',
@@ -94,34 +92,19 @@ KEYWORDS_RESEARCH = {'content_gap': ['Y2Mate y Snappea muestran publicidad agres
                      'descargar youtube shorts gratis',
                      'descargar youtube shorts online',
                      'descargar shorts en celular',
-                     'savefrom youtube shorts',
-                     'savefrom shorts',
-                     'shortsnoob descargar',
-                     'publer youtube shorts',
-                     'y2mate shorts',
-                     'ssyoutube shorts',
                      'snaptik shorts',
                      '10downloader shorts',
-                     'savefrom net descargar videos de youtube shorts',
-                     'descargador publer',
-                     'y2mate descargar shorts',
                      'descargar shorts save from',
                      'savetube shorts',
-                     'yt shorts downloader publer',
                      'snaptube shorts',
                      'vidmate shorts descargar',
                      'descargar shorts por link',
-                     'savefrom mp4 shorts',
                      'ss youtube shorts',
-                     'shortsnoob gratis',
-                     'publer downloader gratis',
-                     'y2mate shorts mp3',
                      'save from net shorts',
                      'online video downloader shorts',
                      'snaptik youtube shorts',
                      '10downloader youtube shorts',
                      'descargador de videos shorts online',
-                     'convertidor savefrom shorts',
                      'relacion de aspecto 9 16 vertical',
                      'resolucion 1080p full hd',
                      'resolucion 1080x1920',
@@ -452,8 +435,8 @@ PAGES = {'home': {'active_tab': 'all',
                                                'transition-colors">3. Extracción de Pistas de Audio MP3 a 320 '
                                                'kbps</a></li>\n'
                                                '  <li><a href="#comparativa-competidores" class="hover:text-rose-600 '
-                                               'transition-colors">4. Tabla Comparativa: YT4MP3 vs ShortsNoob vs '
-                                               'SaveFrom vs Publer</a></li>\n'
+                                               'transition-colors">4. Tabla Comparativa: YT4MP3 frente a otros '
+                                               'convertidores en línea</a></li>\n'
                                                '  <li><a href="#videos-sin-marcas-de-agua" class="hover:text-rose-600 '
                                                'transition-colors">5. Archivos Limpios sin Logotipos ni '
                                                'Superposiciones</a></li>\n'
@@ -636,8 +619,8 @@ PAGES = {'home': {'active_tab': 'all',
                                                'sin gastar megabytes de almacenamiento.</li>\n'
                                                '</ul>\n'
                                                '\n'
-                                               '<h2 id="comparativa-competidores">4. Tabla Comparativa: YT4MP3 vs '
-                                               'ShortsNoob vs SaveFrom vs Publer</h2>\n'
+                                               '<h2 id="comparativa-competidores">4. Tabla Comparativa: YT4MP3 frente '
+                                               'a otros convertidores en línea</h2>\n'
                                                '<p>Para apreciar con claridad las ventajas de nuestra plataforma, vale '
                                                'la pena analizar cómo operan los servicios más conocidos del sector. '
                                                'Con el transcurso de los años, muchos portales tradicionales han '
@@ -650,9 +633,9 @@ PAGES = {'home': {'active_tab': 'all',
                                                '<tr>\n'
                                                '<th>Función / Capacidad</th>\n'
                                                '<th>YT4MP3 (Recomendado)</th>\n'
-                                               '<th>ShortsNoob</th>\n'
-                                               '<th>SaveFrom / SSYouTube</th>\n'
-                                               '<th>Publer Downloader</th>\n'
+                                               '<th>Herramientas web básicas</th>\n'
+                                               '<th>Sitios con ventanas emergentes</th>\n'
+                                               '<th>Servicios con registro</th>\n'
                                                '</tr>\n'
                                                '</thead>\n'
                                                '<tbody>\n'
@@ -716,12 +699,10 @@ PAGES = {'home': {'active_tab': 'all',
                                                '</table>\n'
                                                '</div>\n'
                                                '\n'
-                                               '<p>Servicios como <strong>Savefrom</strong> o '
-                                               '<strong>ShortsNoob</strong> obligan en ocasiones a evitar ventanas '
-                                               'emergentes molestas o notificaciones no deseadas. Por otro lado, '
-                                               'aplicaciones corporativas como Publer imponen registros obligatorios. '
-                                               'YT4MP3 se enfoca en la máxima simplicidad: pegas tu enlace, guardas el '
-                                               'archivo y continúas con tus actividades.</p>\n'
+                                               '<p>Muchos convertidores tradicionales obligan a esquivar ventanas '
+                                               'emergentes molestas o exigen crear una cuenta obligatoria antes de '
+                                               'descargar. YT4MP3 se enfoca en la máxima simplicidad: pegas tu enlace, '
+                                               'guardas el archivo y continúas con tus actividades.</p>\n'
                                                '\n'
                                                '<h2 id="videos-sin-marcas-de-agua">5. Archivos Limpios sin Logotipos '
                                                'ni Superposiciones</h2>\n'

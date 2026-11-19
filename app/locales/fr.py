@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-KEYWORDS_RESEARCH = {'primary': ['convertir youtube en mp3',
-             'telecharger video youtube',
-             'convertisseur youtube mp4',
-             'convertir video youtube en audio',
-             'telechargeur youtube gratuit',
-             'youtube en mp3 320 kbps',
-             'extraire audio youtube',
-             'convertisseur video youtube en ligne',
-             'telecharger youtube shorts',
-             'convertir video youtube sans logiciel'],
+KEYWORDS_RESEARCH = {'content_gap': ["Les sites concurrents affichent des bannières agressives et de faux boutons 'Télécharger' contenant "
+                 'des programmes malveillants.',
+                 "Absence d'explications claires sur la copie privée et la compatibilité des fichiers MP3 avec "
+                 "l'application Fichiers sur iPhone.",
+                 'Manque de précisions techniques concernant les débits binaires (320 kbps vs 128 kbps) et le muxing '
+                 'vidéo 1080p.',
+                 'YT4MP3 propose une conversion en ligne transparente, rapide, sécurisée et exempte de fenêtres '
+                 'publicitaires trompeuses.'],
  'lsi_semantics': ['youtube convertir',
                    'convertisseur et téléchargeur mp3',
                    'youtube shorts en mp4',
@@ -70,14 +68,16 @@ KEYWORDS_RESEARCH = {'primary': ['convertir youtube en mp3',
                    'pas dapplication requise',
                    'haute definition audio',
                    'telechargement direct rapide'],
- 'content_gap': ["Les sites concurrents affichent des bannières agressives et de faux boutons 'Télécharger' contenant "
-                 'des programmes malveillants.',
-                 "Absence d'explications claires sur la copie privée et la compatibilité des fichiers MP3 avec "
-                 "l'application Fichiers sur iPhone.",
-                 'Manque de précisions techniques concernant les débits binaires (320 kbps vs 128 kbps) et le muxing '
-                 'vidéo 1080p.',
-                 'YT4MP3 propose une conversion en ligne transparente, rapide, sécurisée et exempte de fenêtres '
-                 'publicitaires trompeuses.'],
+ 'primary': ['convertir youtube en mp3',
+             'telecharger video youtube',
+             'convertisseur youtube mp4',
+             'convertir video youtube en audio',
+             'telechargeur youtube gratuit',
+             'youtube en mp3 320 kbps',
+             'extraire audio youtube',
+             'convertisseur video youtube en ligne',
+             'telecharger youtube shorts',
+             'convertir video youtube sans logiciel'],
  'shorts_keywords': ['télécharger short youtube',
                      'télécharger youtube shorts',
                      'télécharger video youtube short',
@@ -93,34 +93,19 @@ KEYWORDS_RESEARCH = {'primary': ['convertir youtube en mp3',
                      'télécharger youtube shorts gratuit',
                      'télécharger shorts en ligne',
                      'télécharger shorts sur mobile',
-                     'savefrom youtube shorts',
-                     'savefrom shorts',
-                     'shortsnoob francais',
-                     'publer youtube shorts',
-                     'y2mate shorts',
-                     'ssyoutube shorts',
                      'snaptik shorts',
                      '10downloader shorts',
-                     'savefrom net télécharger short',
                      'savetube shorts',
-                     'yt shorts downloader publer',
                      'snaptube shorts',
                      'vidmate shorts télécharger',
                      'télécharger shorts par lien',
-                     'savefrom mp4 shorts',
                      'ss youtube shorts',
-                     'shortsnoob gratuit',
-                     'publer downloader gratuit',
-                     'y2mate shorts mp3',
                      'save from net shorts',
                      'online video downloader shorts',
                      'snaptik youtube shorts',
                      '10downloader youtube shorts',
                      'téléchargeur de shorts en ligne',
-                     'convertisseur savefrom shorts',
-                     'savefrom net shorts telecharger',
                      'telecharger video short youtube gratuit',
-                     'telecharger shortsnoob',
                      'format vertical 9 16',
                      'résolution 1080p full hd',
                      'résolution 1080x1920',
@@ -189,83 +174,7 @@ KEYWORDS_RESEARCH = {'primary': ['convertir youtube en mp3',
                      'comment installer l application yt4mp3 pour télécharger des shorts',
                      'combien d espace prend un short youtube en 1080p']}
 
-PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3',
-          'meta_desc': "Convertissez des vidéos YouTube publiques en MP3 jusqu'à 320 kbps et MP4 jusqu'à 1080p/4K "
-                       '(lorsque la source le propose) gratuitement. Sans logiciel ni inscription, compatible mobile '
-                       'et PC.',
-          'h1': 'Convertisseur YouTube en MP3 et MP4 en Ligne',
-          'subtitle': "Extrayez l'audio jusqu'à 320 kbps et enregistrez des vidéos en Full HD ou 4K lorsque la source "
-                      "le propose, directement dans votre navigateur sans installer d'application.",
-          'badge': 'Convertisseur Multimédia en Ligne',
-          'placeholder': 'Collez le lien YouTube ici...',
-          'active_tab': 'all',
-          'canonical_url': 'https://www.yt4mp3.com/fr/',
-          'features': [{'icon': 'fa-solid fa-bolt',
-                        'title': 'Conversion Rapide',
-                        'desc': 'Nos serveurs cloud traitent la conversion audio et vidéo directement dans votre '
-                                'navigateur.'},
-                       {'icon': 'fa-solid fa-music',
-                        'title': "Audio Pur jusqu'à 320 kbps",
-                        'desc': "Conservez une bonne clarté sonore avec un débit allant jusqu'à 320 kbps pour une "
-                                'écoute agréable et équilibrée.'},
-                       {'icon': 'fa-solid fa-film',
-                        'title': 'Vidéo Full HD et 4K',
-                        'desc': 'Prise en charge des résolutions 720p, 1080p et 4K Ultra HD, lorsque la vidéo source '
-                                'le propose, au format standard MP4.'},
-                       {'icon': 'fa-solid fa-mobile-screen',
-                        'title': 'Compatible Mobiles et PC',
-                        'desc': 'Compatible avec les smartphones Android, iPhone (Safari), iPad, ainsi que les '
-                                'ordinateurs Windows et Mac.'},
-                       {'icon': 'fa-solid fa-shield-halved',
-                        'title': 'Sans Publicité Trompeuse',
-                        'desc': "Profitez d'un outil propre. Pas de faux boutons de téléchargement ni de pop-ups "
-                                'intrusifs.'},
-                       {'icon': 'fa-solid fa-infinity',
-                        'title': 'Gratuit pour un Usage Quotidien',
-                        'desc': 'Convertissez vos podcasts, conférences, cours et contenus libres de droits pour un '
-                                'usage personnel, sans abonnement ni carte bancaire.'}],
-          'faq': [{'q': 'Comment convertir une vidéo YouTube en MP3 ou MP4 sur YT4MP3 ?',
-                   'a': "La procédure se déroule en 3 étapes rapides : 1) Copiez l'URL de la vidéo ou du Short sur "
-                        'YouTube. 2) Collez le lien dans la boîte de recherche sur YT4MP3. 3) Sélectionnez la qualité '
-                        'audio désirée (320kbps, 256kbps ou 128kbps) ou la résolution vidéo disponible (par exemple '
-                        '1080p ou 720p lorsque la source le propose), puis cliquez sur Télécharger pour enregistrer le '
-                        'fichier.'},
-                  {'q': 'Faut-il installer un logiciel ou une extension de navigateur ?',
-                   'a': 'Non. YT4MP3 fonctionne en ligne depuis les principaux navigateurs (Google Chrome, Safari, '
-                        "Mozilla Firefox, Microsoft Edge ou Opera). Vous n'avez pas besoin d'installer de fichiers "
-                        "exécutables ou d'extensions susceptibles d'alourdir votre ordinateur."},
-                  {'q': 'Comment télécharger des fichiers sur iPhone ou iPad ?',
-                   'a': 'Sur les appareils iOS (iPhone et iPad), ouvrez Safari, collez le lien sur YT4MP3 et lancez le '
-                        'téléchargement. Safari affichera une icône bleue de téléchargement en haut. Le fichier est '
-                        "automatiquement stocké dans l'application native 'Fichiers' (Files) sous le dossier "
-                        "'Téléchargements', prêt pour une lecture hors ligne."},
-                  {'q': 'Où sont enregistrés les fichiers téléchargés sur Android ?',
-                   'a': 'Sur un smartphone Android, vos fichiers MP3 et MP4 sont enregistrés par défaut dans le '
-                        "dossier 'Download' (Téléchargements) de votre mémoire interne, accessible via l'application "
-                        "'Mes Fichiers' ou 'Gestionnaire de fichiers'."},
-                  {'q': 'Quelle est la différence entre un débit de 128 kbps et 320 kbps ?',
-                   'a': 'Le débit de 128 kbps produit des fichiers très légers, parfaits pour les podcasts parlés et '
-                        "les cours audios afin d'économiser l'espace mémoire. Le débit de 320 kbps offre la qualité "
-                        'acoustique maximale du format MP3 avec des basses profondes et des aigus cristallins, '
-                        'recommandé pour la musique.'},
-                  {'q': 'Puis-je convertir des vidéos YouTube Shorts en MP3 ?',
-                   'a': "Oui. Cliquez sur 'Partager' sur la vidéo Shorts, copiez le lien et collez-le sur YT4MP3 afin "
-                        "d'extraire la piste audio au format MP3."},
-                  {'q': 'Le service est-il fiable et sans pop-ups ?',
-                   'a': "Oui. Nous ne proposons aucun installateur et n'affichons pas de fenêtres pop-ups piégées. Le "
-                        'traitement est effectué sur nos serveurs distants et seul le fichier converti vous est '
-                        'fourni.'},
-                  {'q': 'Puis-je transférer les fichiers audio sur une clé USB pour autoradio de voiture ?',
-                   'a': 'Oui. Une fois le fichier MP3 téléchargé sur votre ordinateur, branchez votre clé USB et '
-                        'copiez les fichiers audio dessus. Les autoradios de voiture et enceintes portables lisent le '
-                        'format MP3 standard sans configuration supplémentaire.'},
-                  {'q': 'Y a-t-il une limite sur le nombre de conversions par jour ?',
-                   'a': 'Le service est gratuit pour un usage personnel quotidien. Vous pouvez convertir les contenus '
-                        'autorisés dont vous avez besoin pour votre consultation hors ligne.'},
-                  {'q': "Puis-je écouter les fichiers audio enregistrés avec l'écran du smartphone éteint ?",
-                   'a': 'Oui ! Comme le fichier MP3 est stocké localement dans la mémoire de votre téléphone, vous '
-                        "pouvez le lire avec votre lecteur multimédia habituel même lorsque l'écran est verrouillé, ce "
-                        "qui préserve considérablement l'autonomie de votre batterie."}],
+PAGES = {'home': {'active_tab': 'all',
           'article_html': '<h2>Guide du Convertisseur YouTube en MP3 et MP4 : Téléchargement Propre et Haute '
                           'Fidélité</h2>\n'
                           "<p>L'accès hors ligne aux contenus multimédias est devenu essentiel pour de nombreux "
@@ -395,376 +304,84 @@ PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3
                           'copie privée pour votre propre usage personnel, de la conservation de documents éducatifs '
                           "de libre accès, ou de l'archivage de créations sous licence Creative Commons et de domaine "
                           "public. Disposer d'une copie locale de contenus essentiels garantit la pérennité de votre "
-                          'accès au savoir et à la culture en toutes circonstances.</p>'},
- 'youtube-to-mp3': {'title': 'Convertisseur YouTube MP3 320 kbps Haute Qualité | YT4MP3',
-                    'meta_desc': 'Convertissez des vidéos YouTube en MP3 320 kbps gratuitement en ligne. Son clair, '
-                                 'sans logiciel, rapide et compatible smartphones, clé USB et autoradio.',
-                    'h1': 'Convertisseur YouTube en MP3 Haute Définition',
-                    'subtitle': 'Extrayez la piste audio de vos vidéos autorisées, podcasts et conférences YouTube au '
-                                "format MP3 standard avec un débit allant jusqu'à 320 kbps lorsque la source le "
-                                'permet.',
-                    'badge': 'Audio Haute Définition',
-                    'placeholder': 'Collez le lien de la vidéo YouTube...',
-                    'active_tab': 'yt-mp3',
-                    'canonical_url': 'https://www.yt4mp3.com/fr/youtube-to-mp3',
-                    'features': [{'icon': 'fa-solid fa-headphones',
-                                  'title': "Débit Audio jusqu'à 320 kbps",
-                                  'desc': "Profitez d'une restitution sonore claire au format MP3 (jusqu'à 320 kbps "
-                                          'selon la source) pour une écoute confortable.'},
-                                 {'icon': 'fa-solid fa-sliders',
-                                  'title': 'Choix de la Compression',
-                                  'desc': 'Sélectionnez 320 kbps pour une fidélité acoustique irréprochable ou 128 '
-                                          "kbps pour économiser l'espace mémoire."},
-                                 {'icon': 'fa-solid fa-compact-disc',
-                                  'title': 'Large Compatibilité MP3',
-                                  'desc': 'Vos fichiers se lisent sur la grande majorité des systèmes audio, casques '
-                                          'bluetooth, autoradios et enceintes nomades.'},
-                                 {'icon': 'fa-solid fa-shield-halved',
-                                  'title': 'Sans Logiciel Tiers',
-                                  'desc': "Ne téléchargez aucun programme suspect. Toute la conversion s'effectue en "
-                                          'direct dans votre navigateur web.'},
-                                 {'icon': 'fa-solid fa-cloud-arrow-down',
-                                  'title': 'Extraction Audio Directe',
-                                  'desc': 'Nos serveurs ciblent uniquement la piste audio sur YouTube, accélérant le '
-                                          'téléchargement et préservant votre bande passante.'},
-                                 {'icon': 'fa-solid fa-car',
-                                  'title': 'Idéal pour Clé USB en Voiture',
-                                  'desc': 'Rassemblez vos fichiers audio et podcasts sur clé USB pour vos trajets '
-                                          'routiers sans dépendre du réseau 4G.'}],
-                    'faq': [{'q': 'Que signifie un débit de 320 kbps pour un fichier audio MP3 ?',
-                             'a': 'Le débit binaire de 320 kbps (kilobits par seconde) correspond au niveau de qualité '
-                                  'maximale offert par le conteneur MP3. Il offre une bonne dynamique sonore, des '
-                                  'basses rondes et des voix claires, sans la compression agressive et les artefacts '
-                                  'métalliques des débits réduits comme 96 kbps.'},
-                            {'q': 'Comment transférer les fichiers MP3 sur une clé USB pour autoradio ?',
-                             'a': 'Une fois les fichiers MP3 enregistrés sur votre ordinateur, insérez votre clé USB '
-                                  "dans le port de votre PC ou Mac. Ouvrez le dossier 'Téléchargements', sélectionnez "
-                                  'les fichiers MP3 et copiez-les sur la clé USB. Votre autoradio lira les dossiers '
-                                  'instantanément.'},
-                            {'q': "Puis-je utiliser un MP3 téléchargé comme sonnerie de réveil ou d'appel ?",
-                             'a': 'Oui. Sur Android, accédez à Paramètres > Sons et vibrations > Sonnerie et ajoutez '
-                                  "le fichier MP3 téléchargé. Sur iPhone, vous pouvez utiliser l'application gratuite "
-                                  'GarageBand pour définir le fichier audio comme sonnerie personnalisée.'},
-                            {'q': 'Est-il possible de convertir des vidéos longues de 1 ou 2 heures en MP3 ?',
-                             'a': 'Oui. YT4MP3 prend en charge les longues émissions de radio, conférences et '
-                                  'enregistrements de cours.'},
-                            {'q': 'Le service est-il réellement gratuit sans frais cachés ?',
-                             'a': 'Oui, notre outil est entièrement gratuit pour un usage personnel. Aucune carte '
-                                  'bancaire, aucun numéro de téléphone ni aucun abonnement ne sont requis.'},
-                            {'q': 'Le fichier téléchargé contient-il le titre de la vidéo ?',
-                             'a': 'Oui, notre outil nomme automatiquement le fichier MP3 avec le titre officiel de la '
-                                  'vidéo YouTube pour une organisation facilitée de votre discothèque.'},
-                            {'q': "Puis-je écouter les fichiers avec l'écran de mon téléphone éteint ?",
-                             'a': 'Oui ! Étant donné que le fichier MP3 est enregistré directement dans votre '
-                                  "appareil, vous pouvez le lire avec votre lecteur local l'écran verrouillé sans "
-                                  'consommer de batterie superflue.'},
-                            {'q': 'Comment écouter les fichiers enregistrés dans votre lecteur audio sur smartphone ?',
-                             'a': "Ouvrez simplement le dossier Téléchargements ou l'application Fichiers de votre "
-                                  'smartphone et lancez vos fichiers MP3 directement depuis votre lecteur audio '
-                                  'habituel.'}],
-                    'article_html': "<h2>Guide d'Extraction Audio YouTube en MP3 Haute Définition</h2>\n"
-                                    '<p>Le format MP3 demeure un format pratique pour conserver et écouter ses '
-                                    'fichiers audio, cours et podcasts hors ligne. Que ce soit pour vous accompagner '
-                                    'pendant vos séances de sport à la salle, lors de vos trajets quotidiens dans les '
-                                    'transports en commun ou pour agrémenter de longues heures de route en voiture, '
-                                    'disposer de fichiers audio physiques évite les interruptions publicitaires '
-                                    'répétitives et la surconsommation de votre forfait internet mobile.</p>\n'
-                                    '\n'
-                                    "<p>Chez <strong>YT4MP3</strong>, nous mettons un point d'honneur à offrir une "
-                                    'transcodification audio soignée. Nous isolons le flux sonore le plus qualitatif '
-                                    "transmis par YouTube et appliquons un encodage MP3 à débit constant (CBR) jusqu'à "
-                                    '320 kbps afin de délivrer un son équilibré, naturel et chaleureux.</p>\n'
-                                    '\n'
-                                    '<h3>Échelle de Qualité des Fichiers MP3 : Quel Bitrate Choisir ?</h3>\n'
-                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
-                                    '<table>\n'
-                                    '<thead>\n'
-                                    '<tr>\n'
-                                    '<th>Débit Audio</th>\n'
-                                    '<th>Rendu Sonore</th>\n'
-                                    '<th>Taille Approximative (Titre 4 min)</th>\n'
-                                    '<th>Usage Conseillé</th>\n'
-                                    '</tr>\n'
-                                    '</thead>\n'
-                                    '<tbody>\n'
-                                    '<tr>\n'
-                                    '<td><strong>320 kbps</strong></td>\n'
-                                    '<td>Qualité Maximale (Studio)</td>\n'
-                                    '<td>9.2 MB</td>\n'
-                                    '<td>Casques fermés de qualité, chaîne Hi-Fi, autoradio</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>256 kbps</strong></td>\n'
-                                    '<td>Très Haute Définition</td>\n'
-                                    '<td>7.3 MB</td>\n'
-                                    '<td>Playlists musicales volumineuses sur smartphone</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>192 kbps</strong></td>\n'
-                                    '<td>Qualité Standard Équilibrée</td>\n'
-                                    '<td>5.5 MB</td>\n'
-                                    '<td>Émissions radio parlées, débats avec fond musical</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>128 kbps</strong></td>\n'
-                                    '<td>Léger et Économe</td>\n'
-                                    '<td>3.7 MB</td>\n'
-                                    '<td>Livres audio de parole, mémoire téléphone restreinte</td>\n'
-                                    '</tr>\n'
-                                    '</tbody>\n'
-                                    '</table>\n'
-                                    '</div>\n'
-                                    '\n'
-                                    "<h3>Les Bénéfices Concrets de l'Écoute Musicale Hors Ligne</h3>\n"
-                                    '<ul>\n'
-                                    '<li><strong>Écoute Hors Ligne Fluide :</strong> Écoutez vos conférences, podcasts '
-                                    'et enregistrements personnels sans interruption liée au réseau.</li>\n'
-                                    "<li><strong>Économie d'Énergie et de Batterie :</strong> La lecture d'un fichier "
-                                    "audio local l'écran éteint consomme jusqu'à quatre fois moins d'énergie que le "
-                                    "streaming d'une vidéo YouTube avec écran allumé.</li>\n"
-                                    '<li><strong>Lecture Assurée sans Réseau :</strong> Dans le métro souterrain, en '
-                                    'avion ou en pleine campagne, vos pistes audio restent toujours prêtes à être '
-                                    'jouées.</li>\n'
-                                    '</ul>'},
- 'youtube-to-mp4': {'title': "Convertir Vidéo YouTube en MP4 (jusqu'à 1080p/4K) Gratuit",
-                    'meta_desc': 'Convertissez des vidéos YouTube publiques en MP4 Full HD (1080p) et 4K lorsque la '
-                                 'source le propose, gratuitement. Fichier propre sans logo ajouté, rapide et prêt '
-                                 'pour le montage vidéo.',
-                    'h1': 'Télécharger Vidéos YouTube en MP4 Full HD',
-                    'subtitle': 'Enregistrez vos documentaires, tutoriels et cours au format standard MP4 avec la '
-                                'résolution proposée par la vidéo source et un son synchronisé.',
-                    'badge': 'Vidéo Haute Définition',
-                    'placeholder': 'Collez le lien de la vidéo YouTube à télécharger...',
-                    'active_tab': 'yt-mp4',
-                    'canonical_url': 'https://www.yt4mp3.com/fr/youtube-to-mp4',
-                    'features': [{'icon': 'fa-solid fa-tv',
-                                  'title': 'Résolution Full HD et 4K',
-                                  'desc': "Profitez d'une image nette avec la prise en charge des flux 1080p et Ultra "
-                                          'HD lorsque la source les propose.'},
-                                 {'icon': 'fa-solid fa-file-video',
-                                  'title': 'Format MP4 Standard H.264',
-                                  'desc': 'Un format largement compatible, lisible directement sur Smart TV, '
-                                          'téléphones, tablettes et ordinateurs.'},
-                                 {'icon': 'fa-solid fa-bolt',
-                                  'title': 'Assemblage Audio-Vidéo Rapide',
-                                  'desc': 'Nos serveurs réunissent automatiquement le flux vidéo haute définition et '
-                                          'la piste sonore sans perte de qualité.'},
-                                 {'icon': 'fa-solid fa-scissors',
-                                  'title': 'Prêt pour le Montage Vidéo',
-                                  'desc': 'Importez directement les fichiers téléchargés dans CapCut, DaVinci Resolve, '
-                                          'Premiere Pro ou Final Cut sans conversion.'},
-                                 {'icon': 'fa-solid fa-plane',
-                                  'title': 'Idéal pour les Déplacements',
-                                  'desc': "Emportez vos vidéos d'apprentissage ou de divertissement sur votre tablette "
-                                          'pour les visionner sereinement en voyage.'},
-                                 {'icon': 'fa-solid fa-stamp',
-                                  'title': 'Fichier Propre sans Logo Ajouté',
-                                  'desc': "Votre vidéo reste un fichier propre : notre service n'ajoute aucun logo ni "
-                                          'aucune superposition visuelle.'}],
-                    'faq': [{'q': 'Comment télécharger une vidéo YouTube en 1080p avec le son inclus ?',
-                             'a': "Sur YouTube, les flux vidéo supérieurs à 720p séparent l'image et le son. Lorsque "
-                                  'vous sélectionnez 1080p sur YT4MP3, nos serveurs fusionnent automatiquement en '
-                                  'quelques secondes le flux vidéo haute définition avec la piste audio AAC stéreo '
-                                  'pour vous livrer un fichier MP4 prêt à être visionné.'},
-                            {'q': 'Puis-je regarder les vidéos MP4 téléchargées sur une Smart TV via clé USB ?',
-                             'a': 'Oui, sans aucune difficulté. Copiez le fichier MP4 sur une clé USB et branchez-la '
-                                  'sur le port USB de votre téléviseur connecté (Samsung, LG, Sony, Philips, etc.). Le '
-                                  'lecteur de la télévision reconnaîtra le fichier instantanément.'},
-                            {'q': 'Les vidéos téléchargées peuvent-elles être éditées dans CapCut ou Premiere ?',
-                             'a': "Oui. Le format MP4 standard fourni par YT4MP3 s'importe directement sur la timeline "
-                                  'de la plupart des logiciels de montage comme CapCut, Adobe Premiere Pro ou DaVinci '
-                                  'Resolve.'},
-                            {'q': 'Combien pèse environ une vidéo de 10 minutes en 1080p ?',
-                             'a': "Le poids d'une vidéo 1080p de 10 minutes varie généralement entre 150 Mo et 280 Mo "
-                                  "en fonction de la complexité visuelle et du taux d'images (30 fps ou 60 fps). La "
-                                  "résolution 720p nécessite environ la moitié d'espace tout en restant très nette sur "
-                                  'écran de smartphone.'},
-                            {'q': 'Est-il possible de télécharger des vidéos YouTube Shorts en MP4 ?',
-                             'a': 'Oui. Collez simplement le lien de la vidéo Shorts dans notre barre de conversion et '
-                                  'sélectionnez MP4 pour télécharger la vidéo au format vertical complet avec le son.'},
-                            {'q': 'Y a-t-il un logo ou une mention publicitaire ajoutée sur la vidéo ?',
-                             'a': "Non. Le fichier est propre : notre service n'ajoute aucun logo ni aucune "
-                                  'superposition sur la vidéo convertie.'},
-                            {'q': 'Pourquoi le téléchargement en 4K prend-il un peu plus de temps ?',
-                             'a': 'La résolution 4K Ultra HD contient quatre fois plus de pixels que la Full HD. Les '
-                                  'serveurs doivent traiter un volume de données beaucoup plus lourd avant de '
-                                  'finaliser le fichier vidéo pour votre équipement.'},
-                            {'q': 'Le téléchargement est-il sans danger pour mon ordinateur ?',
-                             'a': "Oui, sécurisé. Vous ne téléchargez aucun fichier d'installation (.exe ou .apk), "
-                                  'mais uniquement le fichier vidéo multimédia pur.'}],
-                    'article_html': '<h2>Guide du Téléchargeur YouTube en MP4 Haute Définition</h2>\n'
-                                    "<p>La vidéo est le moyen d'expression le plus riche et le plus captivant du web "
-                                    "contemporain. Qu'il s'agisse de documentaires scientifiques, de cours magistraux, "
-                                    "d'ateliers de formation technique ou d'archives historiques, YouTube rassemble "
-                                    "une quantité phénoménale de savoirs. Cependant, dépendre d'une connexion internet "
-                                    "pour diffuser des vidéos lors d'une réunion professionnelle ou pendant un "
-                                    'déplacement peut réserver de mauvaises surprises.</p>\n'
-                                    '\n'
-                                    '<p>Le convertisseur <strong>YouTube en MP4</strong> de <strong>YT4MP3</strong> '
-                                    "permet d'enregistrer vos vidéos en résolutions nettes allant du 720p au 1080p "
-                                    "Full HD et jusqu'au 4K Ultra HD, lorsque la vidéo source le propose. "
-                                    "L'utilisation du conteneur MP4 encodé en H.264 et audio stéréo AAC vous assure "
-                                    'une large compatibilité avec vos équipements personnels.</p>\n'
-                                    '\n'
-                                    '<h3>Tableau Comparatif des Résolutions Vidéo MP4</h3>\n'
-                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
-                                    '<table>\n'
-                                    '<thead>\n'
-                                    '<tr>\n'
-                                    '<th>Résolution</th>\n'
-                                    '<th>Dimensions en Pixels</th>\n'
-                                    "<th>Fréquence d'Images</th>\n"
-                                    '<th>Écran Idéal</th>\n'
-                                    '<th>Poids Approximatif (10 Min)</th>\n'
-                                    '</tr>\n'
-                                    '</thead>\n'
-                                    '<tbody>\n'
-                                    '<tr>\n'
-                                    '<td><strong>4K Ultra HD</strong></td>\n'
-                                    '<td>3840 x 2160</td>\n'
-                                    '<td>60 fps / 30 fps</td>\n'
-                                    '<td>Grands téléviseurs 4K, moniteurs graphiques</td>\n'
-                                    '<td>350 - 750 MB</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>1080p Full HD</strong></td>\n'
-                                    '<td>1920 x 1080</td>\n'
-                                    '<td>60 fps / 30 fps</td>\n'
-                                    '<td>Ordinateurs portables, PC de bureau, tablettes</td>\n'
-                                    '<td>150 - 280 MB</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>720p HD</strong></td>\n'
-                                    '<td>1280 x 720</td>\n'
-                                    '<td>30 fps</td>\n'
-                                    '<td>Smartphones Android et iPhone (Recommandé)</td>\n'
-                                    '<td>65 - 130 MB</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>480p SD</strong></td>\n'
-                                    '<td>854 x 480</td>\n'
-                                    '<td>30 fps</td>\n'
-                                    "<td>Téléphones d'entrée de gamme, faible mémoire</td>\n"
-                                    '<td>30 - 60 MB</td>\n'
-                                    '</tr>\n'
-                                    '</tbody>\n'
-                                    '</table>\n'
-                                    '</div>\n'
-                                    '\n'
-                                    '<h3>Applications Utiles des Fichiers Vidéo MP4 Hors Ligne</h3>\n'
-                                    '<ul>\n'
-                                    '<li><strong>Formation et Exposés Professionnels :</strong> Enseignants et '
-                                    'formateurs peuvent projeter des vidéos explicatives de haute qualité en classe ou '
-                                    'en amphithéâtre sans risquer une panne de connexion réseau au moment clé.</li>\n'
-                                    '<li><strong>Montage pour Créateurs de Contenu :</strong> Récupérez des extraits '
-                                    "sous licence libre ou des plans d'illustration pour les assembler facilement dans "
-                                    'votre logiciel de montage sans complications de codecs.</li>\n'
-                                    '<li><strong>Voyages et Consultation Hors Ligne :</strong> Préparez vos tutoriels '
-                                    'et documentaires avant un vol long-courrier pour les visionner hors '
-                                    'connexion.</li>\n'
-                                    '</ul>'},
- 'youtube-shorts-downloader': {'title': 'Convertir YouTube Shorts en MP4 et MP3 | YT4MP3',
-                               'meta_desc': 'Convertissez YouTube Shorts en MP4 (jusqu’à 1080p Full HD lorsque la '
-                                            'source le propose) et audio MP3 jusqu’à 320 kbps gratuitement. Fichier '
-                                            'propre sans logo ajouté, compatible iPhone, Android et PC.',
-                               'h1': 'Télécharger YouTube Shorts en Ligne',
-                               'subtitle': 'Enregistrez des vidéos verticales YouTube Shorts jusqu’en 1080p Full HD '
-                                           'lorsque la source le propose, ou convertissez en audio MP3 jusqu’à 320 '
-                                           'kbps avec un fichier propre sans logo ajouté. Rapide, gratuit et sans '
-                                           'logiciel.',
-                               'badge': 'Téléchargeur YouTube Shorts',
-                               'placeholder': 'Collez le lien YouTube Shorts ici (ex. youtube.com/shorts/...)...',
-                               'active_tab': 'yt-shorts',
-                               'canonical_url': 'https://www.yt4mp3.com/fr/youtube-shorts-downloader',
-                               'features': [{'icon': 'fa-solid fa-wand-magic-sparkles',
-                                             'title': 'Fichier Propre sans Logo Ajouté',
-                                             'desc': "Obtenez un fichier propre : notre service n'ajoute aucun logo ni "
-                                                     'aucune superposition visuelle.'},
-                                            {'icon': 'fa-solid fa-mobile-screen',
-                                             'title': 'Vidéo Verticale jusqu’en 1080p',
-                                             'desc': 'Conserve le format natif 9:16 jusqu’en Full HD lorsque la source '
-                                                     'le propose, adapté aux écrans de smartphone.'},
-                                            {'icon': 'fa-solid fa-music',
-                                             'title': 'Extraction Audio MP3 320kbps',
-                                             'desc': 'Extrayez la piste audio de vos Shorts autorisés au format MP3 '
-                                                     "jusqu'à 320 kbps pour une écoute hors ligne."},
-                                            {'icon': 'fa-solid fa-shield-halved',
-                                             'title': 'Zéro Publicité Intrusive',
-                                             'desc': 'Navigation sereine sans fenêtres pop-up trompeuses, bannières '
-                                                     "intrusives ni téléchargements d'applications douteuses."},
-                                            {'icon': 'fa-solid fa-apple-whole',
-                                             'title': 'Compatible iPhone et Android',
-                                             'desc': 'Enregistrement direct dans la pellicule Photos sur iOS Safari et '
-                                                     'dans le dossier Téléchargements sur Android et PC.'},
-                                            {'icon': 'fa-solid fa-bolt',
-                                             'title': 'Astuce Raccourci URL et PWA',
-                                             'desc': "Tapez 4youtube dans la barre d'adresse pour lancer le "
-                                                     "téléchargement immédiat ou installez notre icône sur l'écran "
-                                                     "d'accueil."}],
-                               'faq': [{'q': 'Comment télécharger une vidéo YouTube Shorts sur mon téléphone ?',
-                                        'a': "Ouvrez la vidéo dans l'application YouTube, touchez Partager puis Copier "
-                                             "le lien. Collez l'URL dans la barre de recherche YT4MP3, choisissez le "
-                                             'format MP4 et appuyez sur Télécharger.'},
-                                       {'q': 'Comment enregistrer un short dans la pellicule Photos de mon iPhone ?',
-                                        'a': "Téléchargez le fichier dans Safari. Touchez l'icône de téléchargement de "
-                                             "Safari, ouvrez la vidéo, touchez le bouton Partager d'iOS et "
-                                             "sélectionnez 'Enregistrer la vidéo'. Le clip vertical apparaîtra dans "
-                                             'votre application Photos.'},
-                                       {'q': 'Notre service ajoute-t-il un logo sur les vidéos Shorts converties ?',
-                                        'a': 'Non. Le fichier est propre : notre service n’ajoute aucun logo ni aucune '
-                                             'superposition sur la vidéo.'},
-                                       {'q': 'Puis-je convertir un YouTube Short en fichier audio MP3 ?',
-                                        'a': "Oui. Sélectionnez simplement l'option MP3 avant de télécharger. Notre "
-                                             'serveur sépare la piste audio et vous délivre un fichier MP3 à 320 kbps '
-                                             'idéal pour vos sonneries ou playlists.'},
-                                       {'q': 'Quelle est la résolution vidéo des Shorts téléchargés ?',
-                                        'a': 'Nous proposons les résolutions disponibles sur la vidéo source (par '
-                                             'exemple 1080p Full HD 1080x1920 ou 720p HD lorsque la source les '
-                                             'propose).'},
-                                       {'q': 'Pourquoi certains convertisseurs échouent avec les liens Shorts ?',
-                                        'a': 'YouTube utilise une structure de lien spécifique pour les formats courts '
-                                             '(youtube.com/shorts/id) différente des vidéos classiques. Les anciens '
-                                             "outils ne savent pas l'analyser, alors que YT4MP3 la prend en charge "
-                                             'nativement.'},
-                                       {'q': 'Y a-t-il une limite quotidienne sur le nombre de Shorts téléchargeables '
-                                             '?',
-                                        'a': 'Non. YT4MP3 est gratuit pour un usage personnel quotidien, éducatif et '
-                                             'une consultation hors ligne.'},
-                                       {'q': 'Dois-je installer une application ou créer un compte utilisateur ?',
-                                        'a': "Aucune installation ni création de compte n'est requise. Tout fonctionne "
-                                             'en ligne dans votre navigateur sur iPhone, Android, Mac, Windows et '
-                                             'Linux.'},
-                                       {'q': "Quel est le raccourci d'URL pour télécharger des Shorts instantanément ?",
-                                        'a': "Ajoutez simplement le chiffre '4' devant youtube.com (ex: "
-                                             '4youtube.com/shorts/id) ou remplacez le domaine par yt4mp3.com dans la '
-                                             "barre d'adresse pour ouvrir directement la page de téléchargement."},
-                                       {'q': 'Pourquoi la vidéo téléchargée est-elle au format vertical ?',
-                                        'a': "Les Shorts sont filmés au format vertical 9:16 pour remplir l'écran des "
-                                             'smartphones. Nous conservons ces proportions pour un affichage naturel '
-                                             'sans bandes noires.'},
-                                       {'q': "Comment YT4MP3 assure-t-il la synchronisation du son et de l'image ?",
-                                        'a': 'YouTube sépare les flux audio et vidéo via le protocole DASH. Nos '
-                                             'serveurs alignent les horodatages (PTS) de chaque flux avant de '
-                                             'finaliser le fichier MP4 afin d’éviter tout décalage.'},
-                                       {'q': 'Puis-je importer les vidéos téléchargées dans CapCut ou Premiere Pro ?',
-                                        'a': 'Oui. Les vidéos sont encodées au standard H.264 MP4 avec audio AAC, ce '
-                                             'qui permet une importation directe et sans erreur dans CapCut, Adobe '
-                                             'Premiere, DaVinci Resolve et Final Cut Pro.'},
-                                       {'q': 'Peut-on télécharger des Shorts privés ou restreints ?',
-                                        'a': 'Notre outil ne peut traiter que les vidéos YouTube publiques accessibles '
-                                             'à tous. Les contenus privés ou nécessitant une connexion personnelle ne '
-                                             'peuvent pas être téléchargés.'},
-                                       {'q': 'Quelle quantité de mémoire prend un short téléchargé en moyenne ?',
-                                        'a': 'Un short de 60 secondes en 1080p pèse généralement entre 15 Mo et 35 Mo. '
-                                             "L'extraction audio MP3 seule prend environ 2,5 Mo à 4 Mo."},
-                                       {'q': 'Le site YT4MP3 est-il fiable et sans pop-ups ?',
-                                        'a': 'Oui. Nous appliquons une politique sans pop-ups trompeurs ni '
-                                             'redirections suspectes. Le traitement se fait sur nos serveurs sécurisés '
-                                             'sans risque pour votre appareil.'},
-                                       {'q': 'Est-il légal de télécharger des YouTube Shorts pour un usage personnel ?',
-                                        'a': 'Télécharger du contenu pour une consultation personnelle hors ligne ou '
-                                             "pour des travaux de recherche relève de l'usage loyal (fair use). "
-                                             'Veillez toujours à respecter les droits des auteurs originaux.'}],
+                          'accès au savoir et à la culture en toutes circonstances.</p>',
+          'badge': 'Convertisseur Multimédia en Ligne',
+          'canonical_url': 'https://www.yt4mp3.com/fr/',
+          'faq': [{'a': "La procédure se déroule en 3 étapes rapides : 1) Copiez l'URL de la vidéo ou du Short sur "
+                        'YouTube. 2) Collez le lien dans la boîte de recherche sur YT4MP3. 3) Sélectionnez la qualité '
+                        'audio désirée (320kbps, 256kbps ou 128kbps) ou la résolution vidéo disponible (par exemple '
+                        '1080p ou 720p lorsque la source le propose), puis cliquez sur Télécharger pour enregistrer le '
+                        'fichier.',
+                   'q': 'Comment convertir une vidéo YouTube en MP3 ou MP4 sur YT4MP3 ?'},
+                  {'a': 'Non. YT4MP3 fonctionne en ligne depuis les principaux navigateurs (Google Chrome, Safari, '
+                        "Mozilla Firefox, Microsoft Edge ou Opera). Vous n'avez pas besoin d'installer de fichiers "
+                        "exécutables ou d'extensions susceptibles d'alourdir votre ordinateur.",
+                   'q': 'Faut-il installer un logiciel ou une extension de navigateur ?'},
+                  {'a': 'Sur les appareils iOS (iPhone et iPad), ouvrez Safari, collez le lien sur YT4MP3 et lancez le '
+                        'téléchargement. Safari affichera une icône bleue de téléchargement en haut. Le fichier est '
+                        "automatiquement stocké dans l'application native 'Fichiers' (Files) sous le dossier "
+                        "'Téléchargements', prêt pour une lecture hors ligne.",
+                   'q': 'Comment télécharger des fichiers sur iPhone ou iPad ?'},
+                  {'a': 'Sur un smartphone Android, vos fichiers MP3 et MP4 sont enregistrés par défaut dans le '
+                        "dossier 'Download' (Téléchargements) de votre mémoire interne, accessible via l'application "
+                        "'Mes Fichiers' ou 'Gestionnaire de fichiers'.",
+                   'q': 'Où sont enregistrés les fichiers téléchargés sur Android ?'},
+                  {'a': 'Le débit de 128 kbps produit des fichiers très légers, parfaits pour les podcasts parlés et '
+                        "les cours audios afin d'économiser l'espace mémoire. Le débit de 320 kbps offre la qualité "
+                        'acoustique maximale du format MP3 avec des basses profondes et des aigus cristallins, '
+                        'recommandé pour la musique.',
+                   'q': 'Quelle est la différence entre un débit de 128 kbps et 320 kbps ?'},
+                  {'a': "Oui. Cliquez sur 'Partager' sur la vidéo Shorts, copiez le lien et collez-le sur YT4MP3 afin "
+                        "d'extraire la piste audio au format MP3.",
+                   'q': 'Puis-je convertir des vidéos YouTube Shorts en MP3 ?'},
+                  {'a': "Oui. Nous ne proposons aucun installateur et n'affichons pas de fenêtres pop-ups piégées. Le "
+                        'traitement est effectué sur nos serveurs distants et seul le fichier converti vous est '
+                        'fourni.',
+                   'q': 'Le service est-il fiable et sans pop-ups ?'},
+                  {'a': 'Oui. Une fois le fichier MP3 téléchargé sur votre ordinateur, branchez votre clé USB et '
+                        'copiez les fichiers audio dessus. Les autoradios de voiture et enceintes portables lisent le '
+                        'format MP3 standard sans configuration supplémentaire.',
+                   'q': 'Puis-je transférer les fichiers audio sur une clé USB pour autoradio de voiture ?'},
+                  {'a': 'Le service est gratuit pour un usage personnel quotidien. Vous pouvez convertir les contenus '
+                        'autorisés dont vous avez besoin pour votre consultation hors ligne.',
+                   'q': 'Y a-t-il une limite sur le nombre de conversions par jour ?'},
+                  {'a': 'Oui ! Comme le fichier MP3 est stocké localement dans la mémoire de votre téléphone, vous '
+                        "pouvez le lire avec votre lecteur multimédia habituel même lorsque l'écran est verrouillé, ce "
+                        "qui préserve considérablement l'autonomie de votre batterie.",
+                   'q': "Puis-je écouter les fichiers audio enregistrés avec l'écran du smartphone éteint ?"}],
+          'features': [{'desc': 'Nos serveurs cloud traitent la conversion audio et vidéo directement dans votre '
+                                'navigateur.',
+                        'icon': 'fa-solid fa-bolt',
+                        'title': 'Conversion Rapide'},
+                       {'desc': "Conservez une bonne clarté sonore avec un débit allant jusqu'à 320 kbps pour une "
+                                'écoute agréable et équilibrée.',
+                        'icon': 'fa-solid fa-music',
+                        'title': "Audio Pur jusqu'à 320 kbps"},
+                       {'desc': 'Prise en charge des résolutions 720p, 1080p et 4K Ultra HD, lorsque la vidéo source '
+                                'le propose, au format standard MP4.',
+                        'icon': 'fa-solid fa-film',
+                        'title': 'Vidéo Full HD et 4K'},
+                       {'desc': 'Compatible avec les smartphones Android, iPhone (Safari), iPad, ainsi que les '
+                                'ordinateurs Windows et Mac.',
+                        'icon': 'fa-solid fa-mobile-screen',
+                        'title': 'Compatible Mobiles et PC'},
+                       {'desc': "Profitez d'un outil propre. Pas de faux boutons de téléchargement ni de pop-ups "
+                                'intrusifs.',
+                        'icon': 'fa-solid fa-shield-halved',
+                        'title': 'Sans Publicité Trompeuse'},
+                       {'desc': 'Convertissez vos podcasts, conférences, cours et contenus libres de droits pour un '
+                                'usage personnel, sans abonnement ni carte bancaire.',
+                        'icon': 'fa-solid fa-infinity',
+                        'title': 'Gratuit pour un Usage Quotidien'}],
+          'h1': 'Convertisseur YouTube en MP3 et MP4 en Ligne',
+          'meta_desc': "Convertissez des vidéos YouTube publiques en MP3 jusqu'à 320 kbps et MP4 jusqu'à 1080p/4K "
+                       '(lorsque la source le propose) gratuitement. Sans logiciel ni inscription, compatible mobile '
+                       'et PC.',
+          'placeholder': 'Collez le lien YouTube ici...',
+          'subtitle': "Extrayez l'audio jusqu'à 320 kbps et enregistrez des vidéos en Full HD ou 4K lorsque la source "
+                      "le propose, directement dans votre navigateur sans installer d'application.",
+          'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3'},
+ 'youtube-shorts-downloader': {'active_tab': 'yt-shorts',
                                'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 '
                                                'rounded-2xl">\n'
                                                '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 '
@@ -781,8 +398,8 @@ PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3
                                                'transition-colors">3. Extraction Audio MP3 à 320 kbps depuis des '
                                                'Shorts Viraux</a></li>\n'
                                                '  <li><a href="#tableau-comparatif-fr" class="hover:text-rose-600 '
-                                               'transition-colors">4. Tableau Comparatif : YT4MP3 vs ShortsNoob vs '
-                                               'SaveFrom vs Publer</a></li>\n'
+                                               'transition-colors">4. Tableau Comparatif : YT4MP3 face aux autres '
+                                               'convertisseurs en ligne</a></li>\n'
                                                '  <li><a href="#fichiers-propres-sans-filigrane-fr" '
                                                'class="hover:text-rose-600 transition-colors">5. Fichiers Propres sans '
                                                'Logo ni Superposition Ajoutée</a></li>\n'
@@ -954,8 +571,8 @@ PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3
                                                'téléphone.</li>\n'
                                                '</ul>\n'
                                                '\n'
-                                               '<h2 id="tableau-comparatif-fr">4. Tableau Comparatif : YT4MP3 vs '
-                                               'ShortsNoob vs SaveFrom vs Publer</h2>\n'
+                                               '<h2 id="tableau-comparatif-fr">4. Tableau Comparatif : YT4MP3 face aux '
+                                               'autres convertisseurs en ligne</h2>\n'
                                                '<p>Pour mesurer les atouts de notre outil, il est instructif de '
                                                'comparer ses fonctionnalités à celles des plateformes historiques, '
                                                'dont beaucoup se sont détériorées au fil des années :</p>\n'
@@ -966,9 +583,9 @@ PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3
                                                '<tr>\n'
                                                '<th>Fonctionnalité</th>\n'
                                                '<th>YT4MP3 (Recommandé)</th>\n'
-                                               '<th>ShortsNoob</th>\n'
-                                               '<th>SaveFrom / SSYouTube</th>\n'
-                                               '<th>Publer Downloader</th>\n'
+                                               '<th>Outils web classiques</th>\n'
+                                               '<th>Sites surchargés de pop-ups</th>\n'
+                                               '<th>Outils avec compte requis</th>\n'
                                                '</tr>\n'
                                                '</thead>\n'
                                                '<tbody>\n'
@@ -1032,12 +649,10 @@ PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3
                                                '</table>\n'
                                                '</div>\n'
                                                '\n'
-                                               '<p>Des sites comme <strong>Savefrom</strong> ou '
-                                               '<strong>ShortsNoob</strong> obligent souvent à esquiver de fausses '
-                                               'alertes système ou des autorisations de notifications indésirables. '
-                                               'Publer impose quant à lui un formulaire de création de compte. YT4MP3 '
-                                               'privilégie la simplicité : collez votre lien, récupérez votre fichier '
-                                               'et consultez-le hors ligne.</p>\n'
+                                               '<p>De nombreux convertisseurs web imposent de contourner des fenêtres '
+                                               "intrusives ou demandent la création d'un compte avant toute "
+                                               'conversion. YT4MP3 privilégie la simplicité : collez votre lien, '
+                                               'récupérez votre fichier et consultez-le hors ligne.</p>\n'
                                                '\n'
                                                '<h2 id="fichiers-propres-sans-filigrane-fr">5. Fichiers Propres sans '
                                                'Logo ni Superposition Ajoutée</h2>\n'
@@ -1126,11 +741,420 @@ PAGES = {'home': {'title': 'Convertisseur YouTube en MP3 et MP4 Gratuit - YT4MP3
                                                'Nous vérifions les repères temporels (PTS) de la vidéo et du flux '
                                                'audio AAC pour les caler à la milliseconde près avant de créer le '
                                                "fichier MP4. Vous bénéficiez ainsi d'une vidéo parfaitement "
-                                               'synchronisée du début à la fin.</p>'}}
+                                               'synchronisée du début à la fin.</p>',
+                               'badge': 'Téléchargeur YouTube Shorts',
+                               'canonical_url': 'https://www.yt4mp3.com/fr/youtube-shorts-downloader',
+                               'faq': [{'a': "Ouvrez la vidéo dans l'application YouTube, touchez Partager puis Copier "
+                                             "le lien. Collez l'URL dans la barre de recherche YT4MP3, choisissez le "
+                                             'format MP4 et appuyez sur Télécharger.',
+                                        'q': 'Comment télécharger une vidéo YouTube Shorts sur mon téléphone ?'},
+                                       {'a': "Téléchargez le fichier dans Safari. Touchez l'icône de téléchargement de "
+                                             "Safari, ouvrez la vidéo, touchez le bouton Partager d'iOS et "
+                                             "sélectionnez 'Enregistrer la vidéo'. Le clip vertical apparaîtra dans "
+                                             'votre application Photos.',
+                                        'q': 'Comment enregistrer un short dans la pellicule Photos de mon iPhone ?'},
+                                       {'a': 'Non. Le fichier est propre : notre service n’ajoute aucun logo ni aucune '
+                                             'superposition sur la vidéo.',
+                                        'q': 'Notre service ajoute-t-il un logo sur les vidéos Shorts converties ?'},
+                                       {'a': "Oui. Sélectionnez simplement l'option MP3 avant de télécharger. Notre "
+                                             'serveur sépare la piste audio et vous délivre un fichier MP3 à 320 kbps '
+                                             'idéal pour vos sonneries ou playlists.',
+                                        'q': 'Puis-je convertir un YouTube Short en fichier audio MP3 ?'},
+                                       {'a': 'Nous proposons les résolutions disponibles sur la vidéo source (par '
+                                             'exemple 1080p Full HD 1080x1920 ou 720p HD lorsque la source les '
+                                             'propose).',
+                                        'q': 'Quelle est la résolution vidéo des Shorts téléchargés ?'},
+                                       {'a': 'YouTube utilise une structure de lien spécifique pour les formats courts '
+                                             '(youtube.com/shorts/id) différente des vidéos classiques. Les anciens '
+                                             "outils ne savent pas l'analyser, alors que YT4MP3 la prend en charge "
+                                             'nativement.',
+                                        'q': 'Pourquoi certains convertisseurs échouent avec les liens Shorts ?'},
+                                       {'a': 'Non. YT4MP3 est gratuit pour un usage personnel quotidien, éducatif et '
+                                             'une consultation hors ligne.',
+                                        'q': 'Y a-t-il une limite quotidienne sur le nombre de Shorts téléchargeables '
+                                             '?'},
+                                       {'a': "Aucune installation ni création de compte n'est requise. Tout fonctionne "
+                                             'en ligne dans votre navigateur sur iPhone, Android, Mac, Windows et '
+                                             'Linux.',
+                                        'q': 'Dois-je installer une application ou créer un compte utilisateur ?'},
+                                       {'a': "Ajoutez simplement le chiffre '4' devant youtube.com (ex: "
+                                             '4youtube.com/shorts/id) ou remplacez le domaine par yt4mp3.com dans la '
+                                             "barre d'adresse pour ouvrir directement la page de téléchargement.",
+                                        'q': "Quel est le raccourci d'URL pour télécharger des Shorts instantanément "
+                                             '?'},
+                                       {'a': "Les Shorts sont filmés au format vertical 9:16 pour remplir l'écran des "
+                                             'smartphones. Nous conservons ces proportions pour un affichage naturel '
+                                             'sans bandes noires.',
+                                        'q': 'Pourquoi la vidéo téléchargée est-elle au format vertical ?'},
+                                       {'a': 'YouTube sépare les flux audio et vidéo via le protocole DASH. Nos '
+                                             'serveurs alignent les horodatages (PTS) de chaque flux avant de '
+                                             'finaliser le fichier MP4 afin d’éviter tout décalage.',
+                                        'q': "Comment YT4MP3 assure-t-il la synchronisation du son et de l'image ?"},
+                                       {'a': 'Oui. Les vidéos sont encodées au standard H.264 MP4 avec audio AAC, ce '
+                                             'qui permet une importation directe et sans erreur dans CapCut, Adobe '
+                                             'Premiere, DaVinci Resolve et Final Cut Pro.',
+                                        'q': 'Puis-je importer les vidéos téléchargées dans CapCut ou Premiere Pro ?'},
+                                       {'a': 'Notre outil ne peut traiter que les vidéos YouTube publiques accessibles '
+                                             'à tous. Les contenus privés ou nécessitant une connexion personnelle ne '
+                                             'peuvent pas être téléchargés.',
+                                        'q': 'Peut-on télécharger des Shorts privés ou restreints ?'},
+                                       {'a': 'Un short de 60 secondes en 1080p pèse généralement entre 15 Mo et 35 Mo. '
+                                             "L'extraction audio MP3 seule prend environ 2,5 Mo à 4 Mo.",
+                                        'q': 'Quelle quantité de mémoire prend un short téléchargé en moyenne ?'},
+                                       {'a': 'Oui. Nous appliquons une politique sans pop-ups trompeurs ni '
+                                             'redirections suspectes. Le traitement se fait sur nos serveurs sécurisés '
+                                             'sans risque pour votre appareil.',
+                                        'q': 'Le site YT4MP3 est-il fiable et sans pop-ups ?'},
+                                       {'a': 'Télécharger du contenu pour une consultation personnelle hors ligne ou '
+                                             "pour des travaux de recherche relève de l'usage loyal (fair use). "
+                                             'Veillez toujours à respecter les droits des auteurs originaux.',
+                                        'q': 'Est-il légal de télécharger des YouTube Shorts pour un usage personnel '
+                                             '?'}],
+                               'features': [{'desc': "Obtenez un fichier propre : notre service n'ajoute aucun logo ni "
+                                                     'aucune superposition visuelle.',
+                                             'icon': 'fa-solid fa-wand-magic-sparkles',
+                                             'title': 'Fichier Propre sans Logo Ajouté'},
+                                            {'desc': 'Conserve le format natif 9:16 jusqu’en Full HD lorsque la source '
+                                                     'le propose, adapté aux écrans de smartphone.',
+                                             'icon': 'fa-solid fa-mobile-screen',
+                                             'title': 'Vidéo Verticale jusqu’en 1080p'},
+                                            {'desc': 'Extrayez la piste audio de vos Shorts autorisés au format MP3 '
+                                                     "jusqu'à 320 kbps pour une écoute hors ligne.",
+                                             'icon': 'fa-solid fa-music',
+                                             'title': 'Extraction Audio MP3 320kbps'},
+                                            {'desc': 'Navigation sereine sans fenêtres pop-up trompeuses, bannières '
+                                                     "intrusives ni téléchargements d'applications douteuses.",
+                                             'icon': 'fa-solid fa-shield-halved',
+                                             'title': 'Zéro Publicité Intrusive'},
+                                            {'desc': 'Enregistrement direct dans la pellicule Photos sur iOS Safari et '
+                                                     'dans le dossier Téléchargements sur Android et PC.',
+                                             'icon': 'fa-solid fa-apple-whole',
+                                             'title': 'Compatible iPhone et Android'},
+                                            {'desc': "Tapez 4youtube dans la barre d'adresse pour lancer le "
+                                                     "téléchargement immédiat ou installez notre icône sur l'écran "
+                                                     "d'accueil.",
+                                             'icon': 'fa-solid fa-bolt',
+                                             'title': 'Astuce Raccourci URL et PWA'}],
+                               'h1': 'Télécharger YouTube Shorts en Ligne',
+                               'meta_desc': 'Convertissez YouTube Shorts en MP4 (jusqu’à 1080p Full HD lorsque la '
+                                            'source le propose) et audio MP3 jusqu’à 320 kbps gratuitement. Fichier '
+                                            'propre sans logo ajouté, compatible iPhone, Android et PC.',
+                               'placeholder': 'Collez le lien YouTube Shorts ici (ex. youtube.com/shorts/...)...',
+                               'subtitle': 'Enregistrez des vidéos verticales YouTube Shorts jusqu’en 1080p Full HD '
+                                           'lorsque la source le propose, ou convertissez en audio MP3 jusqu’à 320 '
+                                           'kbps avec un fichier propre sans logo ajouté. Rapide, gratuit et sans '
+                                           'logiciel.',
+                               'title': 'Convertir YouTube Shorts en MP4 et MP3 | YT4MP3'},
+ 'youtube-to-mp3': {'active_tab': 'yt-mp3',
+                    'article_html': "<h2>Guide d'Extraction Audio YouTube en MP3 Haute Définition</h2>\n"
+                                    '<p>Le format MP3 demeure un format pratique pour conserver et écouter ses '
+                                    'fichiers audio, cours et podcasts hors ligne. Que ce soit pour vous accompagner '
+                                    'pendant vos séances de sport à la salle, lors de vos trajets quotidiens dans les '
+                                    'transports en commun ou pour agrémenter de longues heures de route en voiture, '
+                                    'disposer de fichiers audio physiques évite les interruptions publicitaires '
+                                    'répétitives et la surconsommation de votre forfait internet mobile.</p>\n'
+                                    '\n'
+                                    "<p>Chez <strong>YT4MP3</strong>, nous mettons un point d'honneur à offrir une "
+                                    'transcodification audio soignée. Nous isolons le flux sonore le plus qualitatif '
+                                    "transmis par YouTube et appliquons un encodage MP3 à débit constant (CBR) jusqu'à "
+                                    '320 kbps afin de délivrer un son équilibré, naturel et chaleureux.</p>\n'
+                                    '\n'
+                                    '<h3>Échelle de Qualité des Fichiers MP3 : Quel Bitrate Choisir ?</h3>\n'
+                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                                    '<table>\n'
+                                    '<thead>\n'
+                                    '<tr>\n'
+                                    '<th>Débit Audio</th>\n'
+                                    '<th>Rendu Sonore</th>\n'
+                                    '<th>Taille Approximative (Titre 4 min)</th>\n'
+                                    '<th>Usage Conseillé</th>\n'
+                                    '</tr>\n'
+                                    '</thead>\n'
+                                    '<tbody>\n'
+                                    '<tr>\n'
+                                    '<td><strong>320 kbps</strong></td>\n'
+                                    '<td>Qualité Maximale (Studio)</td>\n'
+                                    '<td>9.2 MB</td>\n'
+                                    '<td>Casques fermés de qualité, chaîne Hi-Fi, autoradio</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>256 kbps</strong></td>\n'
+                                    '<td>Très Haute Définition</td>\n'
+                                    '<td>7.3 MB</td>\n'
+                                    '<td>Playlists musicales volumineuses sur smartphone</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>192 kbps</strong></td>\n'
+                                    '<td>Qualité Standard Équilibrée</td>\n'
+                                    '<td>5.5 MB</td>\n'
+                                    '<td>Émissions radio parlées, débats avec fond musical</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>128 kbps</strong></td>\n'
+                                    '<td>Léger et Économe</td>\n'
+                                    '<td>3.7 MB</td>\n'
+                                    '<td>Livres audio de parole, mémoire téléphone restreinte</td>\n'
+                                    '</tr>\n'
+                                    '</tbody>\n'
+                                    '</table>\n'
+                                    '</div>\n'
+                                    '\n'
+                                    "<h3>Les Bénéfices Concrets de l'Écoute Musicale Hors Ligne</h3>\n"
+                                    '<ul>\n'
+                                    '<li><strong>Écoute Hors Ligne Fluide :</strong> Écoutez vos conférences, podcasts '
+                                    'et enregistrements personnels sans interruption liée au réseau.</li>\n'
+                                    "<li><strong>Économie d'Énergie et de Batterie :</strong> La lecture d'un fichier "
+                                    "audio local l'écran éteint consomme jusqu'à quatre fois moins d'énergie que le "
+                                    "streaming d'une vidéo YouTube avec écran allumé.</li>\n"
+                                    '<li><strong>Lecture Assurée sans Réseau :</strong> Dans le métro souterrain, en '
+                                    'avion ou en pleine campagne, vos pistes audio restent toujours prêtes à être '
+                                    'jouées.</li>\n'
+                                    '</ul>',
+                    'badge': 'Audio Haute Définition',
+                    'canonical_url': 'https://www.yt4mp3.com/fr/youtube-to-mp3',
+                    'faq': [{'a': 'Le débit binaire de 320 kbps (kilobits par seconde) correspond au niveau de qualité '
+                                  'maximale offert par le conteneur MP3. Il offre une bonne dynamique sonore, des '
+                                  'basses rondes et des voix claires, sans la compression agressive et les artefacts '
+                                  'métalliques des débits réduits comme 96 kbps.',
+                             'q': 'Que signifie un débit de 320 kbps pour un fichier audio MP3 ?'},
+                            {'a': 'Une fois les fichiers MP3 enregistrés sur votre ordinateur, insérez votre clé USB '
+                                  "dans le port de votre PC ou Mac. Ouvrez le dossier 'Téléchargements', sélectionnez "
+                                  'les fichiers MP3 et copiez-les sur la clé USB. Votre autoradio lira les dossiers '
+                                  'instantanément.',
+                             'q': 'Comment transférer les fichiers MP3 sur une clé USB pour autoradio ?'},
+                            {'a': 'Oui. Sur Android, accédez à Paramètres > Sons et vibrations > Sonnerie et ajoutez '
+                                  "le fichier MP3 téléchargé. Sur iPhone, vous pouvez utiliser l'application gratuite "
+                                  'GarageBand pour définir le fichier audio comme sonnerie personnalisée.',
+                             'q': "Puis-je utiliser un MP3 téléchargé comme sonnerie de réveil ou d'appel ?"},
+                            {'a': 'Oui. YT4MP3 prend en charge les longues émissions de radio, conférences et '
+                                  'enregistrements de cours.',
+                             'q': 'Est-il possible de convertir des vidéos longues de 1 ou 2 heures en MP3 ?'},
+                            {'a': 'Oui, notre outil est entièrement gratuit pour un usage personnel. Aucune carte '
+                                  'bancaire, aucun numéro de téléphone ni aucun abonnement ne sont requis.',
+                             'q': 'Le service est-il réellement gratuit sans frais cachés ?'},
+                            {'a': 'Oui, notre outil nomme automatiquement le fichier MP3 avec le titre officiel de la '
+                                  'vidéo YouTube pour une organisation facilitée de votre discothèque.',
+                             'q': 'Le fichier téléchargé contient-il le titre de la vidéo ?'},
+                            {'a': 'Oui ! Étant donné que le fichier MP3 est enregistré directement dans votre '
+                                  "appareil, vous pouvez le lire avec votre lecteur local l'écran verrouillé sans "
+                                  'consommer de batterie superflue.',
+                             'q': "Puis-je écouter les fichiers avec l'écran de mon téléphone éteint ?"},
+                            {'a': "Ouvrez simplement le dossier Téléchargements ou l'application Fichiers de votre "
+                                  'smartphone et lancez vos fichiers MP3 directement depuis votre lecteur audio '
+                                  'habituel.',
+                             'q': 'Comment écouter les fichiers enregistrés dans votre lecteur audio sur smartphone '
+                                  '?'}],
+                    'features': [{'desc': "Profitez d'une restitution sonore claire au format MP3 (jusqu'à 320 kbps "
+                                          'selon la source) pour une écoute confortable.',
+                                  'icon': 'fa-solid fa-headphones',
+                                  'title': "Débit Audio jusqu'à 320 kbps"},
+                                 {'desc': 'Sélectionnez 320 kbps pour une fidélité acoustique irréprochable ou 128 '
+                                          "kbps pour économiser l'espace mémoire.",
+                                  'icon': 'fa-solid fa-sliders',
+                                  'title': 'Choix de la Compression'},
+                                 {'desc': 'Vos fichiers se lisent sur la grande majorité des systèmes audio, casques '
+                                          'bluetooth, autoradios et enceintes nomades.',
+                                  'icon': 'fa-solid fa-compact-disc',
+                                  'title': 'Large Compatibilité MP3'},
+                                 {'desc': "Ne téléchargez aucun programme suspect. Toute la conversion s'effectue en "
+                                          'direct dans votre navigateur web.',
+                                  'icon': 'fa-solid fa-shield-halved',
+                                  'title': 'Sans Logiciel Tiers'},
+                                 {'desc': 'Nos serveurs ciblent uniquement la piste audio sur YouTube, accélérant le '
+                                          'téléchargement et préservant votre bande passante.',
+                                  'icon': 'fa-solid fa-cloud-arrow-down',
+                                  'title': 'Extraction Audio Directe'},
+                                 {'desc': 'Rassemblez vos fichiers audio et podcasts sur clé USB pour vos trajets '
+                                          'routiers sans dépendre du réseau 4G.',
+                                  'icon': 'fa-solid fa-car',
+                                  'title': 'Idéal pour Clé USB en Voiture'}],
+                    'h1': 'Convertisseur YouTube en MP3 Haute Définition',
+                    'meta_desc': 'Convertissez des vidéos YouTube en MP3 320 kbps gratuitement en ligne. Son clair, '
+                                 'sans logiciel, rapide et compatible smartphones, clé USB et autoradio.',
+                    'placeholder': 'Collez le lien de la vidéo YouTube...',
+                    'subtitle': 'Extrayez la piste audio de vos vidéos autorisées, podcasts et conférences YouTube au '
+                                "format MP3 standard avec un débit allant jusqu'à 320 kbps lorsque la source le "
+                                'permet.',
+                    'title': 'Convertisseur YouTube MP3 320 kbps Haute Qualité | YT4MP3'},
+ 'youtube-to-mp4': {'active_tab': 'yt-mp4',
+                    'article_html': '<h2>Guide du Téléchargeur YouTube en MP4 Haute Définition</h2>\n'
+                                    "<p>La vidéo est le moyen d'expression le plus riche et le plus captivant du web "
+                                    "contemporain. Qu'il s'agisse de documentaires scientifiques, de cours magistraux, "
+                                    "d'ateliers de formation technique ou d'archives historiques, YouTube rassemble "
+                                    "une quantité phénoménale de savoirs. Cependant, dépendre d'une connexion internet "
+                                    "pour diffuser des vidéos lors d'une réunion professionnelle ou pendant un "
+                                    'déplacement peut réserver de mauvaises surprises.</p>\n'
+                                    '\n'
+                                    '<p>Le convertisseur <strong>YouTube en MP4</strong> de <strong>YT4MP3</strong> '
+                                    "permet d'enregistrer vos vidéos en résolutions nettes allant du 720p au 1080p "
+                                    "Full HD et jusqu'au 4K Ultra HD, lorsque la vidéo source le propose. "
+                                    "L'utilisation du conteneur MP4 encodé en H.264 et audio stéréo AAC vous assure "
+                                    'une large compatibilité avec vos équipements personnels.</p>\n'
+                                    '\n'
+                                    '<h3>Tableau Comparatif des Résolutions Vidéo MP4</h3>\n'
+                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                                    '<table>\n'
+                                    '<thead>\n'
+                                    '<tr>\n'
+                                    '<th>Résolution</th>\n'
+                                    '<th>Dimensions en Pixels</th>\n'
+                                    "<th>Fréquence d'Images</th>\n"
+                                    '<th>Écran Idéal</th>\n'
+                                    '<th>Poids Approximatif (10 Min)</th>\n'
+                                    '</tr>\n'
+                                    '</thead>\n'
+                                    '<tbody>\n'
+                                    '<tr>\n'
+                                    '<td><strong>4K Ultra HD</strong></td>\n'
+                                    '<td>3840 x 2160</td>\n'
+                                    '<td>60 fps / 30 fps</td>\n'
+                                    '<td>Grands téléviseurs 4K, moniteurs graphiques</td>\n'
+                                    '<td>350 - 750 MB</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>1080p Full HD</strong></td>\n'
+                                    '<td>1920 x 1080</td>\n'
+                                    '<td>60 fps / 30 fps</td>\n'
+                                    '<td>Ordinateurs portables, PC de bureau, tablettes</td>\n'
+                                    '<td>150 - 280 MB</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>720p HD</strong></td>\n'
+                                    '<td>1280 x 720</td>\n'
+                                    '<td>30 fps</td>\n'
+                                    '<td>Smartphones Android et iPhone (Recommandé)</td>\n'
+                                    '<td>65 - 130 MB</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>480p SD</strong></td>\n'
+                                    '<td>854 x 480</td>\n'
+                                    '<td>30 fps</td>\n'
+                                    "<td>Téléphones d'entrée de gamme, faible mémoire</td>\n"
+                                    '<td>30 - 60 MB</td>\n'
+                                    '</tr>\n'
+                                    '</tbody>\n'
+                                    '</table>\n'
+                                    '</div>\n'
+                                    '\n'
+                                    '<h3>Applications Utiles des Fichiers Vidéo MP4 Hors Ligne</h3>\n'
+                                    '<ul>\n'
+                                    '<li><strong>Formation et Exposés Professionnels :</strong> Enseignants et '
+                                    'formateurs peuvent projeter des vidéos explicatives de haute qualité en classe ou '
+                                    'en amphithéâtre sans risquer une panne de connexion réseau au moment clé.</li>\n'
+                                    '<li><strong>Montage pour Créateurs de Contenu :</strong> Récupérez des extraits '
+                                    "sous licence libre ou des plans d'illustration pour les assembler facilement dans "
+                                    'votre logiciel de montage sans complications de codecs.</li>\n'
+                                    '<li><strong>Voyages et Consultation Hors Ligne :</strong> Préparez vos tutoriels '
+                                    'et documentaires avant un vol long-courrier pour les visionner hors '
+                                    'connexion.</li>\n'
+                                    '</ul>',
+                    'badge': 'Vidéo Haute Définition',
+                    'canonical_url': 'https://www.yt4mp3.com/fr/youtube-to-mp4',
+                    'faq': [{'a': "Sur YouTube, les flux vidéo supérieurs à 720p séparent l'image et le son. Lorsque "
+                                  'vous sélectionnez 1080p sur YT4MP3, nos serveurs fusionnent automatiquement en '
+                                  'quelques secondes le flux vidéo haute définition avec la piste audio AAC stéreo '
+                                  'pour vous livrer un fichier MP4 prêt à être visionné.',
+                             'q': 'Comment télécharger une vidéo YouTube en 1080p avec le son inclus ?'},
+                            {'a': 'Oui, sans aucune difficulté. Copiez le fichier MP4 sur une clé USB et branchez-la '
+                                  'sur le port USB de votre téléviseur connecté (Samsung, LG, Sony, Philips, etc.). Le '
+                                  'lecteur de la télévision reconnaîtra le fichier instantanément.',
+                             'q': 'Puis-je regarder les vidéos MP4 téléchargées sur une Smart TV via clé USB ?'},
+                            {'a': "Oui. Le format MP4 standard fourni par YT4MP3 s'importe directement sur la timeline "
+                                  'de la plupart des logiciels de montage comme CapCut, Adobe Premiere Pro ou DaVinci '
+                                  'Resolve.',
+                             'q': 'Les vidéos téléchargées peuvent-elles être éditées dans CapCut ou Premiere ?'},
+                            {'a': "Le poids d'une vidéo 1080p de 10 minutes varie généralement entre 150 Mo et 280 Mo "
+                                  "en fonction de la complexité visuelle et du taux d'images (30 fps ou 60 fps). La "
+                                  "résolution 720p nécessite environ la moitié d'espace tout en restant très nette sur "
+                                  'écran de smartphone.',
+                             'q': 'Combien pèse environ une vidéo de 10 minutes en 1080p ?'},
+                            {'a': 'Oui. Collez simplement le lien de la vidéo Shorts dans notre barre de conversion et '
+                                  'sélectionnez MP4 pour télécharger la vidéo au format vertical complet avec le son.',
+                             'q': 'Est-il possible de télécharger des vidéos YouTube Shorts en MP4 ?'},
+                            {'a': "Non. Le fichier est propre : notre service n'ajoute aucun logo ni aucune "
+                                  'superposition sur la vidéo convertie.',
+                             'q': 'Y a-t-il un logo ou une mention publicitaire ajoutée sur la vidéo ?'},
+                            {'a': 'La résolution 4K Ultra HD contient quatre fois plus de pixels que la Full HD. Les '
+                                  'serveurs doivent traiter un volume de données beaucoup plus lourd avant de '
+                                  'finaliser le fichier vidéo pour votre équipement.',
+                             'q': 'Pourquoi le téléchargement en 4K prend-il un peu plus de temps ?'},
+                            {'a': "Oui, sécurisé. Vous ne téléchargez aucun fichier d'installation (.exe ou .apk), "
+                                  'mais uniquement le fichier vidéo multimédia pur.',
+                             'q': 'Le téléchargement est-il sans danger pour mon ordinateur ?'}],
+                    'features': [{'desc': "Profitez d'une image nette avec la prise en charge des flux 1080p et Ultra "
+                                          'HD lorsque la source les propose.',
+                                  'icon': 'fa-solid fa-tv',
+                                  'title': 'Résolution Full HD et 4K'},
+                                 {'desc': 'Un format largement compatible, lisible directement sur Smart TV, '
+                                          'téléphones, tablettes et ordinateurs.',
+                                  'icon': 'fa-solid fa-file-video',
+                                  'title': 'Format MP4 Standard H.264'},
+                                 {'desc': 'Nos serveurs réunissent automatiquement le flux vidéo haute définition et '
+                                          'la piste sonore sans perte de qualité.',
+                                  'icon': 'fa-solid fa-bolt',
+                                  'title': 'Assemblage Audio-Vidéo Rapide'},
+                                 {'desc': 'Importez directement les fichiers téléchargés dans CapCut, DaVinci Resolve, '
+                                          'Premiere Pro ou Final Cut sans conversion.',
+                                  'icon': 'fa-solid fa-scissors',
+                                  'title': 'Prêt pour le Montage Vidéo'},
+                                 {'desc': "Emportez vos vidéos d'apprentissage ou de divertissement sur votre tablette "
+                                          'pour les visionner sereinement en voyage.',
+                                  'icon': 'fa-solid fa-plane',
+                                  'title': 'Idéal pour les Déplacements'},
+                                 {'desc': "Votre vidéo reste un fichier propre : notre service n'ajoute aucun logo ni "
+                                          'aucune superposition visuelle.',
+                                  'icon': 'fa-solid fa-stamp',
+                                  'title': 'Fichier Propre sans Logo Ajouté'}],
+                    'h1': 'Télécharger Vidéos YouTube en MP4 Full HD',
+                    'meta_desc': 'Convertissez des vidéos YouTube publiques en MP4 Full HD (1080p) et 4K lorsque la '
+                                 'source le propose, gratuitement. Fichier propre sans logo ajouté, rapide et prêt '
+                                 'pour le montage vidéo.',
+                    'placeholder': 'Collez le lien de la vidéo YouTube à télécharger...',
+                    'subtitle': 'Enregistrez vos documentaires, tutoriels et cours au format standard MP4 avec la '
+                                'résolution proposée par la vidéo source et un son synchronisé.',
+                    'title': "Convertir Vidéo YouTube en MP4 (jusqu'à 1080p/4K) Gratuit"}}
 
 UI = {'all_formats_tab': 'Tous les formats',
  'all_rights_reserved': 'Tous droits réservés.',
  'back_to_converter': 'Retour au convertisseur',
+ 'benefit1_desc': 'Écoutez vos fichiers audio en avion, dans le métro ou en déplacement sans Wi-Fi ni consommation de '
+                  'données.',
+ 'benefit1_title': 'Écoute Hors Ligne Partout',
+ 'benefit2_desc': 'Les fichiers audio consomment jusqu’à 90% de batterie en moins et zéro forfait vidéo écran éteint.',
+ 'benefit2_title': 'Économie de Batterie et de Données',
+ 'benefit3_desc': 'Continuez d’écouter vos fichiers audio enregistrés avec l’écran verrouillé ou tout en utilisant '
+                  'd’autres applications.',
+ 'benefit3_title': 'Lecture en Arrière-Plan',
+ 'benefit4_desc': 'Extrayez un son clair de vidéos Shorts, de cours académiques et de longs podcasts.',
+ 'benefit4_title': 'Shorts, Podcasts & Longs Mixes',
+ 'benefits_badge': 'Avantages Clés',
+ 'benefits_subtitle': 'Profitez de vos pistes audio préférées partout, en toute liberté et sans connexion.',
+ 'benefits_title': 'Pourquoi Convertir des Vidéos YouTube en MP3 ?',
+ 'comp_badge': 'Comparatif',
+ 'comp_feature_col': 'Fonctionnalité & Performance',
+ 'comp_others_col': 'Autres Convertisseurs',
+ 'comp_row1_others': 'Inscription forcée, abonnements payants ou spams',
+ 'comp_row1_title': 'Inscription et Compte',
+ 'comp_row1_yt4mp3': 'Gratuit pour un usage personnel, sans inscription ni carte bancaire',
+ 'comp_row2_others': 'Files d’attente lentes, débit bridé et comptes à rebours',
+ 'comp_row2_title': 'Vitesse et Limites de Téléchargement',
+ 'comp_row2_yt4mp3': 'Traitement cloud en temps réel & téléchargement direct',
+ 'comp_row3_others': 'Limité à un MP3 compressé 128 kbps ou vidéo 360p floue',
+ 'comp_row3_title': 'Qualité Audio & Vidéo',
+ 'comp_row3_yt4mp3': "MP3 jusqu'à 320 kbps & MP4 jusqu'à 1080p/4K (lorsque la source le propose) avec son synchronisé",
+ 'comp_row4_others': 'Redirections douteuses, bannières intrusives et risques de logiciels malveillants',
+ 'comp_row4_title': 'Publicités & Pop-ups Intrusifs',
+ 'comp_row4_yt4mp3': 'Propre et sécurisé : Zéro pop-under, aucun faux bouton de téléchargement',
+ 'comp_row5_others': 'Échoue souvent sur Safari mobile ou requiert l’installation d’un APK',
+ 'comp_row5_title': 'Support Mobile & Ordinateur',
+ 'comp_row5_yt4mp3': 'Compatible avec iPhone Safari, Android Chrome, Mac et Windows',
+ 'comp_row6_others': 'Limite stricte de 10 à 20 minutes ; incapable de lire les liens Shorts',
+ 'comp_row6_title': 'YouTube Shorts & Longs Podcasts',
+ 'comp_row6_yt4mp3': 'Prise en charge des Shorts, conférences et podcasts de plus de 2 heures',
+ 'comp_subtitle': 'Comparez la vitesse, les formats et la compatibilité de YT4MP3 avec les convertisseurs en ligne '
+                  'classiques.',
+ 'comp_title': 'YT4MP3 vs Autres Convertisseurs',
+ 'comp_yt4mp3_col': 'YT4MP3 (Recommandé)',
  'convert_btn': 'Convertir',
  'download_now': 'Télécharger maintenant',
  'download_ready': 'Votre fichier est prêt au téléchargement',
@@ -1148,6 +1172,7 @@ UI = {'all_formats_tab': 'Tous les formats',
  'nav_home': 'Accueil',
  'nav_mp3': 'YouTube en MP3',
  'nav_mp4': 'YouTube en MP4',
+ 'nav_shorts': 'YouTube Shorts',
  'paste_placeholder': 'Collez ici le lien YouTube (vidéo publique ou Shorts)...',
  'quick_convert': 'Conversion Rapide',
  'select_format': 'Choisissez le format et la qualité',
@@ -1159,43 +1184,4 @@ UI = {'all_formats_tab': 'Tous les formats',
  'step2_title': 'Collez et choisissez le format',
  'step3_desc': "Cliquez sur Convertir et téléchargez directement votre fichier prêt à l'emploi sur votre smartphone ou "
                'ordinateur.',
- 'step3_title': 'Téléchargement direct',
- 'comp_badge': 'Comparatif',
- 'comp_title': 'YT4MP3 vs Autres Convertisseurs',
- 'comp_subtitle': 'Comparez la vitesse, les formats et la compatibilité de YT4MP3 avec les convertisseurs en ligne '
-                  'classiques.',
- 'comp_feature_col': 'Fonctionnalité & Performance',
- 'comp_yt4mp3_col': 'YT4MP3 (Recommandé)',
- 'comp_others_col': 'Autres Convertisseurs',
- 'comp_row1_title': 'Inscription et Compte',
- 'comp_row1_yt4mp3': 'Gratuit pour un usage personnel, sans inscription ni carte bancaire',
- 'comp_row1_others': 'Inscription forcée, abonnements payants ou spams',
- 'comp_row2_title': 'Vitesse et Limites de Téléchargement',
- 'comp_row2_yt4mp3': 'Traitement cloud en temps réel & téléchargement direct',
- 'comp_row2_others': 'Files d’attente lentes, débit bridé et comptes à rebours',
- 'comp_row3_title': 'Qualité Audio & Vidéo',
- 'comp_row3_yt4mp3': "MP3 jusqu'à 320 kbps & MP4 jusqu'à 1080p/4K (lorsque la source le propose) avec son synchronisé",
- 'comp_row3_others': 'Limité à un MP3 compressé 128 kbps ou vidéo 360p floue',
- 'comp_row4_title': 'Publicités & Pop-ups Intrusifs',
- 'comp_row4_yt4mp3': 'Propre et sécurisé : Zéro pop-under, aucun faux bouton de téléchargement',
- 'comp_row4_others': 'Redirections douteuses, bannières intrusives et risques de logiciels malveillants',
- 'comp_row5_title': 'Support Mobile & Ordinateur',
- 'comp_row5_yt4mp3': 'Compatible avec iPhone Safari, Android Chrome, Mac et Windows',
- 'comp_row5_others': 'Échoue souvent sur Safari mobile ou requiert l’installation d’un APK',
- 'comp_row6_title': 'YouTube Shorts & Longs Podcasts',
- 'comp_row6_yt4mp3': 'Prise en charge des Shorts, conférences et podcasts de plus de 2 heures',
- 'comp_row6_others': 'Limite stricte de 10 à 20 minutes ; incapable de lire les liens Shorts',
- 'benefits_badge': 'Avantages Clés',
- 'benefits_title': 'Pourquoi Convertir des Vidéos YouTube en MP3 ?',
- 'benefits_subtitle': 'Profitez de vos pistes audio préférées partout, en toute liberté et sans connexion.',
- 'benefit1_title': 'Écoute Hors Ligne Partout',
- 'benefit1_desc': 'Écoutez vos fichiers audio en avion, dans le métro ou en déplacement sans Wi-Fi ni consommation de '
-                  'données.',
- 'benefit2_title': 'Économie de Batterie et de Données',
- 'benefit2_desc': 'Les fichiers audio consomment jusqu’à 90% de batterie en moins et zéro forfait vidéo écran éteint.',
- 'benefit3_title': 'Lecture en Arrière-Plan',
- 'benefit3_desc': 'Continuez d’écouter vos fichiers audio enregistrés avec l’écran verrouillé ou tout en utilisant '
-                  'd’autres applications.',
- 'benefit4_title': 'Shorts, Podcasts & Longs Mixes',
- 'benefit4_desc': 'Extrayez un son clair de vidéos Shorts, de cours académiques et de longs podcasts.',
- 'nav_shorts': 'YouTube Shorts'}
+ 'step3_title': 'Téléchargement direct'}

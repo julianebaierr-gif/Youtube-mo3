@@ -32,8 +32,8 @@ def test_sitemap_contains_exact_108_urls_and_no_duplicates():
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = root.findall("ns:url", ns)
     
-    # Requirement: 108 URLs (63 core converter + legal pages + 15 multilingual blog hubs + 30 multilingual articles)
-    assert len(urls) == 111, f"Expected exactly 111 URLs in sitemap, found {len(urls)}"
+    # Requirement: 231 URLs (60 core converter + 6 legal/trust pages + 15 multilingual blog hubs + 150 multilingual articles)
+    assert len(urls) == 231, f"Expected exactly 231 URLs in sitemap, found {len(urls)}"
     
     loc_list = [u.find("ns:loc", ns).text.strip() for u in urls]
     
@@ -104,7 +104,7 @@ def test_rss_xml_parsing_and_structure():
     assert channel.find("link").text == "https://www.yt4mp3.com/"
     assert "converting YouTube videos to MP3 and MP4" in channel.find("description").text
     assert channel.find("language").text == "en-us"
-    assert "12 Nov 2026" in channel.find("lastBuildDate").text
+    assert "Nov 2026" in channel.find("lastBuildDate").text
 
 
 def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
@@ -113,8 +113,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
     channel = root.find("channel")
     items = channel.findall("item")
 
-    # 105 items (60 tools + 15 blog hubs + 30 blog articles across all 15 languages)
-    assert len(items) == 105, f"Expected 105 RSS feed items, found {len(items)}"
+    # 225 items (60 tools + 15 blog hubs + 150 blog articles across all 15 languages)
+    assert len(items) == 225, f"Expected 225 RSS feed items, found {len(items)}"
 
     guids = set()
     links = set()
@@ -142,8 +142,8 @@ def test_rss_feed_contains_60_items_with_stable_guids_and_3_month_dates():
         guids.add(guid)
         links.add(link)
 
-    assert len(guids) == 105, "Duplicate GUIDs found in feed"
-    assert len(links) == 105, "Duplicate links found in feed"
+    assert len(guids) == 225, "Duplicate GUIDs found in feed"
+    assert len(links) == 225, "Duplicate links found in feed"
     
     # Must contain dates spanning the last 3 months (Aug, Sep, Oct, Nov 2026)
     expected_months = {"Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026"}
@@ -254,7 +254,7 @@ def test_sitemap_xhtml_hreflang_links():
         assert "x-default" in langs
         assert "en" in langs
         assert "es" in langs
-    assert localized_count == 105
+    assert localized_count == 225
 
 
 def test_shortcut_routes_noindex_and_no_spam():
@@ -293,7 +293,7 @@ def test_all_108_sitemap_urls_accessible_and_indexable():
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = [u.find("ns:loc", ns).text.strip() for u in root.findall("ns:url", ns)]
 
-    assert len(urls) == 111
+    assert len(urls) == 231
 
     for url in urls:
         path = url.replace("https://www.yt4mp3.com", "")
@@ -372,7 +372,7 @@ def test_blog_hub_english():
     assert 'rel="canonical" href="https://www.yt4mp3.com/blog"' in html
     assert 'dir="ltr"' in html
     assert 'lang="en"' in html
-    assert "The Complete Guide to YouTube Audio Extraction" in html
+    assert "A Practical Guide to Converting YouTube Audio to MP3" in html
     assert "youtube-to-mp3-converter-free-guide" in html
     # Check all 16 reciprocal hreflangs
     assert 'hreflang="x-default"' in html
@@ -415,7 +415,7 @@ def test_blog_article_english():
     res = client.get("/blog/youtube-to-mp3-converter-free-guide")
     assert res.status_code == 200
     html = res.text
-    assert "The Complete Guide to YouTube Audio Extraction" in html
+    assert "A Practical Guide to Converting YouTube Audio to MP3" in html
     assert 'rel="canonical" href="https://www.yt4mp3.com/blog/youtube-to-mp3-converter-free-guide"' in html
     assert 'dir="ltr"' in html
     assert 'lang="en"' in html

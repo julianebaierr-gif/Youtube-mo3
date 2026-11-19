@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-KEYWORDS_RESEARCH = {'content_gap': ['Y2MateやSaveFromに見られる悪質な偽警告広告や不要な通知許可を一切排除した安全な環境',
-                 '元動画が対応している場合は最大320kbpsのクリアなオーディオストリーム抽出',
+KEYWORDS_RESEARCH = {'content_gap': ['元動画が対応している場合は最大320kbpsのクリアなオーディオストリーム抽出',
                  'iPhoneの「ファイル」アプリおよびAndroidの「ダウンロード」フォルダへの分かりやすい保存手順',
                  'CapCutやPremiere Proなどの動画編集ソフトでそのまま使える業界標準MP4フォーマットの出力'],
  'lsi_semantics': ['MP3 変換 ダウンローダー',
@@ -88,33 +87,18 @@ KEYWORDS_RESEARCH = {'content_gap': ['Y2MateやSaveFromに見られる悪質な�
                      'YouTubeショート 音声抽出',
                      'ショート動画 ダウンロード PC',
                      'YouTubeショート 縦型動画保存',
-                     'savefrom youtube shorts',
-                     'savefrom shorts',
-                     'shortsnoob 日本語',
-                     'publer youtube shorts',
-                     'y2mate shorts',
-                     'ssyoutube shorts',
                      'snaptik shorts',
                      '10downloader shorts',
-                     'savefrom net youtube shorts 保存',
                      'savetube shorts',
-                     'yt shorts downloader publer',
                      'snaptube shorts',
                      'vidmate shorts ダウンロード',
                      'shorts 保存 リンクから',
-                     'savefrom mp4 shorts',
                      'ss youtube shorts',
-                     'shortsnoob 無料',
-                     'publer ダウンローダー 無料',
-                     'y2mate shorts mp3',
                      'save from net shorts',
                      'online video downloader shorts',
                      'snaptik youtube shorts',
                      '10downloader youtube shorts',
                      'ショート動画 ダウンローダー オンライン',
-                     'savefrom shorts 変換',
-                     'savefrom net shorts 日本',
-                     'shortsnoob 安全',
                      'YouTubeショート 保存 広告なし',
                      '9対16 縦型動画比率',
                      '1080p フルHD 高画質',
@@ -317,8 +301,7 @@ PAGES = {'home': {'active_tab': 'all',
                                                '  <li><a href="#ongaku-mp3-chuushutsu-ja" class="hover:text-rose-600 '
                                                'transition-colors">3. バズ音源・流行りのBGMを320kbps MP3で抽出</a></li>\n'
                                                '  <li><a href="#hikaku-hyou-service-ja" class="hover:text-rose-600 '
-                                               'transition-colors">4. 徹底比較：YT4MP3 vs ShortsNoob vs SaveFrom vs '
-                                               'Publer</a></li>\n'
+                                               'transition-colors">4. 徹底比較：YT4MP3と一般的なオンライン変換ツールの比較</a></li>\n'
                                                '  <li><a href="#sukashinashi-gensun-ja" class="hover:text-rose-600 '
                                                'transition-colors">5. 当サービスによるロゴやオーバーレイ追加のないクリーンな出力</a></li>\n'
                                                '  <li><a href="#creator-repurpose-ja" class="hover:text-rose-600 '
@@ -438,8 +421,7 @@ PAGES = {'home': {'active_tab': 'all',
                                                'テンポの良いサビ部分を集めて、スマホの容量を圧迫せずにワークアウトのお供に。</li>\n'
                                                '</ul>\n'
                                                '\n'
-                                               '<h2 id="hikaku-hyou-service-ja">4. 徹底比較：YT4MP3 vs ShortsNoob vs '
-                                               'SaveFrom vs Publer</h2>\n'
+                                               '<h2 id="hikaku-hyou-service-ja">4. 徹底比較：YT4MP3と一般的なオンライン変換ツールの比較</h2>\n'
                                                '<p>数多くのツールが存在する中で、YT4MP3の特徴や他ツールとの違いを比較表にまとめました：</p>\n'
                                                '\n'
                                                '<div style="overflow-x: auto; margin: 24px 0;">\n'
@@ -448,9 +430,9 @@ PAGES = {'home': {'active_tab': 'all',
                                                '<tr>\n'
                                                '<th>機能・特徴</th>\n'
                                                '<th>YT4MP3（推奨）</th>\n'
-                                               '<th>ShortsNoob</th>\n'
-                                               '<th>SaveFrom / SSYouTube</th>\n'
-                                               '<th>Publer Downloader</th>\n'
+                                               '<th>一般的なWebツール</th>\n'
+                                               '<th>ポップアップが多いサイト</th>\n'
+                                               '<th>登録必須のツール</th>\n'
                                                '</tr>\n'
                                                '</thead>\n'
                                                '<tbody>\n'
@@ -514,7 +496,7 @@ PAGES = {'home': {'active_tab': 'all',
                                                '</table>\n'
                                                '</div>\n'
                                                '\n'
-                                               '<p><strong>Savefrom</strong>や<strong>ShortsNoob</strong>では、迷惑なポップアップバナー広告や、不要な通知の許可を迫られるトラブルが後を絶ちません。またPublerはメールアドレス登録が必要です。YT4MP3は徹底したシンプル設計で、リンクを貼ればすぐに目的のファイルが手に入ります。</p>\n'
+                                               '<p>従来の変換サイトの中には、不要な通知の許可を求めたり、メールアドレス登録を必要とするサービスも少なくありません。YT4MP3は徹底したシンプル設計で、リンクを貼ればすぐに目的のファイルが手に入ります。</p>\n'
                                                '\n'
                                                '<h2 id="sukashinashi-gensun-ja">5. 当サービスによるロゴやオーバーレイ追加のないクリーンな出力</h2>\n'
                                                '<p>動画を編集やオフライン視聴に使う際、変換ツールによってはサイト名やバナーが画面に重ねられることがあります。YT4MP3では、当サービス側でロゴやオーバーレイを追加しないクリーンなファイルとして出力します。</p>\n'

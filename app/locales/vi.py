@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
-KEYWORDS_RESEARCH = {'primary': ['chuyển âm thanh youtube sang mp3',
-             'tải video youtube',
-             'chuyển youtube sang mp3',
-             'tải video youtube về máy tính',
-             'chuyển youtube sang mp4',
-             'chuyển đổi âm thanh youtube miễn phí',
-             'công cụ tải video youtube',
-             'chuyển đổi âm thanh từ youtube',
-             'chuyển âm thanh mp3 từ youtube 320kbps',
-             'web tải video youtube'],
+KEYWORDS_RESEARCH = {'content_gap': ['Giảm thiểu cửa sổ quảng cáo bật lên và thời gian chờ đợi lâu',
+                 'Chuẩn âm thanh 320 kbps chuẩn xác, không bị bóp nghẹt âm trầm hay méo tiếng trên loa ô tô và dàn âm '
+                 'thanh',
+                 'Hướng dẫn chi tiết cách lưu trực tiếp vào ứng dụng Tệp trên iPhone và thư mục Tải về trên Android',
+                 'Định dạng MP4 tương thích rộng rãi với các ứng dụng dựng video phổ biến tại Việt Nam như CapCut và '
+                 'Premiere'],
  'lsi_semantics': ['chuyển đổi và tải xuống mp3',
                    'chuyển youtube shorts sang mp4',
                    'trích xuất âm thanh từ youtube',
@@ -69,12 +65,16 @@ KEYWORDS_RESEARCH = {'primary': ['chuyển âm thanh youtube sang mp3',
                    'lưu livestream youtube',
                    'chuyển đổi tiếng việt',
                    'tải nhanh cho điện thoại'],
- 'content_gap': ['Giảm thiểu cửa sổ quảng cáo bật lên và thời gian chờ đợi lâu',
-                 'Chuẩn âm thanh 320 kbps chuẩn xác, không bị bóp nghẹt âm trầm hay méo tiếng trên loa ô tô và dàn âm '
-                 'thanh',
-                 'Hướng dẫn chi tiết cách lưu trực tiếp vào ứng dụng Tệp trên iPhone và thư mục Tải về trên Android',
-                 'Định dạng MP4 tương thích rộng rãi với các ứng dụng dựng video phổ biến tại Việt Nam như CapCut và '
-                 'Premiere'],
+ 'primary': ['chuyển âm thanh youtube sang mp3',
+             'tải video youtube',
+             'chuyển youtube sang mp3',
+             'tải video youtube về máy tính',
+             'chuyển youtube sang mp4',
+             'chuyển đổi âm thanh youtube miễn phí',
+             'công cụ tải video youtube',
+             'chuyển đổi âm thanh từ youtube',
+             'chuyển âm thanh mp3 từ youtube 320kbps',
+             'web tải video youtube'],
  'shorts_keywords': ['tải youtube shorts',
                      'download youtube shorts',
                      'tải video shorts youtube',
@@ -90,33 +90,18 @@ KEYWORDS_RESEARCH = {'primary': ['chuyển âm thanh youtube sang mp3',
                      'cách tải youtube shorts',
                      'tải video ngắn youtube',
                      'trang web tải shorts youtube',
-                     'savefrom youtube shorts',
-                     'savefrom shorts',
-                     'shortsnoob tải video',
-                     'publer youtube shorts',
-                     'y2mate shorts',
-                     'ssyoutube shorts',
                      'snaptik shorts',
                      '10downloader shorts',
-                     'savefrom net tải video youtube shorts',
                      'savetube shorts',
-                     'yt shorts downloader publer',
                      'snaptube shorts',
                      'vidmate tải shorts',
                      'tải shorts bằng link',
-                     'savefrom mp4 shorts',
                      'ss youtube shorts',
-                     'shortsnoob miễn phí',
-                     'publer downloader miễn phí',
-                     'y2mate shorts mp3',
                      'save from net shorts',
                      'online video downloader shorts',
                      'snaptik youtube shorts',
                      '10downloader youtube shorts',
                      'công cụ tải shorts trực tuyến',
-                     'bộ chuyển đổi savefrom shorts',
-                     'savefrom net shorts việt nam',
-                     'tải video shortsnoob',
                      'tải shorts không quảng cáo',
                      'tỷ lệ video dọc 9 16',
                      'độ phân giải 1080p full hd',
@@ -186,65 +171,7 @@ KEYWORDS_RESEARCH = {'primary': ['chuyển âm thanh youtube sang mp3',
                      'cách cài ứng dụng yt4mp3 lên màn hình điện thoại',
                      'một video shorts 1080p chiếm bao nhiêu dung lượng']}
 
-PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trực Tuyến | YT4MP3',
-          'meta_desc': 'Chuyển đổi video YouTube sang MP3 (tới 320kbps) và MP4 (tới 1080p/4K khi nguồn hỗ trợ) miễn '
-                       'phí trên trình duyệt, không cần cài ứng dụng, hỗ trợ iPhone và Android.',
-          'h1': 'Chuyển Đổi Video YouTube sang MP3 & MP4 Online',
-          'subtitle': 'Chuyển đổi âm thanh rõ nét lên đến 320 kbps và video Full HD 1080p (khi nguồn gốc hỗ trợ) trực '
-                      'tiếp từ trình duyệt mà không cần cài thêm phần mềm.',
-          'badge': 'Công Cụ Tải Video Nhanh Chóng',
-          'placeholder': 'Dán đường dẫn YouTube vào đây...',
-          'active_tab': 'all',
-          'canonical_url': 'https://www.yt4mp3.com/vi/',
-          'features': [{'icon': 'fa-solid fa-bolt',
-                        'title': 'Xử lý đám mây nhanh chóng',
-                        'desc': 'Hệ thống máy chủ thực hiện tách âm thanh và ghép video nhanh chóng trên đám mây, giúp '
-                                'tiết kiệm pin cho thiết bị.'},
-                       {'icon': 'fa-solid fa-music',
-                        'title': 'Âm thanh rõ nét tới 320 kbps',
-                        'desc': 'Chất lượng âm thanh rõ ràng, cân bằng trên tai nghe và loa ô tô khi nguồn âm thanh hỗ '
-                                'trợ.'},
-                       {'icon': 'fa-solid fa-film',
-                        'title': 'Hỗ trợ Video Full HD 1080p & 4K',
-                        'desc': 'Hỗ trợ xuất video độ nét cao lên đến 1080p và 4K 60fps (khi video nguồn cung cấp) ở '
-                                'định dạng MP4 tương thích rộng rãi với TV và máy tính.'},
-                       {'icon': 'fa-solid fa-mobile-screen',
-                        'title': 'Tương thích điện thoại & máy tính',
-                        'desc': 'Hoạt động mượt mà trên iPhone với Safari, các dòng điện thoại Android, máy tính bảng '
-                                'và laptop Windows/Mac.'},
-                       {'icon': 'fa-solid fa-shield-halved',
-                        'title': 'Giao diện sạch sẽ không quảng cáo bật lên',
-                        'desc': 'Không có thông báo nhảy phiền toái, không yêu cầu cài ứng dụng lạ hay tiện ích mở '
-                                'rộng gây hại máy.'},
-                       {'icon': 'fa-solid fa-infinity',
-                        'title': 'Miễn phí cho nhu cầu cá nhân',
-                        'desc': 'Miễn phí cho nhu cầu sử dụng cá nhân hằng ngày để chuyển đổi bài giảng, podcast và tư '
-                                'liệu học tập mà không thu phí.'}],
-          'faq': [{'q': 'Làm thế nào để tải video YouTube sang định dạng MP3 hoặc MP4?',
-                   'a': 'Chỉ với 3 thao tác đơn giản: 1) Sao chép liên kết video trên YouTube. 2) Dán link vào thanh '
-                        'tìm kiếm của YT4MP3. 3) Chọn định dạng mong muốn (MP3 tới 320 kbps hoặc MP4 tới 1080p khi '
-                        'nguồn hỗ trợ) rồi bấm Tải xuống.'},
-                  {'q': 'Tôi có cần cài đặt phần mềm nào vào máy không?',
-                   'a': 'Không cần. YT4MP3 hoạt động hoàn toàn trực tuyến trên nền tảng web thông qua các trình duyệt '
-                        'thông dụng như Chrome, Safari, Cốc Cốc, Firefox.'},
-                  {'q': 'Cách lưu tệp âm thanh hoặc video về iPhone hoặc iPad như thế nào?',
-                   'a': 'Trên iPhone, bạn dùng Safari truy cập trang web, dán link và bấm Tải xuống. Tệp tải về sẽ tự '
-                        "động được lưu vào mục 'Tải về' trong ứng dụng Tệp (Files) của máy."},
-                  {'q': 'Tệp đã tải về sẽ nằm ở đâu trên điện thoại Android?',
-                   'a': "Trên Android, tệp MP3 hoặc MP4 sẽ được lưu trực tiếp vào thư mục 'Download' (Tải về) của bộ "
-                        'nhớ máy. Bạn có thể mở ngay bằng trình phát nhạc trên máy hoặc trình quản lý tệp.'},
-                  {'q': 'Chất lượng âm thanh 128 kbps và 320 kbps khác nhau ra sao?',
-                   'a': '128 kbps có dung lượng nhẹ, phù hợp cho podcast, sách nói và tiết kiệm bộ nhớ. 320 kbps giữ '
-                        'được độ chi tiết cao cho các tệp âm thanh khi nguồn gốc hỗ trợ.'},
-                  {'q': 'Tôi có thể chép nhạc tải về vào USB để cắm trên xe ô tô không?',
-                   'a': 'Được chứ. Các tệp MP3 tải về thuộc định dạng chuẩn quốc tế, bạn chỉ cần sao chép sang thẻ nhớ '
-                        'hoặc USB để nghe nhạc trên xe mà không cần mạng.'},
-                  {'q': 'Công cụ có hỗ trợ tải video ngắn YouTube Shorts không?',
-                   'a': 'Có, bạn chỉ cần dán liên kết video Shorts dạng dọc vào để tải về định dạng video MP4 nguyên '
-                        'gốc hoặc trích xuất riêng bản nhạc nền MP3.'},
-                  {'q': 'Tôi có thể nghe nhạc khi tắt màn hình điện thoại không?',
-                   'a': 'Được chứ. Vì đây là tệp MP3 lưu trực tiếp trên bộ nhớ máy, bạn có thể phát bằng trình phát '
-                        'nhạc trên thiết bị khi màn hình khóa để tiết kiệm pin.'}],
+PAGES = {'home': {'active_tab': 'all',
           'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
                           '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i class="fa-solid '
                           'fa-list-ul mr-2 text-rose-600"></i>Mục Lục Hướng Dẫn</p>\n'
@@ -329,368 +256,66 @@ PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trự
                           '\n'
                           '<h2 id="kha-nang-tuong-thich">Tương thích thiết bị di động và máy tính</h2>\n'
                           '<p>Trang web vận hành trơn tru trên mọi hệ điều hành phổ biến: từ điện thoại iPhone '
-                          '(Safari), Samsung, Xiaomi, Oppo (Chrome/Cốc Cốc) cho đến máy tính Windows và MacBook.</p>'},
- 'youtube-to-mp3': {'title': 'Chuyển YouTube sang MP3 (320 kbps) Miễn Phí | YT4MP3',
-                    'meta_desc': 'Chuyển đổi âm thanh YouTube sang MP3 chất lượng lên tới 320 kbps (khi nguồn hỗ trợ) '
-                                 'miễn phí. Âm thanh rõ nét, không cần cài app, thuận tiện nghe ngoại tuyến trên điện '
-                                 'thoại hoặc qua USB ô tô.',
-                    'h1': 'Chuyển Đổi YouTube sang MP3 Chất Lượng Cao',
-                    'subtitle': 'Trích xuất âm thanh từ bản thu âm acoustic, podcast, bài giảng và nội dung học tập '
-                                'với bitrate lên tới 320 kbps (tùy chất lượng nguồn) nhanh chóng và tiện lợi.',
-                    'badge': 'Âm Thanh Chất Lượng Cao',
-                    'placeholder': 'Dán đường dẫn video hoặc âm thanh YouTube vào đây...',
-                    'active_tab': 'yt-mp3',
-                    'canonical_url': 'https://www.yt4mp3.com/vi/youtube-to-mp3',
-                    'features': [{'icon': 'fa-solid fa-headphones',
-                                  'title': 'Hỗ trợ Bitrate tới 320 kbps',
-                                  'desc': 'Mã hóa âm thanh rõ ràng, giữ nguyên độ chi tiết của bản thu khi video nguồn '
-                                          'cung cấp chất lượng cao.'},
-                                 {'icon': 'fa-solid fa-sliders',
-                                  'title': 'Tùy chỉnh chất lượng linh hoạt',
-                                  'desc': 'Tùy chọn mức chất lượng cao tới 320 kbps hoặc phiên bản nhẹ 128 kbps để tối '
-                                          'ưu dung lượng lưu trữ.'},
-                                 {'icon': 'fa-solid fa-compact-disc',
-                                  'title': 'Chuẩn MP3 tương thích nhiều thiết bị',
-                                  'desc': 'Phát mượt mà trên loa nghe nhạc Bluetooth, dàn âm thanh gia đình và máy '
-                                          'nghe nhạc cá nhân.'},
-                                 {'icon': 'fa-solid fa-shield-halved',
-                                  'title': 'Không cần cài đặt phần mềm độc hại',
-                                  'desc': 'Bảo vệ thiết bị của bạn bằng việc xử lý hoàn toàn trên nền tảng đám mây an '
-                                          'toàn.'},
-                                 {'icon': 'fa-solid fa-car',
-                                  'title': 'Tương thích tốt với USB ô tô',
-                                  'desc': 'Chép các tệp âm thanh cá nhân vào USB để nghe trong những chuyến đi đường '
-                                          'dài không có sóng mạng.'},
-                                 {'icon': 'fa-solid fa-infinity',
-                                  'title': 'Miễn phí cho nhu cầu cá nhân',
-                                  'desc': 'Miễn phí cho nhu cầu sử dụng cá nhân hằng ngày để chuyển đổi bài giảng, '
-                                          'podcast và các tệp âm thanh được phép sử dụng.'}],
-                    'faq': [{'q': 'Tại sao nên chọn mức bitrate 320 kbps khi chuyển đổi âm thanh?',
-                             'a': '320 kbps là mức chất lượng cao nhất của định dạng MP3. Âm thanh giữ được dải bass '
-                                  'sâu, tiếng treble thanh và không bị cảm giác nén nghẹt như các mức nén thấp.'},
-                            {'q': 'Làm thế nào để chép nhạc vào USB cắm trên xe ô tô?',
-                             'a': 'Sau khi tải tệp MP3 về máy tính hoặc điện thoại, bạn cắm USB (định dạng FAT32) vào '
-                                  'và chép trực tiếp các tệp âm thanh sang. Đầu đọc trên xe sẽ nhận tệp nhanh chóng.'},
-                            {'q': 'Tôi có thể dùng tệp MP3 đã lưu làm nhạc chuông điện thoại không?',
-                             'a': 'Được. Trên Android, bạn vào Cài đặt > Âm thanh & rung > Nhạc chuông để chọn tệp âm '
-                                  'thanh. Trên iPhone, bạn có thể dùng GarageBand để tạo nhạc chuông nhanh chóng.'},
-                            {'q': 'Tệp MP3 tải về nằm ở đâu trên iPhone?',
-                             'a': "Các tệp tải về từ Safari sẽ nằm trong mục 'Tải về' (Downloads) của ứng dụng 'Tệp' "
-                                  '(Files) có sẵn trên hệ điều hành iOS.'},
-                            {'q': 'Trình phát nhạc trên điện thoại có nhận tệp tải về không?',
-                             'a': 'Có, hầu hết các trình phát nhạc trên điện thoại đều có tính năng tự động quét tệp '
-                                  'âm thanh có sẵn trong bộ nhớ máy (mục Tệp cục bộ / Nhạc thiết bị).'},
-                            {'q': 'Có thể trích xuất nhạc từ các video ngắn YouTube Shorts không?',
-                             'a': 'Được chứ. Bạn chỉ cần lấy link của video Shorts và dán vào, hệ thống sẽ tách phần '
-                                  'âm thanh thành tệp MP3 cho bạn.'},
-                            {'q': 'Âm lượng bài hát có bị nhỏ đi sau khi chuyển đổi không?',
-                             'a': 'Không, quá trình xử lý giữ nguyên mức âm lượng gần với bản thu gốc.'},
-                            {'q': 'Dịch vụ có thu phí khi sử dụng hằng ngày không?',
-                             'a': 'Không. YT4MP3 miễn phí cho nhu cầu sử dụng cá nhân hằng ngày, phù hợp để lưu trữ '
-                                  'bài giảng, podcast và tư liệu cá nhân.'}],
-                    'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
-                                    '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i '
-                                    'class="fa-solid fa-list-ul mr-2 text-rose-600"></i>Nội Dung Chuyên Sâu</p>\n'
-                                    '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
-                                    '  <li><a href="#uu-diem-320kbps" class="hover:text-rose-600 transition-colors">1. '
-                                    'Ưu điểm của bitrate 320 kbps cao cấp</a></li>\n'
-                                    '  <li><a href="#bang-chat-luong-am-thanh" class="hover:text-rose-600 '
-                                    'transition-colors">2. Bảng so sánh chất lượng âm thanh</a></li>\n'
-                                    '  <li><a href="#nghe-nhac-ngoai-tuyen" class="hover:text-rose-600 '
-                                    'transition-colors">3. Nghe nhạc ngoại tuyến trên ô tô và khi tập luyện</a></li>\n'
-                                    '  <li><a href="#quy-trinh-tach-am" class="hover:text-rose-600 '
-                                    'transition-colors">4. Quy trình tách âm thanh an toàn</a></li>\n'
-                                    '</ul>\n'
-                                    '</div>\n'
-                                    '\n'
-                                    '<h2 id="uu-diem-320kbps">Ưu điểm của bitrate 320 kbps cao cấp</h2>\n'
-                                    '<p>Đối với những người yêu âm nhạc, MP3 vẫn là lựa chọn tiện lợi hàng đầu nhờ khả '
-                                    'năng tương thích với mọi thiết bị. Công cụ <a '
-                                    'href="https://www.yt4mp3.com/vi/youtube-to-mp3" class="text-rose-600 font-bold '
-                                    'hover:underline">chuyển YouTube sang MP3</a> của chúng tôi hỗ trợ tách âm thanh ở '
-                                    'mức bitrate lên tới 320 kbps (tùy thuộc vào chất lượng bản thu gốc).</p>\n'
-                                    '<p>Khác với các tệp bị nén quá mức khiến âm thanh trở nên tù túng, mức 320 kbps '
-                                    'tái hiện dải tần số đầy đủ lên tới 20 kHz.</p>\n'
-                                    '\n'
-                                    '<h2 id="bang-chat-luong-am-thanh">Bảng so sánh chất lượng âm thanh</h2>\n'
-                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
-                                    '<table>\n'
-                                    '<thead>\n'
-                                    '<tr>\n'
-                                    '<th>Tốc độ bit</th>\n'
-                                    '<th>Chất lượng âm học</th>\n'
-                                    '<th>Dung lượng tệp (4 phút)</th>\n'
-                                    '<th>Khuyên dùng cho</th>\n'
-                                    '</tr>\n'
-                                    '</thead>\n'
-                                    '<tbody>\n'
-                                    '<tr>\n'
-                                    '<td><strong>320 kbps</strong></td>\n'
-                                    '<td>Chất lượng cao (tùy nguồn)</td>\n'
-                                    '<td>~9.2 MB</td>\n'
-                                    '<td>Nghe âm thanh chất lượng cao, tai nghe, dàn loa ô tô</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>256 kbps</strong></td>\n'
-                                    '<td>Chất lượng rất cao</td>\n'
-                                    '<td>~7.4 MB</td>\n'
-                                    '<td>Bản thu biểu diễn trực tiếp, nhạc sống</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>192 kbps</strong></td>\n'
-                                    '<td>Chất lượng cân bằng</td>\n'
-                                    '<td>~5.5 MB</td>\n'
-                                    '<td>Nghe nhạc thường ngày, tiết kiệm bộ nhớ</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>128 kbps</strong></td>\n'
-                                    '<td>Mức nén cơ bản</td>\n'
-                                    '<td>~3.7 MB</td>\n'
-                                    '<td>Podcast giọng đọc, bài giảng, sách nói</td>\n'
-                                    '</tr>\n'
-                                    '</tbody>\n'
-                                    '</table>\n'
-                                    '</div>\n'
-                                    '\n'
-                                    '<h2 id="nghe-nhac-ngoai-tuyen">Nghe nhạc ngoại tuyến trên ô tô và khi tập '
-                                    'luyện</h2>\n'
-                                    '<p>Khi chạy bộ ở công viên hoặc lái xe trên các cung đường đèo không có sóng di '
-                                    'động, việc lưu sẵn danh sách bài hát trong máy giúp bạn tận hưởng âm nhạc liền '
-                                    'mạch mà không lo tốn pin cho việc dò mạng liên tục.</p>\n'
-                                    '\n'
-                                    '<h2 id="quy-trinh-tach-am">Quy trình tách âm thanh an toàn</h2>\n'
-                                    '<p>Toàn bộ quá trình diễn ra trên máy chủ đám mây. Bạn không cần tải về các công '
-                                    'cụ chuyển đổi cồng kềnh làm tốn dung lượng bộ nhớ thiết bị.</p>'},
- 'youtube-to-mp4': {'title': 'Chuyển Video YouTube sang MP4 (Tới 1080p & 4K) Miễn Phí | YT4MP3',
-                    'meta_desc': 'Chuyển đổi video YouTube sang MP4 Full HD 1080p và 4K (khi nguồn hỗ trợ) miễn phí. '
-                                 'Tệp sạch không chèn thêm logo, âm thanh đồng bộ, hỗ trợ xem ngoại tuyến trên máy '
-                                 'tính và TV.',
-                    'h1': 'Tải Video YouTube MP4 Full HD Trực Tuyến',
-                    'subtitle': 'Lưu trữ các bài giảng, vlog cá nhân và tư liệu học tập ở độ phân giải lên đến 1080p '
-                                'và 4K (khi video nguồn hỗ trợ) với hình ảnh rõ nét và âm thanh đồng bộ.',
-                    'badge': 'Video Độ Nét Cao',
-                    'placeholder': 'Dán đường dẫn video cần tải vào đây...',
-                    'active_tab': 'yt-mp4',
-                    'canonical_url': 'https://www.yt4mp3.com/vi/youtube-to-mp4',
-                    'features': [{'icon': 'fa-solid fa-tv',
-                                  'title': 'Hỗ trợ độ phân giải đến 1080p & 4K',
-                                  'desc': 'Hỗ trợ xuất ở độ phân giải 1080p Full HD hoặc 4K khi nguồn gốc cung cấp, '
-                                          'giúp hình ảnh rõ ràng trên màn hình TV và máy tính.'},
-                                 {'icon': 'fa-solid fa-file-video',
-                                  'title': 'Chuẩn MP4 phổ biến rộng rãi',
-                                  'desc': 'Định dạng đóng gói H.264 và âm thanh AAC phát mượt mà trên hầu hết các '
-                                          'thiết bị mà không cần cài thêm codec.'},
-                                 {'icon': 'fa-solid fa-scissors',
-                                  'title': 'Sẵn sàng cho CapCut & Premiere Pro',
-                                  'desc': 'Nhập video trực tiếp vào các phần mềm biên tập mà không gặp lỗi lệch tiếng '
-                                          'hay lỗi định dạng.'},
-                                 {'icon': 'fa-solid fa-stamp',
-                                  'title': 'Tệp sạch, không gắn thêm logo',
-                                  'desc': 'Tệp video sạch sẽ: dịch vụ của chúng tôi không tự ý thêm logo hay lớp phủ '
-                                          'lên khung hình của bạn.'},
-                                 {'icon': 'fa-solid fa-hard-drive',
-                                  'title': 'Hỗ trợ xem trên Smart TV qua USB',
-                                  'desc': 'Chép video sang ổ cứng hoặc USB để thưởng thức cùng gia đình trong phòng '
-                                          'khách ấm cúng.'},
-                                 {'icon': 'fa-solid fa-bolt',
-                                  'title': 'Xử lý và xuất video nhanh chóng',
-                                  'desc': 'Máy chủ tiến hành gộp luồng hình ảnh và âm thanh trên đám mây, giúp rút '
-                                          'ngắn thời gian chờ đợi.'}],
-                    'faq': [{'q': 'Làm sao để tải video 1080p có đầy đủ âm thanh đồng bộ?',
-                             'a': 'Trên YouTube, luồng hình ảnh độ nét cao (khi video nguồn hỗ trợ 1080p trở lên) được '
-                                  'phân tách riêng với luồng âm thanh. Hệ thống YT4MP3 sẽ tự động ghép hai luồng này '
-                                  'lại thành một tệp MP4 có âm thanh đồng bộ.'},
-                            {'q': 'Video MP4 tải về có xem được trên tivi qua cổng USB không?',
-                             'a': 'Có, chuẩn MP4 mã hóa H.264 tương thích rộng rãi với các dòng Smart TV của Samsung, '
-                                  'Sony, LG, TCL và Casper.'},
-                            {'q': 'Tôi có thể dùng tệp MP4 để dựng clip trên CapCut được không?',
-                             'a': 'Chắc chắn rồi. Tệp video được xuất theo cấu trúc chuẩn, bạn chỉ cần kéo thả vào '
-                                  'dòng thời gian của CapCut, Premiere hay DaVinci Resolve để cắt ghép.'},
-                            {'q': 'Tại sao video 4K lại mất nhiều thời gian xử lý hơn?',
-                             'a': 'Video 4K (2160p) có lượng điểm ảnh gấp 4 lần Full HD, dung lượng lên tới hàng '
-                                  'gigabyte. Do đó máy chủ cần thêm một chút thời gian để gộp dữ liệu.'},
-                            {'q': 'Cách lưu video vào bộ sưu tập ảnh (Cuộn camera) trên iPhone?',
-                             'a': 'Sau khi tải xong trong Safari, bạn bấm vào tệp trong mục Tải về, bấm biểu tượng '
-                                  "'Chia sẻ' ở góc dưới màn hình và chọn 'Lưu video'."},
-                            {'q': 'Có thể tải video YouTube Shorts dạng dọc về máy không?',
-                             'a': 'Có, công cụ giữ nguyên tỉ lệ khung hình dọc 9:16 và độ nét chuẩn của video Shorts '
-                                  'khi tải về.'},
-                            {'q': 'Giới hạn độ dài video có thể tải là bao nhiêu?',
-                             'a': 'Nền tảng của chúng tôi có thể xử lý mượt mà các video dài từ vài phút đến các bài '
-                                  'giảng kéo dài nhiều tiếng đồng hồ.'},
-                            {'q': 'Tôi có cần đăng ký tài khoản hoặc trả phí không?',
-                             'a': 'Không. YT4MP3 miễn phí cho nhu cầu sử dụng cá nhân hằng ngày mà không cần đăng ký '
-                                  'tài khoản.'}],
-                    'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
-                                    '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i '
-                                    'class="fa-solid fa-list-ul mr-2 text-rose-600"></i>Chủ Đề Hướng Dẫn Video</p>\n'
-                                    '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
-                                    '  <li><a href="#chuan-mp4-h264" class="hover:text-rose-600 transition-colors">1. '
-                                    'Chuẩn video MP4 đóng gói H.264/AAC</a></li>\n'
-                                    '  <li><a href="#bang-thong-so-do-phan-giai" class="hover:text-rose-600 '
-                                    'transition-colors">2. Bảng thông số độ phân giải video</a></li>\n'
-                                    '  <li><a href="#dung-clip-capcut" class="hover:text-rose-600 '
-                                    'transition-colors">3. Sẵn sàng dựng clip trên CapCut và Premiere</a></li>\n'
-                                    '  <li><a href="#phat-lai-smart-tv" class="hover:text-rose-600 '
-                                    'transition-colors">4. Phát lại trên Smart TV và màn chiếu</a></li>\n'
-                                    '</ul>\n'
-                                    '</div>\n'
-                                    '\n'
-                                    '<h2 id="chuan-mp4-h264">Chuẩn video MP4 đóng gói H.264/AAC</h2>\n'
-                                    '<p>Trong thời đại số hóa, định dạng MP4 cùng bộ giải mã H.264 vẫn giữ vị trí độc '
-                                    'tôn nhờ chất lượng hình ảnh sắc nét và độ nén gọn gàng. Sử dụng <a '
-                                    'href="https://www.yt4mp3.com/vi/youtube-to-mp4" class="text-rose-600 font-bold '
-                                    'hover:underline">công cụ chuyển YouTube sang MP4</a> giúp bạn dễ dàng lưu trữ '
-                                    'video cá nhân hoặc tư liệu học tập để xem ngoại tuyến.</p>\n'
-                                    '\n'
-                                    '<h2 id="bang-thong-so-do-phan-giai">Bảng thông số độ phân giải video</h2>\n'
-                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
-                                    '<table>\n'
-                                    '<thead>\n'
-                                    '<tr>\n'
-                                    '<th>Độ phân giải</th>\n'
-                                    '<th>Kích thước điểm ảnh</th>\n'
-                                    '<th>Khung hình/giây</th>\n'
-                                    '<th>Codec âm thanh</th>\n'
-                                    '<th>Ứng dụng tối ưu</th>\n'
-                                    '</tr>\n'
-                                    '</thead>\n'
-                                    '<tbody>\n'
-                                    '<tr>\n'
-                                    '<td><strong>4K Ultra HD (khi nguồn hỗ trợ)</strong></td>\n'
-                                    '<td>3840 x 2160</td>\n'
-                                    '<td>60 fps</td>\n'
-                                    '<td>AAC Stereo</td>\n'
-                                    '<td>TV 4K kích thước lớn, màn hình chuyên nghiệp</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>1080p Full HD (khi nguồn hỗ trợ)</strong></td>\n'
-                                    '<td>1920 x 1080</td>\n'
-                                    '<td>60 / 30 fps</td>\n'
-                                    '<td>AAC Stereo</td>\n'
-                                    '<td>Laptop, máy tính bảng, trình chiếu tài liệu</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>720p HD</strong></td>\n'
-                                    '<td>1280 x 720</td>\n'
-                                    '<td>30 fps</td>\n'
-                                    '<td>AAC Stereo</td>\n'
-                                    '<td>Điện thoại thông minh, lưu trữ nhanh</td>\n'
-                                    '</tr>\n'
-                                    '<tr>\n'
-                                    '<td><strong>480p SD</strong></td>\n'
-                                    '<td>854 x 480</td>\n'
-                                    '<td>30 fps</td>\n'
-                                    '<td>AAC Cơ bản</td>\n'
-                                    '<td>Thiết bị đời cũ, mạng yếu</td>\n'
-                                    '</tr>\n'
-                                    '</tbody>\n'
-                                    '</table>\n'
-                                    '</div>\n'
-                                    '\n'
-                                    '<h2 id="dung-clip-capcut">Sẵn sàng dựng clip trên CapCut và Premiere</h2>\n'
-                                    '<p>Các nhà sáng tạo nội dung cần sao lưu video của chính mình để chỉnh sửa trên '
-                                    'CapCut hoặc Premiere có thể sử dụng tệp MP4 tiêu chuẩn với âm thanh đồng bộ và '
-                                    'hình ảnh ổn định.</p>\n'
-                                    '\n'
-                                    '<h2 id="phat-lai-smart-tv">Phát lại trên Smart TV và màn chiếu</h2>\n'
-                                    '<p>Chép các bài giảng, video giáo dục hoặc video gia đình tự quay vào USB để cắm '
-                                    'trực tiếp vào TV phòng khách và phát ngoại tuyến thuận tiện.</p>'},
- 'youtube-shorts-downloader': {'title': 'Chuyển YouTube Shorts (Tới 1080p MP4 & MP3) | YT4MP3',
-                               'meta_desc': 'Chuyển đổi YouTube Shorts sang MP4 (tới 1080p khi nguồn hỗ trợ) và MP3 '
-                                            '(tới 320kbps) miễn phí. Tệp sạch không chèn thêm logo, hỗ trợ iPhone, '
-                                            'Android và PC.',
-                               'h1': 'Tải YouTube Shorts Trực Tuyến',
-                               'subtitle': 'Lưu video ngắn YouTube Shorts định dạng dọc (tới 1080p khi nguồn gốc hỗ '
-                                           'trợ) hoặc chuyển sang MP3 tới 320kbps. Tệp sạch không gắn thêm lớp phủ, '
-                                           'miễn phí và không cần cài app.',
-                               'badge': 'Công Cụ Tải YouTube Shorts',
-                               'placeholder': 'Dán liên kết YouTube Shorts vào đây (ví dụ: youtube.com/shorts/...)...',
-                               'active_tab': 'yt-shorts',
-                               'canonical_url': 'https://www.yt4mp3.com/vi/youtube-shorts-downloader',
-                               'features': [{'icon': 'fa-solid fa-wand-magic-sparkles',
-                                             'title': 'Tệp Sạch Không Gắn Logo',
-                                             'desc': 'Tệp đầu ra sạch sẽ: dịch vụ của chúng tôi không tự ý thêm logo '
-                                                     'hay lớp phủ văn bản lên video của bạn.'},
-                                            {'icon': 'fa-solid fa-mobile-screen',
-                                             'title': 'Video Dọc Tới 1080p 60fps',
-                                             'desc': 'Giữ nguyên tỷ lệ khung hình 9:16 với độ phân giải lên đến Full '
-                                                     'HD 1080p 60fps khi video nguồn hỗ trợ.'},
-                                            {'icon': 'fa-solid fa-music',
-                                             'title': 'Tách Âm Thanh MP3 320kbps',
-                                             'desc': 'Trích xuất những giai điệu thịnh hành, lời thoại nổi tiếng và '
-                                                     'hiệu ứng âm thanh sống động thành file MP3 chất lượng.'},
-                                            {'icon': 'fa-solid fa-shield-halved',
-                                             'title': 'Giao Diện Gọn Nhẹ & An Toàn',
-                                             'desc': 'Trải nghiệm gọn gàng, không cửa sổ pop-up gây phiền nhiễu, không '
-                                                     'nút tải giả mạo và miễn phí cho nhu cầu cá nhân.'},
-                                            {'icon': 'fa-solid fa-apple-whole',
-                                             'title': 'Tương Thích iPhone & Android',
-                                             'desc': 'Lưu trực tiếp vào album Ảnh trên Safari iOS và thư mục Tệp tải '
-                                                     'về trên Chrome Android cũng như máy tính.'},
-                                            {'icon': 'fa-solid fa-bolt',
-                                             'title': 'Mẹo URL Nhanh & Ứng Dụng PWA',
-                                             'desc': 'Gõ 4youtube vào thanh địa chỉ để mở nhanh trang chuyển đổi hoặc '
-                                                     'cài đặt ứng dụng web ngay trên màn hình chính.'}],
-                               'faq': [{'q': 'Làm thế nào để tải video YouTube Shorts về điện thoại?',
-                                        'a': 'Mở video trong ứng dụng YouTube, nhấn nút Chia sẻ rồi chọn Sao chép liên '
-                                             'kết. Sau đó dán link vào ô tìm kiếm của YT4MP3, chọn định dạng MP4 và '
-                                             'bấm Tải về để lưu vào máy.'},
-                                       {'q': 'Cách lưu video Shorts vào album Ảnh trên iPhone?',
-                                        'a': 'Thực hiện tải về trên trình duyệt Safari. Khi tải xong, nhấn vào biểu '
-                                             'tượng tải về trên thanh Safari, mở video, bấm nút Chia sẻ iOS và chọn '
-                                             "'Lưu video'. Video sẽ xuất hiện trong ứng dụng Ảnh."},
-                                       {'q': 'YT4MP3 có chèn thêm logo hay lớp phủ vào video tải về không?',
-                                        'a': 'Không. YT4MP3 giữ tệp đầu ra sạch sẽ và dịch vụ của chúng tôi không tự ý '
-                                             'thêm logo hay lớp phủ quảng cáo vào video của bạn.'},
-                                       {'q': 'Tôi có thể chuyển video YouTube Shorts thành file nhạc MP3 không?',
-                                        'a': 'Có. Bạn chỉ cần chọn định dạng MP3 trước khi tải. Hệ thống máy chủ sẽ tự '
-                                             'động tách phần âm thanh và cung cấp tệp MP3 chuẩn 320 kbps trong trẻo để '
-                                             'làm nhạc chuông.'},
-                                       {'q': 'Độ phân giải video Shorts tải về là bao nhiêu?',
-                                        'a': 'Chúng tôi hỗ trợ mức phân giải cao nhất mà tác giả tải lên, phần lớn là '
-                                             '1080p Full HD (1080x1920) ở tốc độ 60fps hoặc 30fps, bên cạnh tùy chọn '
-                                             '720p HD.'},
-                                       {'q': 'Tại sao các trang web khác thường báo lỗi với link Shorts?',
-                                        'a': 'YouTube sử dụng cấu trúc đường dẫn riêng cho video ngắn '
-                                             '(youtube.com/shorts/id) thay vì dạng thông thường. Các công cụ cũ không '
-                                             'nhận dạng được, trong khi YT4MP3 xử lý trơn tru cả hai.'},
-                                       {'q': 'YT4MP3 có miễn phí cho nhu cầu sử dụng hằng ngày không?',
-                                        'a': 'Có. YT4MP3 miễn phí cho nhu cầu sử dụng cá nhân hằng ngày, phục vụ thuận '
-                                             'tiện cho việc lưu trữ tài liệu học tập và xem ngoại tuyến.'},
-                                       {'q': 'Tôi có cần cài đặt phần mềm hay tạo tài khoản không?',
-                                        'a': 'Bạn không cần cài ứng dụng hay đăng ký tài khoản. Mọi thao tác đều thực '
-                                             'hiện trực tiếp trên trình duyệt web của điện thoại và máy tính.'},
-                                       {'q': 'Mẹo gõ tắt URL để tải Shorts nhanh là gì?',
-                                        'a': "Bạn chỉ cần thêm số '4' vào trước youtube.com (ví dụ: "
-                                             '4youtube.com/shorts/id) hoặc đổi tên miền thành yt4mp3.com trên thanh '
-                                             'địa chỉ để mở ngay trang tải xuống.'},
-                                       {'q': 'Tại sao video tải về lại có tỷ lệ khung hình đứng?',
-                                        'a': 'YouTube Shorts được quay theo tỷ lệ dọc 9:16 nhằm lấp đầy toàn bộ màn '
-                                             'hình điện thoại. Chúng tôi giữ nguyên tỷ lệ này để mang lại trải nghiệm '
-                                             'xem trọn vẹn nhất.'},
-                                       {'q': 'YT4MP3 làm thế nào để âm thanh không bị lệch so với hình ảnh?',
-                                        'a': 'YouTube truyền tải dữ liệu hình ảnh và âm thanh tách biệt theo giao thức '
-                                             'DASH. Máy chủ của chúng tôi căn chỉnh mốc thời gian (PTS) chính xác đến '
-                                             'từng mili-giây trước khi hoàn tất file MP4.'},
-                                       {'q': 'Tôi có thể đưa video đã tải vào CapCut hay Premiere để chỉnh sửa không?',
-                                        'a': 'Được chứ. Các video được đóng gói theo chuẩn H.264 MP4 với âm thanh AAC, '
-                                             'tương thích rộng rãi với CapCut, Adobe Premiere, DaVinci Resolve và '
-                                             'Final Cut Pro.'},
-                                       {'q': 'Công cụ có tải được video Shorts riêng tư hay bị hạn chế không?',
-                                        'a': 'Trang web chỉ xử lý được các video YouTube Shorts được chia sẻ công '
-                                             'khai. Video ở chế độ riêng tư hoặc yêu cầu đăng nhập không thể tải '
-                                             'được.'},
-                                       {'q': 'Một video Shorts thường chiếm bao nhiêu dung lượng bộ nhớ?',
-                                        'a': 'Một video dọc 60 giây chất lượng 1080p thường có dung lượng từ 15 MB đến '
-                                             '35 MB. Tệp âm thanh MP3 riêng chỉ tốn khoảng 2,5 MB đến 4 MB.'},
-                                       {'q': 'Sử dụng YT4MP3 trên điện thoại và máy tính có an toàn không?',
-                                        'a': 'An toàn khi sử dụng trên trình duyệt. Chúng tôi không sử dụng cửa sổ '
-                                             'pop-up gây phiền nhiễu, nút tải giả mạo hay yêu cầu cấp quyền đáng ngờ.'},
-                                       {'q': 'Tải video YouTube Shorts về máy cho mục đích cá nhân có hợp pháp không?',
-                                        'a': 'Việc lưu video để xem lại khi không có internet hoặc phục vụ mục đích '
-                                             'nghiên cứu cá nhân thuộc phạm vi sử dụng hợp lý. Hãy luôn tôn trọng '
-                                             'quyền tác giả của người tạo nội dung.'}],
+                          '(Safari), Samsung, Xiaomi, Oppo (Chrome/Cốc Cốc) cho đến máy tính Windows và MacBook.</p>',
+          'badge': 'Công Cụ Tải Video Nhanh Chóng',
+          'canonical_url': 'https://www.yt4mp3.com/vi/',
+          'faq': [{'a': 'Chỉ với 3 thao tác đơn giản: 1) Sao chép liên kết video trên YouTube. 2) Dán link vào thanh '
+                        'tìm kiếm của YT4MP3. 3) Chọn định dạng mong muốn (MP3 tới 320 kbps hoặc MP4 tới 1080p khi '
+                        'nguồn hỗ trợ) rồi bấm Tải xuống.',
+                   'q': 'Làm thế nào để tải video YouTube sang định dạng MP3 hoặc MP4?'},
+                  {'a': 'Không cần. YT4MP3 hoạt động hoàn toàn trực tuyến trên nền tảng web thông qua các trình duyệt '
+                        'thông dụng như Chrome, Safari, Cốc Cốc, Firefox.',
+                   'q': 'Tôi có cần cài đặt phần mềm nào vào máy không?'},
+                  {'a': 'Trên iPhone, bạn dùng Safari truy cập trang web, dán link và bấm Tải xuống. Tệp tải về sẽ tự '
+                        "động được lưu vào mục 'Tải về' trong ứng dụng Tệp (Files) của máy.",
+                   'q': 'Cách lưu tệp âm thanh hoặc video về iPhone hoặc iPad như thế nào?'},
+                  {'a': "Trên Android, tệp MP3 hoặc MP4 sẽ được lưu trực tiếp vào thư mục 'Download' (Tải về) của bộ "
+                        'nhớ máy. Bạn có thể mở ngay bằng trình phát nhạc trên máy hoặc trình quản lý tệp.',
+                   'q': 'Tệp đã tải về sẽ nằm ở đâu trên điện thoại Android?'},
+                  {'a': '128 kbps có dung lượng nhẹ, phù hợp cho podcast, sách nói và tiết kiệm bộ nhớ. 320 kbps giữ '
+                        'được độ chi tiết cao cho các tệp âm thanh khi nguồn gốc hỗ trợ.',
+                   'q': 'Chất lượng âm thanh 128 kbps và 320 kbps khác nhau ra sao?'},
+                  {'a': 'Được chứ. Các tệp MP3 tải về thuộc định dạng chuẩn quốc tế, bạn chỉ cần sao chép sang thẻ nhớ '
+                        'hoặc USB để nghe nhạc trên xe mà không cần mạng.',
+                   'q': 'Tôi có thể chép nhạc tải về vào USB để cắm trên xe ô tô không?'},
+                  {'a': 'Có, bạn chỉ cần dán liên kết video Shorts dạng dọc vào để tải về định dạng video MP4 nguyên '
+                        'gốc hoặc trích xuất riêng bản nhạc nền MP3.',
+                   'q': 'Công cụ có hỗ trợ tải video ngắn YouTube Shorts không?'},
+                  {'a': 'Được chứ. Vì đây là tệp MP3 lưu trực tiếp trên bộ nhớ máy, bạn có thể phát bằng trình phát '
+                        'nhạc trên thiết bị khi màn hình khóa để tiết kiệm pin.',
+                   'q': 'Tôi có thể nghe nhạc khi tắt màn hình điện thoại không?'}],
+          'features': [{'desc': 'Hệ thống máy chủ thực hiện tách âm thanh và ghép video nhanh chóng trên đám mây, giúp '
+                                'tiết kiệm pin cho thiết bị.',
+                        'icon': 'fa-solid fa-bolt',
+                        'title': 'Xử lý đám mây nhanh chóng'},
+                       {'desc': 'Chất lượng âm thanh rõ ràng, cân bằng trên tai nghe và loa ô tô khi nguồn âm thanh hỗ '
+                                'trợ.',
+                        'icon': 'fa-solid fa-music',
+                        'title': 'Âm thanh rõ nét tới 320 kbps'},
+                       {'desc': 'Hỗ trợ xuất video độ nét cao lên đến 1080p và 4K 60fps (khi video nguồn cung cấp) ở '
+                                'định dạng MP4 tương thích rộng rãi với TV và máy tính.',
+                        'icon': 'fa-solid fa-film',
+                        'title': 'Hỗ trợ Video Full HD 1080p & 4K'},
+                       {'desc': 'Hoạt động mượt mà trên iPhone với Safari, các dòng điện thoại Android, máy tính bảng '
+                                'và laptop Windows/Mac.',
+                        'icon': 'fa-solid fa-mobile-screen',
+                        'title': 'Tương thích điện thoại & máy tính'},
+                       {'desc': 'Không có thông báo nhảy phiền toái, không yêu cầu cài ứng dụng lạ hay tiện ích mở '
+                                'rộng gây hại máy.',
+                        'icon': 'fa-solid fa-shield-halved',
+                        'title': 'Giao diện sạch sẽ không quảng cáo bật lên'},
+                       {'desc': 'Miễn phí cho nhu cầu sử dụng cá nhân hằng ngày để chuyển đổi bài giảng, podcast và tư '
+                                'liệu học tập mà không thu phí.',
+                        'icon': 'fa-solid fa-infinity',
+                        'title': 'Miễn phí cho nhu cầu cá nhân'}],
+          'h1': 'Chuyển Đổi Video YouTube sang MP3 & MP4 Online',
+          'meta_desc': 'Chuyển đổi video YouTube sang MP3 (tới 320kbps) và MP4 (tới 1080p/4K khi nguồn hỗ trợ) miễn '
+                       'phí trên trình duyệt, không cần cài ứng dụng, hỗ trợ iPhone và Android.',
+          'placeholder': 'Dán đường dẫn YouTube vào đây...',
+          'subtitle': 'Chuyển đổi âm thanh rõ nét lên đến 320 kbps và video Full HD 1080p (khi nguồn gốc hỗ trợ) trực '
+                      'tiếp từ trình duyệt mà không cần cài thêm phần mềm.',
+          'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trực Tuyến | YT4MP3'},
+ 'youtube-shorts-downloader': {'active_tab': 'yt-shorts',
                                'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 '
                                                'rounded-2xl">\n'
                                                '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 '
@@ -707,8 +332,8 @@ PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trự
                                                'transition-colors">3. Tách Âm Thanh MP3 320kbps từ Các Đoạn Shorts '
                                                'Thịnh Hành</a></li>\n'
                                                '  <li><a href="#so-sanh-cong-cu-vi" class="hover:text-rose-600 '
-                                               'transition-colors">4. Bảng So Sánh Chi Tiết: YT4MP3 vs ShortsNoob vs '
-                                               'SaveFrom vs Publer</a></li>\n'
+                                               'transition-colors">4. Bảng So Sánh Chi Tiết: YT4MP3 so với các công cụ '
+                                               'chuyển đổi trực tuyến khác</a></li>\n'
                                                '  <li><a href="#khong-dinh-hinh-mo-vi" class="hover:text-rose-600 '
                                                'transition-colors">5. Tệp Sạch Không Chèn Thêm Logo Hay Lớp '
                                                'Phủ</a></li>\n'
@@ -875,8 +500,8 @@ PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trự
                                                'thoại.</li>\n'
                                                '</ul>\n'
                                                '\n'
-                                               '<h2 id="so-sanh-cong-cu-vi">4. Bảng So Sánh Chi Tiết: YT4MP3 vs '
-                                               'ShortsNoob vs SaveFrom vs Publer</h2>\n'
+                                               '<h2 id="so-sanh-cong-cu-vi">4. Bảng So Sánh Chi Tiết: YT4MP3 so với '
+                                               'các công cụ chuyển đổi trực tuyến khác</h2>\n'
                                                '<p>Để nhận thấy rõ những điểm vượt trội của nền tảng chúng tôi, hãy '
                                                'cùng nhìn qua cách thức hoạt động của những dịch vụ quen thuộc trên '
                                                'mạng hiện nay:</p>\n'
@@ -887,9 +512,9 @@ PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trự
                                                '<tr>\n'
                                                '<th>Tính Năng / Đặc Điểm</th>\n'
                                                '<th>YT4MP3 (Khuyên dùng)</th>\n'
-                                               '<th>ShortsNoob</th>\n'
-                                               '<th>SaveFrom / SSYouTube</th>\n'
-                                               '<th>Publer Downloader</th>\n'
+                                               '<th>Công cụ web thông thường</th>\n'
+                                               '<th>Trang nhiều cửa sổ bật lên</th>\n'
+                                               '<th>Công cụ yêu cầu tài khoản</th>\n'
                                                '</tr>\n'
                                                '</thead>\n'
                                                '<tbody>\n'
@@ -953,11 +578,9 @@ PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trự
                                                '</table>\n'
                                                '</div>\n'
                                                '\n'
-                                               '<p>Các trang như <strong>Savefrom</strong> hay '
-                                               '<strong>ShortsNoob</strong> thường khiến người dùng phiền lòng bởi '
-                                               'những cửa sổ quảng cáo bật lên. Trong khi đó Publer lại đòi hỏi khai '
-                                               'báo tài khoản cá nhân. YT4MP3 đề cao sự thuận tiện: dán liên kết, tải '
-                                               'tệp về và sử dụng ngay.</p>\n'
+                                               '<p>Nhiều trang chuyển đổi thông thường thường gây phiền toái với cửa '
+                                               'sổ bật lên hoặc yêu cầu đăng ký tài khoản cá nhân. YT4MP3 đề cao sự '
+                                               'thuận tiện: dán liên kết, tải tệp về và sử dụng ngay.</p>\n'
                                                '\n'
                                                '<h2 id="khong-dinh-hinh-mo-vi">5. Tệp Sạch Không Chèn Thêm Logo Hay '
                                                'Lớp Phủ</h2>\n'
@@ -1045,72 +668,432 @@ PAGES = {'home': {'title': 'Tải Video YouTube & Chuyển MP3 Miễn Phí Trự
                                                'mây. Chúng tôi đọc kỹ các mốc thời gian (PTS) của luồng hình và luồng '
                                                'âm thanh AAC, căn chỉnh khớp đến từng mili-giây trước khi tạo file MP4 '
                                                'hoàn chỉnh. Nhờ vậy, video bạn tải về luôn đạt được sự ăn khớp nhịp '
-                                               'nhàng giữa hình và tiếng.</p>'}}
+                                               'nhàng giữa hình và tiếng.</p>',
+                               'badge': 'Công Cụ Tải YouTube Shorts',
+                               'canonical_url': 'https://www.yt4mp3.com/vi/youtube-shorts-downloader',
+                               'faq': [{'a': 'Mở video trong ứng dụng YouTube, nhấn nút Chia sẻ rồi chọn Sao chép liên '
+                                             'kết. Sau đó dán link vào ô tìm kiếm của YT4MP3, chọn định dạng MP4 và '
+                                             'bấm Tải về để lưu vào máy.',
+                                        'q': 'Làm thế nào để tải video YouTube Shorts về điện thoại?'},
+                                       {'a': 'Thực hiện tải về trên trình duyệt Safari. Khi tải xong, nhấn vào biểu '
+                                             'tượng tải về trên thanh Safari, mở video, bấm nút Chia sẻ iOS và chọn '
+                                             "'Lưu video'. Video sẽ xuất hiện trong ứng dụng Ảnh.",
+                                        'q': 'Cách lưu video Shorts vào album Ảnh trên iPhone?'},
+                                       {'a': 'Không. YT4MP3 giữ tệp đầu ra sạch sẽ và dịch vụ của chúng tôi không tự ý '
+                                             'thêm logo hay lớp phủ quảng cáo vào video của bạn.',
+                                        'q': 'YT4MP3 có chèn thêm logo hay lớp phủ vào video tải về không?'},
+                                       {'a': 'Có. Bạn chỉ cần chọn định dạng MP3 trước khi tải. Hệ thống máy chủ sẽ tự '
+                                             'động tách phần âm thanh và cung cấp tệp MP3 chuẩn 320 kbps trong trẻo để '
+                                             'làm nhạc chuông.',
+                                        'q': 'Tôi có thể chuyển video YouTube Shorts thành file nhạc MP3 không?'},
+                                       {'a': 'Chúng tôi hỗ trợ mức phân giải cao nhất mà tác giả tải lên, phần lớn là '
+                                             '1080p Full HD (1080x1920) ở tốc độ 60fps hoặc 30fps, bên cạnh tùy chọn '
+                                             '720p HD.',
+                                        'q': 'Độ phân giải video Shorts tải về là bao nhiêu?'},
+                                       {'a': 'YouTube sử dụng cấu trúc đường dẫn riêng cho video ngắn '
+                                             '(youtube.com/shorts/id) thay vì dạng thông thường. Các công cụ cũ không '
+                                             'nhận dạng được, trong khi YT4MP3 xử lý trơn tru cả hai.',
+                                        'q': 'Tại sao các trang web khác thường báo lỗi với link Shorts?'},
+                                       {'a': 'Có. YT4MP3 miễn phí cho nhu cầu sử dụng cá nhân hằng ngày, phục vụ thuận '
+                                             'tiện cho việc lưu trữ tài liệu học tập và xem ngoại tuyến.',
+                                        'q': 'YT4MP3 có miễn phí cho nhu cầu sử dụng hằng ngày không?'},
+                                       {'a': 'Bạn không cần cài ứng dụng hay đăng ký tài khoản. Mọi thao tác đều thực '
+                                             'hiện trực tiếp trên trình duyệt web của điện thoại và máy tính.',
+                                        'q': 'Tôi có cần cài đặt phần mềm hay tạo tài khoản không?'},
+                                       {'a': "Bạn chỉ cần thêm số '4' vào trước youtube.com (ví dụ: "
+                                             '4youtube.com/shorts/id) hoặc đổi tên miền thành yt4mp3.com trên thanh '
+                                             'địa chỉ để mở ngay trang tải xuống.',
+                                        'q': 'Mẹo gõ tắt URL để tải Shorts nhanh là gì?'},
+                                       {'a': 'YouTube Shorts được quay theo tỷ lệ dọc 9:16 nhằm lấp đầy toàn bộ màn '
+                                             'hình điện thoại. Chúng tôi giữ nguyên tỷ lệ này để mang lại trải nghiệm '
+                                             'xem trọn vẹn nhất.',
+                                        'q': 'Tại sao video tải về lại có tỷ lệ khung hình đứng?'},
+                                       {'a': 'YouTube truyền tải dữ liệu hình ảnh và âm thanh tách biệt theo giao thức '
+                                             'DASH. Máy chủ của chúng tôi căn chỉnh mốc thời gian (PTS) chính xác đến '
+                                             'từng mili-giây trước khi hoàn tất file MP4.',
+                                        'q': 'YT4MP3 làm thế nào để âm thanh không bị lệch so với hình ảnh?'},
+                                       {'a': 'Được chứ. Các video được đóng gói theo chuẩn H.264 MP4 với âm thanh AAC, '
+                                             'tương thích rộng rãi với CapCut, Adobe Premiere, DaVinci Resolve và '
+                                             'Final Cut Pro.',
+                                        'q': 'Tôi có thể đưa video đã tải vào CapCut hay Premiere để chỉnh sửa không?'},
+                                       {'a': 'Trang web chỉ xử lý được các video YouTube Shorts được chia sẻ công '
+                                             'khai. Video ở chế độ riêng tư hoặc yêu cầu đăng nhập không thể tải được.',
+                                        'q': 'Công cụ có tải được video Shorts riêng tư hay bị hạn chế không?'},
+                                       {'a': 'Một video dọc 60 giây chất lượng 1080p thường có dung lượng từ 15 MB đến '
+                                             '35 MB. Tệp âm thanh MP3 riêng chỉ tốn khoảng 2,5 MB đến 4 MB.',
+                                        'q': 'Một video Shorts thường chiếm bao nhiêu dung lượng bộ nhớ?'},
+                                       {'a': 'An toàn khi sử dụng trên trình duyệt. Chúng tôi không sử dụng cửa sổ '
+                                             'pop-up gây phiền nhiễu, nút tải giả mạo hay yêu cầu cấp quyền đáng ngờ.',
+                                        'q': 'Sử dụng YT4MP3 trên điện thoại và máy tính có an toàn không?'},
+                                       {'a': 'Việc lưu video để xem lại khi không có internet hoặc phục vụ mục đích '
+                                             'nghiên cứu cá nhân thuộc phạm vi sử dụng hợp lý. Hãy luôn tôn trọng '
+                                             'quyền tác giả của người tạo nội dung.',
+                                        'q': 'Tải video YouTube Shorts về máy cho mục đích cá nhân có hợp pháp '
+                                             'không?'}],
+                               'features': [{'desc': 'Tệp đầu ra sạch sẽ: dịch vụ của chúng tôi không tự ý thêm logo '
+                                                     'hay lớp phủ văn bản lên video của bạn.',
+                                             'icon': 'fa-solid fa-wand-magic-sparkles',
+                                             'title': 'Tệp Sạch Không Gắn Logo'},
+                                            {'desc': 'Giữ nguyên tỷ lệ khung hình 9:16 với độ phân giải lên đến Full '
+                                                     'HD 1080p 60fps khi video nguồn hỗ trợ.',
+                                             'icon': 'fa-solid fa-mobile-screen',
+                                             'title': 'Video Dọc Tới 1080p 60fps'},
+                                            {'desc': 'Trích xuất những giai điệu thịnh hành, lời thoại nổi tiếng và '
+                                                     'hiệu ứng âm thanh sống động thành file MP3 chất lượng.',
+                                             'icon': 'fa-solid fa-music',
+                                             'title': 'Tách Âm Thanh MP3 320kbps'},
+                                            {'desc': 'Trải nghiệm gọn gàng, không cửa sổ pop-up gây phiền nhiễu, không '
+                                                     'nút tải giả mạo và miễn phí cho nhu cầu cá nhân.',
+                                             'icon': 'fa-solid fa-shield-halved',
+                                             'title': 'Giao Diện Gọn Nhẹ & An Toàn'},
+                                            {'desc': 'Lưu trực tiếp vào album Ảnh trên Safari iOS và thư mục Tệp tải '
+                                                     'về trên Chrome Android cũng như máy tính.',
+                                             'icon': 'fa-solid fa-apple-whole',
+                                             'title': 'Tương Thích iPhone & Android'},
+                                            {'desc': 'Gõ 4youtube vào thanh địa chỉ để mở nhanh trang chuyển đổi hoặc '
+                                                     'cài đặt ứng dụng web ngay trên màn hình chính.',
+                                             'icon': 'fa-solid fa-bolt',
+                                             'title': 'Mẹo URL Nhanh & Ứng Dụng PWA'}],
+                               'h1': 'Tải YouTube Shorts Trực Tuyến',
+                               'meta_desc': 'Chuyển đổi YouTube Shorts sang MP4 (tới 1080p khi nguồn hỗ trợ) và MP3 '
+                                            '(tới 320kbps) miễn phí. Tệp sạch không chèn thêm logo, hỗ trợ iPhone, '
+                                            'Android và PC.',
+                               'placeholder': 'Dán liên kết YouTube Shorts vào đây (ví dụ: youtube.com/shorts/...)...',
+                               'subtitle': 'Lưu video ngắn YouTube Shorts định dạng dọc (tới 1080p khi nguồn gốc hỗ '
+                                           'trợ) hoặc chuyển sang MP3 tới 320kbps. Tệp sạch không gắn thêm lớp phủ, '
+                                           'miễn phí và không cần cài app.',
+                               'title': 'Chuyển YouTube Shorts (Tới 1080p MP4 & MP3) | YT4MP3'},
+ 'youtube-to-mp3': {'active_tab': 'yt-mp3',
+                    'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
+                                    '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i '
+                                    'class="fa-solid fa-list-ul mr-2 text-rose-600"></i>Nội Dung Chuyên Sâu</p>\n'
+                                    '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
+                                    '  <li><a href="#uu-diem-320kbps" class="hover:text-rose-600 transition-colors">1. '
+                                    'Ưu điểm của bitrate 320 kbps cao cấp</a></li>\n'
+                                    '  <li><a href="#bang-chat-luong-am-thanh" class="hover:text-rose-600 '
+                                    'transition-colors">2. Bảng so sánh chất lượng âm thanh</a></li>\n'
+                                    '  <li><a href="#nghe-nhac-ngoai-tuyen" class="hover:text-rose-600 '
+                                    'transition-colors">3. Nghe nhạc ngoại tuyến trên ô tô và khi tập luyện</a></li>\n'
+                                    '  <li><a href="#quy-trinh-tach-am" class="hover:text-rose-600 '
+                                    'transition-colors">4. Quy trình tách âm thanh an toàn</a></li>\n'
+                                    '</ul>\n'
+                                    '</div>\n'
+                                    '\n'
+                                    '<h2 id="uu-diem-320kbps">Ưu điểm của bitrate 320 kbps cao cấp</h2>\n'
+                                    '<p>Đối với những người yêu âm nhạc, MP3 vẫn là lựa chọn tiện lợi hàng đầu nhờ khả '
+                                    'năng tương thích với mọi thiết bị. Công cụ <a '
+                                    'href="https://www.yt4mp3.com/vi/youtube-to-mp3" class="text-rose-600 font-bold '
+                                    'hover:underline">chuyển YouTube sang MP3</a> của chúng tôi hỗ trợ tách âm thanh ở '
+                                    'mức bitrate lên tới 320 kbps (tùy thuộc vào chất lượng bản thu gốc).</p>\n'
+                                    '<p>Khác với các tệp bị nén quá mức khiến âm thanh trở nên tù túng, mức 320 kbps '
+                                    'tái hiện dải tần số đầy đủ lên tới 20 kHz.</p>\n'
+                                    '\n'
+                                    '<h2 id="bang-chat-luong-am-thanh">Bảng so sánh chất lượng âm thanh</h2>\n'
+                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                                    '<table>\n'
+                                    '<thead>\n'
+                                    '<tr>\n'
+                                    '<th>Tốc độ bit</th>\n'
+                                    '<th>Chất lượng âm học</th>\n'
+                                    '<th>Dung lượng tệp (4 phút)</th>\n'
+                                    '<th>Khuyên dùng cho</th>\n'
+                                    '</tr>\n'
+                                    '</thead>\n'
+                                    '<tbody>\n'
+                                    '<tr>\n'
+                                    '<td><strong>320 kbps</strong></td>\n'
+                                    '<td>Chất lượng cao (tùy nguồn)</td>\n'
+                                    '<td>~9.2 MB</td>\n'
+                                    '<td>Nghe âm thanh chất lượng cao, tai nghe, dàn loa ô tô</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>256 kbps</strong></td>\n'
+                                    '<td>Chất lượng rất cao</td>\n'
+                                    '<td>~7.4 MB</td>\n'
+                                    '<td>Bản thu biểu diễn trực tiếp, nhạc sống</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>192 kbps</strong></td>\n'
+                                    '<td>Chất lượng cân bằng</td>\n'
+                                    '<td>~5.5 MB</td>\n'
+                                    '<td>Nghe nhạc thường ngày, tiết kiệm bộ nhớ</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>128 kbps</strong></td>\n'
+                                    '<td>Mức nén cơ bản</td>\n'
+                                    '<td>~3.7 MB</td>\n'
+                                    '<td>Podcast giọng đọc, bài giảng, sách nói</td>\n'
+                                    '</tr>\n'
+                                    '</tbody>\n'
+                                    '</table>\n'
+                                    '</div>\n'
+                                    '\n'
+                                    '<h2 id="nghe-nhac-ngoai-tuyen">Nghe nhạc ngoại tuyến trên ô tô và khi tập '
+                                    'luyện</h2>\n'
+                                    '<p>Khi chạy bộ ở công viên hoặc lái xe trên các cung đường đèo không có sóng di '
+                                    'động, việc lưu sẵn danh sách bài hát trong máy giúp bạn tận hưởng âm nhạc liền '
+                                    'mạch mà không lo tốn pin cho việc dò mạng liên tục.</p>\n'
+                                    '\n'
+                                    '<h2 id="quy-trinh-tach-am">Quy trình tách âm thanh an toàn</h2>\n'
+                                    '<p>Toàn bộ quá trình diễn ra trên máy chủ đám mây. Bạn không cần tải về các công '
+                                    'cụ chuyển đổi cồng kềnh làm tốn dung lượng bộ nhớ thiết bị.</p>',
+                    'badge': 'Âm Thanh Chất Lượng Cao',
+                    'canonical_url': 'https://www.yt4mp3.com/vi/youtube-to-mp3',
+                    'faq': [{'a': '320 kbps là mức chất lượng cao nhất của định dạng MP3. Âm thanh giữ được dải bass '
+                                  'sâu, tiếng treble thanh và không bị cảm giác nén nghẹt như các mức nén thấp.',
+                             'q': 'Tại sao nên chọn mức bitrate 320 kbps khi chuyển đổi âm thanh?'},
+                            {'a': 'Sau khi tải tệp MP3 về máy tính hoặc điện thoại, bạn cắm USB (định dạng FAT32) vào '
+                                  'và chép trực tiếp các tệp âm thanh sang. Đầu đọc trên xe sẽ nhận tệp nhanh chóng.',
+                             'q': 'Làm thế nào để chép nhạc vào USB cắm trên xe ô tô?'},
+                            {'a': 'Được. Trên Android, bạn vào Cài đặt > Âm thanh & rung > Nhạc chuông để chọn tệp âm '
+                                  'thanh. Trên iPhone, bạn có thể dùng GarageBand để tạo nhạc chuông nhanh chóng.',
+                             'q': 'Tôi có thể dùng tệp MP3 đã lưu làm nhạc chuông điện thoại không?'},
+                            {'a': "Các tệp tải về từ Safari sẽ nằm trong mục 'Tải về' (Downloads) của ứng dụng 'Tệp' "
+                                  '(Files) có sẵn trên hệ điều hành iOS.',
+                             'q': 'Tệp MP3 tải về nằm ở đâu trên iPhone?'},
+                            {'a': 'Có, hầu hết các trình phát nhạc trên điện thoại đều có tính năng tự động quét tệp '
+                                  'âm thanh có sẵn trong bộ nhớ máy (mục Tệp cục bộ / Nhạc thiết bị).',
+                             'q': 'Trình phát nhạc trên điện thoại có nhận tệp tải về không?'},
+                            {'a': 'Được chứ. Bạn chỉ cần lấy link của video Shorts và dán vào, hệ thống sẽ tách phần '
+                                  'âm thanh thành tệp MP3 cho bạn.',
+                             'q': 'Có thể trích xuất nhạc từ các video ngắn YouTube Shorts không?'},
+                            {'a': 'Không, quá trình xử lý giữ nguyên mức âm lượng gần với bản thu gốc.',
+                             'q': 'Âm lượng bài hát có bị nhỏ đi sau khi chuyển đổi không?'},
+                            {'a': 'Không. YT4MP3 miễn phí cho nhu cầu sử dụng cá nhân hằng ngày, phù hợp để lưu trữ '
+                                  'bài giảng, podcast và tư liệu cá nhân.',
+                             'q': 'Dịch vụ có thu phí khi sử dụng hằng ngày không?'}],
+                    'features': [{'desc': 'Mã hóa âm thanh rõ ràng, giữ nguyên độ chi tiết của bản thu khi video nguồn '
+                                          'cung cấp chất lượng cao.',
+                                  'icon': 'fa-solid fa-headphones',
+                                  'title': 'Hỗ trợ Bitrate tới 320 kbps'},
+                                 {'desc': 'Tùy chọn mức chất lượng cao tới 320 kbps hoặc phiên bản nhẹ 128 kbps để tối '
+                                          'ưu dung lượng lưu trữ.',
+                                  'icon': 'fa-solid fa-sliders',
+                                  'title': 'Tùy chỉnh chất lượng linh hoạt'},
+                                 {'desc': 'Phát mượt mà trên loa nghe nhạc Bluetooth, dàn âm thanh gia đình và máy '
+                                          'nghe nhạc cá nhân.',
+                                  'icon': 'fa-solid fa-compact-disc',
+                                  'title': 'Chuẩn MP3 tương thích nhiều thiết bị'},
+                                 {'desc': 'Bảo vệ thiết bị của bạn bằng việc xử lý hoàn toàn trên nền tảng đám mây an '
+                                          'toàn.',
+                                  'icon': 'fa-solid fa-shield-halved',
+                                  'title': 'Không cần cài đặt phần mềm độc hại'},
+                                 {'desc': 'Chép các tệp âm thanh cá nhân vào USB để nghe trong những chuyến đi đường '
+                                          'dài không có sóng mạng.',
+                                  'icon': 'fa-solid fa-car',
+                                  'title': 'Tương thích tốt với USB ô tô'},
+                                 {'desc': 'Miễn phí cho nhu cầu sử dụng cá nhân hằng ngày để chuyển đổi bài giảng, '
+                                          'podcast và các tệp âm thanh được phép sử dụng.',
+                                  'icon': 'fa-solid fa-infinity',
+                                  'title': 'Miễn phí cho nhu cầu cá nhân'}],
+                    'h1': 'Chuyển Đổi YouTube sang MP3 Chất Lượng Cao',
+                    'meta_desc': 'Chuyển đổi âm thanh YouTube sang MP3 chất lượng lên tới 320 kbps (khi nguồn hỗ trợ) '
+                                 'miễn phí. Âm thanh rõ nét, không cần cài app, thuận tiện nghe ngoại tuyến trên điện '
+                                 'thoại hoặc qua USB ô tô.',
+                    'placeholder': 'Dán đường dẫn video hoặc âm thanh YouTube vào đây...',
+                    'subtitle': 'Trích xuất âm thanh từ bản thu âm acoustic, podcast, bài giảng và nội dung học tập '
+                                'với bitrate lên tới 320 kbps (tùy chất lượng nguồn) nhanh chóng và tiện lợi.',
+                    'title': 'Chuyển YouTube sang MP3 (320 kbps) Miễn Phí | YT4MP3'},
+ 'youtube-to-mp4': {'active_tab': 'yt-mp4',
+                    'article_html': '<div class="toc-box mb-8 p-6 bg-gray-50 border border-gray-200 rounded-2xl">\n'
+                                    '<p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3"><i '
+                                    'class="fa-solid fa-list-ul mr-2 text-rose-600"></i>Chủ Đề Hướng Dẫn Video</p>\n'
+                                    '<ul class="space-y-1.5 text-xs sm:text-sm text-gray-700">\n'
+                                    '  <li><a href="#chuan-mp4-h264" class="hover:text-rose-600 transition-colors">1. '
+                                    'Chuẩn video MP4 đóng gói H.264/AAC</a></li>\n'
+                                    '  <li><a href="#bang-thong-so-do-phan-giai" class="hover:text-rose-600 '
+                                    'transition-colors">2. Bảng thông số độ phân giải video</a></li>\n'
+                                    '  <li><a href="#dung-clip-capcut" class="hover:text-rose-600 '
+                                    'transition-colors">3. Sẵn sàng dựng clip trên CapCut và Premiere</a></li>\n'
+                                    '  <li><a href="#phat-lai-smart-tv" class="hover:text-rose-600 '
+                                    'transition-colors">4. Phát lại trên Smart TV và màn chiếu</a></li>\n'
+                                    '</ul>\n'
+                                    '</div>\n'
+                                    '\n'
+                                    '<h2 id="chuan-mp4-h264">Chuẩn video MP4 đóng gói H.264/AAC</h2>\n'
+                                    '<p>Trong thời đại số hóa, định dạng MP4 cùng bộ giải mã H.264 vẫn giữ vị trí độc '
+                                    'tôn nhờ chất lượng hình ảnh sắc nét và độ nén gọn gàng. Sử dụng <a '
+                                    'href="https://www.yt4mp3.com/vi/youtube-to-mp4" class="text-rose-600 font-bold '
+                                    'hover:underline">công cụ chuyển YouTube sang MP4</a> giúp bạn dễ dàng lưu trữ '
+                                    'video cá nhân hoặc tư liệu học tập để xem ngoại tuyến.</p>\n'
+                                    '\n'
+                                    '<h2 id="bang-thong-so-do-phan-giai">Bảng thông số độ phân giải video</h2>\n'
+                                    '<div style="overflow-x: auto; margin: 24px 0;">\n'
+                                    '<table>\n'
+                                    '<thead>\n'
+                                    '<tr>\n'
+                                    '<th>Độ phân giải</th>\n'
+                                    '<th>Kích thước điểm ảnh</th>\n'
+                                    '<th>Khung hình/giây</th>\n'
+                                    '<th>Codec âm thanh</th>\n'
+                                    '<th>Ứng dụng tối ưu</th>\n'
+                                    '</tr>\n'
+                                    '</thead>\n'
+                                    '<tbody>\n'
+                                    '<tr>\n'
+                                    '<td><strong>4K Ultra HD (khi nguồn hỗ trợ)</strong></td>\n'
+                                    '<td>3840 x 2160</td>\n'
+                                    '<td>60 fps</td>\n'
+                                    '<td>AAC Stereo</td>\n'
+                                    '<td>TV 4K kích thước lớn, màn hình chuyên nghiệp</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>1080p Full HD (khi nguồn hỗ trợ)</strong></td>\n'
+                                    '<td>1920 x 1080</td>\n'
+                                    '<td>60 / 30 fps</td>\n'
+                                    '<td>AAC Stereo</td>\n'
+                                    '<td>Laptop, máy tính bảng, trình chiếu tài liệu</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>720p HD</strong></td>\n'
+                                    '<td>1280 x 720</td>\n'
+                                    '<td>30 fps</td>\n'
+                                    '<td>AAC Stereo</td>\n'
+                                    '<td>Điện thoại thông minh, lưu trữ nhanh</td>\n'
+                                    '</tr>\n'
+                                    '<tr>\n'
+                                    '<td><strong>480p SD</strong></td>\n'
+                                    '<td>854 x 480</td>\n'
+                                    '<td>30 fps</td>\n'
+                                    '<td>AAC Cơ bản</td>\n'
+                                    '<td>Thiết bị đời cũ, mạng yếu</td>\n'
+                                    '</tr>\n'
+                                    '</tbody>\n'
+                                    '</table>\n'
+                                    '</div>\n'
+                                    '\n'
+                                    '<h2 id="dung-clip-capcut">Sẵn sàng dựng clip trên CapCut và Premiere</h2>\n'
+                                    '<p>Các nhà sáng tạo nội dung cần sao lưu video của chính mình để chỉnh sửa trên '
+                                    'CapCut hoặc Premiere có thể sử dụng tệp MP4 tiêu chuẩn với âm thanh đồng bộ và '
+                                    'hình ảnh ổn định.</p>\n'
+                                    '\n'
+                                    '<h2 id="phat-lai-smart-tv">Phát lại trên Smart TV và màn chiếu</h2>\n'
+                                    '<p>Chép các bài giảng, video giáo dục hoặc video gia đình tự quay vào USB để cắm '
+                                    'trực tiếp vào TV phòng khách và phát ngoại tuyến thuận tiện.</p>',
+                    'badge': 'Video Độ Nét Cao',
+                    'canonical_url': 'https://www.yt4mp3.com/vi/youtube-to-mp4',
+                    'faq': [{'a': 'Trên YouTube, luồng hình ảnh độ nét cao (khi video nguồn hỗ trợ 1080p trở lên) được '
+                                  'phân tách riêng với luồng âm thanh. Hệ thống YT4MP3 sẽ tự động ghép hai luồng này '
+                                  'lại thành một tệp MP4 có âm thanh đồng bộ.',
+                             'q': 'Làm sao để tải video 1080p có đầy đủ âm thanh đồng bộ?'},
+                            {'a': 'Có, chuẩn MP4 mã hóa H.264 tương thích rộng rãi với các dòng Smart TV của Samsung, '
+                                  'Sony, LG, TCL và Casper.',
+                             'q': 'Video MP4 tải về có xem được trên tivi qua cổng USB không?'},
+                            {'a': 'Chắc chắn rồi. Tệp video được xuất theo cấu trúc chuẩn, bạn chỉ cần kéo thả vào '
+                                  'dòng thời gian của CapCut, Premiere hay DaVinci Resolve để cắt ghép.',
+                             'q': 'Tôi có thể dùng tệp MP4 để dựng clip trên CapCut được không?'},
+                            {'a': 'Video 4K (2160p) có lượng điểm ảnh gấp 4 lần Full HD, dung lượng lên tới hàng '
+                                  'gigabyte. Do đó máy chủ cần thêm một chút thời gian để gộp dữ liệu.',
+                             'q': 'Tại sao video 4K lại mất nhiều thời gian xử lý hơn?'},
+                            {'a': 'Sau khi tải xong trong Safari, bạn bấm vào tệp trong mục Tải về, bấm biểu tượng '
+                                  "'Chia sẻ' ở góc dưới màn hình và chọn 'Lưu video'.",
+                             'q': 'Cách lưu video vào bộ sưu tập ảnh (Cuộn camera) trên iPhone?'},
+                            {'a': 'Có, công cụ giữ nguyên tỉ lệ khung hình dọc 9:16 và độ nét chuẩn của video Shorts '
+                                  'khi tải về.',
+                             'q': 'Có thể tải video YouTube Shorts dạng dọc về máy không?'},
+                            {'a': 'Nền tảng của chúng tôi có thể xử lý mượt mà các video dài từ vài phút đến các bài '
+                                  'giảng kéo dài nhiều tiếng đồng hồ.',
+                             'q': 'Giới hạn độ dài video có thể tải là bao nhiêu?'},
+                            {'a': 'Không. YT4MP3 miễn phí cho nhu cầu sử dụng cá nhân hằng ngày mà không cần đăng ký '
+                                  'tài khoản.',
+                             'q': 'Tôi có cần đăng ký tài khoản hoặc trả phí không?'}],
+                    'features': [{'desc': 'Hỗ trợ xuất ở độ phân giải 1080p Full HD hoặc 4K khi nguồn gốc cung cấp, '
+                                          'giúp hình ảnh rõ ràng trên màn hình TV và máy tính.',
+                                  'icon': 'fa-solid fa-tv',
+                                  'title': 'Hỗ trợ độ phân giải đến 1080p & 4K'},
+                                 {'desc': 'Định dạng đóng gói H.264 và âm thanh AAC phát mượt mà trên hầu hết các '
+                                          'thiết bị mà không cần cài thêm codec.',
+                                  'icon': 'fa-solid fa-file-video',
+                                  'title': 'Chuẩn MP4 phổ biến rộng rãi'},
+                                 {'desc': 'Nhập video trực tiếp vào các phần mềm biên tập mà không gặp lỗi lệch tiếng '
+                                          'hay lỗi định dạng.',
+                                  'icon': 'fa-solid fa-scissors',
+                                  'title': 'Sẵn sàng cho CapCut & Premiere Pro'},
+                                 {'desc': 'Tệp video sạch sẽ: dịch vụ của chúng tôi không tự ý thêm logo hay lớp phủ '
+                                          'lên khung hình của bạn.',
+                                  'icon': 'fa-solid fa-stamp',
+                                  'title': 'Tệp sạch, không gắn thêm logo'},
+                                 {'desc': 'Chép video sang ổ cứng hoặc USB để thưởng thức cùng gia đình trong phòng '
+                                          'khách ấm cúng.',
+                                  'icon': 'fa-solid fa-hard-drive',
+                                  'title': 'Hỗ trợ xem trên Smart TV qua USB'},
+                                 {'desc': 'Máy chủ tiến hành gộp luồng hình ảnh và âm thanh trên đám mây, giúp rút '
+                                          'ngắn thời gian chờ đợi.',
+                                  'icon': 'fa-solid fa-bolt',
+                                  'title': 'Xử lý và xuất video nhanh chóng'}],
+                    'h1': 'Tải Video YouTube MP4 Full HD Trực Tuyến',
+                    'meta_desc': 'Chuyển đổi video YouTube sang MP4 Full HD 1080p và 4K (khi nguồn hỗ trợ) miễn phí. '
+                                 'Tệp sạch không chèn thêm logo, âm thanh đồng bộ, hỗ trợ xem ngoại tuyến trên máy '
+                                 'tính và TV.',
+                    'placeholder': 'Dán đường dẫn video cần tải vào đây...',
+                    'subtitle': 'Lưu trữ các bài giảng, vlog cá nhân và tư liệu học tập ở độ phân giải lên đến 1080p '
+                                'và 4K (khi video nguồn hỗ trợ) với hình ảnh rõ nét và âm thanh đồng bộ.',
+                    'title': 'Chuyển Video YouTube sang MP4 (Tới 1080p & 4K) Miễn Phí | YT4MP3'}}
 
-UI = {'nav_home': 'Trang chủ',
- 'nav_mp3': 'YouTube sang MP3',
- 'nav_mp4': 'YouTube sang MP4',
- 'all_formats_tab': 'Tất cả định dạng',
- 'mp3_music_tab': 'Nhạc MP3',
- 'mp4_video_tab': 'Video MP4',
- 'paste_placeholder': 'Dán liên kết video, Shorts hoặc nhạc YouTube tại đây...',
+UI = {'all_formats_tab': 'Tất cả định dạng',
+ 'all_rights_reserved': 'Bảo lưu mọi quyền.',
+ 'back_to_converter': 'Quay lại công cụ',
+ 'benefit1_desc': 'Nghe trên máy bay, tàu điện ngầm hoặc khi đi du lịch mà không cần Wi-Fi hay tốn 4G/5G.',
+ 'benefit1_title': 'Nghe ngoại tuyến ở mọi nơi',
+ 'benefit2_desc': 'Tệp âm thanh tiết kiệm tới 90% pin và không tốn dung lượng phát video khi tắt màn hình.',
+ 'benefit2_title': 'Tiết kiệm pin & Dung lượng mạng',
+ 'benefit3_desc': 'Tiếp tục phát tệp âm thanh đã lưu trên máy khi khóa màn hình điện thoại hoặc khi dùng ứng dụng '
+                  'khác.',
+ 'benefit3_title': 'Phát trong nền khi tắt màn hình',
+ 'benefit4_desc': 'Trích xuất âm thanh rõ nét từ video Shorts, bài giảng học tập, sách nói và các bản ghi âm dài.',
+ 'benefit4_title': 'Shorts, Podcast & Bản phối dài',
+ 'benefits_badge': 'Lợi ích chính',
+ 'benefits_subtitle': 'Thưởng thức tệp âm thanh cá nhân của bạn mọi lúc mọi nơi cho nhu cầu sử dụng hằng ngày.',
+ 'benefits_title': 'Tại sao nên chuyển đổi video YouTube sang MP3?',
+ 'comp_badge': 'So sánh',
+ 'comp_feature_col': 'Tính năng & Khả năng',
+ 'comp_others_col': 'Công cụ khác',
+ 'comp_row1_others': 'Bắt buộc đăng ký, thu phí hoặc gửi email rác',
+ 'comp_row1_title': 'Đăng ký & Tài khoản',
+ 'comp_row1_yt4mp3': 'Miễn phí sử dụng, không cần đăng ký hay thẻ',
+ 'comp_row2_others': 'Hàng đợi chờ lâu, bóp băng thông & đếm ngược',
+ 'comp_row2_title': 'Tốc độ & Giới hạn tải',
+ 'comp_row2_yt4mp3': 'Xử lý đám mây tức thì & tải trực tiếp',
+ 'comp_row3_others': 'Bị giới hạn ở 128 kbps nén hoặc video mờ 360p',
+ 'comp_row3_title': 'Chất lượng Âm thanh & Video',
+ 'comp_row3_yt4mp3': 'MP3 tới 320 kbps & MP4 tới 1080p/4K (khi nguồn hỗ trợ) âm thanh đồng bộ',
+ 'comp_row4_others': 'Chuyển hướng phiền phức, quảng cáo bật lên & hàng đợi chậm',
+ 'comp_row4_title': 'Quảng cáo & Cửa sổ bật lên',
+ 'comp_row4_yt4mp3': 'Sạch & an toàn: Không pop-under, không nút tải giả mạo',
+ 'comp_row5_others': 'Thường lỗi trên iOS Safari hoặc bắt cài file APK lạ',
+ 'comp_row5_title': 'Hỗ trợ Điện thoại & Thiết bị',
+ 'comp_row5_yt4mp3': 'Mượt mà trên iPhone Safari, Android Chrome, Mac & Windows',
+ 'comp_row6_others': 'Giới hạn 10-20 phút; không nhận diện được link Shorts',
+ 'comp_row6_title': 'YouTube Shorts & Video dài',
+ 'comp_row6_yt4mp3': 'Hỗ trợ video Shorts, bài giảng & podcast dài',
+ 'comp_subtitle': 'Xem lý do nhiều người dùng chọn YT4MP3 thay vì các trang web chậm và nhiều quảng cáo gây phiền '
+                  'nhiễu.',
+ 'comp_title': 'YT4MP3 và Các Công Cụ Chuyển Đổi Khác',
+ 'comp_yt4mp3_col': 'YT4MP3 (Khuyên dùng)',
  'convert_btn': 'Chuyển đổi',
  'download_now': 'Tải xuống ngay',
  'download_ready': 'Tệp tin đã sẵn sàng',
- 'back_to_converter': 'Quay lại công cụ',
- 'free_badge': 'Miễn phí sử dụng',
- 'quick_convert': 'Chuyển Đổi Nhanh',
- 'select_format': 'Chọn định dạng & chất lượng',
- 'features_title': 'Tại sao nên chọn YT4MP3',
- 'how_it_works_title': 'Cách chuyển đổi video YouTube',
  'faq_title': 'Câu hỏi thường gặp',
+ 'features_title': 'Tại sao nên chọn YT4MP3',
+ 'free_badge': 'Miễn phí sử dụng',
+ 'how_it_works_title': 'Cách chuyển đổi video YouTube',
  'languages_label': 'Ngôn ngữ',
- 'all_rights_reserved': 'Bảo lưu mọi quyền.',
  'legal_disclaimer': 'YT4MP3 là công cụ chuyển đổi định dạng trực tuyến độc lập phục vụ mục đích sao lưu cá nhân, học '
                      'tập ngoại tuyến và sử dụng hợp lý. Người dùng chịu trách nhiệm tuân thủ Điều khoản dịch vụ của '
                      'YouTube và luật bản quyền hiện hành.',
- 'step1_title': 'Sao chép liên kết video',
+ 'mp3_music_tab': 'Nhạc MP3',
+ 'mp4_video_tab': 'Video MP4',
+ 'nav_home': 'Trang chủ',
+ 'nav_mp3': 'YouTube sang MP3',
+ 'nav_mp4': 'YouTube sang MP4',
+ 'nav_shorts': 'YouTube Shorts',
+ 'paste_placeholder': 'Dán liên kết video, Shorts hoặc nhạc YouTube tại đây...',
+ 'quick_convert': 'Chuyển Đổi Nhanh',
+ 'select_format': 'Chọn định dạng & chất lượng',
  'step1_desc': 'Mở video bạn yêu thích trên YouTube, bấm Chia sẻ và sao chép đường link URL.',
- 'step2_title': 'Dán và chọn định dạng',
+ 'step1_title': 'Sao chép liên kết video',
  'step2_desc': 'Dán liên kết vào ô tìm kiếm và chọn âm thanh MP3 (lên đến 320kbps) hoặc video MP4 (lên đến 4K khi '
                'nguồn gốc hỗ trợ).',
- 'step3_title': 'Tải tập tin về máy',
+ 'step2_title': 'Dán và chọn định dạng',
  'step3_desc': 'Bấm Chuyển đổi, chờ vài giây để hệ thống xử lý và tải tệp trực tiếp về điện thoại hoặc máy tính.',
- 'comp_badge': 'So sánh',
- 'comp_title': 'YT4MP3 và Các Công Cụ Chuyển Đổi Khác',
- 'comp_subtitle': 'Xem lý do nhiều người dùng chọn YT4MP3 thay vì các trang web chậm và nhiều quảng cáo gây phiền '
-                  'nhiễu.',
- 'comp_feature_col': 'Tính năng & Khả năng',
- 'comp_yt4mp3_col': 'YT4MP3 (Khuyên dùng)',
- 'comp_others_col': 'Công cụ khác',
- 'comp_row1_title': 'Đăng ký & Tài khoản',
- 'comp_row1_yt4mp3': 'Miễn phí sử dụng, không cần đăng ký hay thẻ',
- 'comp_row1_others': 'Bắt buộc đăng ký, thu phí hoặc gửi email rác',
- 'comp_row2_title': 'Tốc độ & Giới hạn tải',
- 'comp_row2_yt4mp3': 'Xử lý đám mây tức thì & tải trực tiếp',
- 'comp_row2_others': 'Hàng đợi chờ lâu, bóp băng thông & đếm ngược',
- 'comp_row3_title': 'Chất lượng Âm thanh & Video',
- 'comp_row3_yt4mp3': 'MP3 tới 320 kbps & MP4 tới 1080p/4K (khi nguồn hỗ trợ) âm thanh đồng bộ',
- 'comp_row3_others': 'Bị giới hạn ở 128 kbps nén hoặc video mờ 360p',
- 'comp_row4_title': 'Quảng cáo & Cửa sổ bật lên',
- 'comp_row4_yt4mp3': 'Sạch & an toàn: Không pop-under, không nút tải giả mạo',
- 'comp_row4_others': 'Chuyển hướng phiền phức, quảng cáo bật lên & hàng đợi chậm',
- 'comp_row5_title': 'Hỗ trợ Điện thoại & Thiết bị',
- 'comp_row5_yt4mp3': 'Mượt mà trên iPhone Safari, Android Chrome, Mac & Windows',
- 'comp_row5_others': 'Thường lỗi trên iOS Safari hoặc bắt cài file APK lạ',
- 'comp_row6_title': 'YouTube Shorts & Video dài',
- 'comp_row6_yt4mp3': 'Hỗ trợ video Shorts, bài giảng & podcast dài',
- 'comp_row6_others': 'Giới hạn 10-20 phút; không nhận diện được link Shorts',
- 'benefits_badge': 'Lợi ích chính',
- 'benefits_title': 'Tại sao nên chuyển đổi video YouTube sang MP3?',
- 'benefits_subtitle': 'Thưởng thức tệp âm thanh cá nhân của bạn mọi lúc mọi nơi cho nhu cầu sử dụng hằng ngày.',
- 'benefit1_title': 'Nghe ngoại tuyến ở mọi nơi',
- 'benefit1_desc': 'Nghe trên máy bay, tàu điện ngầm hoặc khi đi du lịch mà không cần Wi-Fi hay tốn 4G/5G.',
- 'benefit2_title': 'Tiết kiệm pin & Dung lượng mạng',
- 'benefit2_desc': 'Tệp âm thanh tiết kiệm tới 90% pin và không tốn dung lượng phát video khi tắt màn hình.',
- 'benefit3_title': 'Phát trong nền khi tắt màn hình',
- 'benefit3_desc': 'Tiếp tục phát tệp âm thanh đã lưu trên máy khi khóa màn hình điện thoại hoặc khi dùng ứng dụng '
-                  'khác.',
- 'benefit4_title': 'Shorts, Podcast & Bản phối dài',
- 'benefit4_desc': 'Trích xuất âm thanh rõ nét từ video Shorts, bài giảng học tập, sách nói và các bản ghi âm dài.',
- 'nav_shorts': 'YouTube Shorts'}
+ 'step3_title': 'Tải tập tin về máy'}

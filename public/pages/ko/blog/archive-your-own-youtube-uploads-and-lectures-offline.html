@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr" class="scroll-smooth">
+<head>
+    <!-- Google AdSense Verification -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2350272227833258"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-2350272227833258">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSKBZTD4XJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-GSKBZTD4XJ');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="msvalidate.01" content="98533D5A610C8BB068BDE589D75E9C6F" />
+    <title>본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드 - YT4MP3</title>
+    <meta name="description" content="크리에이터, 교사, 학생을 위한 실용적인 워크플로: 체계적인 폴더 구조, ID3 태그, 라이선스 로그, 3-2-1 백업 원칙으로 본인 영상과 허가된 강의를 안전하게 보관하세요.">
+    <link rel="canonical" href="https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    <link rel="alternate" type="application/rss+xml" title="YT4MP3 Latest Tools &amp; Updates" href="https://www.yt4mp3.com/feed.xml">
+    
+    
+    <link rel="alternate" hreflang="x-default" href="https://www.yt4mp3.com/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="en" href="https://www.yt4mp3.com/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="es" href="https://www.yt4mp3.com/es/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="id" href="https://www.yt4mp3.com/id/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="pt" href="https://www.yt4mp3.com/pt/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="fr" href="https://www.yt4mp3.com/fr/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="de" href="https://www.yt4mp3.com/de/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="tr" href="https://www.yt4mp3.com/tr/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="it" href="https://www.yt4mp3.com/it/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="ru" href="https://www.yt4mp3.com/ru/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="vi" href="https://www.yt4mp3.com/vi/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="ja" href="https://www.yt4mp3.com/ja/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="ko" href="https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="ar" href="https://www.yt4mp3.com/ar/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="hi" href="https://www.yt4mp3.com/hi/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    <link rel="alternate" hreflang="my" href="https://www.yt4mp3.com/my/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    
+    
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="google-site-verification" content="b3Ifvt8yqgwM3AgU5QRivpMCfczwvxG_o21SA6S40Bk" />
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="OvFiTUkvewm4E95mOTaF1w" async></script>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" sizes="48x48" href="/static/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/icon-512.png">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- OpenGraph & Twitter Cards -->
+    <meta property="og:title" content="본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드">
+    <meta property="og:description" content="크리에이터, 교사, 학생을 위한 실용적인 워크플로: 체계적인 폴더 구조, ID3 태그, 라이선스 로그, 3-2-1 백업 원칙으로 본인 영상과 허가된 강의를 안전하게 보관하세요.">
+    <meta property="og:url" content="https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="YT4MP3">
+    <meta property="og:locale" content="ko_KO">
+    <meta property="og:image" content="https://www.yt4mp3.com/static/blog/blog-youtube-to-mp3.jpg">
+    <meta property="og:image:secure_url" content="https://www.yt4mp3.com/static/blog/blog-youtube-to-mp3.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1536">
+    <meta property="og:image:height" content="864">
+    <meta property="og:image:alt" content="본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드">
+    <meta name="twitter:description" content="크리에이터, 교사, 학생을 위한 실용적인 워크플로: 체계적인 폴더 구조, ID3 태그, 라이선스 로그, 3-2-1 백업 원칙으로 본인 영상과 허가된 강의를 안전하게 보관하세요.">
+    <meta name="twitter:image" content="https://www.yt4mp3.com/static/blog/blog-youtube-to-mp3.jpg">
+
+    <!-- Tailwind CSS (Pre-compiled, non-blocking) -->
+    <link rel="stylesheet" href="/static/css/tailwind.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap"></noscript>
+
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        code, .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        body {
+            background-color: #fafafa;
+            color: #0f172a;
+            min-height: 100vh;
+        }
+        .human-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+        /* Editorial Article Typography */
+        .seo-article h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.35;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .seo-article h2:first-child {
+            margin-top: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .seo-article h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        .seo-article p {
+            font-size: 1rem;
+            color: #475569;
+            line-height: 1.85;
+            margin-bottom: 1.35rem;
+        }
+        .seo-article ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #475569;
+            line-height: 1.8;
+        }
+        .seo-article ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #475569;
+            line-height: 1.8;
+        }
+        .seo-article li {
+            margin-bottom: 0.6rem;
+        }
+        .seo-article strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .seo-article a {
+            color: #e11d48;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: color 0.15s ease;
+        }
+        .seo-article a:hover {
+            color: #be123c;
+        }
+        .seo-article table {
+            width: 100%;
+            min-width: 540px;
+            border-collapse: collapse;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.75rem 0;
+        }
+        .seo-article th {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 12px 16px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-align: left;
+        }
+        .seo-article td {
+            padding: 12px 16px;
+            border: 1px solid #f1f5f9;
+            font-size: 0.875rem;
+            color: #334155;
+            line-height: 1.6;
+        }
+        .seo-article tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        .table-responsive {
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .toc-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .toc-box a {
+            color: #334155;
+            text-decoration: none;
+            display: block;
+            padding: 4px 0;
+            font-size: 0.925rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+        .toc-box a:hover {
+            color: #e11d48;
+            text-decoration: underline;
+        }
+        .highlight-box {
+            background: #fff1f2;
+            border-left: 4px solid #e11d48;
+            padding: 1.25rem 1.5rem;
+            border-radius: 8px;
+            margin: 1.75rem 0;
+        }
+        .seo-article h2[id], .seo-article h3[id] {
+            scroll-margin-top: 5.5rem;
+        }
+
+        /* ========================================================
+           World-Class Converter CTA Banner (Zero External Dependencies)
+           ======================================================== */
+        .article-cta-banner {
+            background: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e293b 100%);
+            border: 1px solid #334155;
+            border-radius: 24px;
+            padding: 44px 28px;
+            text-align: center;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            margin: 44px 0 24px 0;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .article-cta-banner::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 440px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.22) 0%, rgba(244, 63, 94, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .article-cta-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .article-cta-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            color: #ffffff;
+            margin: 0 auto 18px auto;
+            box-shadow: 0 8px 18px -2px rgba(225, 29, 72, 0.45);
+        }
+        .article-cta-badge svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+        .article-cta-heading {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            letter-spacing: -0.025em;
+            line-height: 1.3;
+            margin: 0 0 12px 0;
+        }
+        .article-cta-text {
+            font-size: 0.95rem;
+            color: #cbd5e1 !important;
+            line-height: 1.65;
+            margin: 0 auto 26px auto;
+            max-width: 520px;
+        }
+        .article-cta-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .article-cta-btn-main {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 26px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff !important;
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            text-decoration: none !important;
+            box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        .article-cta-btn-main svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        .article-cta-btn-main:hover {
+            background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(225, 29, 72, 0.45);
+            color: #ffffff !important;
+        }
+        .article-cta-btn-main:active {
+            transform: translateY(0);
+        }
+        .article-cta-btn-sub {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 22px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #e2e8f0 !important;
+            background: #1e293b;
+            border: 1px solid #475569;
+            text-decoration: none !important;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        .article-cta-btn-sub svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            flex-shrink: 0;
+        }
+        .article-cta-btn-sub:hover {
+            background: #334155;
+            color: #ffffff !important;
+            border-color: #64748b;
+            transform: translateY(-2px);
+        }
+        .article-cta-btn-sub:active {
+            transform: translateY(0);
+        }
+        @media (max-width: 640px) {
+            .article-cta-banner {
+                padding: 32px 18px;
+                border-radius: 18px;
+                margin: 36px 0 20px 0;
+            }
+            .article-cta-heading {
+                font-size: 1.3rem;
+            }
+            .article-cta-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+            .article-cta-btn-main, .article-cta-btn-sub {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <!-- Schema.org BlogPosting & BreadcrumbList JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BlogPosting",
+          "@id": "https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline#article",
+          "isPartOf": {
+            "@type": "WebSite",
+            "@id": "https://www.yt4mp3.com/#website",
+            "name": "YT4MP3",
+            "url": "https://www.yt4mp3.com/"
+          },
+          "headline": "\ubcf8\uc778\uc758 YouTube \uc5c5\ub85c\ub4dc \uc601\uc0c1 \ubc31\uc5c5 \ubc0f \uc624\ud504\ub77c\uc778 \ud559\uc2b5 \ub77c\uc774\ube0c\ub7ec\ub9ac \uad6c\ucd95 \uac00\uc774\ub4dc",
+          "description": "\ud06c\ub9ac\uc5d0\uc774\ud130, \uad50\uc0ac, \ud559\uc0dd\uc744 \uc704\ud55c \uc2e4\uc6a9\uc801\uc778 \uc6cc\ud06c\ud50c\ub85c: \uccb4\uacc4\uc801\uc778 \ud3f4\ub354 \uad6c\uc870, ID3 \ud0dc\uadf8, \ub77c\uc774\uc120\uc2a4 \ub85c\uadf8, 3-2-1 \ubc31\uc5c5 \uc6d0\uce59\uc73c\ub85c \ubcf8\uc778 \uc601\uc0c1\uacfc \ud5c8\uac00\ub41c \uac15\uc758\ub97c \uc548\uc804\ud558\uac8c \ubcf4\uad00\ud558\uc138\uc694.",
+          "url": "https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline",
+          "datePublished": "2026-11-19",
+          "dateModified": "2026-11-19",
+          "inLanguage": "ko",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline"
+          },
+          "author": {
+            "@type": "Organization",
+            "name": "YT4MP3 Engineering Team",
+            "url": "https://www.yt4mp3.com/contact-us"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "YT4MP3",
+            "url": "https://www.yt4mp3.com/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.yt4mp3.com/static/icon-192.png",
+              "width": 192,
+              "height": 192
+            }
+          },
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://www.yt4mp3.com/static/blog/blog-youtube-to-mp3.jpg",
+            "width": 1200,
+            "height": 630
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "\ud648",
+              "item": "https://www.yt4mp3.com/ko/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "\ube14\ub85c\uadf8",
+              "item": "https://www.yt4mp3.com/ko/blog/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "\ubcf8\uc778\uc758 YouTube \uc5c5\ub85c\ub4dc \uc601\uc0c1 \ubc31\uc5c5 \ubc0f \uc624\ud504\ub77c\uc778 \ud559\uc2b5 \ub77c\uc774\ube0c\ub7ec\ub9ac \uad6c\ucd95 \uac00\uc774\ub4dc",
+              "item": "https://www.yt4mp3.com/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Crisp Human Header -->
+    <header class="sticky top-0 z-40 bg-white border-b border-gray-200">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/ko/" aria-label="YT4MP3 Homepage" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center">
+                    <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="artLogoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a" />
+                                <stop offset="100%" stop-color="#020617" />
+                            </linearGradient>
+                            <linearGradient id="artLogoRoseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fb7185" />
+                                <stop offset="50%" stop-color="#f43f5e" />
+                                <stop offset="100%" stop-color="#e11d48" />
+                            </linearGradient>
+                            <linearGradient id="artLogoBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38bdf8" />
+                                <stop offset="100%" stop-color="#2563eb" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="512" height="512" rx="128" fill="url(#artLogoBgGrad)" />
+                        <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="#334155" stroke-width="4" opacity="0.6" />
+                        <path d="M168 136 C168 118 188 108 204 118 L386 238 C400 248 400 264 386 274 L204 394 C188 404 168 394 168 376 Z" fill="url(#artLogoRoseGrad)" />
+                        <rect x="220" y="216" width="14" height="80" rx="7" fill="#ffffff" opacity="0.95" />
+                        <rect x="246" y="186" width="14" height="140" rx="7" fill="#ffffff" opacity="0.95" />
+                        <rect x="272" y="226" width="14" height="60" rx="7" fill="#ffffff" opacity="0.95" />
+                        <circle cx="396" cy="180" r="14" fill="url(#artLogoBlueGrad)" />
+                        <circle cx="420" cy="220" r="10" fill="url(#artLogoBlueGrad)" opacity="0.8" />
+                    </svg>
+                </div>
+                <div class="flex items-center tracking-tight">
+                    <span class="font-black text-2xl tracking-tighter text-slate-950">YT<span class="text-rose-600">4</span>MP3</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav aria-label="Main Navigation" class="hidden md:flex items-center gap-1 bg-gray-100 p-1 rounded-xl text-sm font-semibold">
+                <a href="/ko/youtube-to-mp3" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-slate-900 transition-colors">
+                    <i class="fa-solid fa-music text-rose-500 mr-1 text-xs"></i> MP3
+                </a>
+                <a href="/ko/youtube-to-mp4" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-slate-900 transition-colors">
+                    <i class="fa-solid fa-video text-blue-500 mr-1 text-xs"></i> MP4
+                </a>
+                <a href="/ko/youtube-shorts-downloader" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-slate-900 transition-colors">
+                    <i class="fa-solid fa-bolt text-amber-500 mr-1 text-xs"></i> Shorts
+                </a>
+                <a href="/ko/blog/" class="px-3.5 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm font-bold">
+                    <i class="fa-solid fa-newspaper text-emerald-500 mr-1 text-xs"></i> 블로그
+                </a>
+            </nav>
+
+            <!-- Right CTA Button & Language Switcher -->
+            <div class="flex items-center gap-2">
+                <!-- Language Selector Dropdown -->
+                <div class="relative inline-block text-left" id="lang-dropdown-wrapper">
+                    <button type="button" id="lang-menu-button" aria-expanded="false" aria-haspopup="true" onclick="toggleLanguageMenu()" class="px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-900 bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all flex items-center gap-1.5 border border-gray-300">
+                        <span class="text-base leading-none">🇰🇷</span>
+                        <span class="hidden sm:inline">한국어</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-500 ml-0.5"></i>
+                    </button>
+                    <div id="lang-menu-dropdown" class="hidden absolute right-0 mt-2 w-52 sm:w-60 rounded-2xl bg-white border border-gray-200 shadow-xl py-2 z-50 max-h-80 overflow-y-auto">
+                        <div class="px-3 py-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 mb-1">
+                            Languages
+                        </div>
+                        
+                        <a href="/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇺🇸</span>
+                                <span>English</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">en</span>
+                            
+                        </a>
+                        
+                        <a href="/es/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇪🇸</span>
+                                <span>Español</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">es</span>
+                            
+                        </a>
+                        
+                        <a href="/id/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇮🇩</span>
+                                <span>Bahasa Indonesia</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">id</span>
+                            
+                        </a>
+                        
+                        <a href="/pt/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇧🇷</span>
+                                <span>Português</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">pt</span>
+                            
+                        </a>
+                        
+                        <a href="/fr/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇫🇷</span>
+                                <span>Français</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">fr</span>
+                            
+                        </a>
+                        
+                        <a href="/de/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇩🇪</span>
+                                <span>Deutsch</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">de</span>
+                            
+                        </a>
+                        
+                        <a href="/tr/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇹🇷</span>
+                                <span>Türkçe</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">tr</span>
+                            
+                        </a>
+                        
+                        <a href="/it/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇮🇹</span>
+                                <span>Italiano</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">it</span>
+                            
+                        </a>
+                        
+                        <a href="/ru/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇷🇺</span>
+                                <span>Русский</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">ru</span>
+                            
+                        </a>
+                        
+                        <a href="/vi/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇻🇳</span>
+                                <span>Tiếng Việt</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">vi</span>
+                            
+                        </a>
+                        
+                        <a href="/ja/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇯🇵</span>
+                                <span>日本語</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">ja</span>
+                            
+                        </a>
+                        
+                        <a href="/ko/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm bg-rose-50 text-rose-700 font-bold transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇰🇷</span>
+                                <span>한국어</span>
+                            </span>
+                            
+                            <i class="fa-solid fa-check text-rose-600 text-xs"></i>
+                            
+                        </a>
+                        
+                        <a href="/ar/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇸🇦</span>
+                                <span>العربية</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">ar</span>
+                            
+                        </a>
+                        
+                        <a href="/hi/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇮🇳</span>
+                                <span>हिन्दी</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">hi</span>
+                            
+                        </a>
+                        
+                        <a href="/my/blog/archive-your-own-youtube-uploads-and-lectures-offline" class="flex items-center justify-between px-3.5 py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 hover:text-slate-900 font-medium transition-colors">
+                            <span class="flex items-center gap-2">
+                                <span class="text-base leading-none">🇲🇲</span>
+                                <span>မြန်မာစာ</span>
+                            </span>
+                            
+                            <span class="text-[11px] text-gray-400 uppercase font-mono">my</span>
+                            
+                        </a>
+                        
+                    </div>
+                </div>
+
+                <!-- Back to Converter CTA -->
+                <a href="/ko/" aria-label="Converter" class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-900 bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all flex items-center gap-1.5 border border-gray-300">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span class="hidden sm:inline">변환기로 돌아가기</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 sm:py-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+
+            <!-- Breadcrumbs -->
+            <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-gray-500 mb-6 font-medium overflow-x-auto whitespace-nowrap">
+                <a href="/ko/" class="hover:text-slate-900 transition-colors">
+                    홈
+                </a>
+                <span class="text-gray-300">/</span>
+                <a href="/ko/blog/" class="hover:text-slate-900 transition-colors">
+                    블로그
+                </a>
+                <span class="text-gray-300">/</span>
+                <span class="text-slate-900 font-bold truncate max-w-xs sm:max-w-md">본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드</span>
+            </nav>
+
+            <!-- Article Header -->
+            <header class="mb-8 sm:mb-10">
+                <div class="flex items-center gap-2.5 text-xs text-gray-500 mb-4">
+                    <span class="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold uppercase text-[11px]">
+                        팁 및 활용법
+                    </span>
+                    <span>•</span>
+                    <span>2026년 11월 19일</span>
+                    <span>•</span>
+                    <span>읽는 시간 약 9분</span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 mb-4 leading-tight">
+                    본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드
+                </h1>
+                <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-3xl">
+                    체계적인 폴더 규칙, ID3 메타데이터, 출처 로그, 3-2-1 저장 전략 및 학습용 미디어 플레이어를 활용하여 본인의 YouTube 업로드 영상과 허가된 공개 강의를 신뢰할 수 있는 오프라인 라이브러리로 구축하는 방법을 알아보세요.
+                </p>
+            </header>
+
+            
+            <figure class="mb-8 sm:mb-10 rounded-2xl overflow-hidden border border-gray-200 shadow-sm bg-slate-900">
+                <img src="/static/blog/blog-youtube-to-mp3.jpg" alt="본인의 YouTube 업로드 영상 백업 및 오프라인 학습 라이브러리 구축 가이드" width="1536" height="864" class="w-full h-auto block" fetchpriority="high">
+            </figure>
+            
+
+            <!-- Article Body Card -->
+            <div class="human-card p-6 sm:p-10 lg:p-12 mb-10">
+                <article class="seo-article">
+                    <p>크리에이터는 하드 드라이브가 고장 나거나 편집 소프트웨어가 바뀌면서 원본 프로젝트 렌더링 파일을 잃어버리곤 합니다. 교사는 학교 네트워크가 불안정한 교실에서도 끊김 없이 재생할 수 있는 수업 녹화본이 필요합니다. 학생들은 기차 통학길이나 비행기 안, 혹은 안정적인 Wi-Fi를 쓰기 어려운 환경에서 대학 공개 강의에 의존합니다. 이 세 가지 경우 모두, 체계적으로 정리된 로컬 아카이브를 갖추고 있으면 파일을 찾느라 허비하는 시간을 아끼고 본인이 직접 만들었거나 정당하게 보관 허가를 받은 자료를 안전하게 보호할 수 있습니다.</p>
+<p>YT4MP3는 사용자가 직접 입력한 YouTube 링크를 개인적이고 합법적인 용도에 한해 MP3 또는 MP4로 변환해 주는 웹 브라우저 도구입니다. 하지만 도구는 신뢰할 수 있는 아카이브를 만드는 과정의 작은 일부일 뿐입니다. 일관된 폴더 이름 규칙, 깔끔한 오디오 태그, 출처 및 라이선스 기록부(로그), 그리고 이중 백업 체계가 없다면 오프라인 폴더는 6개월도 지나지 않아 출처조차 확인할 수 없는 이름 없는 파일 더미로 변해 버립니다.</p>
+<p>이 가이드는 크리에이터, 교사, 학생을 위한 완전하고 실용적인 워크플로를 제시합니다. 저장 전 권리 확인부터 알맞은 포맷 선택, 폴더 이름 설계, ID3 메타데이터 입력, 라이선스 로그 유지, 3-2-1 백업 원칙 적용, 학습용 재생 앱 선택, 그리고 파일별 보관 기간 결정까지 단계별로 살펴봅니다.</p>
+
+<h2 id="lawful-scope-and-permissions">소유권, 라이선스 및 허가 확인부터 시작하기</h2>
+<p>단 하나의 동영상이나 오디오 트랙이라도 저장하기 전에 로컬 사본을 보관할 명확한 법적 근거가 있는지 먼저 확인하세요. 크리에이터와 저작권법, 그리고 YouTube 서비스 약관을 존중해야 아카이브를 깨끗하게 유지할 수 있으며, 나중에 라이브러리 전체를 삭제해야 하는 불상사를 막을 수 있습니다. 저작권, 공정 이용(Fair Use), 공정 취급(Fair Dealing), 크리에이티브 커먼즈가 어떻게 작동하는지 확실하지 않다면 먼저 <a href="/ko/blog/youtube-copyright-fair-use-creative-commons-guide">YouTube 저작권, 공정 이용 및 크리에이티브 커먼즈 가이드</a>를 읽어보시기 바랍니다.</p>
+<p>실제 운영할 때 오프라인 학습용 또는 크리에이터 아카이브는 다음 네 가지 명확한 범주 안에 머물러야 합니다:</p>
+<ul>
+<li><strong>본인이 직접 업로드한 영상:</strong> 튜토리얼, 수업 브리핑, 리허설, 채널 에피소드 등 본인이 직접 촬영하거나 내레이션을 녹음하고 편집한 동영상입니다. 원본 Google 계정에 여전히 접근할 수 있다면 깔끔한 시청용 사본을 보관하는 것과 더불어 Google 테이크아웃(Google Takeout)을 통해 원본 업로드 파일을 일괄 요청할 수도 있습니다.</li>
+<li><strong>크리에이티브 커먼즈(Creative Commons) 저작물:</strong> YouTube에서 CC BY 라벨로 게시된 동영상이나 대학 채널에서 CC BY-NC-SA 같은 오픈 라이선스로 공개한 강의로, 해당 라이선스에 명시된 출처 표기 및 비영리 규정을 준수하는 경우에 해당합니다.</li>
+<li><strong>퍼블릭 도메인(Public Domain) 기록물:</strong> 저작권 보호 기간이 만료되었거나 원작자가 CC0 조건으로 권리를 기증한 역사적 연설, 공공 방송 아카이브, 정부 교육용 영상 등입니다.</li>
+<li><strong>직접적인 서면 허가를 받은 자료:</strong> 강사, 학교 학과 또는 크리에이터가 오프라인 학습용 사본 보관을 명시적으로 허락한 강의 녹화본이나 교육용 클립입니다.</li>
+</ul>
+<p>유료, 대여, 보호된 콘텐츠, 실시간 방송 또는 비공개 영상은 저장하지 마시고, 다른 크리에이터의 저작물을 절대 본인의 것처럼 재업로드하지 마세요. 대학 채널에서 오픈 코스웨어(OpenCourseWare) 시리즈를 제공할 때는 채널의 '정보(About)' 페이지와 개별 동영상 설명란을 모두 확인하는 것이 좋습니다. 강의 자체는 오픈 라이선스를 따르더라도 강의 중간에 삽입된 다큐멘터리 클립이나 배경 음악은 일반 저작권의 보호를 받는 경우가 있기 때문입니다. 의심스러울 때는 강사나 기관에 서면 확인을 요청하거나 공식 앱 내부의 기본 오프라인 저장 기능을 이용하세요.</p>
+
+<h2 id="choosing-formats-and-quality">아카이브 목적에 맞는 포맷과 비트레이트 선택하기</h2>
+<p>모든 녹화본에 대용량 동영상 파일이 필요한 것도 아니고, 반대로 모든 강의를 오디오만으로 공부할 수 있는 것도 아닙니다. 자료를 실제로 어떻게 복습하고 검토할지에 맞춰 포맷을 고르면 저장 공간 비용을 합리적으로 줄이면서도 노트북, 태블릿, 스마트폰 어디서나 매끄럽게 재생할 수 있습니다.</p>
+<p>보관 권한이 있는 파일을 준비할 때 다음 기준표를 실용적인 지침으로 활용해 보세요:</p>
+<table>
+<thead>
+<tr>
+<th>활용 사례</th>
+<th>권장 포맷</th>
+<th>실용적인 품질 목표</th>
+<th>선택 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>크리에이터 업로드 백업</td>
+<td>MP4</td>
+<td>1080p 또는 선택 가능한 최고 화질 (원본이 제공할 때)</td>
+<td>참고 및 보관을 위해 시각적 디테일, 슬라이드, 화면 텍스트를 온전히 보존</td>
+</tr>
+<tr>
+<td>슬라이드 비중이 높거나 코딩이 포함된 강의</td>
+<td>MP4</td>
+<td>720p 또는 1080p (원본이 제공할 때)</td>
+<td>파일 용량을 지나치게 키우지 않으면서 수식, 터미널 텍스트, 도표를 선명하게 유지</td>
+</tr>
+<tr>
+<td>구두 세미나 및 질의응답 강연</td>
+<td>MP3</td>
+<td>128 kbps ~ 192 kbps</td>
+<td>작은 파일 크기, 즉각적인 구간 이동 및 모든 플레이어에서의 범용 호환성</td>
+</tr>
+<tr>
+<td>어학 발음 훈련 및 음악 이론</td>
+<td>MP3</td>
+<td>192 kbps ~ 256 kbps</td>
+<td>반복 청취 시 명확한 발음 구분과 정확한 음색 표현</td>
+</tr>
+</tbody>
+</table>
+<p>대략적인 저장 공간 기준으로, 128kbps MP3 오디오 1시간 분량은 약 58MB를 차지하는 반면, 720p 또는 1080p MP4 동영상 1시간 분량은 움직임과 프레임 레이트에 따라 보통 350MB에서 1.2GB 사이를 차지합니다. 24강으로 구성된 컴퓨터 공학 강좌가 슬라이드와 코드 시연에 크게 의존한다면 720p MP4 파일로 보관할 때 약 12GB~20GB가 필요합니다. 반대로 동일한 24시간 분량이 순수한 세미나 토론이라면 128kbps MP3 사본은 약 1.4GB면 충분하므로 스마트폰에도 부담 없이 들어갑니다.</p>
+<p>본인 소유이거나 허가받은 링크를 변환할 준비가 되었다면, 시각 자료가 중요한 수업과 크리에이터 참고용 사본에는 <a href="/ko/youtube-to-mp4">YouTube MP4 변환기</a>를, 음성 중심의 학습 트랙에는 <a href="/ko/youtube-to-mp3">YouTube MP3 변환기</a>를 사용하세요. 1080p나 4K 같은 고해상도는 원본 소스가 해당 화질을 제공할 때만 선택할 수 있다는 점을 기억해 두세요. 컨테이너별 장단점, 오디오 비트레이트 및 파일 크기를 더 자세히 비교하려면 <a href="/ko/blog/mp4-vs-webm-mkv-m4a-mp3-format-guide">알기 쉬운 미디어 포맷 가이드</a>, <a href="/ko/blog/mp3-bitrate-explained-128-192-256-320-kbps">MP3 비트레이트 가이드</a>, 그리고 <a href="/ko/blog/video-resolution-guide-360p-to-4k-file-size-and-quality">360p부터 4K까지의 동영상 해상도 가이드</a>를 참조하세요.</p>
+
+<h2 id="folder-structure-and-naming">예측 가능한 폴더 구조와 파일 이름 체계 설계하기</h2>
+<p>잘 지은 파일 이름은 별도의 데이터베이스 소프트웨어 없이도 관리 작업의 절반을 해결해 줍니다. Windows, macOS, Linux, Android 태블릿 등 어떤 환경에서 아카이브를 열더라도 경로가 깨지거나 정렬 순서가 뒤죽박죽되지 않도록 일관된 패턴과 표준 문자를 사용하는 것이 핵심입니다.</p>
+<p>첫날부터 다음 다섯 가지 간단한 명명 규칙을 적용해 보세요:</p>
+<ol>
+<li><strong>ISO 8601 날짜 형식 사용:</strong> 날짜를 <em>YYYY-MM-DD</em> 형태(예: <em>2026-03-14</em>)로 표기하면 이름순 정렬이 곧 시간순 정렬과 일치하게 됩니다.</li>
+<li><strong>일련번호에 앞자리 0 채우기(Zero-pad):</strong> <em>1</em>, <em>2</em> 대신 <em>01</em>, <em>02</em>부터 <em>24</em>까지 두 자리 숫자를 사용해야 10강이 2강보다 앞에 정렬되는 현상을 막을 수 있습니다.</li>
+<li><strong>시스템 예약 문자 피하기:</strong> 슬래시(/), 콜론(:), 물음표(?), 따옴표("), 별표(*)는 사용하지 말고, 공백은 하이픈(-)이나 밑줄(_)로 대체하세요.</li>
+<li><strong>본인 제작물과 외부 강의 폴더 분리:</strong> 소유권이 절대 섞이지 않도록 본인의 오리지널 채널 백업은 하나의 루트 디렉터리에 두고, 제3자 라이선스 학습 자료는 별도의 루트 디렉터리에 보관하세요.</li>
+<li><strong>크리에이터 백업 파일명에 해상도 또는 비트레이트 포함:</strong> 파일 이름 끝에 <em>1080p</em>나 <em>192kbps</em>를 붙여 두면 원본 참고용 사본과 가벼운 학습용 버전을 한눈에 구분할 수 있습니다.</li>
+</ol>
+<p>다음은 파일 10개부터 수천 개까지 무리 없이 확장할 수 있는 깔끔한 폴더 구조 예시입니다:</p>
+<ul>
+<li><strong>크리에이터 루트 폴더:</strong> <em>Archive/My-Channel-Uploads/2026/2026-02-18_ep12_microphone-placement_1080p.mp4</em></li>
+<li><strong>크리에이터용 보조 메모 파일:</strong> <em>Archive/My-Channel-Uploads/2026/2026-02-18_ep12_microphone-placement_notes.txt</em></li>
+<li><strong>강좌 루트 폴더:</strong> <em>Study-Library/CS201-Data-Structures_OCW-CC-BY-NC-SA/Lectures/01_2025-09-08_arrays-and-pointers_720p.mp4</em></li>
+<li><strong>오디오 전용 학습 세트:</strong> <em>Study-Library/HIST110-Modern-Europe_CC-BY/Audio/04_2025-09-19_industrial-shift_128kbps.mp3</em></li>
+<li><strong>자막 및 슬라이드 자료:</strong> <em>Study-Library/CS201-Data-Structures_OCW-CC-BY-NC-SA/Transcripts/01_arrays-and-pointers.srt</em></li>
+</ul>
+<p>강좌 폴더 이름 자체에 라이선스 약어(<em>OCW-CC-BY-NC-SA</em> 또는 <em>CC-BY</em>)가 포함된 점에 주목하세요. 몇 달 뒤 해당 폴더를 USB 드라이브에 복사하더라도 디렉터리를 보는 사람 누구나 내부 파일에 적용된 라이선스 조건을 즉시 파악할 수 있습니다.</p>
+
+<h2 id="metadata-and-id3-tagging">오디오 및 비디오 파일에 깔끔한 ID3 메타데이터 태그 입히기</h2>
+<p>파일 탐색기에서는 파일 이름만으로도 충분하지만, 모바일 음악 플레이어, 팟캐스트 앱, 태블릿 미디어 라이브러리는 파일 이름이 아니라 파일 내부에 심어진 메타데이터 태그를 읽어들입니다. 태그가 비어 있으면 MP3로 저장한 강의 20개가 모두 '알 수 없는 아티스트(Unknown Artist)'로 묶여 순서가 뒤섞인 채 재생되곤 합니다.</p>
+<p>MP3 파일의 경우 구형 카오디오, 데스크톱 소프트웨어, 모바일 플레이어 모두가 한글과 특수문자를 깨짐 없이 읽을 수 있도록 ID3v2.3 또는 ID3v2.4(UTF-8) 형식으로 태그를 작성하세요. MP4 파일 역시 많은 데스크톱 태그 편집기에서 MP3와 동일한 방식으로 수정할 수 있는 메타데이터 항목(제목, 아티스트, 앨범, 트랙, 연도, 설명)을 지원합니다.</p>
+<table>
+<thead>
+<tr>
+<th>태그 항목</th>
+<th>크리에이터 백업 예시</th>
+<th>학생 또는 교사 강의 예시</th>
+<th>중요한 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>제목 (Title)</td>
+<td>Ep 12 마이크 배치 기법</td>
+<td>04 산업화의 전환 (1850-1900)</td>
+<td>잠금 화면과 재생목록에 정확한 주제를 표시함</td>
+</tr>
+<tr>
+<td>아티스트 (Artist)</td>
+<td>내 채널 이름</td>
+<td>A. 파텔 교수 (Prof. A. Patel)</td>
+<td>플레이어 라이브러리 내에서 발표자를 깔끔하게 구분함</td>
+</tr>
+<tr>
+<td>앨범 (Album)</td>
+<td>2026 스튜디오 팁 시리즈</td>
+<td>HIST110 현대 유럽사</td>
+<td>모든 에피소드나 강의를 하나의 연속된 폴더 보기로 묶어줌</td>
+</tr>
+<tr>
+<td>앨범 아티스트 (Album Artist)</td>
+<td>내 채널 이름</td>
+<td>OpenCourseWare Archive</td>
+<td>초청 강사가 여러 명인 강의가 별개의 앨범으로 쪼개지는 것을 방지함</td>
+</tr>
+<tr>
+<td>트랙 번호 (Track Number)</td>
+<td>12/20</td>
+<td>04/24</td>
+<td>플레이어가 강의 계획서 순서대로 재생하도록 강제함</td>
+</tr>
+<tr>
+<td>연도 (Year)</td>
+<td>2026</td>
+<td>2025</td>
+<td>여러 해에 걸친 강좌 개정판을 정렬할 때 유용함</td>
+</tr>
+<tr>
+<td>장르 (Genre)</td>
+<td>Tutorial</td>
+<td>Lecture</td>
+<td>개인 감상용 음악과 학습용 오디오를 필터링하여 분리해 줌</td>
+</tr>
+<tr>
+<td>설명 (Comment)</td>
+<td>원본 업로드; 원본 URL; 2026-02-18</td>
+<td>CC BY 4.0; 원본 URL; 2026-03-02 저장</td>
+<td>파일 내부에 출처 표기와 원본 경로를 직접 보존함</td>
+</tr>
+</tbody>
+</table>
+<p>태그를 파일 하나씩 일일이 수정할 필요는 없습니다. Mp3tag(Windows 및 macOS)나 Kid3(Windows, macOS, Linux) 같은 무료 데스크톱 도구를 사용하면 폴더 안의 강의 24개를 한 번에 선택해 앨범, 앨범 아티스트, 연도, 장르를 일괄 지정하고, 규칙적으로 작성된 파일 이름에서 트랙 번호와 제목을 자동으로 추출해 채워 넣을 수 있습니다. 또한 500x500 픽셀 크기의 작은 JPEG 강좌 배지나 채널 썸네일을 앨범 커버 아트로 추가해 두면 파일 용량을 거의 늘리지 않으면서도 스마트폰 화면에서 원하는 강좌를 한눈에 찾을 수 있습니다.</p>
+
+<h2 id="source-and-licence-log">파일과 함께 출처 및 라이선스 로그 보관하기</h2>
+<p>파일 내부에 심어진 설명(Comment) 태그도 유용하지만, 참고문헌 목록을 작성하거나 상업적 재사용 허용 여부를 확인해야 할 때, 혹은 수백 개의 파일 중에서 특정 클립의 출처를 검증해야 할 때는 일일이 열어보기가 번거롭습니다. 아카이브 최상단 폴더에 일반 텍스트 형식의 대장(Ledger) 파일 하나를 두면 이 문제를 단 몇 분 만에 해결할 수 있습니다.</p>
+<p>루트 폴더인 <em>Archive</em> 및 <em>Study-Library</em> 안에 <em>sources-log.csv</em>라는 이름의 스프레드시트/CSV 파일(또는 <em>LICENCES.md</em> 마크다운 표)을 하나 만드세요. 새로운 강좌나 업로드 묶음을 추가할 때마다 한 줄씩 기록을 업데이트하면 됩니다. 일반 CSV 파일은 20년 뒤에도 Excel, LibreOffice Calc, Google Sheets 또는 어떤 텍스트 편집기에서든 열 수 있어 장기 보관에 가장 이상적입니다.</p>
+<table>
+<thead>
+<tr>
+<th>열 이름 (Column)</th>
+<th>기록할 내용</th>
+<th>입력 예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>file_path</td>
+<td>아카이브 루트 기준 상대 경로</td>
+<td>CS201/Lectures/01_2025-09-08_arrays_720p.mp4</td>
+</tr>
+<tr>
+<td>source_title</td>
+<td>정확한 원본 동영상 또는 강의 제목</td>
+<td>Lecture 1: Arrays, Memory and Pointers</td>
+</tr>
+<tr>
+<td>creator_or_org</td>
+<td>채널명, 강사 또는 대학 기관명</td>
+<td>State University Open Lectures</td>
+</tr>
+<tr>
+<td>source_url</td>
+<td>변환에 사용한 원본 표준 링크</td>
+<td>https://www.youtube.com/watch?v=...</td>
+</tr>
+<tr>
+<td>licence_basis</td>
+<td>본인 저작물, CC 버전, 퍼블릭 도메인 또는 이메일 허가</td>
+<td>CC BY-NC-SA 4.0 (동영상 설명란에서 확인 완료)</td>
+</tr>
+<tr>
+<td>date_saved</td>
+<td>변환 및 저장 날짜 (ISO 형식)</td>
+<td>2026-03-02</td>
+</tr>
+<tr>
+<td>attribution_text</td>
+<td>바로 복사해 붙여넣을 수 있는 출처 표기 문구</td>
+<td>"Lecture 1: Arrays" by State University, CC BY-NC-SA 4.0</td>
+</tr>
+<tr>
+<td>review_date</td>
+<td>다음 점검일 또는 삭제 예정일</td>
+<td>2027-06-30</td>
+</tr>
+</tbody>
+</table>
+<p>한 학기 동안 오프라인 사본 사용을 허락하는 강사의 이메일처럼 직접 허가를 받은 경우에는 해당 이메일의 PDF 또는 텍스트 사본을 <em>Permissions/</em> 하위 폴더에 저장하고 <em>licence_basis</em> 열에 해당 파일 이름을 적어 두세요. 강좌 페이지에서 슬라이드나 유인물도 함께 저장했다면 동일한 표에 URL을 기록해 두어 학습 자료 전체의 출처를 처음부터 끝까지 추적할 수 있게 관리하세요.</p>
+
+<h2 id="the-3-2-1-backup-rule">3-2-1 백업 원칙으로 아카이브 안전하게 보호하기</h2>
+<p>노트북 내장 드라이브 한 곳에만 파일을 저장해 두는 것은 백업이 아닙니다. 단지 단일 장애점(Single Point of Failure)을 인터넷에서 디스크 하나로 옮겨 놓았을 뿐입니다. 노트북은 떨어뜨리거나 도난당할 수 있고 운영체제 업그레이드 중에 초기화되기도 합니다. 전문 아키비스트와 스튜디오 편집자들이 사용하는 표준 안전장치는 <strong>3-2-1 백업 원칙</strong>입니다:</p>
+<ul>
+<li><strong>데이터 사본 3개 유지:</strong> 일상적으로 사용하는 작업용 사본 1개와 독립된 백업 사본 2개를 보유합니다.</li>
+<li><strong>서로 다른 2가지 저장 매체 활용:</strong> 예를 들어 컴퓨터 내장 SSD에 기본 사본을 두고, 별도의 외장 USB 하드 드라이브(HDD), 외장 SSD 또는 로컬 NAS를 두 번째 매체로 사용합니다.</li>
+<li><strong>외부 장소(Off-site)에 사본 1개 보관:</strong> 집, 기숙사, 사무실 외부의 물리적으로 떨어진 장소에 보관하는 사본입니다. 비공개 개인 클라우드 스토리지에 올리거나, 암호화된 외장 드라이브를 본가나 사무실 사물함에 보관하는 방법이 있습니다.</li>
+</ul>
+<p>200GB 분량의 원본 1080p MP4 업로드 영상과 프로젝트 대본을 보관하는 크리에이터라도 생각보다 적은 비용으로 실용적인 백업 환경을 구축할 수 있습니다. 올해 진행 중인 활성 파일은 내장 드라이브에 두고, 전체 아카이브는 깔끔하게 포맷된 2TB USB-C 외장 드라이브(Windows와 macOS를 함께 쓴다면 exFAT, Windows 전용은 NTFS, Mac 전용은 APFS)에 미러링한 뒤, 암호화된 사본을 비공개 클라우드 버킷이나 백업 서비스에 동기화하세요.</p>
+<p>15GB~50GB 규모의 비교적 작은 학습 라이브러리를 운영하는 학생은 더 적은 장비로도 같은 원칙을 실천할 수 있습니다. 이번 학기 강좌는 노트북과 스마트폰에 넣어 두고, 일주일에 한 번씩 전용 USB 플래시 드라이브나 외장 HDD에 로컬 백업을 동기화하며, 외부 사본은 개인용 비공개 클라우드 스토리지에 보관하세요. 이때 제3자 라이선스가 적용된 강의를 공개 공유 폴더에 넣지 않도록 주의하세요. 타인의 저작물을 의도치 않게 재배포하는 일이 없도록 클라우드 백업은 반드시 비공개(Private) 상태로 유지해야 합니다.</p>
+<p>일 년에 두 번은 드라이브 상태 점검을 진행하세요. 외장 디스크를 연결해 오래된 폴더에서 임의의 파일 서너 개를 열어 정상적으로 재생되는지 확인하고, 동기화 소프트웨어에 누락된 파일이나 권한 오류가 없는지 살펴보세요.</p>
+
+<h2 id="playback-apps-and-study-workflow">학습과 복습에 최적화된 미디어 재생 앱 선택하기</h2>
+<p>잘 정리된 라이브러리는 복습을 편리하게 해 주는 재생 소프트웨어와 만났을 때 비로소 진가를 발휘합니다. 운영체제에 기본 내장된 일반 미디어 플레이어는 75분짜리 강의를 어디서 멈췄는지 잊어버리거나 세밀한 배속 조절 기능을 지원하지 않는 경우가 많습니다.</p>
+<p>데스크톱 컴퓨터(Windows, macOS, Linux)에서는 무료이면서도 안정적인 <strong>VLC 미디어 플레이어</strong>와 <strong>mpv</strong>(또는 macOS용 <strong>IINA</strong>)를 추천합니다. 학습용 플레이어를 설정할 때는 다음 네 가지 기능을 확인하세요:</p>
+<ul>
+<li><strong>세밀한 재생 속도 조절:</strong> 목소리 음정(피치)이 왜곡되지 않으면서 <em>1.0배속</em>, <em>1.25배속</em>, <em>1.5배속</em>, <em>1.75배속</em> 사이를 부드럽게 조절할 수 있어야 익숙한 구간을 빠르게 복습할 수 있습니다.</li>
+<li><strong>구간 반복(A-B 루프) 및 북마크:</strong> 까다로운 20초 분량의 코드 설명이나 외국어 문장을 재생 바를 일일이 움직이지 않고도 반복해서 들을 수 있어 집중력이 유지됩니다.</li>
+<li><strong>외부 자막 파일 지원:</strong> 동영상과 동일한 파일 이름을 가진 <em>.srt</em> 또는 <em>.vtt</em> 대본 파일을 같은 폴더에 넣어 두면 오프라인에서도 VLC가 자동으로 자막을 불러옵니다.</li>
+<li><strong>재생 위치 기억:</strong> 어제 90분짜리 세미나를 닫았던 정확한 타임스탬프를 기억해 주어 이어보기가 편리합니다.</li>
+</ul>
+<p>스마트폰과 태블릿에서는 <strong>모바일용 VLC(VLC for Mobile)</strong>가 iOS와 Android 모두에서 로컬 MP4 폴더를 깔끔하게 처리합니다. MP3 전용 강의 라이브러리의 경우 로컬 폴더를 가상 팟캐스트 피드로 불러오는 <strong>AntennaPod</strong>(Android), <strong>Musicolet</strong>(Android) 또는 <strong>BookPlayer</strong>(iOS) 같은 팟캐스트·폴더 기반 오디오 플레이어가 탁월합니다. 트랙별 재생 위치를 기억하고 15초 되감기 버튼을 지원하며 ID3 챕터와 트랙 번호를 완벽하게 인식하기 때문입니다. 변환한 오디오를 스마트폰으로 처음 옮기는 분이라면 <a href="/ko/blog/youtube-to-mp3-on-iphone-and-android-guide">iPhone 및 Android용 모바일 MP3 가이드</a>에서 파일 전송과 폴더 저장 방법을 단계별로 확인해 보세요.</p>
+
+<h2 id="how-long-to-keep-files">아카이브 파일의 보관 기간 결정하기</h2>
+<p>모든 파일을 영구적으로 쌓아 두기만 하면 결국 더 이상 필요 없는 오래된 자료가 드라이브를 가득 채우게 됩니다. 사용자 역할에 따라 명확한 보관 주기를 정해 두면 저장 공간을 효율적으로 유지하고 출처 로그의 정확성을 지킬 수 있습니다:</p>
+<ul>
+<li><strong>크리에이터:</strong> 최종 출력된 업로드 영상, 썸네일, 자막, 대본은 무기한(최소한 채널이 유지되는 기간에 5년을 더한 기간 동안) 보관하세요. 반면 최종 MP4와 원본 프로젝트 파일이 두 곳에 안전하게 백업되었다면, 중간 프록시 렌더링 파일이나 용량이 큰 미편집 NG 컷은 게시 후 60~90일이 지났을 때 삭제해도 안전합니다.</li>
+<li><strong>학생:</strong> 현재 수강 중인 학기의 강의 동영상과 오디오는 학기 중과 시험 기간 동안 노트북에 보관하세요. 성적이 확정된 후에는 수학, 알고리즘, 어학 시리즈처럼 기초가 되는 핵심 참고 강좌만 외장 콜드 스토리지(보관용 드라이브)로 옮기고, 소프트웨어 인터페이스가 금방 바뀌는 시의성 도구 튜토리얼은 12~24개월 후에 정리하세요.</li>
+<li><strong>교사 및 강사:</strong> 학기가 시작되기 전 일 년에 한 번씩 각 강좌 폴더를 검토하세요. 외부 크리에이티브 커먼즈 자료나 허가 기반 클립의 출처 표기가 여전히 정확한지 확인하고, 오래된 녹화본은 최신 자료로 교체하며, 원작자가 삭제를 요청하거나 기한부 사용 허가가 만료된 제3자 클립은 즉시 삭제하세요.</li>
+</ul>
+<p>합법적인 미디어 워크플로에 관한 정확하고 실용적인 정보를 제공하기 위한 본 사이트의 원칙은 <a href="/editorial-policy">편집 정책 페이지</a>에 안내되어 있으며, 권리 침해 우려를 신고하고자 하는 권리자는 <a href="/dmca-policy">DMCA 정책</a>을 확인하실 수 있습니다. 포맷, 모바일 재생 및 저작권 기초를 다루는 더 많은 튜토리얼은 <a href="/ko/blog">YT4MP3 블로그</a> 전체 목록에서 찾아보세요.</p>
+
+<h2 id="faq">자주 묻는 질문 (FAQ)</h2>
+<h3>크리에이터가 본인 채널을 백업할 때 Google 테이크아웃과 MP4 변환 중 무엇을 써야 하나요?</h3>
+<p>채널의 Google 계정에 여전히 로그인할 수 있고 원본 소스 파일을 대량으로 내려받고 싶다면 계정 데이터 내보내기 전용 도구인 Google 테이크아웃(Google Takeout)을 사용하는 것이 가장 좋습니다. 개별 링크를 MP4로 변환하는 방식은 전체 아카이브 내보내기를 기다릴 필요 없이 특정 업로드 영상의 휴대용 시청 사본, 발표 슬라이드 삽입용 참고 클립, 또는 본인 강연의 MP3 오디오 트랙이 빠르게 필요할 때 유용합니다.</p>
+<h3>크리에이티브 커먼즈 강의가 나중에 삭제되거나 원작자가 사본 삭제를 요청하면 어떻게 해야 하나요?</h3>
+<p>유효한 크리에이티브 커먼즈 라이선스는 조건을 준수한 사용자에 대해 원칙적으로 소급 철회되지 않지만, 원작자가 직접 연락해 삭제를 요청하거나 해당 동영상 안에 라이선스 없는 제3자의 영상이 포함되어 있었다는 사실을 알게 된 경우에는 해당 파일을 삭제하고 출처 로그에 삭제 내역을 기록해 두는 것이 바람직합니다.</p>
+<h3>학생용 오프라인 학습 라이브러리에는 MP3와 MP4 중 어느 쪽이 더 나은가요?</h3>
+<p>슬라이드, 화이트보드 수식 유도, 도표, 화면 속 코드를 읽어야 한다면 MP4를 선택하고, 순수한 구두 강의나 어학 듣기 연습이라면 MP3를 선택하세요. 오디오만 필요한 수업에 MP3 파일을 활용하면 HD 동영상에 비해 저장 공간 사용량을 약 10분의 1 수준으로 줄일 수 있습니다.</p>
+<h3>오프라인 아카이브를 구축하려면 외장 드라이브 용량이 얼마나 필요할까요?</h3>
+<p>두세 학기 분량의 강의(720p MP4 및 오디오 합산 약 60~100시간)를 보관하는 학생이라면 보통 100GB 안에 충분히 들어오므로 500GB 또는 1TB 외장 SSD만 있어도 여유 공간이 넉넉합니다. 수년간의 1080p 또는 4K 업로드 영상을 백업하는 크리에이터라면 향후 몇 년간 늘어날 용량까지 고려해 2TB~4TB 외장 드라이브를 준비하는 것이 좋습니다.</p>
+<h3>오프라인 학습 폴더를 같은 반 친구들과 공유해도 되나요?</h3>
+<p>라이선스나 서면 허가 조건에서 재배포를 명시적으로 허용하고 있으며 출처 표기 등 모든 조건을 준수하는 경우에만 가능합니다. 설령 CC BY나 CC BY-SA 강좌라 하더라도, 백업 드라이브는 개인 학습용으로만 비공개 유지하고 친구들에게는 원본 소스 링크를 공유하여 각자 라이선스를 확인하고 직접 사본을 받도록 안내하는 것이 훨씬 안전하고 간편합니다.</p>
+
+<h2 id="next-steps">다음 단계</h2>
+<p>모든 것을 한꺼번에 정리하려 하기보다 작은 규모로 먼저 시작해 보세요. 오늘 바로 깔끔한 루트 폴더 하나와 간단한 <em>sources-log.csv</em> 파일을 만들고, <a href="/ko/youtube-to-mp4">MP4 변환기</a> 또는 <a href="/ko/youtube-to-mp3">MP3 변환기</a>를 사용해 본인이 직접 제작한 가장 중요한 업로드 영상이나 검증된 크리에이티브 커먼즈 강의 5개를 백업해 보세요. 파일에 태그를 깔끔하게 입력하고 폴더를 두 번째 드라이브에 복사해 두면, 인터넷 연결이 없는 곳에서도 언제든 믿고 열어볼 수 있는 든든한 오프라인 라이브러리가 완성됩니다.</p>
+                </article>
+            </div>
+
+            <!-- Share & Converter Callout Card -->
+            <div class="article-cta-banner">
+                <div class="article-cta-inner">
+                    <div class="article-cta-badge">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                        </svg>
+                    </div>
+                    
+                    <h2 class="article-cta-heading">
+                        YouTube 동영상을 320kbps 고음질 MP3로 변환할 준비가 되셨나요?
+                    </h2>
+                    <p class="article-cta-text">
+                        YT4MP3에서 회원가입 및 광고 없이 스튜디오급 고음질 초고속 클라우드 미디어 변환을 경험해보세요.
+                    </p>
+                    <div class="article-cta-buttons">
+                        <a href="/ko/youtube-to-mp3" class="article-cta-btn-main">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                            </svg>
+                            <span>YouTube MP3 변환기 시작</span>
+                        </a>
+                        <a href="/ko/blog/" class="article-cta-btn-sub">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            </svg>
+                            <span>모든 가이드 보기</span>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Clean Handcrafted Footer -->
+    <footer class="bg-slate-950 text-slate-300 border-t border-slate-900 pt-12 pb-8 mt-12">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-slate-900">
+                
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-2.5 mb-3">
+                        <div class="w-8 h-8 rounded-xl p-0.5 bg-slate-800/80 border border-slate-700/60 shadow-md flex-shrink-0 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="artFootRoseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#fb7185" />
+                                        <stop offset="50%" stop-color="#f43f5e" />
+                                        <stop offset="100%" stop-color="#e11d48" />
+                                    </linearGradient>
+                                    <linearGradient id="artFootBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38bdf8" />
+                                        <stop offset="100%" stop-color="#2563eb" />
+                                    </linearGradient>
+                                </defs>
+                                <rect width="512" height="512" rx="128" fill="#1e293b" />
+                                <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="#475569" stroke-width="8" />
+                                <path d="M168 136 C168 118 188 108 204 118 L386 238 C400 248 400 264 386 274 L204 394 C188 404 168 394 168 376 Z" fill="url(#artFootRoseGrad)" />
+                                <rect x="220" y="216" width="14" height="80" rx="7" fill="#ffffff" />
+                                <rect x="246" y="186" width="14" height="140" rx="7" fill="#ffffff" />
+                                <rect x="272" y="226" width="14" height="60" rx="7" fill="#ffffff" />
+                                <circle cx="396" cy="180" r="14" fill="url(#artFootBlueGrad)" />
+                                <circle cx="420" cy="220" r="10" fill="url(#artFootBlueGrad)" />
+                            </svg>
+                        </div>
+                        <span class="font-black text-lg tracking-tight text-white">YT<span class="text-rose-500">4</span>MP3</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        Fast YouTube to MP3 (320kbps) audio converter and YouTube to MP4 (1080p / 4K) video downloader.
+                    </p>
+                    <div class="flex items-center gap-1.5 text-xs text-emerald-400">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>Service Status: Online</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Audio</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="/ko/youtube-to-mp3" class="hover:text-white transition-colors">YouTube to MP3 Converter</a></li>
+                        <li><a href="/ko/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Music to MP3</a></li>
+                        <li><a href="/ko/youtube-to-mp3" class="hover:text-white transition-colors">YouTube Shorts to MP3</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">YouTube Video</h3>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="/ko/youtube-to-mp4" class="hover:text-white transition-colors">YouTube to MP4 Converter</a></li>
+                        <li><a href="/ko/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 1080p Downloader</a></li>
+                        <li><a href="/ko/youtube-to-mp4" class="hover:text-white transition-colors">YouTube 4K UHD Video</a></li>
+                        <li><a href="/ko/youtube-shorts-downloader" class="hover:text-white transition-colors">YouTube Shorts MP4</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Resources & Legal</h3>
+                    <ul class="space-y-2 text-xs mb-3">
+                        <li><a href="/ko/blog/" class="hover:text-white transition-colors font-bold text-rose-400">Knowledge Blog</a></li>
+                        <li><a href="/privacy-policy" class="hover:text-white underline">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service" class="hover:text-white underline">Terms of Service</a></li>
+                        <li><a href="/about-us" class="hover:text-white underline">About Us</a></li>
+                        <li><a href="/editorial-policy" class="hover:text-white underline">Editorial Policy</a></li>
+                        <li><a href="/dmca-policy" class="hover:text-white underline">Copyright &amp; DMCA</a></li>
+                        <li><a href="/contact-us" class="hover:text-white underline">Contact</a></li>
+                    </ul>
+                    <p class="text-[11px] text-slate-400">DMCA Notice: <a href="mailto:contact.yt4mp3@gmail.com" class="text-slate-300 hover:underline">contact.yt4mp3@gmail.com</a></p>
+                </div>
+            </div>
+
+            <div class="pt-6 text-center text-xs text-slate-400">
+                <p>© 2026 YT4MP3. 모든 권리 보유.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        function toggleLanguageMenu() {
+            const menu = document.getElementById('lang-menu-dropdown');
+            if (!menu) return;
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            const wrapper = document.getElementById('lang-dropdown-wrapper');
+            const menu = document.getElementById('lang-menu-dropdown');
+            if (wrapper && menu && !wrapper.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Deferred FontAwesome
+        window.addEventListener('load', function() {
+            var fa = document.createElement('link');
+            fa.rel = 'stylesheet';
+            fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
+            document.head.appendChild(fa);
+        });
+    </script>
+</body>
+</html>

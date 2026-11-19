@@ -1,20 +1,24 @@
 # YT4MP3
-> Free Online YouTube to MP3 and MP4 Converter
+> Free Online YouTube to MP3 and MP4 Converter & Media Guides
 
-YT4MP3 is a fast, free, web-based tool for converting and downloading YouTube videos and YouTube Shorts into high-quality MP3 audio (up to 320kbps) and HD/4K MP4 video files.
+YT4MP3 is an independent, browser-based utility for converting YouTube links that you own, are licensed to use, or have permission to save into MP3 audio (up to 320kbps) and MP4 video files (when the source offers it).
 
 ## Core Features
 - YouTube to MP3 converter with 320kbps, 256kbps, 192kbps, and 128kbps bitrate selection.
-- YouTube to MP4 video downloader supporting 1080p, 720p, 1440p (2K), and 2160p (4K) resolutions.
-- Dedicated YouTube Shorts Downloader for saving vertical Shorts in HD MP4 or MP3 audio.
-- Direct browser downloads with zero software installation and no user registration required.
-- Fully compatible with desktop and mobile devices including Android, iOS, Windows, macOS, and Linux in 15 languages.
+- YouTube to MP4 converter supporting 1080p, 720p, 1440p (2K), and 2160p (4K) resolutions when available from the source.
+- Dedicated YouTube Shorts converter for vertical 9:16 MP4 or MP3 audio.
+- Direct browser workflow with no software installation and no account registration required.
+- Compatible with desktop and mobile browsers across Android, iOS, Windows, macOS, and Linux in 15 languages.
 
 ## Available Pages
 - [Home](https://www.yt4mp3.com/): Free Online YouTube to MP3 and MP4 Converter.
-- [YouTube to MP3 Converter](https://www.yt4mp3.com/youtube-to-mp3): Convert YouTube videos and music into high quality 320kbps MP3 audio files.
-- [YouTube to MP4 Converter](https://www.yt4mp3.com/youtube-to-mp4): Download YouTube videos in 1080p, 720p, and 4K MP4 format.
-- [YouTube Shorts Downloader](https://www.yt4mp3.com/youtube-shorts-downloader): Download YouTube Shorts videos in HD MP4 or convert Shorts to MP3.
+- [YouTube to MP3 Converter](https://www.yt4mp3.com/youtube-to-mp3): Convert permitted YouTube links into MP3 audio files up to 320kbps.
+- [YouTube to MP4 Converter](https://www.yt4mp3.com/youtube-to-mp4): Convert permitted YouTube links into MP4 video files up to 4K when the source offers it.
+- [YouTube Shorts Downloader](https://www.yt4mp3.com/youtube-shorts-downloader): Convert permitted YouTube Shorts into MP4 video or MP3 audio.
+- [Blog & Technical Guides](https://www.yt4mp3.com/blog): Original tutorials on audio bitrates, video formats, mobile saving workflows, and copyright/Creative Commons compliance.
+- [About Us](https://www.yt4mp3.com/about-us): Organization mission, technical standards, and responsible-use principles.
+- [Copyright & DMCA Policy](https://www.yt4mp3.com/dmca-policy): Intellectual property compliance and DMCA takedown notice procedures.
+- [Editorial Policy](https://www.yt4mp3.com/editorial-policy): Content accuracy, review standards, and advertising independence.
 - [Contact Us](https://www.yt4mp3.com/contact-us): Official support and DMCA contact (contact.yt4mp3@gmail.com).
-- [Terms of Service](https://www.yt4mp3.com/terms-of-service): Terms governing the personal and fair use of the converter tool.
+- [Terms of Service](https://www.yt4mp3.com/terms-of-service): Terms governing personal, lawful use of the converter utility.
 - [Privacy Policy](https://www.yt4mp3.com/privacy-policy): Privacy practices and data handling information.

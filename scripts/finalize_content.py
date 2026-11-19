@@ -140,14 +140,8 @@ tool_re = re.compile(r"^https://www\.yt4mp3\.com/(?:(?:%s)/)?(?:youtube-to-mp3|y
 
 
 def changed(loc):
-    path = loc.replace(base, "")
-    if re.fullmatch(r"/(?:[a-z]{2}/)?(?:youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader)?", path):
-        return True
-    if re.fullmatch(r"/(?:[a-z]{2}/)?blog/?", path):
-        return True
-    if not LEGAL_ONLY and any(path.endswith("/blog/" + s) for s in REWRITE):
-        return True
-    return path in ("/contact-us",)
+    # All site pages received updated footer trust links, scrubbed content, hub sections, or new articles today
+    return True
 
 
 sm = set_lastmod(sm, changed)

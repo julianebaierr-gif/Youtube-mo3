@@ -614,12 +614,6 @@ def get_authoritative_feed_xml() -> str:
         except Exception:
             pass
 
-    updated_3_pages = {
-        "https://www.yt4mp3.com/youtube-to-mp3": "2026-11-15",
-        "https://www.yt4mp3.com/youtube-to-mp4": "2026-11-15",
-        "https://www.yt4mp3.com/youtube-shorts-downloader": "2026-11-15",
-    }
-
     items_xml = "".join([
         f"""    <item>
       <title>{html.escape(title, quote=True)}</title>
@@ -628,7 +622,7 @@ def get_authoritative_feed_xml() -> str:
       <description>{html.escape(desc, quote=True)}</description>
       <dc:language>{item_lang}</dc:language>
       <pubDate>{pub_date}</pubDate>
-      <lastmod>{updated_3_pages.get(link) or sitemap_dates.get(link, "2026-11-11")}</lastmod>
+      <lastmod>{sitemap_dates.get(link, "2026-11-19")}</lastmod>
     </item>\n""" for link, title, desc, item_lang, pub_date in urls
     ])
     _FEED_CACHE_XML = f"""<?xml version="1.0" encoding="UTF-8"?>
@@ -638,7 +632,7 @@ def get_authoritative_feed_xml() -> str:
     <link>https://www.yt4mp3.com/</link>
     <description>Latest tools, guides, and multilingual updates for converting YouTube videos to MP3 and MP4.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 12 Nov 2026</lastBuildDate>
+    <lastBuildDate>Thu, 19 Nov 2026</lastBuildDate>
     <atom:link href="https://www.yt4mp3.com/feed.xml" rel="self" type="application/rss+xml" />
 {items_xml}  </channel>
 </rss>"""
