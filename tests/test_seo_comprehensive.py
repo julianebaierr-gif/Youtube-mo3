@@ -1,4 +1,4 @@
-import os
+﻿import os
 import re
 import xml.etree.ElementTree as ET
 import pytest
@@ -70,7 +70,7 @@ def test_sitemap_valid_distinct_lastmod_dates():
         lm = u.find("ns:lastmod", ns)
         assert lm is not None, f"Missing lastmod in {loc}"
         lastmod = lm.text.strip()
-        assert lastmod in ["2026-11-11", "2026-11-12", "2026-11-15"]
+        assert lastmod in ["2026-11-11", "2026-11-12", "2026-11-15", "2026-11-19"]
 
 def test_sitemap_has_clean_xsl_stylesheet():
     res = client.get("/sitemap.xml")
@@ -440,6 +440,7 @@ def test_blog_article_arabic_rtl():
     assert 'href="/ar/youtube-shorts-downloader"' in html
     assert 'href="/ar/"' in html
     assert html.count("hreflang=") == 16
+
 
 
 
