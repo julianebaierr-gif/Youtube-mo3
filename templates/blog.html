@@ -284,6 +284,15 @@
                 {% endfor %}
             </div>
 
+                        {% if hub_extra %}
+            <section class="mb-10 max-w-3xl mx-auto" aria-labelledby="hub-intro-title">
+                <h2 id="hub-intro-title" class="text-xl sm:text-2xl font-black text-slate-950 mb-4">{{ hub_extra.intro_title }}</h2>
+                {% for para in hub_extra.intro %}
+                <p class="text-sm sm:text-base text-gray-700 leading-relaxed mb-4">{{ para }}</p>
+                {% endfor %}
+            </section>
+            {% endif %}
+
             <!-- Articles Section -->
             {% if articles and articles|length > 0 %}
             <!-- Published Articles Grid -->
@@ -347,6 +356,41 @@
                     </a>
                 </div>
             </div>
+            {% endif %}
+
+            {% if hub_extra %}
+            <section class="mt-12" aria-labelledby="hub-topics-title">
+                <h2 id="hub-topics-title" class="text-xl sm:text-2xl font-black text-slate-950 mb-5">{{ hub_extra.topics_title }}</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for tp in hub_extra.topics %}
+                    <div class="human-card p-5">
+                        <h3 class="text-base font-bold text-slate-900 mb-2">{{ tp.title }}</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">{{ tp.desc }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="mt-12 max-w-3xl mx-auto" aria-labelledby="hub-faq-title">
+                <h2 id="hub-faq-title" class="text-xl sm:text-2xl font-black text-slate-950 mb-5">{{ hub_extra.faq_title }}</h2>
+                {% for item in hub_extra.faq %}
+                <div class="human-card p-5 mb-3">
+                    <h3 class="text-base font-bold text-slate-900 mb-2">{{ item.q }}</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">{{ item.a }}</p>
+                </div>
+                {% endfor %}
+            </section>
+
+            <section class="mt-12 max-w-3xl mx-auto human-card p-6" aria-labelledby="hub-trust-title">
+                <h2 id="hub-trust-title" class="text-lg sm:text-xl font-black text-slate-950 mb-3">{{ hub_extra.trust_title }}</h2>
+                <p class="text-sm text-gray-700 leading-relaxed mb-4">{{ hub_extra.trust_text }}</p>
+                <p class="text-sm font-semibold">
+                    <a href="/about-us" class="text-rose-600 hover:underline">{{ hub_extra.about_label }}</a> &middot;
+                    <a href="/editorial-policy" class="text-rose-600 hover:underline">{{ hub_extra.editorial_label }}</a> &middot;
+                    <a href="/dmca-policy" class="text-rose-600 hover:underline">{{ hub_extra.dmca_label }}</a>
+                </p>
+            </section>
+
             {% endif %}
 
         </div>
@@ -418,7 +462,10 @@
                         <li><a href="{% if lang and lang != 'en' %}/{{ lang }}/blog/{% else %}/blog{% endif %}" class="hover:text-white transition-colors font-bold text-rose-400">Knowledge Blog</a></li>
                         <li><a href="/privacy-policy" class="hover:text-white underline">Privacy Policy</a></li>
                         <li><a href="/terms-of-service" class="hover:text-white underline">Terms of Service</a></li>
-                        <li><a href="/contact-us" class="hover:text-white underline">DMCA / Contact</a></li>
+                        <li><a href="/about-us" class="hover:text-white underline">About Us</a></li>
+                        <li><a href="/editorial-policy" class="hover:text-white underline">Editorial Policy</a></li>
+                        <li><a href="/dmca-policy" class="hover:text-white underline">Copyright &amp; DMCA</a></li>
+                        <li><a href="/contact-us" class="hover:text-white underline">Contact</a></li>
                     </ul>
                     <p class="text-[11px] text-slate-400">DMCA Notice: <a href="mailto:contact.yt4mp3@gmail.com" class="text-slate-300 hover:underline">contact.yt4mp3@gmail.com</a></p>
                 </div>

@@ -33,7 +33,7 @@ def test_sitemap_contains_exact_108_urls_and_no_duplicates():
     urls = root.findall("ns:url", ns)
     
     # Requirement: 108 URLs (63 core converter + legal pages + 15 multilingual blog hubs + 30 multilingual articles)
-    assert len(urls) == 108, f"Expected exactly 108 URLs in sitemap, found {len(urls)}"
+    assert len(urls) == 111, f"Expected exactly 111 URLs in sitemap, found {len(urls)}"
     
     loc_list = [u.find("ns:loc", ns).text.strip() for u in urls]
     
@@ -245,7 +245,7 @@ def test_sitemap_xhtml_hreflang_links():
     localized_count = 0
     for u in urls:
         loc = u.find("ns:loc", ns).text.strip()
-        if any(legal in loc for legal in ["contact-us", "terms-of-service", "privacy-policy"]):
+        if any(legal in loc for legal in ["contact-us", "terms-of-service", "privacy-policy", "about-us", "dmca-policy", "editorial-policy"]):
             continue
         localized_count += 1
         xhtml_links = u.findall("xhtml:link", ns)
@@ -293,7 +293,7 @@ def test_all_108_sitemap_urls_accessible_and_indexable():
     ns = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     urls = [u.find("ns:loc", ns).text.strip() for u in root.findall("ns:url", ns)]
 
-    assert len(urls) == 108
+    assert len(urls) == 111
 
     for url in urls:
         path = url.replace("https://www.yt4mp3.com", "")
@@ -440,6 +440,8 @@ def test_blog_article_arabic_rtl():
     assert 'href="/ar/youtube-shorts-downloader"' in html
     assert 'href="/ar/"' in html
     assert html.count("hreflang=") == 16
+
+
 
 
 

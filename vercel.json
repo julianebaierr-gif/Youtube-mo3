@@ -330,7 +330,7 @@
       }
     },
     {
-      "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy|blog)/",
+      "src": "/(youtube-to-mp3|youtube-to-mp4|youtube-shorts-downloader|contact-us|terms-of-service|privacy-policy|about-us|dmca-policy|editorial-policy|blog)/",
       "status": 301,
       "headers": {
         "Location": "/$1"
@@ -381,7 +381,7 @@
       "dest": "/public/pages/en/$1.html"
     },
     {
-      "src": "/(contact-us|terms-of-service|privacy-policy)",
+      "src": "/(contact-us|terms-of-service|privacy-policy|about-us|dmca-policy|editorial-policy)",
       "dest": "/public/pages/legal/$1.html"
     },
     {

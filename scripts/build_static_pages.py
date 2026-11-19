@@ -55,6 +55,9 @@ def build_static():
         "/contact-us": os.path.join(pages_dir, "legal", "contact-us.html"),
         "/terms-of-service": os.path.join(pages_dir, "legal", "terms-of-service.html"),
         "/privacy-policy": os.path.join(pages_dir, "legal", "privacy-policy.html"),
+        "/about-us": os.path.join(pages_dir, "legal", "about-us.html"),
+        "/dmca-policy": os.path.join(pages_dir, "legal", "dmca-policy.html"),
+        "/editorial-policy": os.path.join(pages_dir, "legal", "editorial-policy.html"),
     }
     for art in BLOG_ARTICLES:
         slug = art.get("slug")

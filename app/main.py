@@ -151,6 +151,13 @@ def render_legal_page(request: Request, page_key: str):
         _LEGAL_HTML_CACHE[page_key] = html_str
     return HTMLResponse(content=html_str, headers=EDGE_HTML_HEADERS)
 
+def _get_hub_extra(lang: str):
+    try:
+        from app.hub_extra import HUB_EXTRA
+        return HUB_EXTRA.get(lang)
+    except Exception:
+        return None
+
 def render_blog_hub(request: Request, lang: str = "en"):
     if lang not in SUPPORTED_LANGUAGES:
         raise HTTPException(status_code=404, detail="Language not found")
@@ -177,6 +184,7 @@ def render_blog_hub(request: Request, lang: str = "en"):
             seo=seo,
             blog=blog_data,
             articles=articles,
+            hub_extra=_get_hub_extra(lang),
             t=ui_strings,
             lang=lang,
             lang_dir=current_meta.get("dir", "ltr"),
@@ -303,16 +311,27 @@ async def blog_article_page(request: Request, slug: str):
         raise HTTPException(status_code=404, detail="Article not found")
     return render_blog_article(request, slug, "en")
 
-# /dmca redirects to contact-us which contains the full DMCA section
+# Trust pages: About, DMCA / Copyright, Editorial policy
+for _tp in ("about-us", "dmca-policy", "editorial-policy"):
+    def _make_trust_route(_key):
+        async def _trust_page(request: Request):
+            if request.url.path.endswith("/") and len(request.url.path) > 1:
+                return RedirectResponse(url="/" + _key, status_code=301)
+            return render_legal_page(request, _key)
+        return _trust_page
+    _h = _make_trust_route(_tp)
+    app.add_api_route("/" + _tp, _h, methods=["GET"], response_class=HTMLResponse)
+    app.add_api_route("/" + _tp + "/", _h, methods=["GET"], response_class=HTMLResponse)
+
 @app.get("/dmca", response_class=HTMLResponse)
 @app.get("/dmca/", response_class=HTMLResponse)
 async def dmca_page(request: Request):
-    return RedirectResponse(url="/contact-us#dmca", status_code=301)
+    return RedirectResponse(url="/dmca-policy", status_code=301)
 
 @app.get("/about", response_class=HTMLResponse)
 @app.get("/about/", response_class=HTMLResponse)
 async def about_page_redirect(request: Request):
-    return RedirectResponse(url="/contact-us#about", status_code=301)
+    return RedirectResponse(url="/about-us", status_code=301)
 
 @app.api_route("/robots.text", methods=["GET", "HEAD"])
 async def robots_text_redirect():
@@ -572,7 +591,11 @@ def get_authoritative_feed_xml() -> str:
                 trans = art.get("translations", {}).get(lang, {})
                 title = trans.get("title", art.get("title"))
                 desc = trans.get("meta_desc") or trans.get("excerpt") or art.get("meta_desc", "")
-            pub_date = release_dates["article"]
+            try:
+                from app.articles_extra import NEW_SLUGS as _NEW_SLUGS
+            except Exception:
+                _NEW_SLUGS = []
+            pub_date = "Thu, 19 Nov 2026" if slug in _NEW_SLUGS else release_dates["article"]
             urls.append((link, title, desc, lang, pub_date))
             
     # Read sitemap dates so feed lastmod matches sitemap.xml exactly

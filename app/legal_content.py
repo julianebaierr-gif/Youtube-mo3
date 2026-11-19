@@ -374,3 +374,10 @@ LEGAL_PAGES = {'contact-us': {'title': 'Contact Us | YT4MP3 Support & Feedback',
                                     'policy periodically to reflect changes in our services or legal obligations. Any '
                                     'modifications will be posted directly on this page, and continued use of '
                                     'YT4MP3.com constitutes your acceptance of the revised terms.</p>'}}
+
+
+try:
+    from app.legal_extra import LEGAL_EXTRA
+    LEGAL_PAGES.update(LEGAL_EXTRA)
+except ImportError:
+    pass
